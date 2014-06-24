@@ -1,0 +1,7 @@
+%awsSecretAccessKeys = (
+    # personal account
+    personal => {
+        id => 'AKIAIJIW6RKNOZZPTMRA',
+        key => 'MZ9LmUEo1Axje/dpejOeQIf+nu8M6V/FvxjIFUT/',
+    }
+);

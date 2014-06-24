@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BD91EB5919467D54002D8C1C /* FooView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91EB5819467D54002D8C1C /* FooView.swift */; };
+		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
+		BDB6D54119440392001340B4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D54019440392001340B4 /* main.swift */; };
+		BDB6D54319440392001340B4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D54219440392001340B4 /* AppDelegate.swift */; };
+		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
+		BDB6D54819440392001340B4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54619440392001340B4 /* MainMenu.xib */; };
+		BDB6D55419440392001340B4 /* windmillTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D55319440392001340B4 /* windmillTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BDB6D54E19440392001340B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BDB6D53319440392001340B4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BDB6D53A19440392001340B4;
+			remoteInfo = windmill;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		BD91EB5819467D54002D8C1C /* FooView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooView.swift; sourceTree = "<group>"; };
+		BD91EB5B19491C40002D8C1C /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDB6D54019440392001340B4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		BDB6D54219440392001340B4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		BDB6D54719440392001340B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDB6D55319440392001340B4 /* windmillTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = windmillTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BDB6D53819440392001340B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDB6D54A19440392001340B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BDB6D53219440392001340B4 = {
+			isa = PBXGroup;
+			children = (
+				BDB6D53D19440392001340B4 /* windmill */,
+				BDB6D55019440392001340B4 /* windmillTests */,
+				BDB6D53C19440392001340B4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BDB6D53C19440392001340B4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6D53B19440392001340B4 /* windmill.app */,
+				BDB6D54D19440392001340B4 /* windmillTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BDB6D53D19440392001340B4 /* windmill */ = {
+			isa = PBXGroup;
+			children = (
+				BD91EB5B19491C40002D8C1C /* scripts */,
+				BDB6D54219440392001340B4 /* AppDelegate.swift */,
+				BDB6D54419440392001340B4 /* Images.xcassets */,
+				BDB6D54619440392001340B4 /* MainMenu.xib */,
+				BDB6D53E19440392001340B4 /* Supporting Files */,
+				BD91EB5819467D54002D8C1C /* FooView.swift */,
+			);
+			path = windmill;
+			sourceTree = "<group>";
+		};
+		BDB6D53E19440392001340B4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6D53F19440392001340B4 /* Info.plist */,
+				BDB6D54019440392001340B4 /* main.swift */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BDB6D55019440392001340B4 /* windmillTests */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6D55319440392001340B4 /* windmillTests.swift */,
+				BDB6D55119440392001340B4 /* Supporting Files */,
+			);
+			path = windmillTests;
+			sourceTree = "<group>";
+		};
+		BDB6D55119440392001340B4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				BDB6D55219440392001340B4 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BDB6D53A19440392001340B4 /* windmill */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDB6D55719440392001340B4 /* Build configuration list for PBXNativeTarget "windmill" */;
+			buildPhases = (
+				BDB6D53719440392001340B4 /* Sources */,
+				BDB6D53819440392001340B4 /* Frameworks */,
+				BDB6D53919440392001340B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = windmill;
+			productName = windmill;
+			productReference = BDB6D53B19440392001340B4 /* windmill.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BDB6D54C19440392001340B4 /* windmillTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDB6D55A19440392001340B4 /* Build configuration list for PBXNativeTarget "windmillTests" */;
+			buildPhases = (
+				BDB6D54919440392001340B4 /* Sources */,
+				BDB6D54A19440392001340B4 /* Frameworks */,
+				BDB6D54B19440392001340B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BDB6D54F19440392001340B4 /* PBXTargetDependency */,
+			);
+			name = windmillTests;
+			productName = windmillTests;
+			productReference = BDB6D54D19440392001340B4 /* windmillTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BDB6D53319440392001340B4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = qnoid.com;
+				TargetAttributes = {
+					BDB6D53A19440392001340B4 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					BDB6D54C19440392001340B4 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = BDB6D53A19440392001340B4;
+					};
+				};
+			};
+			buildConfigurationList = BDB6D53619440392001340B4 /* Build configuration list for PBXProject "windmill" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BDB6D53219440392001340B4;
+			productRefGroup = BDB6D53C19440392001340B4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BDB6D53A19440392001340B4 /* windmill */,
+				BDB6D54C19440392001340B4 /* windmillTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BDB6D53919440392001340B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
+				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
+				BDB6D54819440392001340B4 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDB6D54B19440392001340B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BDB6D53719440392001340B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB6D54319440392001340B4 /* AppDelegate.swift in Sources */,
+				BD91EB5919467D54002D8C1C /* FooView.swift in Sources */,
+				BDB6D54119440392001340B4 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDB6D54919440392001340B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB6D55419440392001340B4 /* windmillTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BDB6D54F19440392001340B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BDB6D53A19440392001340B4 /* windmill */;
+			targetProxy = BDB6D54E19440392001340B4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BDB6D54619440392001340B4 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BDB6D54719440392001340B4 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BDB6D55519440392001340B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				METAL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BDB6D55619440392001340B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				METAL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BDB6D55819440392001340B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		BDB6D55919440392001340B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		BDB6D55B19440392001340B4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/windmill.app/Contents/MacOS/windmill";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = windmillTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Debug;
+		};
+		BDB6D55C19440392001340B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/windmill.app/Contents/MacOS/windmill";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = windmillTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BDB6D53619440392001340B4 /* Build configuration list for PBXProject "windmill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDB6D55519440392001340B4 /* Debug */,
+				BDB6D55619440392001340B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDB6D55719440392001340B4 /* Build configuration list for PBXNativeTarget "windmill" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDB6D55819440392001340B4 /* Debug */,
+				BDB6D55919440392001340B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDB6D55A19440392001340B4 /* Build configuration list for PBXNativeTarget "windmillTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDB6D55B19440392001340B4 /* Debug */,
+				BDB6D55C19440392001340B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BDB6D53319440392001340B4 /* Project object */;
+}
