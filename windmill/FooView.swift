@@ -61,7 +61,7 @@ class FooView: NSView
             
             let task = NSTask()
             task.launchPath = NSBundle.mainBundle().pathForResource("scripts/checkout", ofType: "sh")
-            task.arguments = [folder]
+            task.arguments = [folder, NSBundle.mainBundle().pathForResource("scripts", ofType:nil)]
             task.launch()
             
             // Perform operation using the list of files

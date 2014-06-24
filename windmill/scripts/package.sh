@@ -11,4 +11,4 @@ xcrun -sdk iphoneos PackageApplication -v $DERIVED_DATA_DIR/$PROJECT_NAME.app
 IPA=$DERIVED_DATA_DIR/$PROJECT_NAME.ipa
 PLIST=$WINDMILL_ROOT/$PROJECT_NAME.plist
 
-. $APP_ROOT/scripts/deploy.sh
+. $SCRIPTS_ROOT/deploy.sh
