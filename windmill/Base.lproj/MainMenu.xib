@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6154.17" systemVersion="13D65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6205" systemVersion="13E28" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6154.17"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6205"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -10,8 +10,25 @@
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
-        <customObject id="-3" userLabel="Application"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="windmill" customModuleProvider="target"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu id="HrS-Yp-WEt">
+            <items>
+                <menuItem title="Quit Windmill" keyEquivalent="q" id="jEn-dt-edy">
+                    <connections>
+                        <action selector="terminate:" target="-2" id="p3s-Wr-EB0"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="Vbf-11-7Ry"/>
+            </connections>
+            <point key="canvasLocation" x="320.5" y="583.5"/>
+        </menu>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="windmill" customModuleProvider="target">
+            <connections>
+                <outlet property="menu" destination="HrS-Yp-WEt" id="qhn-Kb-Rlz"/>
+            </connections>
+        </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
     </objects>
 </document>

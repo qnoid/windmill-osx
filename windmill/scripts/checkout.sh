@@ -2,9 +2,9 @@
 #$1 the local git repo
 
 (
-USES_COCOAPODS=true
 WINDMILL_ROOT="$HOME/.windmill"
 SCRIPTS_ROOT=$2
+RESOURCES_ROOT=$3
 
 . $SCRIPTS_ROOT/common.sh
 
@@ -35,5 +35,8 @@ else
 	(cd $WINDMILL_ROOT; git clone $remote $PROJECT_NAME)
 fi
 
+(
 . $SCRIPTS_ROOT/build.sh
+) 2>&1 | tee $HOME/.windmill/$PROJECT_NAME.log
+
 ) 2>&1 | tee $HOME/.windmill/windmill.log

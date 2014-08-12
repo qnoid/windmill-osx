@@ -14,6 +14,7 @@
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDB6D54819440392001340B4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54619440392001340B4 /* MainMenu.xib */; };
 		BDB6D55419440392001340B4 /* windmillTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D55319440392001340B4 /* windmillTests.swift */; };
+		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D55319440392001340B4 /* windmillTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = windmillTests.swift; sourceTree = "<group>"; };
+		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BDF6B75B199A428C008B09D9 /* resources */,
 				BD91EB5B19491C40002D8C1C /* scripts */,
 				BDB6D54219440392001340B4 /* AppDelegate.swift */,
 				BDB6D54419440392001340B4 /* Images.xcassets */,
@@ -195,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDF6B75C199A428D008B09D9 /* resources in Resources */,
 				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
 				BDB6D54819440392001340B4 /* MainMenu.xib in Resources */,

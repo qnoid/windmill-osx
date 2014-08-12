@@ -8,21 +8,21 @@
 
 import Cocoa
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     
     @IBOutlet var menu : NSMenu?
     var statusItem: NSStatusItem?
     
-    func applicationDidFinishLaunching(aNotification: NSNotification?) {
-        // Insert code here to initialize your application
-        
-        self.menu = NSMenu()
-
-        let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(CGFloat(NSVariableStatusItemLength))
+    func applicationDidFinishLaunching(aNotification: NSNotification?)
+    {
+        let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(20)
+        statusItem.menu = self.menu
         self.statusItem = statusItem;
         statusItem.enabled = true
         statusItem.highlightMode = true
-        statusItem.view = FooView(frame: NSMakeRect(0, 0, 20, 19))
+        let fooView = FooView(frame: NSMakeRect(0, 0, 20, 19))
+        fooView.statusItem = self.statusItem;
+        statusItem.view = fooView;
     }
 
     func applicationWillTerminate(aNotification: NSNotification?) {
@@ -33,6 +33,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func about()
     {
         
+    }
+    
+    func menuWillOpen(menu: NSMenu!) {
+
     }
 }
 
