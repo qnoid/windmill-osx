@@ -1,0 +1,1 @@
+curl -i -H "Windmill-Name: balance" -H "Windmill-Identifier: com.qnoid.balance" -F "ipa=@/Users/qnoid/.windmill/balance/build/Build/Products/Release-iphoneos/balance.ipa" -F "plist=@/Users/qnoid/.windmill/balance.plist" http://localhost:8080/windmill/rest/windmill | grep ^Location | awk '{print $2}'

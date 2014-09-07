@@ -8,8 +8,14 @@
 
 import Cocoa
 
-class FooView: NSView
+protocol WindmillViewDelegate
 {
+    func didPerformDragOperationWithFolder(folder:String)
+}
+
+class WindmillView: NSView
+{
+    var delegate : WindmillViewDelegate?
     
     var statusItem: NSStatusItem?
     
@@ -30,11 +36,7 @@ class FooView: NSView
         contentSize.width,
         contentSize.height)
     }
-    
-    func pathForDir(name: String!) -> String! {
-        return NSBundle.mainBundle().pathForResource(name, ofType:nil);
-    }
-    
+        
     override func mouseDown(theEvent: NSEvent!){
         dispatch_async(dispatch_get_main_queue()){
             
@@ -59,7 +61,7 @@ class FooView: NSView
     
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation
     {
-        println("Drag Enter");
+        println(__FUNCTION__);
         return .Copy;
     }
 
@@ -71,8 +73,7 @@ class FooView: NSView
 
     override func draggingExited(sender: NSDraggingInfo!)
     {
-        println("Drag Exit");
-        
+        println(__FUNCTION__);
     }
 
     override func prepareForDragOperation(sender: NSDraggingInfo!) -> Bool
@@ -87,21 +88,14 @@ class FooView: NSView
         println(__FUNCTION__);
         let pboard = sender.draggingPasteboard()
         
-        if (pboard.availableTypeFromArray(["NSFilenamesPboardType"]) != nil) {
-            let files : AnyObject! = pboard.propertyListForType(NSFilenamesPboardType)
-
-            println(files)
+        if let folder = pboard.firstFilename()
+        {
+            println(folder)
+            self.delegate?.didPerformDragOperationWithFolder(folder)
             
-            let folder = files.firstObject as String
-            
-            let task = NSTask()
-            task.launchPath = NSBundle.mainBundle().pathForResource("scripts/checkout", ofType: "sh")
-            task.arguments = [folder, self.pathForDir("scripts"), self.pathForDir("resources")]
-            task.launch()
-            
-            // Perform operation using the list of files
+        return true
         }
 
-        return true;
+        return false
     }
 }

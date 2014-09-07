@@ -2,7 +2,7 @@
 
 set -e 
 
-echo $PROJECT_NAME
+echo "[windmill] $PROJECT_NAME"
 
 DERIVED_DATA_DIR="$WINDMILL_ROOT/$PROJECT_NAME/build/Build/Products/Release-iphoneos"
 
@@ -13,7 +13,14 @@ cp $RESOURCES_ROOT/sample.plist $WINDMILL_ROOT/$PROJECT_NAME.plist
 PLIST=$WINDMILL_ROOT/$PROJECT_NAME.plist
 
 CFBundleIdentifier=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" $WINDMILL_ROOT/$PROJECT_NAME/$PROJECT_NAME/$PROJECT_NAME-Info.plist`
-/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-identifier com.qnoid.balance" $PLIST
+
+echo "[windmill] :CFBundleIdentifier '$CFBundleIdentifier'"
+
+CFBundleIdentifier=`echo $CFBundleIdentifier | sed s/'${PRODUCT_NAME:rfc1034identifier}'/$PROJECT_NAME/g`
+
+echo "[windmill] Setting bundle-identifier to: '$CFBundleIdentifier'"
+
+/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-identifier $CFBundleIdentifier" $PLIST
 /usr/libexec/PlistBuddy -c "Set items:0:metadata:title $PROJECT_NAME" $PLIST
 
 . $SCRIPTS_ROOT/deploy.sh

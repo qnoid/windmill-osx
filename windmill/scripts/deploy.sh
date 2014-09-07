@@ -2,9 +2,8 @@
 
 set -e
 
-echo $IPA
-echo $PLIST
+echo "[windmill] $IPA"
+echo "[windmill] $PLIST"
 
-curl -v -F "ipa=@$IPA" -F "plist=@$PLIST" http://localhost:8080/windmill/rest/windmill
-
-echo "Upload done: https://qnoid.s3-eu-west-1.amazonaws.com/$PROJECT_NAME.ipa"
+LOCATION=`curl -i -H "Windmill-Name: $PROJECT_NAME" -H "Windmill-Identifier: $CFBundleIdentifier" -F "ipa=@$IPA" -F "plist=@$PLIST" http://localhost:8080/windmill/rest/windmill/$USER | grep ^Location | awk '{print $2}'`
+echo "[windmill] Upload done: $LOCATION"
