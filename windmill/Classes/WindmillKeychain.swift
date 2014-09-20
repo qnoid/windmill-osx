@@ -16,7 +16,7 @@ let KeychainAccountIOWindmillUser = KeychainAccount(serviceName: "io.windmill", 
 
 extension Keychain
 {
-    var createUser : KeychainCreateUser
+    private var createWindmillUser : KeychainCreateUser
     {
         func createUser(user:String) -> OSStatus {
         return self.addGenericPassword(KeychainAccountIOWindmillUser, password:user)
@@ -25,7 +25,7 @@ extension Keychain
         return createUser;
     }
     
-    var findUser : KeychainFindUser
+    var findWindmillUser : KeychainFindUser
     {
         func findUser() -> NSString?
         {
@@ -49,11 +49,11 @@ extension Keychain
     */
     func createUser(user:String) -> Bool
     {
-        if let user = self.findUser(){
+        if let user = self.findWindmillUser(){
             return false
         }
         
-        self.createUser(user)
+        self.createWindmillUser(user)
         
     return true
     }

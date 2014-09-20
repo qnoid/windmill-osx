@@ -1,26 +1,34 @@
 #!/bin/bash
 
-set -e 
+function default_info_plist(){
+INFO_PLIST=$WINDMILL_ROOT/$PROJECT_NAME/$APPLICATION_NAME/Info.plist
+}
 
-echo "[windmill] $PROJECT_NAME"
+set -e 
 
 DERIVED_DATA_DIR="$WINDMILL_ROOT/$PROJECT_NAME/build/Build/Products/Release-iphoneos"
 
-xcrun -sdk iphoneos PackageApplication -v $DERIVED_DATA_DIR/$PROJECT_NAME.app
-IPA=$DERIVED_DATA_DIR/$PROJECT_NAME.ipa
+assert_directory_exists_at_path $DERIVED_DATA_DIR/$APPLICATION_NAME.app "Open in Xcode the '$APPLICATION_NAME' project under '$PROJECT_LOCAL_FOLDER'. Under 'Product > Scheme > Manage Schemes...', Next to the scheme '$APPLICATION_NAME', check 'Shared'."
 
-cp $RESOURCES_ROOT/sample.plist $WINDMILL_ROOT/$PROJECT_NAME.plist
-PLIST=$WINDMILL_ROOT/$PROJECT_NAME.plist
+xcrun -sdk iphoneos PackageApplication -v $DERIVED_DATA_DIR/$APPLICATION_NAME.app
+IPA=$DERIVED_DATA_DIR/$APPLICATION_NAME.ipa
 
-CFBundleIdentifier=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" $WINDMILL_ROOT/$PROJECT_NAME/$PROJECT_NAME/$PROJECT_NAME-Info.plist`
+cp $RESOURCES_ROOT/sample.plist $WINDMILL_ROOT/$APPLICATION_NAME.plist
+PLIST=$WINDMILL_ROOT/$APPLICATION_NAME.plist
+
+INFO_PLIST=$WINDMILL_ROOT/$PROJECT_NAME/$APPLICATION_NAME/$APPLICATION_NAME-Info.plist
+file_does_not_exist_at_path "$WINDMILL_ROOT/$PROJECT_NAME/$APPLICATION_NAME/$APPLICATION_NAME-Info.plist" default_info_plist
+
+CFBundleIdentifier=`/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" $INFO_PLIST`
 
 echo "[windmill] :CFBundleIdentifier '$CFBundleIdentifier'"
 
-CFBundleIdentifier=`echo $CFBundleIdentifier | sed s/'${PRODUCT_NAME:rfc1034identifier}'/$PROJECT_NAME/g`
+CFBundleIdentifier=`echo $CFBundleIdentifier | sed s/'${PRODUCT_NAME:rfc1034identifier}'/$APPLICATION_NAME/g`
+CFBundleIdentifier=`echo $CFBundleIdentifier | sed s/'$(PRODUCT_NAME:rfc1034identifier)'/$APPLICATION_NAME/g`
 
 echo "[windmill] Setting bundle-identifier to: '$CFBundleIdentifier'"
 
 /usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-identifier $CFBundleIdentifier" $PLIST
-/usr/libexec/PlistBuddy -c "Set items:0:metadata:title $PROJECT_NAME" $PLIST
+/usr/libexec/PlistBuddy -c "Set items:0:metadata:title $APPLICATION_NAME" $PLIST
 
 . $SCRIPTS_ROOT/deploy.sh

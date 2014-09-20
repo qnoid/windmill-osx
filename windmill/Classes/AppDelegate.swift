@@ -9,7 +9,7 @@
 import AppKit
 import Foundation
 
-private let userIdentifier = NSUUID.UUID().UUIDString;
+private let userIdentifier = NSUUID().UUIDString;
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillViewDelegate
 {
@@ -45,15 +45,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillView
     
     func didPerformDragOperationWithFolder(folder: String)
     {
-        if let user = self.keychain.findGenericPassword(KeychainAccountIOWindmillUser).password
-        {
-            let task = WindmillTasks.deployTask(folder, user: user)
-            task.launch()
-        }
-        else
-        {
+        let user = self.keychain.findWindmillUser()
+        if(user == nil){
             NSLog("Error querying default keychain for account: '%@' under service '%@'", KeychainAccountIOWindmillUser.name, KeychainAccountIOWindmillUser.serviceName)
+        return;
         }
+
+        let task = WindmillTasks.deployTask(folder, user: user!)
+        task.launch()
     }
 }
 
