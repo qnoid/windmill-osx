@@ -20,7 +20,7 @@ function find_xcworkspace_info(){
 function find_xcworkspace()
 {
 echo "[windmill] [debug] [$FUNCNAME]"
-APPLICATION_NAME=`(cd $WINDMILL_ROOT/$PROJECT_NAME; find . -type d -name *\.xcworkspace -maxdepth 1 | sed 's/\.\/\([a-z]*\)\.xcworkspace/\1/')`
+APPLICATION_NAME=`(cd $WINDMILL_ROOT/$PROJECT_NAME; find . -type d -name *\.xcworkspace -maxdepth 1 | sed 's/\.\/\([A-z0-9-]*\)\.xcworkspace/\1/')`
 windmill_xcodebuild=xcodebuild_xcworkspace
 }
 
@@ -31,7 +31,7 @@ function find_xcodeproj_info(){
 function find_xcodeproj()
 {
 echo "[windmill] [debug] [$FUNCNAME]"
-APPLICATION_NAME=`(cd $WINDMILL_ROOT/$PROJECT_NAME; find . -type d -name *\.xcodeproj -maxdepth 1 | sed 's/\.\/\([a-z]*\)\.xcodeproj/\1/')`
+APPLICATION_NAME=`(cd $WINDMILL_ROOT/$PROJECT_NAME; find . -type d -name *\.xcodeproj -maxdepth 1 | sed 's/\.\/\([A-z0-9-]*\)\.xcodeproj/\1/')`
 windmill_xcodebuild=xcodebuild_xcodeproj
 }
 
