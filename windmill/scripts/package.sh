@@ -8,7 +8,7 @@ set -e
 
 DERIVED_DATA_DIR="$WINDMILL_ROOT/$PROJECT_NAME/build/Build/Products/Release-iphoneos"
 
-assert_directory_exists_at_path $DERIVED_DATA_DIR/$APPLICATION_NAME.app "Open in Xcode the '$APPLICATION_NAME' project under '$PROJECT_LOCAL_FOLDER'. Under 'Product > Scheme > Manage Schemes...', Next to the scheme '$APPLICATION_NAME', check 'Shared'."
+assert_directory_exists_at_path $DERIVED_DATA_DIR/$APPLICATION_NAME.app "Open in Xcode the '$APPLICATION_NAME' project under '$PROJECT_LOCAL_FOLDER'. Under 'Product > Scheme > Manage Schemes...', Next to the scheme '$APPLICATION_NAME', check 'Shared'. Next do 'git commit -a -m '+ made $APPLICATION_NAME scheme 'Shared' && git push'"
 
 xcrun -sdk iphoneos PackageApplication -v $DERIVED_DATA_DIR/$APPLICATION_NAME.app
 IPA=$DERIVED_DATA_DIR/$APPLICATION_NAME.ipa

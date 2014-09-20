@@ -9,8 +9,6 @@ WINDMILL_BASE_URL=$5
 
 . $SCRIPTS_ROOT/common.sh
 
-directory_does_not_exist_at_path ~/.windmill mkdir_windmill
-
 function mkdir_windmill() {
 mkdir ~/.windmill
 }
@@ -23,6 +21,8 @@ echo "[windmill] git -C $REPO_NAME pull"
 function git_clone(){
 (cd $WINDMILL_ROOT; git clone $remote $REPO_NAME)
 }
+
+directory_does_not_exist_at_path ~/.windmill mkdir_windmill
 
 PROJECT_NAME=`basename $1`
 

@@ -37,7 +37,7 @@ windmill_xcodebuild=xcodebuild_xcodeproj
 
 function pod_install() {
 export LANG=en_US.UTF-8
-(cd $WINDMILL_ROOT/$PROJECT_NAME; /Users/qnoid/.rbenv/shims/pod install)
+(cd $WINDMILL_ROOT/$PROJECT_NAME; pod install)
 }
 
 #script
@@ -47,6 +47,7 @@ set -e
 file_exist_at_path "$WINDMILL_ROOT/$PROJECT_NAME/Podfile" pod_install
 
 APPLICATION_NAME=$PROJECT_NAME
+windmill_xcodebuild=xcodebuild_xcworkspace
 
 directory_does_not_exist_at_path "$WINDMILL_ROOT/$PROJECT_NAME/$PROJECT_NAME.xcworkspace" find_xcworkspace
 
