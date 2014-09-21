@@ -14,7 +14,7 @@ mkdir ~/.windmill
 }
 
 function git_pull(){
-echo "[windmill] git -C $REPO_NAME pull"
+echo "[windmill] [debug] git -C $REPO_NAME pull"
 (cd $WINDMILL_ROOT; git -C $REPO_NAME pull)
 }
 

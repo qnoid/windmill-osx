@@ -37,6 +37,7 @@ windmill_xcodebuild=xcodebuild_xcodeproj
 
 function pod_install() {
 export LANG=en_US.UTF-8
+echo "[windmill] [debug] [$FUNCNAME]"
 (cd $WINDMILL_ROOT/$PROJECT_NAME; pod install)
 }
 
@@ -52,6 +53,8 @@ windmill_xcodebuild=xcodebuild_xcworkspace
 directory_does_not_exist_at_path "$WINDMILL_ROOT/$PROJECT_NAME/$PROJECT_NAME.xcworkspace" find_xcworkspace
 
 if_string_is_empty "$APPLICATION_NAME" find_xcodeproj
+
+assert_exists "$APPLICATION_NAME" "[windmill] [unsupported] git repo must hold either a .xcworkspace or a .xcodeproj at its root"
 
 PROVISIONING_PROFILE="$HOME/Library/MobileDevice/Provisioning Profiles/$PROJECT_NAME.mobileprovision"
 
