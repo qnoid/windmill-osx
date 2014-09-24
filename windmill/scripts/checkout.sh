@@ -24,19 +24,20 @@ function git_clone(){
 
 directory_does_not_exist_at_path ~/.windmill mkdir_windmill
 
-PROJECT_NAME=`basename $1`
+LOCAL_GIT_REPO=$1
+PROJECT_NAME=`basename $LOCAL_GIT_REPO`
 
 (
-assert_exists "$1" "Please drag and drop the project folder that contains the git repo."
+assert_exists "$LOCAL_GIT_REPO" "Please drag and drop the project folder that contains the git repo."
 
 (
-echo "[windmill] Using "$1
+echo "[windmill] Using "$LOCAL_GIT_REPO
 
 set -e
 
-remote=`git -C $1 remote -v | grep "fetch" | awk '{print $2}'`
+remote=`git -C "$LOCAL_GIT_REPO" remote -v | grep "fetch" | awk '{print $2}'`
 
-assert_exists "$remote" "Local git repo '"$1"' does not have an origin (fetch) defined"
+assert_exists "$remote" "Local git repo '$1' does not have an origin (fetch) defined"
 
 echo "[windmill] Found remote repo at: "$remote
 
