@@ -38,8 +38,7 @@ class Keychain
         var passwordLength: UInt32 = 0
         var passwordPtr: UnsafeMutablePointer<Void> = nil
         
-        let status = SecKeychainFindGenericPassword(
-            nil,
+        let status = SecKeychainFindGenericPassword(self.keychain,
             UInt32(countElements(account.serviceName.utf8)),
             account.serviceName,
             UInt32(countElements(account.name.utf8)),
