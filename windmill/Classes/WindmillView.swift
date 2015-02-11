@@ -1,5 +1,5 @@
 //
-//  FooView.swift
+//  WindmillView.swift
 //  windmill
 //
 //  Created by Markos Charatzas on 10/06/2014.
@@ -10,7 +10,7 @@ import Cocoa
 
 protocol WindmillViewDelegate
 {
-    func didPerformDragOperationWithFolder(folder:String)
+    func didPerformDragOperationWithFolder(folderName:String)
 }
 
 class WindmillView: NSView
@@ -19,7 +19,7 @@ class WindmillView: NSView
     
     var statusItem: NSStatusItem?
     
-    required init(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder);
     }
     
@@ -37,35 +37,36 @@ class WindmillView: NSView
         contentSize.height)
     }
         
-    override func mouseDown(theEvent: NSEvent!){
+    override func mouseDown(theEvent: NSEvent){
         dispatch_async(dispatch_get_main_queue()){
             
             if let statusItem = self.statusItem {
-                statusItem.popUpStatusItemMenu(statusItem.menu)
+                statusItem.popUpStatusItemMenu(statusItem.menu!)
             }
         }
     }
     
     override func drawRect(rect: NSRect)
     {
-        let image = NSImage(named:"windmill")
-        
-        let srcRect = NSMakeRect(0, 0, image.size.width, image.size.height);
+        if let image = NSImage(named:"windmill")
+        {
+            let srcRect = NSMakeRect(0, 0, image.size.width, image.size.height);
 
-        let canvasRect = NSRectToCGRect(rect);
-        let imageSize = NSSizeToCGSize(srcRect.size);
-        let dstRect = self.rectCenteredInside(canvasRect, contentSize: imageSize)
+            let canvasRect = NSRectToCGRect(rect);
+            let imageSize = NSSizeToCGSize(srcRect.size);
+            let dstRect = self.rectCenteredInside(canvasRect, contentSize: imageSize)
 
-        image.drawInRect(NSRectFromCGRect(dstRect), fromRect: srcRect, operation: .CompositeSourceOver, fraction: 1.0)
+            image.drawInRect(NSRectFromCGRect(dstRect), fromRect: srcRect, operation: .CompositeSourceOver, fraction: 1.0)
+        }
     }
     
-    override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation
+    override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
     {
         println(__FUNCTION__);
         return .Copy;
     }
 
-    override func draggingUpdated(sender: NSDraggingInfo!) -> NSDragOperation
+    override func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation
     {
         return .Copy;
         
@@ -76,14 +77,14 @@ class WindmillView: NSView
         println(__FUNCTION__);
     }
 
-    override func prepareForDragOperation(sender: NSDraggingInfo!) -> Bool
+    override func prepareForDragOperation(sender: NSDraggingInfo) -> Bool
     {
         println(__FUNCTION__);
         return true;
         
     }
 
-    override func performDragOperation(sender: NSDraggingInfo!) -> Bool
+    override func performDragOperation(sender: NSDraggingInfo) -> Bool
     {
         println(__FUNCTION__);
         let pboard = sender.draggingPasteboard()

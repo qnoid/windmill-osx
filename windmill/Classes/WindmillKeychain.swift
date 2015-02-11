@@ -10,7 +10,7 @@ import Foundation
 
 typealias KeychainCreateUser = (String) -> OSStatus
 
-typealias KeychainFindUser = () -> NSString?
+typealias KeychainFindUser = () -> String?
 
 let KeychainAccountIOWindmillUser = KeychainAccount(serviceName: "io.windmill", name: "io.windmill.user")
 
@@ -27,7 +27,7 @@ extension Keychain
     
     var findWindmillUser : KeychainFindUser
     {
-        func findUser() -> NSString?
+        func findUser() -> String?
         {
             let account = self.findGenericPassword(KeychainAccountIOWindmillUser);
             
@@ -43,6 +43,8 @@ extension Keychain
     
     /**
     Creates a new user under the KeychainAccountIOWindmillUsers if one doesn't already exist.
+    
+    As a result of calling this method, a subsequent call to #findWindmillUser is guaranteed to return a user.
 
     @param user the user to create
     @return true if created, false otherwise

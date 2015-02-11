@@ -1,0 +1,10 @@
+framework module foo {
+  umbrella header "foo.h"
+
+  export *
+  module * { export * }
+}
+
+module foo.Swift {
+    header "foo-Swift.h"
+}

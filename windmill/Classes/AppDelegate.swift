@@ -13,17 +13,21 @@ private let userIdentifier = NSUUID().UUIDString;
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillViewDelegate
 {
-    @IBOutlet var menu : NSMenu?
+    @IBOutlet var menu : NSMenu!
     
     var keychain : Keychain {
         return Keychain.defaultKeychain()
     }
     
-    func applicationDidFinishLaunching(aNotification: NSNotification?)
-    {        
+    var scheduler : Scheduler!
+    
+    func applicationDidFinishLaunching(aNotification: NSNotification)
+    {
         self.keychain.createUser(userIdentifier)
-        
-        let statusItem = NSStatusBar.systemStatusItem(self.menu!)
+
+        self.scheduler = Scheduler()
+
+        let statusItem = NSStatusBar.systemStatusItem(self.menu)
         
         let windmillView = WindmillView(frame: NSMakeRect(0, 0, 20, 19))
         windmillView.delegate = self
@@ -31,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillView
         statusItem.view = windmillView;
     }
 
-    func applicationWillTerminate(aNotification: NSNotification?) {
+    func applicationWillTerminate(aNotification: NSNotification) {
     }
     
     func about()
@@ -39,20 +43,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillView
         
     }
     
-    func menuWillOpen(menu: NSMenu!) {
+    func menuWillOpen(menu: NSMenu) {
 
     }
     
-    func didPerformDragOperationWithFolder(folder: String)
+    func didPerformDragOperationWithFolder(localGitRepo: String) {
+        self.deployGitRepo(localGitRepo)
+    }
+        
+    func deployGitRepo(localGitRepo : String)
     {
-        let user = self.keychain.findWindmillUser()
-        if(user == nil){
-            NSLog("Error querying default keychain for account: '%@' under service '%@'", KeychainAccountIOWindmillUser.name, KeychainAccountIOWindmillUser.serviceName)
-        return;
+        if let user = self.keychain.findWindmillUser(){
+        let deployGitRepoForUserTask = NSTask.taskDeploy(localGitRepo:localGitRepo, forUser:user)
+            
+        self.scheduler.launch(deployGitRepoForUserTask)
+        self.scheduler.schedule {
+            return NSTask.taskPoll(localGitRepo)
+            }(ifDirty: {
+                [unowned self] in
+                self.deployGitRepo(localGitRepo)
+            })
         }
-
-        let task = WindmillTasks.deployTask(folder, user: user!)
-        task.launch()
     }
 }
 

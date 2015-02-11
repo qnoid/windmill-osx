@@ -18,7 +18,7 @@ extension NSPasteboard
         }
         
         let files : AnyObject! = self.propertyListForType(NSFilenamesPboardType)
-        let folder = files.firstObject as String
+        let folder = files.firstObject as! String
 
     return folder
     }

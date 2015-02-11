@@ -25,12 +25,13 @@ function git_clone(){
 directory_does_not_exist_at_path ~/.windmill mkdir_windmill
 
 LOCAL_GIT_REPO=$1
-PROJECT_NAME=`basename $LOCAL_GIT_REPO`
+PROJECT_NAME=`basename "$LOCAL_GIT_REPO"`
 
 (
 assert_exists "$LOCAL_GIT_REPO" "Please drag and drop the project folder that contains the git repo."
 
 (
+echo "[windmill] Project name: '"$PROJECT_NAME"'"
 echo "[windmill] Using "$LOCAL_GIT_REPO
 
 set -e
@@ -51,6 +52,6 @@ echo "[windmill] Using repo name: "$REPO_NAME
 directory_exist_at_path "$WINDMILL_ROOT/$REPO_NAME" git_pull git_clone
 
 . $SCRIPTS_ROOT/build.sh
-) 2>&1 | tee $HOME/.windmill/$PROJECT_NAME.log
+) 2>&1 | tee "$WINDMILL_ROOT/$PROJECT_NAME.log"
 
-) 2>&1 | tee $HOME/.windmill/windmill.log
+) 2>&1 | tee "$WINDMILL_ROOT/windmill.log"

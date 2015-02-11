@@ -1,0 +1,10 @@
+framework module YosemiteCollections {
+  umbrella header "YosemiteCollections.h"
+
+  export *
+  module * { export * }
+}
+
+module YosemiteCollections.Swift {
+    header "YosemiteCollections-Swift.h"
+}
