@@ -11,10 +11,11 @@
 		BD30160419BB0F79001134F8 /* WindmillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160119BB0F79001134F8 /* WindmillView.swift */; };
 		BD30160519BB0F79001134F8 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160219BB0F79001134F8 /* Keychain.swift */; };
 		BD30160619BB10C8001134F8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D54019440392001340B4 /* main.swift */; };
-		BD30160A19BCBCFD001134F8 /* WindmillTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160919BCBCFD001134F8 /* WindmillTasks.swift */; };
+		BD30160A19BCBCFD001134F8 /* NSTask+WindmillTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */; };
 		BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160B19BCBE30001134F8 /* NSPasteboard.swift */; };
 		BD30160E19BCC52D001134F8 /* NSStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160D19BCC52D001134F8 /* NSStatusBar.swift */; };
 		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
+		BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9C48B119DA05DC00440ED0 /* Scheduler.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDB6D54819440392001340B4 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54619440392001340B4 /* MainMenu.xib */; };
 		BDB6D55419440392001340B4 /* windmillTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D55319440392001340B4 /* windmillTests.swift */; };
@@ -32,14 +33,28 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		BDDF0B7919DED38C0017347F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		BD30160019BB0F79001134F8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BD30160119BB0F79001134F8 /* WindmillView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillView.swift; sourceTree = "<group>"; };
 		BD30160219BB0F79001134F8 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
-		BD30160919BCBCFD001134F8 /* WindmillTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillTasks.swift; sourceTree = "<group>"; };
+		BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasks.swift"; sourceTree = "<group>"; };
 		BD30160B19BCBE30001134F8 /* NSPasteboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPasteboard.swift; sourceTree = "<group>"; };
 		BD30160D19BCC52D001134F8 /* NSStatusBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSStatusBar.swift; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		BD9C48B119DA05DC00440ED0 /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54019440392001340B4 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -75,8 +90,9 @@
 			children = (
 				BD30160019BB0F79001134F8 /* AppDelegate.swift */,
 				BD30160119BB0F79001134F8 /* WindmillView.swift */,
-				BD30160919BCBCFD001134F8 /* WindmillTasks.swift */,
+				BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */,
 				BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */,
+				BD9C48B119DA05DC00440ED0 /* Scheduler.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -160,6 +176,7 @@
 				BDB6D53719440392001340B4 /* Sources */,
 				BDB6D53819440392001340B4 /* Frameworks */,
 				BDB6D53919440392001340B4 /* Resources */,
+				BDDF0B7919DED38C0017347F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -252,13 +269,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD30160619BB10C8001134F8 /* main.swift in Sources */,
+				BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
 				BD30160419BB0F79001134F8 /* WindmillView.swift in Sources */,
 				BD30160E19BCC52D001134F8 /* NSStatusBar.swift in Sources */,
 				BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */,
 				BD30160519BB0F79001134F8 /* Keychain.swift in Sources */,
-				BD30160A19BCBCFD001134F8 /* WindmillTasks.swift in Sources */,
+				BD30160A19BCBCFD001134F8 /* NSTask+WindmillTasks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,8 +393,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -386,8 +409,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
