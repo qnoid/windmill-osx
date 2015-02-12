@@ -28,7 +28,7 @@ class Scheduler
         self.operationQueue = NSOperationQueue()
     }
     
-    func launch(task: NSTask)
+    func queue(task: NSTask)
     {
         self.operationQueue.addOperationWithBlock {
             task.launch()

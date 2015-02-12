@@ -56,7 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, WindmillView
         if let user = self.keychain.findWindmillUser(){
         let deployGitRepoForUserTask = NSTask.taskDeploy(localGitRepo:localGitRepo, forUser:user)
             
-        self.scheduler.launch(deployGitRepoForUserTask)
+        self.scheduler.queue(deployGitRepoForUserTask)
         self.scheduler.schedule {
             return NSTask.taskPoll(localGitRepo)
             }(ifDirty: {
