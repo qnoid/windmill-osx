@@ -26,10 +26,11 @@ class Scheduler
     required init()
     {
         self.operationQueue = NSOperationQueue()
+        self.operationQueue.qualityOfService = .UserInitiated
     }
     
     func queue(task: NSTask)
-    {
+    {        
         self.operationQueue.addOperationWithBlock {
             task.launch()
         }
@@ -45,8 +46,6 @@ class Scheduler
             
             task.launch()
             let terminationStatus = task.waitForStatus()
-            
-            println(terminationStatus)
             
             switch terminationStatus
             {

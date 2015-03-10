@@ -1,5 +1,11 @@
 #!/bin/bash
-#$1 path of clone
+
+# Requires the following variables to be set
+# WINDMILL_ROOT
+# SCRIPTS_ROOT
+# APPLICATION_NAME
+# PROJECT_NAME
+
 
 . $SCRIPTS_ROOT/common.sh
 
@@ -70,5 +76,3 @@ rm $WINDMILL_ROOT/$PROJECT_NAME.mobileprovision.plist
 assert_exists "$mobileprovisionUUID" "Could not find an 'iPhone Distribution' provisioning profile that matches the name of the project: "$PROJECT_NAME
 
 (cd $WINDMILL_ROOT/$PROJECT_NAME; $windmill_xcodebuild)
-
-. $SCRIPTS_ROOT/package.sh

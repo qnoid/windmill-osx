@@ -9,6 +9,13 @@
 import AppKit
 import Foundation
 
+
+struct Event {
+    var action: Selector
+    var target: AnyObject?
+    var mask: NSEventMask
+}
+
 extension NSStatusBar
 {
     class func systemStatusItem(menu: NSMenu) -> NSStatusItem
@@ -19,5 +26,15 @@ extension NSStatusBar
         statusItem.highlightMode = true
 
     return statusItem
+    }
+    
+    class func systemStatusItem(menu: NSMenu, event: Event) -> NSStatusItem
+    {
+        let statusItem = self.systemStatusItem(menu)
+        statusItem.action = event.action
+        statusItem.target = event.target
+        statusItem.sendActionOn(Int(event.mask.rawValue))
+        
+        return statusItem
     }
 }

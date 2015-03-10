@@ -66,16 +66,16 @@ fi
 
 function repo_name_at_local_git_repo ()
 {
-remote=`git -C "$1" remote -v | grep "fetch" | awk '{print $2}'`
+remote=$(git -C "$1" remote -v | grep "fetch" | awk '{print $2}')
 
 assert_exists "$remote" "Local git repo '$1' does not have an origin (fetch) defined"
 
-echo "[windmill] Found remote repo at: "$remote
+echo "[windmill] Found remote repo at: '""$remote""'"
 
 #local directory to clone to, in the form of foo.git
-REPO_NAME=`basename $remote .git`
+REPO_NAME=$(basename "$remote" .git)
 
 assert_exists "$REPO_NAME" "Could not parse repo name."
 
-echo "[windmill] Using repo name: "$REPO_NAME
+echo "[windmill] Using repo name: ""$REPO_NAME"
 }

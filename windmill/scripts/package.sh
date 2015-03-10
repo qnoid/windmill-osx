@@ -30,5 +30,3 @@ echo "[windmill] Setting bundle-identifier to: '$CFBundleIdentifier'"
 
 /usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-identifier $CFBundleIdentifier" $PLIST
 /usr/libexec/PlistBuddy -c "Set items:0:metadata:title $APPLICATION_NAME" $PLIST
-
-. $SCRIPTS_ROOT/deploy.sh

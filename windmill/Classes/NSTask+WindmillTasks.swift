@@ -11,7 +11,8 @@ import Foundation
 let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-54-77-169-177.eu-west-1.compute.amazonaws.com"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
-let ScriptCheckout = "scripts/checkout"
+let ScriptOnCommit = "scripts/on_commit"
+let ScriptNightly = "scripts/nightly"
 let ScriptPoll = "scripts/poll"
 
 enum TerminationStatus : Int32, Printable
@@ -29,19 +30,40 @@ enum TerminationStatus : Int32, Printable
     }
 }
 
+struct TaskNightly
+{
+    enum TerminationStatus : Int32, Printable
+    {
+        case Success = 0
+        case Error = 1
+        
+        var description : String {
+            switch self{
+            case .Success:
+                return "Successfuly deployed IPA."
+            case .Error:
+                return "Error deploying IPA"
+            }
+        }
+    }
+}
+
 extension NSTask
 {
-    func waitForStatus() -> TerminationStatus
-    {
-        self.waitUntilExit()
-        return TerminationStatus(rawValue: self.terminationStatus)!
-    }
-
     private class func pathForDir(name: String!) -> String! {
         return NSBundle.mainBundle().pathForResource(name, ofType:nil);
     }
 
-    static func taskDeploy(#localGitRepo: String, forUser user:String) -> NSTask
+    static func taskOnCommit(#localGitRepo: String) -> NSTask
+    {
+        let task = NSTask()
+        task.launchPath = NSBundle.mainBundle().pathForResource(ScriptOnCommit, ofType: "sh")!
+        task.arguments = [localGitRepo, self.pathForDir("scripts")]
+        
+        return task;
+    }
+    
+    static func taskNightly(#localGitRepo: String, forUser user:String) -> NSTask
     {
         var windmillBaseURL = WINDMILL_BASE_URL_PRODUCTION
         #if DEBUG
@@ -49,7 +71,7 @@ extension NSTask
         #endif
             
         let task = NSTask()
-        task.launchPath = NSBundle.mainBundle().pathForResource(ScriptCheckout, ofType: "sh")!
+        task.launchPath = NSBundle.mainBundle().pathForResource(ScriptNightly, ofType: "sh")!
         task.arguments = [localGitRepo, self.pathForDir("scripts"), self.pathForDir("resources"), user, windmillBaseURL]
         
     return task;
@@ -62,5 +84,19 @@ extension NSTask
         task.arguments = [localGitRepo, self.pathForDir("scripts"), "master"]
         
     return task;
+    }
+    
+    func waitForStatus() -> TerminationStatus
+    {
+        self.waitUntilExit()
+        return TerminationStatus(rawValue: self.terminationStatus)!
+    }
+    
+    func addDependency(dependency: NSTask, onExit:()->Void)
+    {
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+            dependency.waitUntilExit()
+            dispatch_sync(dispatch_get_main_queue(), onExit)
+        }
     }
 }
