@@ -18,7 +18,7 @@ function git_clone(){
 }
 
 
-assert_exists "$LOCAL_GIT_REPO" "Please drag and drop the project folder that contains the git repo."
+assert_exists "$LOCAL_GIT_REPO" "Drag and drop a project folder that contains the git repo."
 
 echo "[windmill] Project name: '"$PROJECT_NAME"'"
 echo "[windmill] Using "$LOCAL_GIT_REPO
