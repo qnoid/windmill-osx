@@ -6,12 +6,13 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MainWindowController" customModule="windmill" customModuleProvider="target">
             <connections>
+                <outlet property="outlineView" destination="2CR-fS-UG8" id="LMx-8W-isc"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="zYe-be-TUY"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+        <window title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -23,13 +24,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="1024" height="480"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RnF-bW-QfL">
-                        <rect key="frame" x="-1" y="-13" width="180" height="494"/>
-                        <clipView key="contentView" misplaced="YES" drawsBackground="NO" id="kvV-Bd-pT5">
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RnF-bW-QfL">
+                        <rect key="frame" x="0.0" y="-10" width="180" height="492"/>
+                        <clipView key="contentView" drawsBackground="NO" id="kvV-Bd-pT5">
                             <rect key="frame" x="1" y="1" width="148" height="398"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <outlineView toolTip="Drag and drop a project folder that contains the git repo." appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="HHa-hb-oJV" id="2CR-fS-UG8">
+                                <outlineView toolTip="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo." appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="HHa-hb-oJV" id="2CR-fS-UG8">
                                     <rect key="frame" x="0.0" y="0.0" width="178" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
@@ -92,13 +93,16 @@
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
-                                        <outlet property="dataSource" destination="-2" id="ClS-gI-LSA"/>
                                         <outlet property="delegate" destination="-2" id="NLT-zk-fVI"/>
                                     </connections>
                                 </outlineView>
                             </subviews>
                             <nil key="backgroundColor"/>
                         </clipView>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="492" id="au1-C7-bco"/>
+                            <constraint firstAttribute="width" constant="180" id="xgx-oF-sbe"/>
+                        </constraints>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="9Bf-n1-o3K">
                             <rect key="frame" x="1" y="119" width="238" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
@@ -109,6 +113,10 @@
                         </scroller>
                     </scrollView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="RnF-bW-QfL" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" constant="-2" id="Pc0-uU-Jhr"/>
+                    <constraint firstItem="RnF-bW-QfL" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="YUc-eW-Tnr"/>
+                </constraints>
             </view>
             <point key="canvasLocation" x="334" y="179"/>
         </window>

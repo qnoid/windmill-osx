@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BD081A121AB05EFA00B8E948 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A111AB05EFA00B8E948 /* Project.swift */; };
+		BD081A191AB09ABC00B8E948 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A151AB09AA600B8E948 /* SwiftGit2.framework */; };
+		BD081A1A1AB09ABC00B8E948 /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A151AB09AA600B8E948 /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD081A1D1AB09B1D00B8E948 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */; };
+		BD081A1F1AB09C7D00B8E948 /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
+		BD081A5E1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */; };
+		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160019BB0F79001134F8 /* AppDelegate.swift */; };
 		BD30160519BB0F79001134F8 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160219BB0F79001134F8 /* Keychain.swift */; };
 		BD30160619BB10C8001134F8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D54019440392001340B4 /* main.swift */; };
@@ -18,7 +26,6 @@
 		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
 		BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9C48B119DA05DC00440ED0 /* Scheduler.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
-		BDB6D55419440392001340B4 /* windmillTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D55319440392001340B4 /* windmillTests.swift */; };
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
 		BDD8602A1A93E88B001232E7 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDD860291A93E88B001232E7 /* MainWindow.xib */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
@@ -35,12 +42,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		BDDF0B7919DED38C0017347F /* Embed Frameworks */ = {
+		BD081A1B1AB09ABC00B8E948 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				BD081A1A1AB09ABC00B8E948 /* SwiftGit2.framework in Embed Frameworks */,
+				BD081A1F1AB09C7D00B8E948 /* LlamaKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,6 +57,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BD081A111AB05EFA00B8E948 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
+		BD081A151AB09AA600B8E948 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
+		BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LlamaKit.framework; path = frameworks/LlamaKit.framework; sourceTree = "<group>"; };
+		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsOutlineViewDataSource.swift; path = Classes/ProjectsOutlineViewDataSource.swift; sourceTree = "<group>"; };
+		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD30160019BB0F79001134F8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BD30160219BB0F79001134F8 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasks.swift"; sourceTree = "<group>"; };
@@ -63,7 +78,6 @@
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BDB6D55319440392001340B4 /* windmillTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = windmillTests.swift; sourceTree = "<group>"; };
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
 		BDD860291A93E88B001232E7 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
@@ -74,6 +88,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD081A191AB09ABC00B8E948 /* SwiftGit2.framework in Frameworks */,
+				BD081A1D1AB09B1D00B8E948 /* LlamaKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +103,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BD081A181AB09AB000B8E948 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */,
+				BD081A151AB09AA600B8E948 /* SwiftGit2.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BD081A231AB0AD1700B8E948 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				BD081A271AB0ADEF00B8E948 /* Localizable.strings */,
+			);
+			name = en.lproj;
+			path = resources/en.lproj;
+			sourceTree = "<group>";
+		};
+		BD081A5C1AB1A50900B8E948 /* ProjectsOutlineView */ = {
+			isa = PBXGroup;
+			children = (
+				BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */,
+			);
+			name = ProjectsOutlineView;
+			sourceTree = "<group>";
+		};
 		BD3015FF19BB0F79001134F8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -97,6 +139,7 @@
 				BD8210D91A8D89C900DF2CFD /* NSApplication.xib */,
 				BD8210D31A8D7D3500DF2CFD /* MainViewController.swift */,
 				BDD860291A93E88B001232E7 /* MainWindow.xib */,
+				BD081A111AB05EFA00B8E948 /* Project.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -104,6 +147,7 @@
 		BDB6D53219440392001340B4 = {
 			isa = PBXGroup;
 			children = (
+				BD081A181AB09AB000B8E948 /* Frameworks */,
 				BDB6D53D19440392001340B4 /* windmill */,
 				BDB6D55019440392001340B4 /* windmillTests */,
 				BDB6D53C19440392001340B4 /* Products */,
@@ -122,6 +166,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BD081A5C1AB1A50900B8E948 /* ProjectsOutlineView */,
 				BDC1E93419BCCCAD009A3E42 /* Common */,
 				BD3015FF19BB0F79001134F8 /* Classes */,
 				BDF6B75B199A428C008B09D9 /* resources */,
@@ -135,6 +180,7 @@
 		BDB6D53E19440392001340B4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BD081A231AB0AD1700B8E948 /* en.lproj */,
 				BDB6D53F19440392001340B4 /* Info.plist */,
 				BDB6D54019440392001340B4 /* main.swift */,
 			);
@@ -144,8 +190,8 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
-				BDB6D55319440392001340B4 /* windmillTests.swift */,
 				BDB6D55119440392001340B4 /* Supporting Files */,
+				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -179,7 +225,7 @@
 				BDB6D53719440392001340B4 /* Sources */,
 				BDB6D53819440392001340B4 /* Frameworks */,
 				BDB6D53919440392001340B4 /* Resources */,
-				BDDF0B7919DED38C0017347F /* Embed Frameworks */,
+				BD081A1B1AB09ABC00B8E948 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -251,6 +297,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
+				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
 				BD8210DA1A8D89C900DF2CFD /* NSApplication.xib in Resources */,
 				BDD8602A1A93E88B001232E7 /* MainWindow.xib in Resources */,
 				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
@@ -275,6 +322,8 @@
 				BD30160619BB10C8001134F8 /* main.swift in Sources */,
 				BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
+				BD081A5E1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift in Sources */,
+				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
 				BD8210D41A8D7D3500DF2CFD /* MainViewController.swift in Sources */,
 				BD30160E19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift in Sources */,
@@ -288,7 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDB6D55419440392001340B4 /* windmillTests.swift in Sources */,
+				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +350,17 @@
 			targetProxy = BDB6D54E19440392001340B4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BD081A271AB0ADEF00B8E948 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BD081A281AB0ADEF00B8E948 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		BDB6D55519440392001340B4 /* Debug */ = {
@@ -337,7 +397,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
@@ -376,7 +436,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_WHOLE_MODULE_OPTIMIZATION = YES;
@@ -391,10 +451,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/frameworks",
 				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -407,10 +467,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/frameworks",
 				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

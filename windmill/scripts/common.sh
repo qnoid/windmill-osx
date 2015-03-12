@@ -64,6 +64,14 @@ $3
 fi
 }
 
+# Extracts the remote repo
+#
+# git remote -v
+# origin	git@bitbucket.org:qnoid/balance.git (fetch)
+# origin	git@bitbucket.org:qnoid/balance.git (push)
+#
+# @sets $remote  the origin of the git repo as returned by 'git remote -v', i.e. git@bitbucket.org:qnoid/balance.git
+# @sets $REPO_NAME
 function repo_name_at_local_git_repo ()
 {
 remote=$(git -C "$1" remote -v | grep "fetch" | awk '{print $2}')

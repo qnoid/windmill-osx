@@ -8,42 +8,57 @@
 
 import AppKit
 
-class MainWindowController : NSWindowController, NSOutlineViewDataSource, NSOutlineViewDelegate
+/**
+
+
+*/
+class MainWindowController : NSWindowController, NSOutlineViewDelegate
 {
-    override func windowDidLoad() {
+    
+    class func mainWindowController() -> MainWindowController
+    {
+        let mainWindowController = MainWindowController(windowNibName: "MainWindow")
+        
+        return mainWindowController
+    }
+    
+    var datasource : ProjectsDataSource?{
+        didSet{
+            self.datasource?.mainWindowController = self
+        }
+    }
+    
+    @IBOutlet weak var outlineView: NSOutlineView!
+    
+    func reloadData()
+    {
+        self.outlineView.reloadData()
+    }
+    
+    override func windowDidLoad()
+    {
         println(__FUNCTION__)
+        self.outlineView.setDataSource(self.datasource)
     }
     
-    func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int
-    {
-        return 1
-    }
-    
-    func outlineView(outlineView: NSOutlineView, isItemExpandable item: AnyObject) -> Bool
-    {
-        return false
-    }
-    
-    func outlineView(outlineView: NSOutlineView, child index: Int, ofItem item: AnyObject?) -> AnyObject
-    {
-        return "balance"
-    }
-    
-//    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool
-//    {
-//        let item = item as? String
-//        
-//        return item == "Projects"
-//    }
-    
+    //NSOutlineViewDelegate
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView?
     {
-        let item = item as! String
-        
-        var v = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! NSTableCellView
-        if let tf = v.textField {
-            tf.stringValue = item
+        if let project = item as? Project
+        {
+            var v = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! NSTableCellView
+            if let tf = v.textField {
+                tf.stringValue = project.name
+            }
+            
+            return v
         }
+
+        var v = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
+        if let tf = v.textField {
+            tf.stringValue = "Projects"
+        }
+        
         return v
     }
 }
