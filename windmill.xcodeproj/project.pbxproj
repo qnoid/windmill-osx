@@ -35,6 +35,8 @@
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
 		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
 		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
+		BDD002051AB3060B00F8E34A /* Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002041AB3060B00F8E34A /* Windmill.swift */; };
+		BDD002071AB3244600F8E34A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002061AB3244600F8E34A /* Operators.swift */; };
 		BDD8602A1A93E88B001232E7 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDD860291A93E88B001232E7 /* MainWindow.xib */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 /* End PBXBuildFile section */
@@ -95,6 +97,8 @@
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
 		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		BDD002021AB2F26400F8E34A /* PathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathComponent.swift; sourceTree = "<group>"; };
+		BDD002041AB3060B00F8E34A /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
+		BDD002061AB3244600F8E34A /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		BDD860291A93E88B001232E7 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +161,8 @@
 				BD8210D31A8D7D3500DF2CFD /* MainViewController.swift */,
 				BDD860291A93E88B001232E7 /* MainWindow.xib */,
 				BD081A111AB05EFA00B8E948 /* Project.swift */,
+				BDD002041AB3060B00F8E34A /* Windmill.swift */,
+				BDD002061AB3244600F8E34A /* Operators.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -349,7 +355,9 @@
 				BD79D7091AB1F69400596928 /* ConsoleLog.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
 				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
+				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
 				BD081A5E1AB1A53500B8E948 /* ProjectsDataSource.swift in Sources */,
+				BDD002051AB3060B00F8E34A /* Windmill.swift in Sources */,
 				BD081A641AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,

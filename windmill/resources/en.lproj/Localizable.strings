@@ -6,6 +6,7 @@
   Copyright (c) 2015 qnoid.com. All rights reserved.
 */
 "applicationDidFinishLaunching.statusItem.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.";
-"didPerformDragOperationWithFolder.alert.informativeTextbar.repo.error"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\nDo 'git init'.\nAdd a remote origin using\n'git remote add origin <url>'";
-"didPerformDragOperationWithFolder.alert.messageText.latestCommit.error"="";
-"didPerformDragOperationWithFolder.alert.informativeTextbar.latestCommit.error"="Have you made your first commit yet?\nDid you push?\n'git push -u origin master'";
+"windmill.repo.error.description"="No git repository under %@";
+"windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\nDo 'git init'.\nAdd a remote origin using\n'git remote add origin <url>'";
+"windmill.latestCommit.error.description"="No commit found in remote repository";
+"windmill.latestCommit.error.failureReason"="Have you made your first commit yet?\nDid you push?\n'git push -u origin master'";

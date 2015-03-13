@@ -23,31 +23,16 @@ final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
     weak var mainWindowController : MainWindowController!
     
     let headers : Array<Header>
-    var projects : Array<Project>
+    var projects : Array<Project> {
+        didSet{
+            self.mainWindowController?.reloadData()
+        }
+    }
     
     public init(projects : Array<Project> = [], headers : Array<Header> = ["Projects"])
     {
         self.projects = projects
         self.headers = headers
-    }
-    
-    /*
-    Adds the 'project' to the datasource.
-    
-    @postcodition MainWindowController#reloadData will be called if the given 'project' was added
-    @param project the project to add to the datasource
-    @returns true if the 'project' was added to the datasource, false if already in the datasource
-    */
-    public func add(project : Project) -> Bool
-    {
-        if(contains(self.projects, project)){
-        return false
-        }
-        
-        self.projects.append(project)
-        self.mainWindowController?.reloadData()
-        
-        return true
     }
     
     public func outlineView(outlineView: NSOutlineView, numberOfChildrenOfItem item: AnyObject?) -> Int
@@ -68,5 +53,20 @@ final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
         var index = index - self.headers.count
         
         return self.projects[index]
+    }
+    
+    // drag and drop support
+    //registerForDraggedTypes
+    public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject?) -> NSPasteboardWriting! {
+        return item as! NSPasteboardWriting;
+    }
+    
+    public func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation
+    {
+        return .Generic;
+    }
+    
+    public func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
+        return self.mainWindowController.performDragOperation(info)
     }
 }

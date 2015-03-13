@@ -14,9 +14,9 @@ struct KeychainAccount
     let name : String
 }
 
-class Keychain
+final public class Keychain
 {
-    var keychain:SecKeychainRef!
+    var keychain:SecKeychainRef?
     
     class func defaultKeychain() -> Keychain {
         return Keychain()

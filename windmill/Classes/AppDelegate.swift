@@ -8,8 +8,6 @@
 
 import AppKit
 import Foundation
-import SwiftGit2
-import LlamaKit
 
 private let userIdentifier = NSUUID().UUIDString;
 
@@ -20,14 +18,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     @IBOutlet weak var menu: NSMenu!
     
     weak var window: NSWindow!
-    var statusItem: NSStatusItem!
+    var statusItem: NSStatusItem! {
+        didSet{
+            self.statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
+            
+            let image = NSImage(named:"windmill")!
+            image.setTemplate(true)
+            self.statusItem.button?.image = image
+            self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
+            self.statusItem.button?.window?.delegate = self
+        }
+    }
     
     var mainWindowController: MainWindowController!
-    var projectsDatasource : ProjectsDataSource!
     
-    var keychain: Keychain = Keychain.defaultKeychain()
-    var scheduler: Scheduler = Scheduler()
-
+    let keychain: Keychain = Keychain.defaultKeychain()
+    let windmill: Windmill
+    
+    override required init()
+    {
+        self.windmill = Windmill(keychain: self.keychain)
+        super.init()
+    }
     
     func applicationDidFinishLaunching(aNotification: NSNotification)
     {
@@ -36,19 +48,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             target: self,
             mask: NSEventMask.LeftMouseDownMask
             ))
-        self.statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
-        
-        let image = NSImage(named:"windmill")!
-        image.setTemplate(true)
-        self.statusItem.button?.image = image
-        self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
-        self.statusItem.button?.window?.delegate = self
         
         self.keychain.createUser(userIdentifier)
-        self.mainWindowController = MainWindowController.mainWindowController()
-        self.projectsDatasource = ProjectsDataSource.projectsDataSource()
-        self.mainWindowController.outlineViewDatasource = self.projectsDatasource
-        self.window = mainWindowController.window
+        self.mainWindowController = MainWindowController.mainWindowController(self.windmill)
+        
+        self.window = self.mainWindowController.window
         self.window.makeKeyAndOrderFront(self)
     }
 
@@ -88,94 +92,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         
     }
     
-    func performDragOperation(sender: NSDraggingInfo) -> Bool
+    func performDragOperation(info: NSDraggingInfo) -> Bool
     {
         println(__FUNCTION__);
-        let pboard = sender.draggingPasteboard()
-        
-        if let folder = pboard.firstFilename()
+
+        if let folder = info.draggingPasteboard().firstFilename()
         {
             AppDelegate.logger.log(.INFO, folder)
-            self.didPerformDragOperationWithFolder(folder)
+            self.windmill.add(folder)
             
             return true
         }
         
         return false
-    }
-    
-    func didPerformDragOperationWithFolder(localGitRepo: String)
-    {
-        if let localGitRepoURL = NSURL(fileURLWithPath: localGitRepo)
-        {
-            let name = localGitRepoURL.lastPathComponent!
-
-            let repo = Repository.atURL(localGitRepoURL)
-            
-            if let repo = repo.value
-            {
-                let latestCommit: Result<Commit, NSError> = repo.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
-                
-                if let commit = latestCommit.value {
-                    AppDelegate.logger.log(.INFO, "Latest Commit: \(commit.message) by \(commit.author.name)")
-                    
-                    let origin = repo.allRemotes().value![0].URL
-                        
-                    if(self.projectsDatasource.add(Project(name: name, origin: origin)))
-                    {
-                        let defaultFileManager = NSFileManager.defaultManager()
-                        
-                        let userLibraryDirectoryView = defaultFileManager.userLibraryDirectoryView()
-                        let directoryForProvisioningProfiles = userLibraryDirectoryView.directory.mobileDeviceProvisioningProfiles()
-                        
-                        let mobileProvisioningExists = directoryForProvisioningProfiles.fileExists("\(name).mobileprovision")
-                                                
-                        self.deployGitRepo(localGitRepo)
-                    }
-                    
-                }
-                else {
-                    AppDelegate.logger.log(.ERROR, "Could not get commit: \(latestCommit.error)")
-                    let alert = NSAlert()
-                    alert.messageText = NSLocalizedString("didPerformDragOperationWithFolder.alert.messageText.latestCommit.error", comment: "")
-                    alert.informativeText = NSLocalizedString("didPerformDragOperationWithFolder.alert.informativeTextbar.latestCommit.error", comment: "")
-                    alert.alertStyle = .CriticalAlertStyle
-                    alert.beginSheetModalForWindow(self.window, completionHandler: nil)
-                }
-            }
-            else {
-                AppDelegate.logger.log(.ERROR, "Could not open repository: \(repo.error)")
-                let alert = NSAlert(error: repo.error!)
-                alert.informativeText = NSLocalizedString("didPerformDragOperationWithFolder.alert.informativeTextbar.repo.error", comment: "")
-                alert.alertStyle = .CriticalAlertStyle
-                alert.beginSheetModalForWindow(self.window, completionHandler: nil)
-            }
-
-        }
-        else {
-            AppDelegate.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
-        }
-    }
-    
-    func deployGitRepo(localGitRepo : String)
-    {
-        let taskOnCommit = NSTask.taskOnCommit(localGitRepo: localGitRepo)
-        self.scheduler.queue(taskOnCommit)
-        
-        if let user = self.keychain.findWindmillUser()
-        {
-            let deployGitRepoForUserTask = NSTask.taskNightly(localGitRepo: localGitRepo, forUser:user)
-            
-            deployGitRepoForUserTask.addDependency(taskOnCommit){
-                self.scheduler.queue(deployGitRepoForUserTask)
-                self.scheduler.schedule {
-                    return NSTask.taskPoll(localGitRepo)
-                    }(ifDirty: {
-                        [unowned self] in
-                        self.deployGitRepo(localGitRepo)
-                        })
-            }
-        }
     }
 }
 

@@ -8,11 +8,16 @@
 
 import Foundation
 
-final public class Project : Hashable, Equatable
+final public class Project : Hashable, Equatable, Printable
 {
     public var hashValue: Int {
         return self.origin.hashValue
     }
+    
+    public var description: String {
+        return self.origin
+    }
+
     
     let name : String
     
@@ -24,8 +29,4 @@ final public class Project : Hashable, Equatable
         self.name = name
         self.origin = origin
     }
-}
-
-public func == (lhs: Project, rhs: Project) -> Bool {
-    return lhs.origin == rhs.origin
 }

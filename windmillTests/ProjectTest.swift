@@ -15,10 +15,19 @@ class ProjectTest: XCTestCase {
     func testEquatable()
     {
         let sameOrigin = "origin"
-        let this = Project(name: "foo", origin: sameOrigin)
-        let that = Project(name: "foo", origin: sameOrigin)
+        let x = Project(name: "x", origin: sameOrigin)
         
-        XCTAssertTrue(this == that, "Projects with same origin should be equal.")
+        XCTAssertTrue(x == x, "`x == x` should be `true`")
+
+        let y = Project(name: "y", origin: sameOrigin)
+        
+        XCTAssertTrue(x == y, "`x == y` implies `y == x`")
+        XCTAssertTrue(y == x, "`x == y` implies `y == x`")
+        
+        let z = Project(name: "z", origin: sameOrigin)
+
+        XCTAssertTrue(y == z, "`x == y` and `y == z` implies `x == z`")
+        XCTAssertTrue(x == z, "`x == y` and `y == z` implies `x == z`")
     }
     
     func testNonEquatable()

@@ -10,7 +10,10 @@ import Foundation
 
 typealias TaskProvider = () -> NSTask
 
-class Scheduler
+/**
+
+*/
+final public class Scheduler
 {
     static var dispatch_queue_global_utility : dispatch_queue_t {
         return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.value), 0)
@@ -23,7 +26,7 @@ class Scheduler
     let delayInSeconds = 0.5 * 60
     let operationQueue : NSOperationQueue
     
-    required init()
+    required public init()
     {
         self.operationQueue = NSOperationQueue()
         self.operationQueue.qualityOfService = .UserInitiated
