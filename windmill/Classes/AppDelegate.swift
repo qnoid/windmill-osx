@@ -15,6 +15,8 @@ private let userIdentifier = NSUUID().UUIDString;
 
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 {
+    static let logger : ConsoleLog = ConsoleLog()
+
     @IBOutlet weak var menu: NSMenu!
     
     weak var window: NSWindow!
@@ -44,8 +46,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         
         self.keychain.createUser(userIdentifier)
         self.mainWindowController = MainWindowController.mainWindowController()
-        self.projectsDatasource = ProjectsDataSource()
-        self.mainWindowController.datasource = self.projectsDatasource
+        self.projectsDatasource = ProjectsDataSource.projectsDataSource()
+        self.mainWindowController.outlineViewDatasource = self.projectsDatasource
         self.window = mainWindowController.window
         self.window.makeKeyAndOrderFront(self)
     }
@@ -93,7 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         
         if let folder = pboard.firstFilename()
         {
-            println(folder)
+            AppDelegate.logger.log(.INFO, folder)
             self.didPerformDragOperationWithFolder(folder)
             
             return true
@@ -115,18 +117,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
                 let latestCommit: Result<Commit, NSError> = repo.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
                 
                 if let commit = latestCommit.value {
-                    println("Latest Commit: \(commit.message) by \(commit.author.name)")
+                    AppDelegate.logger.log(.INFO, "Latest Commit: \(commit.message) by \(commit.author.name)")
                     
-
                     let origin = repo.allRemotes().value![0].URL
                         
-                    if(self.projectsDatasource.add(Project(name: name, origin: origin))){
+                    if(self.projectsDatasource.add(Project(name: name, origin: origin)))
+                    {
+                        let defaultFileManager = NSFileManager.defaultManager()
+                        
+                        let userLibraryDirectoryView = defaultFileManager.userLibraryDirectoryView()
+                        let directoryForProvisioningProfiles = userLibraryDirectoryView.directory.mobileDeviceProvisioningProfiles()
+                        
+                        let mobileProvisioningExists = directoryForProvisioningProfiles.fileExists("\(name).mobileprovision")
+                                                
                         self.deployGitRepo(localGitRepo)
                     }
                     
                 }
                 else {
-                    println("Could not get commit: \(latestCommit.error)")
+                    AppDelegate.logger.log(.ERROR, "Could not get commit: \(latestCommit.error)")
                     let alert = NSAlert()
                     alert.messageText = NSLocalizedString("didPerformDragOperationWithFolder.alert.messageText.latestCommit.error", comment: "")
                     alert.informativeText = NSLocalizedString("didPerformDragOperationWithFolder.alert.informativeTextbar.latestCommit.error", comment: "")
@@ -135,7 +144,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
                 }
             }
             else {
-                println("Could not open repository: \(repo.error)")
+                AppDelegate.logger.log(.ERROR, "Could not open repository: \(repo.error)")
                 let alert = NSAlert(error: repo.error!)
                 alert.informativeText = NSLocalizedString("didPerformDragOperationWithFolder.alert.informativeTextbar.repo.error", comment: "")
                 alert.alertStyle = .CriticalAlertStyle
@@ -144,7 +153,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 
         }
         else {
-            println("Error parsing location of local git repo: \(localGitRepo)")
+            AppDelegate.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
         }
     }
     

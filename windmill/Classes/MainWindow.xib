@@ -92,9 +92,6 @@
                                             </prototypeCellViews>
                                         </tableColumn>
                                     </tableColumns>
-                                    <connections>
-                                        <outlet property="delegate" destination="-2" id="NLT-zk-fVI"/>
-                                    </connections>
                                 </outlineView>
                             </subviews>
                             <nil key="backgroundColor"/>

@@ -13,20 +13,28 @@
 		BD081A1D1AB09B1D00B8E948 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */; };
 		BD081A1F1AB09C7D00B8E948 /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
-		BD081A5E1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */; };
+		BD081A5E1AB1A53500B8E948 /* ProjectsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
+		BD081A621AB1E6F500B8E948 /* ProjectsDataSourceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A611AB1E6F500B8E948 /* ProjectsDataSourceTest.swift */; };
+		BD081A641AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */; };
 		BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160019BB0F79001134F8 /* AppDelegate.swift */; };
 		BD30160519BB0F79001134F8 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160219BB0F79001134F8 /* Keychain.swift */; };
 		BD30160619BB10C8001134F8 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB6D54019440392001340B4 /* main.swift */; };
 		BD30160A19BCBCFD001134F8 /* NSTask+WindmillTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */; };
 		BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160B19BCBE30001134F8 /* NSPasteboard.swift */; };
 		BD30160E19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */; };
+		BD79D7091AB1F69400596928 /* ConsoleLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D7081AB1F69400596928 /* ConsoleLog.swift */; };
+		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
+		BD79D70D1AB1FD1300596928 /* ProjectsOutlineViewDelegateTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70C1AB1FD1300596928 /* ProjectsOutlineViewDelegateTest.swift */; };
+		BD79D70F1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */; };
 		BD8210D41A8D7D3500DF2CFD /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8210D31A8D7D3500DF2CFD /* MainViewController.swift */; };
 		BD8210DA1A8D89C900DF2CFD /* NSApplication.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD8210D91A8D89C900DF2CFD /* NSApplication.xib */; };
 		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
 		BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9C48B119DA05DC00440ED0 /* Scheduler.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
+		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
+		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
 		BDD8602A1A93E88B001232E7 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDD860291A93E88B001232E7 /* MainWindow.xib */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 /* End PBXBuildFile section */
@@ -61,13 +69,19 @@
 		BD081A151AB09AA600B8E948 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
 		BD081A1C1AB09B1D00B8E948 /* LlamaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LlamaKit.framework; path = frameworks/LlamaKit.framework; sourceTree = "<group>"; };
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
-		BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsOutlineViewDataSource.swift; path = Classes/ProjectsOutlineViewDataSource.swift; sourceTree = "<group>"; };
+		BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsDataSource.swift; path = Classes/ProjectsDataSource.swift; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
+		BD081A611AB1E6F500B8E948 /* ProjectsDataSourceTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsDataSourceTest.swift; sourceTree = "<group>"; };
+		BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsOutlineViewDelegate.swift; path = Classes/ProjectsOutlineViewDelegate.swift; sourceTree = "<group>"; };
 		BD30160019BB0F79001134F8 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BD30160219BB0F79001134F8 /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		BD30160919BCBCFD001134F8 /* NSTask+WindmillTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasks.swift"; sourceTree = "<group>"; };
 		BD30160B19BCBE30001134F8 /* NSPasteboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPasteboard.swift; sourceTree = "<group>"; };
 		BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStatusBar+WindmillStatusBar.swift"; sourceTree = "<group>"; };
+		BD79D7081AB1F69400596928 /* ConsoleLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsoleLog.swift; sourceTree = "<group>"; };
+		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
+		BD79D70C1AB1FD1300596928 /* ProjectsOutlineViewDelegateTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsOutlineViewDelegateTest.swift; sourceTree = "<group>"; };
+		BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+WindmillFileManager.swift"; sourceTree = "<group>"; };
 		BD8210D31A8D7D3500DF2CFD /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		BD8210D91A8D89C900DF2CFD /* NSApplication.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NSApplication.xib; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
@@ -79,6 +93,8 @@
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
+		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
+		BDD002021AB2F26400F8E34A /* PathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathComponent.swift; sourceTree = "<group>"; };
 		BDD860291A93E88B001232E7 /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,7 +140,8 @@
 		BD081A5C1AB1A50900B8E948 /* ProjectsOutlineView */ = {
 			isa = PBXGroup;
 			children = (
-				BD081A5D1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift */,
+				BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */,
+				BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */,
 			);
 			name = ProjectsOutlineView;
 			sourceTree = "<group>";
@@ -192,6 +209,8 @@
 			children = (
 				BDB6D55119440392001340B4 /* Supporting Files */,
 				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
+				BD081A611AB1E6F500B8E948 /* ProjectsDataSourceTest.swift */,
+				BD79D70C1AB1FD1300596928 /* ProjectsOutlineViewDelegateTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -210,6 +229,11 @@
 				BD30160219BB0F79001134F8 /* Keychain.swift */,
 				BD30160B19BCBE30001134F8 /* NSPasteboard.swift */,
 				BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */,
+				BD79D7081AB1F69400596928 /* ConsoleLog.swift */,
+				BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */,
+				BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */,
+				BDD002001AB2F24F00F8E34A /* Directory.swift */,
+				BDD002021AB2F26400F8E34A /* PathComponent.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -320,16 +344,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD30160619BB10C8001134F8 /* main.swift in Sources */,
+				BD79D70F1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift in Sources */,
 				BD9C48B219DA05DC00440ED0 /* Scheduler.swift in Sources */,
+				BD79D7091AB1F69400596928 /* ConsoleLog.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
-				BD081A5E1AB1A53500B8E948 /* ProjectsOutlineViewDataSource.swift in Sources */,
+				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
+				BD081A5E1AB1A53500B8E948 /* ProjectsDataSource.swift in Sources */,
+				BD081A641AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
 				BD8210D41A8D7D3500DF2CFD /* MainViewController.swift in Sources */,
 				BD30160E19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift in Sources */,
+				BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */,
 				BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */,
 				BD30160519BB0F79001134F8 /* Keychain.swift in Sources */,
 				BD30160A19BCBCFD001134F8 /* NSTask+WindmillTasks.swift in Sources */,
+				BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +367,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD081A621AB1E6F500B8E948 /* ProjectsDataSourceTest.swift in Sources */,
+				BD79D70D1AB1FD1300596928 /* ProjectsOutlineViewDelegateTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

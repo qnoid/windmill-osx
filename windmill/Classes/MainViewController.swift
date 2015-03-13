@@ -12,53 +12,40 @@ import AppKit
 
 
 */
-class MainWindowController : NSWindowController, NSOutlineViewDelegate
+public class MainWindowController : NSWindowController
 {
     
-    class func mainWindowController() -> MainWindowController
+    public class func mainWindowController() -> MainWindowController
     {
         let mainWindowController = MainWindowController(windowNibName: "MainWindow")
+        mainWindowController.outlineViewdelegate = ProjectsOutlineViewDelegate()
         
         return mainWindowController
     }
     
-    var datasource : ProjectsDataSource?{
+    var outlineViewDatasource : ProjectsDataSource?{
         didSet{
-            self.datasource?.mainWindowController = self
+            self.outlineViewDatasource?.mainWindowController = self
         }
     }
+
+    var outlineViewdelegate : ProjectsOutlineViewDelegate?
+
+    @IBOutlet public weak var outlineView: NSOutlineView!
     
-    @IBOutlet weak var outlineView: NSOutlineView!
+    /**
+    Causes the #outlineview to refresh
     
+    */
     func reloadData()
     {
         self.outlineView.reloadData()
     }
     
-    override func windowDidLoad()
+    override public func windowDidLoad()
     {
         println(__FUNCTION__)
-        self.outlineView.setDataSource(self.datasource)
-    }
-    
-    //NSOutlineViewDelegate
-    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView?
-    {
-        if let project = item as? Project
-        {
-            var v = outlineView.makeViewWithIdentifier("DataCell", owner: self) as! NSTableCellView
-            if let tf = v.textField {
-                tf.stringValue = project.name
-            }
-            
-            return v
-        }
-
-        var v = outlineView.makeViewWithIdentifier("HeaderCell", owner: self) as! NSTableCellView
-        if let tf = v.textField {
-            tf.stringValue = "Projects"
-        }
-        
-        return v
+        self.outlineView.setDataSource(self.outlineViewDatasource)
+        self.outlineView.setDelegate(self.outlineViewdelegate)
     }
 }
