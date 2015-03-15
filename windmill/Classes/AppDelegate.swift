@@ -22,7 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         didSet{
             self.statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
             
-            let image = NSImage(named:"windmill")!
+            let image = NSImage(named:"statusItem")!
             image.setTemplate(true)
             self.statusItem.button?.image = image
             self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])

@@ -20,7 +20,7 @@ extension NSStatusBar
 {
     class func systemStatusItem(menu: NSMenu) -> NSStatusItem
     {
-        let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(20)
+        let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
         statusItem.menu = menu
         statusItem.enabled = true
         statusItem.highlightMode = true
