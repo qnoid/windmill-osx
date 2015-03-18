@@ -37,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     override required init()
     {
-        self.windmill = Windmill(keychain: self.keychain)
+        self.windmill = Windmill.windmill(self.keychain)
         super.init()
     }
     
@@ -92,19 +92,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         
     }
     
-    func performDragOperation(info: NSDraggingInfo) -> Bool
-    {
-        println(__FUNCTION__);
-
-        if let folder = info.draggingPasteboard().firstFilename()
-        {
-            AppDelegate.logger.log(.INFO, folder)
-            self.windmill.add(folder)
-            
-            return true
-        }
-        
-        return false
+    func performDragOperation(info: NSDraggingInfo) -> Bool {
+        return self.mainWindowController.performDragOperation(info)
     }
 }
 

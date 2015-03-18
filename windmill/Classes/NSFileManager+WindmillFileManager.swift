@@ -8,9 +8,10 @@
 
 import Foundation
 
-extension NSFileManager
+public extension NSFileManager
 {
-    typealias UserLibraryDirectoryView = (URL:NSURL, directory:UserLibraryDirectory)
+    public typealias UserLibraryDirectoryView = (URL:NSURL, directory:UserLibraryDirectory)
+    public typealias UserApplicationSupportDirectoryView = (URL:NSURL, directory:ApplicationSupportDirectory)
     
     func directory(URL:NSURL) -> Directory {
     return Directory(URL: URL, fileManager: self)
@@ -23,6 +24,13 @@ extension NSFileManager
         return (URL: URLForUserLibraryDirectory, directory:directory(URLForUserLibraryDirectory))
     }
     
+    func userApplicationSupportDirectoryView() -> UserApplicationSupportDirectoryView
+    {
+        let URLForUserApplicationSupportDirectory = self.URLForDirectory(.ApplicationSupportDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false, error:nil)!
+        
+        return (URL: URLForUserApplicationSupportDirectory, directory:directory(URLForUserApplicationSupportDirectory))
+    }
+
     func fileExists(filename: String, atURL URL:NSURL) -> Bool {
         return self.fileExistsAtPath(URL.path!.stringByAppendingPathComponent(filename))
     }

@@ -8,27 +8,66 @@
 
 import Foundation
 
-protocol DirectoryType
+public protocol DirectoryType
 {
+    var URL : NSURL { get }
+    
+    func file(filename: String) -> DirectoryType
+    
     func fileExists(filename: String) -> Bool
+    
     func traverse(pathComponent: PathComponent) -> DirectoryType
+    
+    /**
+    Creates the directory that returned as part of calling #traverse:
+    
+    :returns: true if created, false otherwise
+    */
+    func create() -> Bool
 }
 
-protocol UserLibraryDirectory
+public protocol UserLibraryDirectory : DirectoryType
 {
     func mobileDeviceProvisioningProfiles() -> DirectoryType
 }
 
-struct Directory : DirectoryType, UserLibraryDirectory
+public protocol ApplicationSupportDirectory : DirectoryType
 {
-    let URL : NSURL
+    
+}
+
+func ApplicationDirectory() -> DirectoryType
+{
+    let applicationName = NSBundle.mainBundle().CFBundleName()
+    let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
+    let applicationDirectory = NSFileManager.defaultManager().userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
+    
+    let created = applicationDirectory.create()
+    
+    Windmill.logger.log(.DEBUG, created)
+
+    return applicationDirectory
+}
+
+public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory
+{
+    static let logger : ConsoleLog = ConsoleLog()
+
+    public let URL : NSURL
     let fileManager : NSFileManager
     
-    func fileExists(filename: String) -> Bool {
+    public func file(filename: String) -> DirectoryType
+    {
+        let URLForFilename = NSURL(fileURLWithPath: self.URL.path!.stringByAppendingPathComponent(filename), isDirectory: false)!
+        
+        return Directory(URL:URLForFilename, fileManager: self.fileManager)
+    }
+    
+    public func fileExists(filename: String) -> Bool {
         return self.fileManager.fileExistsAtPath(self.URL.path!.stringByAppendingPathComponent(filename))
     }
     
-    func traverse(pathComponent: PathComponent) -> DirectoryType
+    public func traverse(pathComponent: PathComponent) -> DirectoryType
     {
         let path = self.URL.path!.stringByExpandingTildeInPath
         
@@ -37,7 +76,21 @@ struct Directory : DirectoryType, UserLibraryDirectory
         return Directory(URL: URLForPathComponent, fileManager: self.fileManager)
     }
     
-    func mobileDeviceProvisioningProfiles() -> DirectoryType {
+    /// UserLibraryDirectory
+    public func mobileDeviceProvisioningProfiles() -> DirectoryType {
         return self.traverse(PathComponent.MobileDeviceProvisioningProfiles)
+    }
+    
+    /// ApplicationSupportDirectory
+    
+    public func create() -> Bool
+    {
+        var error : NSError?
+        
+        let created = self.fileManager.createDirectoryAtURL(self.URL, withIntermediateDirectories:false, attributes: nil, error: &error)
+        
+        Directory.logger.log(.ERROR, error)
+        
+        return created
     }
 }

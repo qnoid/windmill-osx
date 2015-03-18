@@ -18,7 +18,7 @@ final public class Keychain
 {
     var keychain:SecKeychainRef?
     
-    class func defaultKeychain() -> Keychain {
+    public class func defaultKeychain() -> Keychain {
         return Keychain()
     }
     

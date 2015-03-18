@@ -12,6 +12,7 @@ import Foundation
 public class ConsoleLog {
     
     public enum Level : Printable {
+        case DEBUG
         case INFO
         case WARN
         case ERROR
@@ -19,6 +20,8 @@ public class ConsoleLog {
         public var description: String {
         
             switch self{
+            case DEBUG:
+                return "DEBUG"
             case INFO:
                 return "INFO"
             case WARN:

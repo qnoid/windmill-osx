@@ -15,7 +15,7 @@ extension MainWindowController
 {
     class func loadMainWindowController() -> MainWindowController
     {
-        let mainWindowViewController = MainWindowController.mainWindowController()
+        let mainWindowViewController = MainWindowController.mainWindowController(Windmill())
         let loadWindow = mainWindowViewController.window
         return mainWindowViewController
     }

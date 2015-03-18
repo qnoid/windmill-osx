@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct PathComponent : RawRepresentable
+public struct PathComponent : RawRepresentable
 {
     typealias RawValue = String
     
-    let rawValue: String
+    public let rawValue: String
     
-    init?(rawValue: String)
+    public init?(rawValue: String)
     {
         self.rawValue = rawValue
     }

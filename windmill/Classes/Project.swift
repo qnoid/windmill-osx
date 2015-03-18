@@ -10,6 +10,16 @@ import Foundation
 
 final public class Project : Hashable, Equatable, Printable
 {
+    static let toDictionary : (Project) -> Dictionary<String, AnyObject> = { project in
+        return [
+            "name": project.name,
+            "origin": project.origin ]
+    }
+    
+    static let fromDictionary : (object : AnyObject) -> Project = { (object : AnyObject) -> Project in
+        return Project(dictionary: object as! Dictionary<String, AnyObject>)
+    }
+    
     public var hashValue: Int {
         return self.origin.hashValue
     }
@@ -17,7 +27,6 @@ final public class Project : Hashable, Equatable, Printable
     public var description: String {
         return self.origin
     }
-
     
     let name : String
     
@@ -28,5 +37,13 @@ final public class Project : Hashable, Equatable, Printable
     {
         self.name = name
         self.origin = origin
+    }
+
+    convenience public init(dictionary aDictionary: Dictionary<String, AnyObject>)
+    {
+        let name = aDictionary["name"] as! String
+        let origin = aDictionary["origin"] as! String
+        
+        self.init(name:name, origin:origin)
     }
 }

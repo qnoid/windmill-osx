@@ -23,22 +23,22 @@ public class MainWindowController : NSWindowController, WindmillDelegate
         
         return mainWindowController
     }
-    
-    lazy var outlineViewDataSource : ProjectsDataSource = {
-            let outlineViewDataSource = ProjectsDataSource.projectsDataSource()
-            outlineViewDataSource.mainWindowController = self
-        return outlineViewDataSource
-    }()
 
-    var outlineViewdelegate = ProjectsOutlineViewDelegate()
+    @IBOutlet public weak var outlineView: NSOutlineView!
     var windmill: Windmill! {
         didSet{
             self.windmill.delegate = self
         }
     }
-    
-    @IBOutlet public weak var outlineView: NSOutlineView!
-    
+
+    var outlineViewdelegate = ProjectsOutlineViewDelegate()
+    lazy var outlineViewDataSource : ProjectsDataSource = {
+        let outlineViewDataSource = ProjectsDataSource()
+        outlineViewDataSource.mainWindowController = self
+        outlineViewDataSource.projects = self.windmill.projects
+        
+        return outlineViewDataSource
+        }()
 
     /**
 
@@ -66,9 +66,17 @@ public class MainWindowController : NSWindowController, WindmillDelegate
         if let folder = info.draggingPasteboard().firstFilename()
         {
             MainWindowController.logger.log(.INFO, folder)
-            self.windmill.add(folder)
+            let result = parse(fullPathOfLocalGitRepo: folder)
             
-            return true
+            switch result
+            {
+                case .Success(let project):
+                    self.windmill.deployGitRepo(folder, project: project.unbox)
+                    return true
+                case .Failure(let error):
+                    alert(error.unbox)(window: self.window!)
+                    return false
+            }
         }
         
         return false
@@ -76,14 +84,5 @@ public class MainWindowController : NSWindowController, WindmillDelegate
     
     func created(windmill: Windmill, projects: Array<Project>, project: Project) {
         self.outlineViewDataSource.projects = projects
-    }
-    
-    func failed(windmill: Windmill, error: NSError)
-    {
-        let alert = NSAlert()
-        alert.messageText = error.localizedDescription
-        alert.informativeText = error.localizedFailureReason
-        alert.alertStyle = .CriticalAlertStyle
-        alert.beginSheetModalForWindow(self.window!, completionHandler: nil)
     }
 }

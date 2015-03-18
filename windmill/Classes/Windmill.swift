@@ -13,48 +13,62 @@ import LlamaKit
 
 public typealias WindmillProvider = () -> Windmill
 
+/// domain is WindmillDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
+public typealias WindmillError = NSError
+
 typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-extension NSError {
-    
-    enum ErrorCode : Int {
-        
-        /// Error loading repo
-        case RepoError
-        
-        /// Error loading commit
-        case CommitError
-    }
-
-    class func errorRepo(localGitRepo: String, underlyingError : NSError) -> NSError
-    {
-        let localizedDescription = NSLocalizedString("windmill.repo.error.description", comment:"")
-        let failureDescription = String(format:localizedDescription, localGitRepo)
-        
-        return NSError(domain: WindmillDomain, code: ErrorCode.RepoError.rawValue, userInfo:
-            [NSLocalizedDescriptionKey: failureDescription,
-            NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.repo.error.failureReason", comment:""),
-            NSUnderlyingErrorKey: underlyingError])
-    }
-    
-    class func errorCommit(underlyingError : NSError) -> NSError{
-        return NSError(domain: WindmillDomain, code: ErrorCode.CommitError.rawValue, userInfo:
-            [NSLocalizedDescriptionKey: NSLocalizedString("windmill.latestCommit.error.description", comment:""),
-            NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.latestCommit.error.failureReason", comment:""),
-            NSUnderlyingErrorKey: underlyingError])
-    }
-}
-
-protocol WindmillDelegate
+func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
 {
-    func created(windmill: Windmill, projects:Array<Project>, project: Project)
-    func failed(windmill: Windmill, error: NSError)
+    if let localGitRepoURL = NSURL(fileURLWithPath: localGitRepo)
+    {
+        let repo = Repository.atURL(localGitRepoURL)
+        
+        if let repo = repo.value
+        {
+            let latestCommit: Result<Commit, NSError> = repo.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
+            
+            if let commit = latestCommit.value
+            {
+                Windmill.logger.log(.INFO, "Latest Commit: \(commit.message) by \(commit.author.name)")
+                
+                let name = localGitRepoURL.lastPathComponent!
+                let origin = repo.allRemotes().value![0].URL
+                
+                return success(Project(name: name, origin: origin))
+            }
+            else if let error = latestCommit.error {
+                Windmill.logger.log(.ERROR, "Could not get commit: \(error)")
+                return failure(NSError.errorCommit(error))
+            }
+        }
+        else if let error = repo.error {
+            Windmill.logger.log(.ERROR, "Could not open repository: \(error)")
+            return failure(NSError.errorRepo(localGitRepo, underlyingError:error))
+        }
+    }
+
+    Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
+    
+    return failure(NSError.errorNoRepo(localGitRepo))
 }
 
 final public class Windmill
 {
+    class func windmill(keychain: Keychain) -> Windmill
+    {
+        let projects = read(NSInputStream.inputStreamOnProjects())
+        
+        self.logger.log(.DEBUG, projects)
+        
+        let windmill = Windmill(keychain: keychain)
+        windmill.projects = projects
+        
+        return windmill
+    }
+    
     static let logger : ConsoleLog = ConsoleLog()
     
     var delegate: WindmillDelegate?
@@ -64,7 +78,7 @@ final public class Windmill
     
     var projects : Array<Project>
     
-    convenience init()
+    public convenience init()
     {
         self.init(scheduler: Scheduler(), keychain: Keychain.defaultKeychain())
     }
@@ -85,18 +99,30 @@ final public class Windmill
         self.keychain = keychain
         self.projects = []
     }
-
+    
+    func add(project: Project)
+    {
+        self.projects.append(project)
+        
+        write(self.projects, NSOutputStream.outputStreamOnProjects())
+        
+        self.delegate?.created(self, projects:self.projects, project: project)
+    }
+    
     /**
 
     /**
     
-    Adds the 'project' to the datasource.
+    Adds the 'localGitRepo' to the list of projects.
     
-    :postcodition: MainWindowController#reloadData will be called if the given 'project' was added
+    If #delegate is set, you will receive a callback to WindmillDelegate#created(self, projects:self.projects, project: project)
+    if the project was
+
+    :precondition: the given 'localGitRepo' must have a remote origin
+    :precondition: the given 'localGitRepo' must have at least a commit in its remote origin
     
-    :param: project the project to add to the datasource
-    
-    :returns: true if the 'project' was added to the datasource, false if already in the datasource
+    :param: localGitRepo the local git repo to add to Windmill
+    :returns: true if the 'localGitRepo' was added, false if already added
     */
 
     project was added
@@ -104,60 +130,17 @@ final public class Windmill
     project failed to create
     
     */
-    func add(localGitRepo: String) -> Bool
+    public func deployGitRepo(localGitRepo: String, project: Project) -> Bool
     {
-        if let localGitRepoURL = NSURL(fileURLWithPath: localGitRepo)
-        {
-            let name = localGitRepoURL.lastPathComponent!
-            
-            let repo = Repository.atURL(localGitRepoURL)
-            
-            if let repo = repo.value
-            {
-                let latestCommit: Result<Commit, NSError> = repo.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
-                
-                if let commit = latestCommit.value {
-                    Windmill.logger.log(.INFO, "Latest Commit: \(commit.message) by \(commit.author.name)")
-                    
-                    let origin = repo.allRemotes().value![0].URL
-                    
-                    let project = Project(name: name, origin: origin)
-                    if(contains(self.projects, project)){
-                        Windmill.logger.log(.INFO, "Project already added: \(project)")
-                        return false
-                    }
-                    
-                    self.projects.append(project)
-
-                    self.delegate?.created(self, projects:self.projects, project: project)
-
-                    let defaultFileManager = NSFileManager.defaultManager()
-                    
-                    let userLibraryDirectoryView = defaultFileManager.userLibraryDirectoryView()
-                    let directoryForProvisioningProfiles = userLibraryDirectoryView.directory.mobileDeviceProvisioningProfiles()
-                    
-                    let mobileProvisioningExists = directoryForProvisioningProfiles.fileExists("\(name).mobileprovision")
-                    
-                    self.deployGitRepo(localGitRepo)
-                    
-                    return true
-                }
-                else if let error = latestCommit.error {
-                    Windmill.logger.log(.ERROR, "Could not get commit: \(error)")
-                    self.delegate?.failed(self, error: NSError.errorCommit(error))
-                }
-            }
-            else if let error = repo.error {
-                Windmill.logger.log(.ERROR, "Could not open repository: \(error)")
-                self.delegate?.failed(self, error: NSError.errorRepo(localGitRepo, underlyingError:error))
-            }
-            
-        }
-        else {
-            Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
+        if(contains(self.projects, project)){
+            Windmill.logger.log(.INFO, "Project already added: \(project)")
+            return false
         }
         
-        return false
+        self.add(project)
+        self.deployGitRepo(localGitRepo)
+        
+        return true
     }
     
     func deployGitRepo(localGitRepo : String)
@@ -180,5 +163,4 @@ final public class Windmill
             }
         }
     }
-
 }

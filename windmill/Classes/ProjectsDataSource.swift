@@ -15,11 +15,6 @@ public typealias Header = String
 */
 final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
 {
-    public class func projectsDataSource() -> ProjectsDataSource
-    {
-        return ProjectsDataSource()
-    }
-    
     weak var mainWindowController : MainWindowController!
     
     let headers : Array<Header>
