@@ -1,2 +1,3 @@
-github "LlamaKit/LlamaKit" "v0.6.0"
-github "SwiftGit2/SwiftGit2" "v0.1"
+github "robrix/Box" "1.2.2"
+github "antitypical/Result" "0.4.5"
+github "SwiftGit2/SwiftGit2" "44fd952378616dfcd0fc65e762599f5ccba9bad0"

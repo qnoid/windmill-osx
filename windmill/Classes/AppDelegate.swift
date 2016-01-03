@@ -23,7 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             self.statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
             
             let image = NSImage(named:"statusItem")!
-            image.setTemplate(true)
+            image.template = true
             self.statusItem.button?.image = image
             self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
             self.statusItem.button?.window?.delegate = self
@@ -50,6 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             ))
         
         self.keychain.createUser(userIdentifier)
+        self.windmill.start()        
         self.mainWindowController = MainWindowController.mainWindowController(self.windmill)
         
         self.window = self.mainWindowController.window
@@ -70,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
     {
-        println(__FUNCTION__);
+        print(__FUNCTION__);
         return .Copy;
     }
     
@@ -82,12 +83,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     func draggingExited(sender: NSDraggingInfo!)
     {
-        println(__FUNCTION__);
+        print(__FUNCTION__);
     }
     
     func prepareForDragOperation(sender: NSDraggingInfo) -> Bool
     {
-        println(__FUNCTION__);
+        print(__FUNCTION__);
         return true;
         
     }

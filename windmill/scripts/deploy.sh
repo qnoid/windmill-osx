@@ -15,7 +15,7 @@ echo "[windmill] $PLIST"
 
 BINARY_LENGTH=$(ls -alF $IPA | cut -d ' ' -f 8)
 
-LOCATION=$(curl -i -H "Windmill-Name: $APPLICATION_NAME" -H "Windmill-Identifier: $CFBundleIdentifier" -H "binary-length: $BINARY_LENGTH" -F "ipa=@$IPA" -F "plist=@$PLIST" "$WINDMILL_BASE_URL/windmill/$USER" | awk '/^Location/ {print $2}')
+LOCATION=$(curl -i -H "Windmill-Name: $APPLICATION_NAME" -H "Windmill-Identifier: $PRODUCT_BUNDLE_IDENTIFIER" -H "binary-length: $BINARY_LENGTH" -F "ipa=@$IPA" -F "plist=@$PLIST" "$WINDMILL_BASE_URL/windmill/$USER" | awk '/^Location/ {print $2}')
 
 if_string_is_empty "$LOCATION" exit 1
 

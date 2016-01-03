@@ -8,19 +8,19 @@
 
 import Foundation
 
-let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-54-77-169-177.eu-west-1.compute.amazonaws.com"
+let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-52-16-168-196.eu-west-1.compute.amazonaws.com"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
 let ScriptOnCommit = "scripts/on_commit"
 let ScriptNightly = "scripts/nightly"
 let ScriptPoll = "scripts/poll"
 
-enum TerminationStatus : Int32, Printable
+public enum TerminationStatus : Int32, CustomStringConvertible
 {
     case AlreadyUpToDate = 0
     case Dirty = 1
     
-    var description : String {
+    public var description : String {
         switch self{
         case .AlreadyUpToDate:
             return "Already up-to-date."
@@ -32,7 +32,7 @@ enum TerminationStatus : Int32, Printable
 
 struct TaskNightly
 {
-    enum TerminationStatus : Int32, Printable
+    enum TerminationStatus : Int32, CustomStringConvertible
     {
         case Success = 0
         case Error = 1
@@ -48,22 +48,49 @@ struct TaskNightly
     }
 }
 
-extension NSTask
+public extension NSTask
 {
     private class func pathForDir(name: String!) -> String! {
         return NSBundle.mainBundle().pathForResource(name, ofType:nil);
     }
 
-    static func taskOnCommit(#localGitRepo: String) -> NSTask
+    /**
+
+    :directoryPath:
+    :buildProjectWithName:
+    :scheme:
+    */
+    public static func taskDevelopmentBuildProject(directoryPath directoryPath: String)(withName projectName: String, scheme: String) -> NSTask
     {
         let task = NSTask()
-        task.launchPath = NSBundle.mainBundle().pathForResource(ScriptOnCommit, ofType: "sh")!
-        task.arguments = [localGitRepo, self.pathForDir("scripts")]
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.BUILD_PROJECT, ofType: "sh")!
+        task.arguments = [projectName, scheme]
         
         return task;
     }
     
-    static func taskNightly(#localGitRepo: String, forUser user:String) -> NSTask
+    public static func taskDevelopmentBuildWorkspace(directoryPath directoryPath: String)(withName workspaceName: String, scheme: String) -> NSTask
+    {
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath        
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.BUILD_WORKSPACE, ofType: "sh")!
+        task.arguments = [workspaceName, scheme]
+        
+        return task;
+    }
+
+
+    static func taskOnCommit(repoName: String, origin: String) -> NSTask
+    {
+        let task = NSTask()
+        task.launchPath = NSBundle.mainBundle().pathForResource(ScriptOnCommit, ofType: "sh")!
+        task.arguments = [repoName, origin, self.pathForDir("scripts")]
+        
+        return task;
+    }
+    
+    static func taskNightly(repoName: String, origin: String, forUser user:String) -> NSTask
     {
         var windmillBaseURL = WINDMILL_BASE_URL_PRODUCTION
         #if DEBUG
@@ -72,21 +99,21 @@ extension NSTask
             
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(ScriptNightly, ofType: "sh")!
-        task.arguments = [localGitRepo, self.pathForDir("scripts"), self.pathForDir("resources"), user, windmillBaseURL]
+        task.arguments = [repoName, origin, self.pathForDir("scripts"), self.pathForDir("resources"), user, windmillBaseURL]
         
     return task;
     }
     
-    static func taskPoll(localGitRepo: String) -> NSTask
+    static func taskPoll(repoName: String) -> NSTask
     {
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(ScriptPoll, ofType: "sh")!
-        task.arguments = [localGitRepo, self.pathForDir("scripts"), "master"]
+        task.arguments = [repoName, self.pathForDir("scripts"), "master"]
         
     return task;
     }
     
-    func waitForStatus() -> TerminationStatus
+    public func waitForStatus() -> TerminationStatus
     {
         self.waitUntilExit()
         return TerminationStatus(rawValue: self.terminationStatus)!

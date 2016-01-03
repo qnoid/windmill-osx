@@ -25,6 +25,9 @@ public class MainWindowController : NSWindowController, WindmillDelegate
     }
 
     @IBOutlet public weak var outlineView: NSOutlineView!
+    @IBOutlet weak var buildProgressIndicator: NSProgressIndicator!
+    @IBOutlet public weak var buildTextField: NSTextField!
+    
     var windmill: Windmill! {
         didSet{
             self.windmill.delegate = self
@@ -52,7 +55,7 @@ public class MainWindowController : NSWindowController, WindmillDelegate
     
     override public func windowDidLoad()
     {
-        println(__FUNCTION__)
+        print(__FUNCTION__)
         self.outlineView.setDataSource(self.outlineViewDataSource)
         self.outlineView.setDelegate(self.outlineViewdelegate)
         self.outlineView.registerForDraggedTypes([NSFilenamesPboardType])
@@ -61,25 +64,32 @@ public class MainWindowController : NSWindowController, WindmillDelegate
     /// callback from #outlineViewDatasource when a drag operation is performed by the user
     func performDragOperation(info: NSDraggingInfo) -> Bool
     {
-        println(__FUNCTION__);
+        print(__FUNCTION__);
         
-        if let folder = info.draggingPasteboard().firstFilename()
-        {
-            MainWindowController.logger.log(.INFO, folder)
-            let result = parse(fullPathOfLocalGitRepo: folder)
-            
-            switch result
-            {
-                case .Success(let project):
-                    self.windmill.deployGitRepo(folder, project: project.unbox)
-                    return true
-                case .Failure(let error):
-                    alert(error.unbox)(window: self.window!)
-                    return false
-            }
+        guard let folder = info.draggingPasteboard().firstFilename() else {
+            return false
         }
         
-        return false
+        MainWindowController.logger.log(.INFO, folder)
+        let result = parse(fullPathOfLocalGitRepo: folder)
+        
+        switch result
+        {
+            case .Success(let project):
+                let wasDeployed = self.windmill.deploy(project)
+                
+                if(wasDeployed) {
+                    self.buildProgressIndicator.startAnimation(self)
+                
+                    let commitNumber = "8076c32"
+                    self.buildTextField.attributedStringValue = NSAttributedString.commitBuildString(commitNumber, branchName: "master")
+                }
+
+                return true
+            case .Failure(let error):
+                alert(error)(window: self.window!)
+                return false
+        }
     }
     
     func created(windmill: Windmill, projects: Array<Project>, project: Project) {

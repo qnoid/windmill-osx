@@ -19,19 +19,19 @@ public extension NSFileManager
     
     func userLibraryDirectoryView() -> UserLibraryDirectoryView
     {
-        let URLForUserLibraryDirectory = self.URLForDirectory(.LibraryDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false, error:nil)!
+        let URLForUserLibraryDirectory = try! self.URLForDirectory(.LibraryDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false)
         
         return (URL: URLForUserLibraryDirectory, directory:directory(URLForUserLibraryDirectory))
     }
     
     func userApplicationSupportDirectoryView() -> UserApplicationSupportDirectoryView
     {
-        let URLForUserApplicationSupportDirectory = self.URLForDirectory(.ApplicationSupportDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false, error:nil)!
+        let URLForUserApplicationSupportDirectory = try! self.URLForDirectory(.ApplicationSupportDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false)
         
         return (URL: URLForUserApplicationSupportDirectory, directory:directory(URLForUserApplicationSupportDirectory))
     }
 
     func fileExists(filename: String, atURL URL:NSURL) -> Bool {
-        return self.fileExistsAtPath(URL.path!.stringByAppendingPathComponent(filename))
+        return self.fileExistsAtPath((URL.path! as NSString).stringByAppendingPathComponent(filename))
     }
 }

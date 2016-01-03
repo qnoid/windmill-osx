@@ -1,7 +1,8 @@
 #!/bin/bash
-PROJECT_LOCAL_FOLDER=$1
 WINDMILL_ROOT="$HOME/.windmill"
-SCRIPTS_ROOT=$2
+REPO_NAME=$1
+REMOTE=$2
+SCRIPTS_ROOT=$3
 
 set -e
 
@@ -13,8 +14,7 @@ mkdir ~/.windmill
 
 directory_does_not_exist_at_path ~/.windmill mkdir_windmill
 
-LOCAL_GIT_REPO=$1
-PROJECT_NAME=`basename "$LOCAL_GIT_REPO"`
+PROJECT_NAME=$REPO_NAME
 
 (
 (

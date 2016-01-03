@@ -3,7 +3,6 @@
 # Requires the following variables to be set
 # WINDMILL_ROOT
 # SCRIPTS_ROOT
-# APPLICATION_NAME
 # PROJECT_NAME
 
 

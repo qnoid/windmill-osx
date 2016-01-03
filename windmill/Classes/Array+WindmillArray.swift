@@ -10,7 +10,7 @@ import Foundation
 
 extension Array
 {
-    func forEach(each: (T) -> Void){
+    func forEach(each: (Element) -> Void){
         for obj in self {
             each(obj)
         }

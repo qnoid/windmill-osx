@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>F207635A-FFF7-4B53-B803-A2F6B5B97645</string>
 	<key>IDESourceControlProjectName</key>
-	<string>windmill</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>0B288AAEAD4BAC34AB00517E2823B7B3734EB021</key>
 		<string>bitbucket.org:qnoid/windmill-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>windmill.xcodeproj</string>
+	<string>windmill.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>0B288AAEAD4BAC34AB00517E2823B7B3734EB021</key>

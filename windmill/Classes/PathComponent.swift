@@ -10,7 +10,7 @@ import Foundation
 
 public struct PathComponent : RawRepresentable
 {
-    typealias RawValue = String
+    public typealias RawValue = String
     
     public let rawValue: String
     

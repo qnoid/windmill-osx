@@ -13,9 +13,9 @@ protocol WindmillDelegate
     /**
     Callback when Windmill#add: succesfully added a project
     
-    :param: windmill the Windmill instance associated with the delegate
-    :param: projects the total number of projects in windmill
-    :param: project the project for the given 'localGitRepo' at the time #add: was called
+    - parameter windmill: the Windmill instance associated with the delegate
+    - parameter projects: the total number of projects in windmill
+    - parameter project: the project for the given 'localGitRepo' at the time #add: was called
     */
     func created(windmill: Windmill, projects:Array<Project>, project: Project)    
 }

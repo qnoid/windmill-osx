@@ -8,7 +8,7 @@
 
 import Foundation
 import SwiftGit2
-import LlamaKit
+import Result
 
 
 public typealias WindmillProvider = () -> Windmill
@@ -20,39 +20,41 @@ typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
+public func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
 {
-    if let localGitRepoURL = NSURL(fileURLWithPath: localGitRepo)
-    {
-        let repo = Repository.atURL(localGitRepoURL)
+    Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
+    
+    let localGitRepoURL: NSURL? = NSURL(fileURLWithPath: localGitRepo, isDirectory: true)
+    
+    guard let _localGitRepoURL = localGitRepoURL else {
+        Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
         
-        if let repo = repo.value
-        {
-            let latestCommit: Result<Commit, NSError> = repo.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
-            
-            if let commit = latestCommit.value
-            {
-                Windmill.logger.log(.INFO, "Latest Commit: \(commit.message) by \(commit.author.name)")
-                
-                let name = localGitRepoURL.lastPathComponent!
-                let origin = repo.allRemotes().value![0].URL
-                
-                return success(Project(name: name, origin: origin))
-            }
-            else if let error = latestCommit.error {
-                Windmill.logger.log(.ERROR, "Could not get commit: \(error)")
-                return failure(NSError.errorCommit(error))
-            }
-        }
-        else if let error = repo.error {
-            Windmill.logger.log(.ERROR, "Could not open repository: \(error)")
-            return failure(NSError.errorRepo(localGitRepo, underlyingError:error))
-        }
+        return Result.Failure(NSError.errorNoRepo(localGitRepo))
+    }
+    
+    let repo = Repository.atURL(_localGitRepoURL)
+    
+    guard let _repo = repo.value else {
+        Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
+        return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
+    }
+    
+    let latestCommit: Result<Commit, NSError> = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
+
+    guard let _latestCommit = latestCommit.value else {
+        Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
+        return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
     }
 
-    Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
+    Windmill.logger.log(.INFO, "Latest Commit: \(_latestCommit.message) by \(_latestCommit.author.name)")
     
-    return failure(NSError.errorNoRepo(localGitRepo))
+    let name = _localGitRepoURL.lastPathComponent!
+    let origin = _repo.allRemotes().value![0].URL
+
+    Windmill.logger.log(.DEBUG, "Project name: \(name)")
+    Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
+    
+    return Result.Success(Project(name: name, origin: origin))
 }
 
 final public class Windmill
@@ -100,29 +102,48 @@ final public class Windmill
         self.projects = []
     }
     
-    func add(project: Project)
+    private func add(project: Project)
     {
         self.projects.append(project)
         
-        write(self.projects, NSOutputStream.outputStreamOnProjects())
+        write(self.projects, outputStream: NSOutputStream.outputStreamOnProjects())
         
         self.delegate?.created(self, projects:self.projects, project: project)
+    }
+
+    private func deployGitRepo(repoName: String, origin: String)
+    {
+        let taskOnCommit = NSTask.taskOnCommit(repoName, origin: origin)
+        self.scheduler.queue(taskOnCommit)
+        
+        guard let user = try? self.keychain.findWindmillUser() else {
+            Windmill.logger.log(.ERROR, "A windmill user account should have been created.")
+            return
+        }
+        
+        let nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)
+        
+        nightlyDeployGitRepoForUserTask.addDependency(taskOnCommit){
+            self.scheduler.queue(nightlyDeployGitRepoForUserTask)
+            self.scheduler.schedule(taskProvider: NSTask.taskPoll(repoName), ifDirty: { [unowned self] in
+                    self.deployGitRepo(repoName, origin: origin)
+                    })
+        }
     }
     
     /**
 
     /**
     
-    Adds the 'localGitRepo' to the list of projects.
+    Adds the given *project* to the list of projects.
     
     If #delegate is set, you will receive a callback to WindmillDelegate#created(self, projects:self.projects, project: project)
     if the project was
 
-    :precondition: the given 'localGitRepo' must have a remote origin
-    :precondition: the given 'localGitRepo' must have at least a commit in its remote origin
+    - precondition: the given *project* must have a valid remote origin
     
-    :param: localGitRepo the local git repo to add to Windmill
-    :returns: true if the 'localGitRepo' was added, false if already added
+    - parameter project: the project to add to Windmill
+    - returns: true if the 'project' was added, false if already added
     */
 
     project was added
@@ -130,37 +151,22 @@ final public class Windmill
     project failed to create
     
     */
-    public func deployGitRepo(localGitRepo: String, project: Project) -> Bool
+    public func deploy(project: Project) -> Bool
     {
-        if(contains(self.projects, project)){
+        guard !self.projects.contains(project) else {
             Windmill.logger.log(.INFO, "Project already added: \(project)")
             return false
         }
         
         self.add(project)
-        self.deployGitRepo(localGitRepo)
+        self.deployGitRepo(project.name, origin: project.origin)
         
         return true
     }
     
-    func deployGitRepo(localGitRepo : String)
-    {
-        let taskOnCommit = NSTask.taskOnCommit(localGitRepo: localGitRepo)
-        self.scheduler.queue(taskOnCommit)
-        
-        if let user = self.keychain.findWindmillUser()
-        {
-            let deployGitRepoForUserTask = NSTask.taskNightly(localGitRepo: localGitRepo, forUser:user)
-            
-            deployGitRepoForUserTask.addDependency(taskOnCommit){
-                self.scheduler.queue(deployGitRepoForUserTask)
-                self.scheduler.schedule {
-                    return NSTask.taskPoll(localGitRepo)
-                    }(ifDirty: {
-                        [unowned self] in
-                        self.deployGitRepo(localGitRepo)
-                        })
-            }
+    public func start(){
+        for project in self.projects {
+            self.deployGitRepo(project.name, origin: project.origin)
         }
     }
 }

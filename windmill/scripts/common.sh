@@ -64,6 +64,15 @@ $3
 fi
 }
 
+function if_strings_equal ()
+{
+echo "[windmill] [debug] [$FUNCNAME] $1 $2"
+if [ "$1" -eq "$2" ]; then
+$3
+fi
+}
+
+
 # Extracts the remote repo
 #
 # git remote -v

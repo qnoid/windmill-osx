@@ -11,7 +11,7 @@ import Foundation
 
 public class ConsoleLog {
     
-    public enum Level : Printable {
+    public enum Level : CustomStringConvertible {
         case DEBUG
         case INFO
         case WARN
@@ -34,6 +34,6 @@ public class ConsoleLog {
     
     public func log<T>(level : Level, _ value : T)
     {
-        println("[\(level):] \(value)")
+        print("[windmill] [\(level):] \(value)")
     }    
 }

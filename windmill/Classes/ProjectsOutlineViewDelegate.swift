@@ -30,7 +30,7 @@ public class ProjectsOutlineViewDelegate : NSObject, NSOutlineViewDelegate
     /// private
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, project: Project) -> NSTableCellView
     {
-        var cell = outlineView.makeViewWithIdentifier("DataCell")
+        let cell = outlineView.makeViewWithIdentifier("DataCell")
         cell.textField?.stringValue = project.name
         
         return cell
@@ -38,7 +38,7 @@ public class ProjectsOutlineViewDelegate : NSObject, NSOutlineViewDelegate
     
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, header: Header) -> NSTableCellView
     {
-        var cell = outlineView.makeViewWithIdentifier("HeaderCell")
+        let cell = outlineView.makeViewWithIdentifier("HeaderCell")
         cell.textField?.stringValue = header
         
         return cell

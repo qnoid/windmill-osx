@@ -4,7 +4,8 @@
 # WINDMILL_ROOT
 # SCRIPTS_ROOT
 # PROJECT_NAME
-# LOCAL_GIT_REPO
+# REPO_NAME
+# REMOTE
 
 . $SCRIPTS_ROOT/common.sh
 
@@ -14,17 +15,9 @@ echo "[windmill] [debug] git -C $PROJECT_NAME pull"
 }
 
 function git_clone(){
-(cd $WINDMILL_ROOT; git clone $remote $PROJECT_NAME)
+(cd $WINDMILL_ROOT; git clone $REMOTE $PROJECT_NAME)
 }
 
-
-assert_exists "$LOCAL_GIT_REPO" "Drag and drop a project folder that contains the git repo."
-
-echo "[windmill] Project name: '"$PROJECT_NAME"'"
-echo "[windmill] Using "$LOCAL_GIT_REPO
-
 set -e
-
-repo_name_at_local_git_repo $LOCAL_GIT_REPO
 
 directory_exist_at_path "$WINDMILL_ROOT/$REPO_NAME" git_pull git_clone

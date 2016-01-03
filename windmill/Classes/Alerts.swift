@@ -12,7 +12,7 @@ func alert(error: NSError)(window: NSWindow)
 {
     let alert = NSAlert()
     alert.messageText = error.localizedDescription
-    alert.informativeText = error.localizedFailureReason
+    alert.informativeText = error.localizedFailureReason!
     alert.alertStyle = .CriticalAlertStyle
     alert.beginSheetModalForWindow(window, completionHandler: nil)
 }

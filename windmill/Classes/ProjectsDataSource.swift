@@ -45,15 +45,15 @@ final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
             return self.headers[0]
         }
         
-        var index = index - self.headers.count
+        let index = index - self.headers.count
         
         return self.projects[index]
     }
     
     // drag and drop support
     //registerForDraggedTypes
-    public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject?) -> NSPasteboardWriting! {
-        return item as! NSPasteboardWriting;
+    public func outlineView(outlineView: NSOutlineView, pasteboardWriterForItem item: AnyObject) -> NSPasteboardWriting? {
+        return item as? NSPasteboardWriting;
     }
     
     public func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation

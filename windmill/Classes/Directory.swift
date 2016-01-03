@@ -21,7 +21,7 @@ public protocol DirectoryType
     /**
     Creates the directory that returned as part of calling #traverse:
     
-    :returns: true if created, false otherwise
+    - returns: true if created, false otherwise
     */
     func create() -> Bool
 }
@@ -44,7 +44,7 @@ func ApplicationDirectory() -> DirectoryType
     
     let created = applicationDirectory.create()
     
-    Windmill.logger.log(.DEBUG, created)
+    Windmill.logger.log(.DEBUG, "Was <windmill> application directory created?: \(created)")
 
     return applicationDirectory
 }
@@ -58,20 +58,20 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     
     public func file(filename: String) -> DirectoryType
     {
-        let URLForFilename = NSURL(fileURLWithPath: self.URL.path!.stringByAppendingPathComponent(filename), isDirectory: false)!
+        let URLForFilename = NSURL(fileURLWithPath: (self.URL.path! as NSString).stringByAppendingPathComponent(filename), isDirectory: false)
         
         return Directory(URL:URLForFilename, fileManager: self.fileManager)
     }
     
     public func fileExists(filename: String) -> Bool {
-        return self.fileManager.fileExistsAtPath(self.URL.path!.stringByAppendingPathComponent(filename))
+        return self.fileManager.fileExistsAtPath((self.URL.path! as NSString).stringByAppendingPathComponent(filename))
     }
     
     public func traverse(pathComponent: PathComponent) -> DirectoryType
     {
-        let path = self.URL.path!.stringByExpandingTildeInPath
+        let path = (self.URL.path! as NSString).stringByExpandingTildeInPath
         
-        let URLForPathComponent = NSURL(fileURLWithPath: path.stringByAppendingPathComponent(pathComponent.rawValue), isDirectory: true)!
+        let URLForPathComponent = NSURL(fileURLWithPath: (path as NSString).stringByAppendingPathComponent(pathComponent.rawValue), isDirectory: true)
         
         return Directory(URL: URLForPathComponent, fileManager: self.fileManager)
     }
@@ -85,11 +85,15 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     
     public func create() -> Bool
     {
-        var error : NSError?
+        let created: Bool
+        do {
+            try self.fileManager.createDirectoryAtURL(self.URL, withIntermediateDirectories:false, attributes: nil)
+            created = true
+        } catch let error as NSError {
+            Directory.logger.log(.ERROR, error)
+            created = false
+        }
         
-        let created = self.fileManager.createDirectoryAtURL(self.URL, withIntermediateDirectories:false, attributes: nil, error: &error)
-        
-        Directory.logger.log(.ERROR, error)
         
         return created
     }

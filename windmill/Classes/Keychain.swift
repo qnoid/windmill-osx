@@ -25,9 +25,9 @@ final public class Keychain
     func addGenericPassword(account:KeychainAccount, password:String) -> OSStatus
     {
         let status = SecKeychainAddGenericPassword(self.keychain,
-            UInt32(count(account.serviceName.utf8)), account.serviceName,
-            UInt32(count(account.name.utf8)), account.name,
-            UInt32(count(password.utf8)), password,
+            UInt32(account.serviceName.utf8.count), account.serviceName,
+            UInt32(account.name.utf8.count), account.name,
+            UInt32(password.utf8.count), password,
             nil)
         
         return status;
@@ -39,19 +39,19 @@ final public class Keychain
         var passwordPtr: UnsafeMutablePointer<Void> = nil
         
         let status = SecKeychainFindGenericPassword(self.keychain,
-            UInt32(count(account.serviceName.utf8)),
+            UInt32(account.serviceName.utf8.count),
             account.serviceName,
-            UInt32(count(account.name.utf8)),
+            UInt32(account.name.utf8.count),
             account.name,
             &passwordLength,
             &passwordPtr,
             nil)
         
-            if status == OSStatus(errSecSuccess) {
-            let password = NSString(bytes: passwordPtr, length: Int(passwordLength), encoding: NSUTF8StringEncoding)
-            return (status, password as? String)
-            }
-            return (status, nil)
+        if status == OSStatus(errSecSuccess) {
+        let password = NSString(bytes: passwordPtr, length: Int(passwordLength), encoding: NSUTF8StringEncoding)
+        return (status, password as? String)
+        }
+        return (status, nil)
     }
 
 }

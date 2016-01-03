@@ -28,23 +28,23 @@ extension NSOutputStream
 
 func read(inputStream: ProjectsInputStream) -> Array<Project>
 {
-    var error : NSError?
-    
-    inputStream.open()
-    let object: AnyObject? = NSJSONSerialization.JSONObjectWithStream(inputStream, options: NSJSONReadingOptions(), error: &error)
-    inputStream.close()
-    
-    if object == nil{
+    do
+    {
+      defer {
+        inputStream.close()
+      }
+      
+      inputStream.open()
+      let object: AnyObject? = try NSJSONSerialization.JSONObjectWithStream(inputStream, options: NSJSONReadingOptions())
+        
+        let projects = Array((object as! NSArray)).map(Project.fromDictionary)
+
+        return projects
+    } catch let error {
+        Windmill.logger.log(.ERROR, error)
+        
         return []
     }
-    
-    let projects = Array((object as! NSArray)).map(Project.fromDictionary)
-    
-    if let error = error {
-        Windmill.logger.log(.ERROR, error)
-    }
-    
-    return projects
 }
 
 func write(projects: Array<Project>, outputStream: ProjectsOutputStream)
@@ -56,5 +56,5 @@ func write(projects: Array<Project>, outputStream: ProjectsOutputStream)
     
     outputStream.close()
     
-    println(error)
+    print(error)
 }

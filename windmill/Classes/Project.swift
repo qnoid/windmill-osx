@@ -8,7 +8,7 @@
 
 import Foundation
 
-final public class Project : Hashable, Equatable, Printable
+final public class Project : Hashable, Equatable, CustomStringConvertible
 {
     static let toDictionary : (Project) -> Dictionary<String, AnyObject> = { project in
         return [

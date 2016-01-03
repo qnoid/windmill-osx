@@ -3,17 +3,15 @@
 #  poll.sh
 #  ref: http://stackoverflow.com/questions/7166509/how-to-build-a-git-polling-build-bot
 
-PROJECT_LOCAL_FOLDER=$1
+REPO_NAME=$1
 WINDMILL_ROOT="$HOME/.windmill"
 SCRIPTS_ROOT=$2
 BRANCH=$3
 
 . $SCRIPTS_ROOT/common.sh
 
-LOCAL_GIT_REPO=$1
-PROJECT_NAME=`basename "$LOCAL_GIT_REPO"`
+PROJECT_NAME=$REPO_NAME
 BUILD_DIR="$WINDMILL_ROOT/$PROJECT_NAME/build"
-repo_name_at_local_git_repo $LOCAL_GIT_REPO
 
 function store_prev_head()
 {

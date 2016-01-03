@@ -10,9 +10,14 @@ import Foundation
 
 typealias KeychainCreateUser = (String) -> OSStatus
 
-typealias KeychainFindUser = () -> String?
+typealias KeychainFindUser = () throws -> String
 
 let KeychainAccountIOWindmillUser = KeychainAccount(serviceName: "io.windmill", name: "io.windmill.user")
+
+enum KeychainError: ErrorType
+{
+    case Instance(OSStatus)
+}
 
 extension Keychain
 {
@@ -27,15 +32,15 @@ extension Keychain
     
     var findWindmillUser : KeychainFindUser
     {
-        func findUser() -> String?
+        func findUser() throws -> String
         {
             let account = self.findGenericPassword(KeychainAccountIOWindmillUser);
             
-            if let user = account.password{
-                return user;
+            guard let user = account.password else {
+                throw KeychainError.Instance(account.status)
             }
             
-        return nil
+        return user
         }
 
     return findUser;
@@ -51,12 +56,11 @@ extension Keychain
     */
     func createUser(user:String) -> Bool
     {
-        if let user = self.findWindmillUser(){
-            return false
+        guard let _ = try? self.findWindmillUser() else {
+            self.createWindmillUser(user)
+            return true
         }
         
-        self.createWindmillUser(user)
-        
-    return true
+    return false
     }
 }

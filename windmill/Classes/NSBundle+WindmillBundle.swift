@@ -14,7 +14,7 @@ public struct BundleKey : RawRepresentable
         return BundleKey(rawValue: "CFBundleName")!
     }
 
-    typealias RawValue = String
+    public typealias RawValue = String
     
     public let rawValue: String
     
