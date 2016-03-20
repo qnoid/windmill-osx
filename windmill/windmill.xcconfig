@@ -1,0 +1,9 @@
+//
+//  windmill.xcconfig
+//  windmill
+//
+//  Created by Markos Charatzas on 20/03/2016.
+//  Copyright © 2016 qnoid.com. All rights reserved.
+//
+
+OTHER_LDFLAGS=-D DEVELOPMENT

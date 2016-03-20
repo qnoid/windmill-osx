@@ -14,7 +14,7 @@ import Foundation
 final public class Scheduler
 {
     static var dispatch_queue_global_utility : dispatch_queue_t {
-        return dispatch_get_global_queue(Int(QOS_CLASS_UTILITY.rawValue), 0)
+        return dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
     }
 
     static var dispatch_queue_serial : dispatch_queue_t {
@@ -22,31 +22,21 @@ final public class Scheduler
     }
 
     let delayInSeconds = 0.5 * 60
-    let operationQueue : NSOperationQueue
     
     required public init()
     {
-        self.operationQueue = NSOperationQueue()
-        self.operationQueue.qualityOfService = .UserInitiated
     }
     
-    func queue(task: NSTask)
-    {        
-        self.operationQueue.addOperationWithBlock {
-            task.launch()
-        }
-    }
-    
-    func schedule(@autoclosure(escaping) taskProvider taskProvider: () -> NSTask, ifDirty callback: () -> Void)
+    func schedule(@autoclosure(escaping) taskProvider taskProvider: TaskProvider, ifDirty callback: () -> Void)
     {
-        let when = dispatch_time(DISPATCH_TIME_NOW, Int64(self.delayInSeconds * Double(NSEC_PER_SEC)))
+        let when = dispatch_time(DISPATCH_TIME_NOW, Int64(self.delayInSeconds) * Int64(NSEC_PER_SEC))
         
         let task = taskProvider()
         
         dispatch_after(when, Scheduler.dispatch_queue_serial) { [unowned self] in
             
             task.launch()
-            let terminationStatus = task.waitForStatus()
+            let terminationStatus = task.waitUntilStatus()
             
             switch terminationStatus
             {

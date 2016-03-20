@@ -8,7 +8,7 @@
 
 import AppKit
 
-func alert(error: NSError)(window: NSWindow)
+func alert(error: NSError, window: NSWindow)
 {
     let alert = NSAlert()
     alert.messageText = error.localizedDescription

@@ -114,17 +114,31 @@ final public class Windmill
     private func deployGitRepo(repoName: String, origin: String)
     {
         let taskOnCommit = NSTask.taskOnCommit(repoName, origin: origin)
-        self.scheduler.queue(taskOnCommit)
         
         guard let user = try? self.keychain.findWindmillUser() else {
-            Windmill.logger.log(.ERROR, "A windmill user account should have been created.")
+            Windmill.logger.log(.ERROR, "\(__FUNCTION__) A windmill user account should have been created.")
             return
         }
         
-        let nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)
-        
-        nightlyDeployGitRepoForUserTask.addDependency(taskOnCommit){
-            self.scheduler.queue(nightlyDeployGitRepoForUserTask)
+        taskOnCommit.launch()
+        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunch(.OnCommit))
+
+        taskOnCommit.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)] status in
+            
+            defaultCenter.postNotification(NSTask.Notifications.taskDidExit(.OnCommit, terminationStatus: status))
+            
+            nightlyDeployGitRepoForUserTask.launch()
+            defaultCenter.postNotification(NSTask.Notifications.taskDidLaunch(.Nightly))
+            
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                
+                let status = nightlyDeployGitRepoForUserTask.waitUntilStatus()
+                
+                dispatch_async(dispatch_get_main_queue()){[defaultCenter = NSNotificationCenter.defaultCenter()] in
+                    defaultCenter.postNotification(NSTask.Notifications.taskDidExit(.Nightly, terminationStatus: status))
+                }
+            }
+            
             self.scheduler.schedule(taskProvider: NSTask.taskPoll(repoName), ifDirty: { [unowned self] in
                     self.deployGitRepo(repoName, origin: origin)
                     })

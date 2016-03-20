@@ -8,14 +8,14 @@
 
 import Foundation
 
-let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-52-16-168-196.eu-west-1.compute.amazonaws.com"
+let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-52-50-52-225.eu-west-1.compute.amazonaws.com"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
 let ScriptOnCommit = "scripts/on_commit"
 let ScriptNightly = "scripts/nightly"
 let ScriptPoll = "scripts/poll"
 
-public enum TerminationStatus : Int32, CustomStringConvertible
+public enum TerminationStatus : Int, CustomStringConvertible
 {
     case AlreadyUpToDate = 0
     case Dirty = 1
@@ -48,9 +48,34 @@ struct TaskNightly
     }
 }
 
-public extension NSTask
+enum TaskType: String
 {
-    private class func pathForDir(name: String!) -> String! {
+    case OnCommit
+    case Nightly
+}
+
+protocol Foo
+{
+    func bar()
+}
+
+typealias TaskProvider = () -> NSTask
+
+extension NSTask
+{
+    struct Notifications {
+        static let taskDidLaunch = "taskDidLaunch"
+        static let taskDidExit = "taskDidExit"
+        
+        static func taskDidLaunch(type: TaskType) -> NSNotification {
+            return NSNotification(name: taskDidLaunch, object: nil, userInfo: ["type":type.rawValue])
+        }
+        static func taskDidExit(type: TaskType, terminationStatus: TerminationStatus) -> NSNotification {
+            return NSNotification(name: taskDidExit, object: nil, userInfo: ["type":type.rawValue, "status":terminationStatus.rawValue])
+        }
+    }
+    
+    private class func pathForDir(name: String) -> String! {
         return NSBundle.mainBundle().pathForResource(name, ofType:nil);
     }
 
@@ -79,15 +104,14 @@ public extension NSTask
         
         return task;
     }
-
-
-    static func taskOnCommit(repoName: String, origin: String) -> NSTask
-    {
+    
+    static func taskOnCommit(repoName: String, origin: String) -> NSTask {
+        
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(ScriptOnCommit, ofType: "sh")!
         task.arguments = [repoName, origin, self.pathForDir("scripts")]
         
-        return task;
+        return task
     }
     
     static func taskNightly(repoName: String, origin: String, forUser user:String) -> NSTask
@@ -101,7 +125,7 @@ public extension NSTask
         task.launchPath = NSBundle.mainBundle().pathForResource(ScriptNightly, ofType: "sh")!
         task.arguments = [repoName, origin, self.pathForDir("scripts"), self.pathForDir("resources"), user, windmillBaseURL]
         
-    return task;
+    return task
     }
     
     static func taskPoll(repoName: String) -> NSTask
@@ -113,17 +137,21 @@ public extension NSTask
     return task;
     }
     
-    public func waitForStatus() -> TerminationStatus
+    public func waitUntilStatus() -> TerminationStatus
     {
         self.waitUntilExit()
-        return TerminationStatus(rawValue: self.terminationStatus)!
+        return TerminationStatus(rawValue: Int(self.terminationStatus))!
     }
     
-    func addDependency(dependency: NSTask, onExit:()->Void)
+    func whenExit(block: (TerminationStatus) -> Void)
     {
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-            dependency.waitUntilExit()
-            dispatch_sync(dispatch_get_main_queue(), onExit)
+ 
+            let status = self.waitUntilStatus()
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                block(status)
+            }
         }
     }
 }

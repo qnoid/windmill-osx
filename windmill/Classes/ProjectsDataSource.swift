@@ -15,12 +15,12 @@ public typealias Header = String
 */
 final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
 {
-    weak var mainWindowController : MainWindowController!
+    weak var projectsViewController : ProjectsViewController!
     
     let headers : Array<Header>
     var projects : Array<Project> {
         didSet{
-            self.mainWindowController?.reloadData()
+            self.projectsViewController?.reloadData()
         }
     }
     
@@ -62,6 +62,6 @@ final public class ProjectsDataSource : NSObject, NSOutlineViewDataSource
     }
     
     public func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
-        return self.mainWindowController.performDragOperation(info)
+        return self.projectsViewController.performDragOperation(info)
     }
 }

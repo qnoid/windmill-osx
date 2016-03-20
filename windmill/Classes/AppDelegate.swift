@@ -11,53 +11,60 @@ import Foundation
 
 private let userIdentifier = NSUUID().UUIDString;
 
+
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 {
     static let logger : ConsoleLog = ConsoleLog()
 
-    @IBOutlet weak var menu: NSMenu!
+    @IBOutlet weak var menu: NSMenu! {
+        didSet{
+            self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
+                action: "mouseDown:",
+                target: self,
+                mask: NSEventMask.LeftMouseDownMask
+                ))
+        }
+    }
     
-    weak var window: NSWindow!
     var statusItem: NSStatusItem! {
         didSet{
-            self.statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
+            statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
             
             let image = NSImage(named:"statusItem")!
             image.template = true
-            self.statusItem.button?.image = image
+            statusItem.button?.image = image
             self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
             self.statusItem.button?.window?.delegate = self
         }
     }
     
-    var mainWindowController: MainWindowController!
-    
-    let keychain: Keychain = Keychain.defaultKeychain()
-    let windmill: Windmill
-    
-    override required init()
-    {
-        self.windmill = Windmill.windmill(self.keychain)
-        super.init()
+    var mainViewController: MainViewController! {
+        didSet{
+            mainViewController.projectsViewController.windmill = self.windmill
+            mainViewController.projectDetailViewController.scheduler = self.windmill.scheduler
+        }
     }
     
-    func applicationDidFinishLaunching(aNotification: NSNotification)
-    {
-        self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
-            action: "mouseDown:",
-            target: self,
-            mask: NSEventMask.LeftMouseDownMask
-            ))
-        
-        self.keychain.createUser(userIdentifier)
-        self.windmill.start()        
-        self.mainWindowController = MainWindowController.mainWindowController(self.windmill)
-        
-        self.window = self.mainWindowController.window
-        self.window.makeKeyAndOrderFront(self)
-    }
+    lazy var keychain: Keychain = Keychain.defaultKeychain()
+    lazy var windmill: Windmill = Windmill.windmill(self.keychain)
 
+    override init() {
+        super.init()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("mainWindowDidLoad:"), name: "mainWindowDidLoad", object: nil)
+    }
+    
+    func applicationDidFinishLaunching(notification: NSNotification)
+    {
+        self.keychain.createUser(userIdentifier)
+        self.windmill.start()
+    }
+    
     func applicationWillTerminate(aNotification: NSNotification) {
+    }
+    
+    func mainWindowDidLoad(aNotification: NSNotification) {
+        let mainWindowViewController = aNotification.object as! MainWindowController
+        self.mainViewController = mainWindowViewController.contentViewController as! MainViewController
     }
     
     func mouseDown(theEvent: NSEvent)
@@ -67,7 +74,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             statusItem.popUpStatusItemMenu(statusItem.menu!)
         }
     }
-    
     
     func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
     {
@@ -94,7 +100,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     }
     
     func performDragOperation(info: NSDraggingInfo) -> Bool {
-        return self.mainWindowController.performDragOperation(info)
+        return self.mainViewController.performDragOperation(info)
     }
 }
 

@@ -1,3 +1,2 @@
-github "robrix/Box" "1.2.2"
-github "antitypical/Result" "0.4.5"
-github "SwiftGit2/SwiftGit2" "44fd952378616dfcd0fc65e762599f5ccba9bad0"
+github "antitypical/Result" "1.0.1"
+github "SwiftGit2/SwiftGit2" "4149f2ce5da586729729cb0e0a6c9e19f9a0a575"
