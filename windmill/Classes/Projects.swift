@@ -23,7 +23,18 @@ extension NSOutputStream
     class func outputStreamOnProjects() -> ProjectsOutputStream {
         return NSOutputStream(URL: ApplicationDirectory().file("projects.json").URL, append: false)!
     }
+}
+
+extension NSFileManager {
     
+    var foo: NSURL {
+        return try! self.URLForDirectory(.UserDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: false)
+    }
+    
+    var windmill: String {
+        return "\(NSHomeDirectory())/.windmill/"
+    }
+
 }
 
 func read(inputStream: ProjectsInputStream) -> Array<Project>

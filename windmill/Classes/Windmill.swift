@@ -123,28 +123,65 @@ final public class Windmill
         taskCheckout.launch()
         
         let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Checkout.rawValue, "origin":origin])
-        
         NSNotificationCenter.defaultCenter().postNotification(notification)
 
-        taskCheckout.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)] status in
+        let directoryPath = "\(NSFileManager.defaultManager().windmill)\(repoName)"
+        debugPrint(directoryPath)
+        taskCheckout.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), buildTask = NSTask.taskBuild(directoryPath: directoryPath, scheme: repoName)] status in
             
             defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Checkout, terminationStatus: status))
+
+            buildTask.launch()
+            let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Build.rawValue])
+            NSNotificationCenter.defaultCenter().postNotification(notification)
             
-            nightlyDeployGitRepoForUserTask.launch()
-            defaultCenter.postNotification(NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Nightly.rawValue, "origin":origin]))
+            buildTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), testTask = NSTask.taskTest(directoryPath: directoryPath, scheme:repoName)] status in
+                
+                defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Build, terminationStatus: status))
+                
+                testTask.launch()
+                let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Test.rawValue])
+                NSNotificationCenter.defaultCenter().postNotification(notification)
+                
+                testTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), packageTask = NSTask.taskPackage(directoryPath: directoryPath, projectName: repoName)] status in
+
+                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Test, terminationStatus: status))
+                    
+                    packageTask.launch()
+                    let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Package.rawValue])
+                    NSNotificationCenter.defaultCenter().postNotification(notification)
+                    
+                    packageTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), deployTask = NSTask.taskDeploy(directoryPath: directoryPath, projectName: repoName, forUser:user)] status in
+                        
+                        defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Package, terminationStatus: status))
+                        
+                        deployTask.launch()
+                        let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Deploy.rawValue])
+                        NSNotificationCenter.defaultCenter().postNotification(notification)
             
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        deployTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)] status in
                 
-                let status = nightlyDeployGitRepoForUserTask.waitUntilStatus()
+                            defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Deploy, terminationStatus: status))
                 
-                dispatch_async(dispatch_get_main_queue()){[defaultCenter = NSNotificationCenter.defaultCenter()] in
-                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Nightly, terminationStatus: status))
+                            nightlyDeployGitRepoForUserTask.launch()
+                            defaultCenter.postNotification(NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Nightly.rawValue, "origin":origin]))
+                
+                            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                    
+                                let status = nightlyDeployGitRepoForUserTask.waitUntilStatus()
+                    
+                                dispatch_async(dispatch_get_main_queue()){[defaultCenter = NSNotificationCenter.defaultCenter()] in
+                                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Nightly, terminationStatus: status))
+                                }
+                            }
+                
+                            self.scheduler.schedule(taskProvider: NSTask.taskPoll(repoName), ifDirty: { [unowned self] in
+                                self.deployGitRepo(repoName, origin: origin)
+                            })
+                        }
+                    }
                 }
             }
-            
-            self.scheduler.schedule(taskProvider: NSTask.taskPoll(repoName), ifDirty: { [unowned self] in
-                    self.deployGitRepo(repoName, origin: origin)
-                    })
         }
     }
     

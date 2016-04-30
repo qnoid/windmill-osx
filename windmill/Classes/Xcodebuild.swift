@@ -14,8 +14,10 @@ struct Xcodebuild
 {
     struct Development
     {
-        static let BUILD_PROJECT : BashScript = "scripts/xcodebuild/development/build_project"
-        static let BUILD_WORKSPACE : BashScript = "scripts/xcodebuild/development/build_workspace"
+        static let BUILD : BashScript = "scripts/xcodebuild/development/build"
+        static let TEST : BashScript = "scripts/xcodebuild/development/test"
+        static let PACKAGE : BashScript = "scripts/xcodebuild/development/package"
+        static let DEPLOY : BashScript = "scripts/xcodebuild/development/deploy"
     }
 }
 

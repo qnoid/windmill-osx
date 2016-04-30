@@ -38,7 +38,7 @@ public protocol ApplicationSupportDirectory : DirectoryType
 
 func ApplicationDirectory() -> DirectoryType
 {
-    let applicationName = NSBundle.mainBundle().CFBundleName()
+    let applicationName = NSBundle.mainBundle().bundleIdentifier!
     let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
     let applicationDirectory = NSFileManager.defaultManager().userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
     

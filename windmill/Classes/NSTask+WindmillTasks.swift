@@ -11,6 +11,12 @@ import Foundation
 let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-52-50-52-225.eu-west-1.compute.amazonaws.com"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
+#if DEBUG
+let WINDMILL_BASE_URL = WINDMILL_BASE_URL_DEVELOPMENT
+#else
+let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
+#endif
+
 let ScriptOnCommit = "scripts/on_commit"
 let ScriptNightly = "scripts/nightly"
 let ScriptPoll = "scripts/poll"
@@ -51,7 +57,28 @@ struct TaskNightly
 enum TaskType: String
 {
     case Checkout
+    case Build
+    case Test
+    case Package
+    case Deploy
     case Nightly
+    
+    var imageName: String {
+        switch (self){
+        case .Checkout:
+            return "windmill-activity-indicator-checkout"
+        case .Build:
+            return "windmill-activity-indicator-build"
+        case .Test:
+            return "windmill-activity-indicator-test"
+        case .Package:
+            return "windmill-activity-indicator-package"
+        case .Deploy:
+            return "windmill-activity-indicator"
+        case .Nightly:
+            return "Nightly"
+        }
+    }
 }
 
 typealias TaskProvider = () -> NSTask
@@ -80,22 +107,12 @@ extension NSTask
     :buildProjectWithName:
     :scheme:
     */
-    public static func taskDevelopmentBuildProject(directoryPath directoryPath: String)(withName projectName: String, scheme: String) -> NSTask
-    {
-        let task = NSTask()
-        task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.BUILD_PROJECT, ofType: "sh")!
-        task.arguments = [projectName, scheme]
-        
-        return task;
-    }
-    
-    public static func taskDevelopmentBuildWorkspace(directoryPath directoryPath: String)(withName workspaceName: String, scheme: String) -> NSTask
+    public static func taskBuild(directoryPath directoryPath: String, scheme: String) -> NSTask
     {
         let task = NSTask()
         task.currentDirectoryPath = directoryPath        
-        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.BUILD_WORKSPACE, ofType: "sh")!
-        task.arguments = [workspaceName, scheme]
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.BUILD, ofType: "sh")!
+        task.arguments = [scheme]
         
         return task;
     }
@@ -105,6 +122,36 @@ extension NSTask
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(Git.Development.CHECKOUT, ofType: "sh")!
         task.arguments = [repoName, origin, self.pathForDir("scripts")]
+        
+        return task;
+    }
+
+    public static func taskTest(directoryPath directoryPath: String, scheme: String, simulatorName: String = "iPhone 4s") -> NSTask {
+        
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.TEST, ofType: "sh")!
+        task.arguments = [scheme, simulatorName]
+        
+        return task;
+    }
+
+    public static func taskPackage(directoryPath directoryPath: String, projectName name: String) -> NSTask {
+        
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.PACKAGE, ofType: "sh")!
+        task.arguments = [name, self.pathForDir("resources")]
+        
+        return task;
+    }
+
+    public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> NSTask {
+        
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Xcodebuild.Development.DEPLOY, ofType: "sh")!
+        task.arguments = [name, user, WINDMILL_BASE_URL]
         
         return task;
     }
@@ -149,7 +196,7 @@ extension NSTask
     
     func whenExit(block: (TerminationStatus) -> Void)
     {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) { [self]
  
             let status = self.waitUntilStatus()
             

@@ -25,10 +25,10 @@
             </objects>
             <point key="canvasLocation" x="-397" y="138"/>
         </scene>
-        <!--foo-->
+        <!--Main View Controller Scene-->
         <scene sceneID="pHJ-l6-QGn">
             <objects>
-                <splitViewController title="foo" id="oqp-ch-CgG" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController title="foo" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
                         <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
@@ -161,55 +161,42 @@
         <scene sceneID="Amb-BC-0eG">
             <objects>
                 <viewController id="Hwi-w3-Rle" customClass="ProjectDetailViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="6j5-vW-ygG">
+                    <view key="view" id="6j5-vW-ygG">
                         <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="DNK-I9-TY2">
-                                <rect key="frame" x="20" y="413" width="16" height="16"/>
-                            </progressIndicator>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rH9-xF-M3e">
-                                <rect key="frame" x="44" y="413" width="61" height="17"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rH9-xF-M3e">
+                                <rect key="frame" x="92" y="413" width="79" height="31"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="checkout" id="oWA-62-ngk">
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" size="18" name="AvenirNext-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TZj-HZ-qga">
-                                <rect key="frame" x="115" y="413" width="475" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="git@bitbucket.org:qnoid/verylargebox.git" id="NcG-y2-3Lh">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="frg-E1-xZw">
-                                <rect key="frame" x="20" y="388" width="16" height="16"/>
-                            </progressIndicator>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ljg-f9-WXg">
-                                <rect key="frame" x="44" y="388" width="35" height="17"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ljg-f9-WXg">
+                                <rect key="frame" x="175" y="413" width="47" height="31"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="build" id="Uv9-0L-XVZ">
-                                    <font key="font" metaFont="system"/>
+                                    <font key="font" size="18" name="AvenirNext-Regular"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dRv-DK-jLA">
-                                <rect key="frame" x="115" y="388" width="475" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="* [commit] (branch)" id="MeU-jp-5bc">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                            <imageView toolTip="Keep the windmill spinning!" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b81-dN-eNy" userLabel="activityIndicatorImageView">
+                                <rect key="frame" x="20" y="369" width="44" height="44"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill-activity-indicator" id="pgf-K7-67P"/>
+                            </imageView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="b81-dN-eNy" firstAttribute="top" secondItem="rH9-xF-M3e" secondAttribute="bottom" id="Epp-AK-ZFX"/>
+                            <constraint firstItem="rH9-xF-M3e" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="trailing" constant="30" id="K0p-Ud-Dy9"/>
+                            <constraint firstItem="b81-dN-eNy" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="20" id="SCW-ba-mTO"/>
+                            <constraint firstItem="rH9-xF-M3e" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" constant="36" id="dks-hm-ET4"/>
+                            <constraint firstItem="ljg-f9-WXg" firstAttribute="leading" secondItem="rH9-xF-M3e" secondAttribute="trailing" constant="8" id="exW-m8-7om"/>
+                            <constraint firstItem="ljg-f9-WXg" firstAttribute="top" secondItem="rH9-xF-M3e" secondAttribute="top" id="qi9-h1-Ygh"/>
+                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="buildProgressIndicator" destination="frg-E1-xZw" id="icQ-M6-UAR"/>
-                        <outlet property="checkoutProgressIndicator" destination="DNK-I9-TY2" id="rbY-88-7hu"/>
-                        <outlet property="commitTextField" destination="dRv-DK-jLA" id="rJt-JL-v6N"/>
-                        <outlet property="originTextField" destination="TZj-HZ-qga" id="Mdw-u5-MTO"/>
+                        <outlet property="activityIndicatorImageView" destination="b81-dN-eNy" id="Cgk-3T-zNF"/>
                     </connections>
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -452,5 +439,6 @@
     </scenes>
     <resources>
         <image name="windmill" width="16" height="16"/>
+        <image name="windmill-activity-indicator" width="44" height="44"/>
     </resources>
 </document>

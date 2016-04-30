@@ -13,8 +13,6 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
     static let logger : ConsoleLog = ConsoleLog()
     
     @IBOutlet public weak var outlineView: NSOutlineView!
-    @IBOutlet weak var buildProgressIndicator: NSProgressIndicator!
-    @IBOutlet public weak var buildTextField: NSTextField!
     
     var windmill: Windmill! {
         didSet{
@@ -58,15 +56,7 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
         switch result
         {
         case .Success(let project):
-            let wasDeployed = self.windmill.deploy(project)
-            
-            if(wasDeployed) {
-                self.buildProgressIndicator.startAnimation(self)
-                
-                let commitNumber = "8076c32"
-                self.buildTextField.attributedStringValue = NSAttributedString.commitBuildString(commitNumber, branchName: "master")
-            }
-            
+            self.windmill.deploy(project)
             return true
         case .Failure(let error):
             alert(error, window: self.view.window!)
