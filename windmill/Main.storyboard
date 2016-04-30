@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
@@ -25,10 +25,10 @@
             </objects>
             <point key="canvasLocation" x="-397" y="138"/>
         </scene>
-        <!--Main View Controller-->
+        <!--foo-->
         <scene sceneID="pHJ-l6-QGn">
             <objects>
-                <splitViewController id="oqp-ch-CgG" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController title="foo" id="oqp-ch-CgG" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
                         <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
@@ -52,10 +52,10 @@
             <objects>
                 <viewController storyboardIdentifier="ProjectsViewController" id="CLr-JN-nba" customClass="ProjectsViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <scrollView key="view" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="olU-Jr-aod">
-                        <rect key="frame" x="0.0" y="0.0" width="180" height="492"/>
+                        <rect key="frame" x="0.0" y="0.0" width="180" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" drawsBackground="NO" id="eIj-lL-CPI">
-                            <rect key="frame" x="1" y="1" width="178" height="490"/>
+                            <rect key="frame" x="1" y="1" width="178" height="478"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <outlineView toolTip="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo." appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="IYb-OR-B3W" id="sYh-bU-Ug6">
@@ -82,7 +82,7 @@
                                                     <rect key="frame" x="1" y="1" width="175" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GvD-aO-Vvr">
+                                                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GvD-aO-Vvr">
                                                             <rect key="frame" x="0.0" y="1" width="145" height="14"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Projects" id="vAL-zD-3nx">
                                                                 <font key="font" metaFont="smallSystemBold"/>
@@ -91,6 +91,11 @@
                                                             </textFieldCell>
                                                         </textField>
                                                     </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="GvD-aO-Vvr" secondAttribute="trailing" constant="32" id="0Ot-M9-CdB"/>
+                                                        <constraint firstItem="GvD-aO-Vvr" firstAttribute="leading" secondItem="0A8-9W-H6c" secondAttribute="leading" constant="2" id="aQq-nW-RxE"/>
+                                                        <constraint firstItem="GvD-aO-Vvr" firstAttribute="centerY" secondItem="0A8-9W-H6c" secondAttribute="centerY" id="koz-It-jOE"/>
+                                                    </constraints>
                                                     <connections>
                                                         <outlet property="textField" destination="GvD-aO-Vvr" id="hjX-pO-ozt"/>
                                                     </connections>
@@ -99,11 +104,14 @@
                                                     <rect key="frame" x="1" y="20" width="175" height="17"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gC9-M6-y5D">
+                                                        <imageView translatesAutoresizingMaskIntoConstraints="NO" id="gC9-M6-y5D">
                                                             <rect key="frame" x="3" y="0.0" width="17" height="17"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="17" id="7Jn-sB-bg6"/>
+                                                            </constraints>
                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill" id="9ud-Iy-oc2"/>
                                                         </imageView>
-                                                        <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JdJ-vv-N26">
+                                                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JdJ-vv-N26">
                                                             <rect key="frame" x="25" y="0.0" width="120" height="17"/>
                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" placeholderString="project name" id="NBy-dC-Tu4">
                                                                 <font key="font" metaFont="system"/>
@@ -112,6 +120,14 @@
                                                             </textFieldCell>
                                                         </textField>
                                                     </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="JdJ-vv-N26" firstAttribute="centerY" secondItem="qr6-n9-R6n" secondAttribute="centerY" id="1Rr-VW-Rej"/>
+                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="bottom" secondItem="JdJ-vv-N26" secondAttribute="bottom" id="2fB-5H-7ps"/>
+                                                        <constraint firstItem="JdJ-vv-N26" firstAttribute="leading" secondItem="gC9-M6-y5D" secondAttribute="trailing" constant="7" id="3X1-qd-L6k"/>
+                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="leading" secondItem="qr6-n9-R6n" secondAttribute="leading" constant="3" id="Aeh-ab-Jkk"/>
+                                                        <constraint firstAttribute="trailing" secondItem="JdJ-vv-N26" secondAttribute="trailing" constant="32" id="Nmh-vI-o1c"/>
+                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="top" secondItem="JdJ-vv-N26" secondAttribute="top" id="mfC-IQ-bGd"/>
+                                                    </constraints>
                                                     <connections>
                                                         <outlet property="imageView" destination="gC9-M6-y5D" id="v8K-1N-h2m"/>
                                                         <outlet property="textField" destination="JdJ-vv-N26" id="wZ6-V9-f5W"/>
@@ -124,10 +140,6 @@
                             </subviews>
                             <nil key="backgroundColor"/>
                         </clipView>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="180" id="15W-ss-LiH"/>
-                            <constraint firstAttribute="height" constant="492" id="UYT-vp-UqV"/>
-                        </constraints>
                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="g6V-fB-adw">
                             <rect key="frame" x="1" y="475" width="178" height="16"/>
                             <autoresizingMask key="autoresizingMask"/>
@@ -150,14 +162,14 @@
             <objects>
                 <viewController id="Hwi-w3-Rle" customClass="ProjectDetailViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="6j5-vW-ygG">
-                        <rect key="frame" x="0.0" y="0.0" width="588" height="492"/>
+                        <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="DNK-I9-TY2">
-                                <rect key="frame" x="20" y="425" width="16" height="16"/>
+                                <rect key="frame" x="20" y="413" width="16" height="16"/>
                             </progressIndicator>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rH9-xF-M3e">
-                                <rect key="frame" x="44" y="425" width="61" height="17"/>
+                                <rect key="frame" x="44" y="413" width="61" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="checkout" id="oWA-62-ngk">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -165,18 +177,18 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TZj-HZ-qga">
-                                <rect key="frame" x="115" y="425" width="475" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="git@bitbucket.org:qnoid/balance.git" id="NcG-y2-3Lh">
+                                <rect key="frame" x="115" y="413" width="475" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="git@bitbucket.org:qnoid/verylargebox.git" id="NcG-y2-3Lh">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="frg-E1-xZw">
-                                <rect key="frame" x="20" y="400" width="16" height="16"/>
+                                <rect key="frame" x="20" y="388" width="16" height="16"/>
                             </progressIndicator>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ljg-f9-WXg">
-                                <rect key="frame" x="44" y="400" width="35" height="17"/>
+                                <rect key="frame" x="44" y="388" width="35" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="build" id="Uv9-0L-XVZ">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -184,7 +196,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dRv-DK-jLA">
-                                <rect key="frame" x="115" y="400" width="475" height="17"/>
+                                <rect key="frame" x="115" y="388" width="475" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="* [commit] (branch)" id="MeU-jp-5bc">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>

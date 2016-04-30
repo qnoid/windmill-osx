@@ -50,13 +50,8 @@ struct TaskNightly
 
 enum TaskType: String
 {
-    case OnCommit
+    case Checkout
     case Nightly
-}
-
-protocol Foo
-{
-    func bar()
 }
 
 typealias TaskProvider = () -> NSTask
@@ -67,10 +62,10 @@ extension NSTask
         static let taskDidLaunch = "taskDidLaunch"
         static let taskDidExit = "taskDidExit"
         
-        static func taskDidLaunch(type: TaskType) -> NSNotification {
-            return NSNotification(name: taskDidLaunch, object: nil, userInfo: ["type":type.rawValue])
+        static func taskDidLaunchNotification(userInfo: [String: AnyObject] ) -> NSNotification {
+            return NSNotification(name: taskDidLaunch, object: nil, userInfo: userInfo)
         }
-        static func taskDidExit(type: TaskType, terminationStatus: TerminationStatus) -> NSNotification {
+        static func taskDidExitNotification(type: TaskType, terminationStatus: TerminationStatus) -> NSNotification {
             return NSNotification(name: taskDidExit, object: nil, userInfo: ["type":type.rawValue, "status":terminationStatus.rawValue])
         }
     }
@@ -104,7 +99,16 @@ extension NSTask
         
         return task;
     }
-    
+
+    public static func taskCheckout(repoName: String, origin: String) -> NSTask {
+        
+        let task = NSTask()
+        task.launchPath = NSBundle.mainBundle().pathForResource(Git.Development.CHECKOUT, ofType: "sh")!
+        task.arguments = [repoName, origin, self.pathForDir("scripts")]
+        
+        return task;
+    }
+
     static func taskOnCommit(repoName: String, origin: String) -> NSTask {
         
         let task = NSTask()

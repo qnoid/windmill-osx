@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		BD081A121AB05EFA00B8E948 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A111AB05EFA00B8E948 /* Project.swift */; };
-		BD081A191AB09ABC00B8E948 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A151AB09AA600B8E948 /* SwiftGit2.framework */; };
-		BD081A1A1AB09ABC00B8E948 /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A151AB09AA600B8E948 /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
 		BD081A5E1AB1A53500B8E948 /* ProjectsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD081A641AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */; };
+		BD1835D41CCC1CEA00B79D0F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D21CCC1CEA00B79D0F /* Result.framework */; };
+		BD1835D71CCC1D1300B79D0F /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D21CCC1CEA00B79D0F /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD1835D81CCC1D1300B79D0F /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */; };
+		BD1835D91CCC1D1300B79D0F /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A881C42B7240015A13A /* ProjectsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A871C42B7240015A13A /* ProjectsViewController.swift */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
@@ -48,13 +50,10 @@
 		BDD002181AB8807A00F8E34A /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002171AB8807A00F8E34A /* Projects.swift */; };
 		BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002191AB8B5AD00F8E34A /* Alerts.swift */; };
 		BDD0021C1ABA26ED00F8E34A /* WindmillTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD0021B1ABA26ED00F8E34A /* WindmillTest.swift */; };
-		BDD0021E1ABA278A00F8E34A /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD081A151AB09AA600B8E948 /* SwiftGit2.framework */; };
 		BDD002211ABA3ECD00F8E34A /* Xcodebuild.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Xcodebuild.swift */; };
 		BDD002231ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */; };
 		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
-		BDFA10C31C39566100C58B71 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDFA10C21C39566100C58B71 /* Result.framework */; };
-		BDFA10C41C39566100C58B71 /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDFA10C21C39566100C58B71 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,8 +73,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BD081A1A1AB09ABC00B8E948 /* SwiftGit2.framework in Embed Frameworks */,
-				BDFA10C41C39566100C58B71 /* Result.framework in Embed Frameworks */,
+				BD1835D91CCC1D1300B79D0F /* SwiftGit2.framework in Embed Frameworks */,
+				BD1835D71CCC1D1300B79D0F /* Result.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,11 +83,12 @@
 
 /* Begin PBXFileReference section */
 		BD081A111AB05EFA00B8E948 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
-		BD081A151AB09AA600B8E948 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsDataSource.swift; path = Classes/ProjectsDataSource.swift; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsOutlineViewDelegate.swift; path = Classes/ProjectsOutlineViewDelegate.swift; sourceTree = "<group>"; };
+		BD1835D21CCC1CEA00B79D0F /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = frameworks/Result.framework; sourceTree = "<group>"; };
+		BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A871C42B7240015A13A /* ProjectsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
@@ -131,7 +131,6 @@
 		BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasksTest.swift"; sourceTree = "<group>"; };
 		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
-		BDFA10C21C39566100C58B71 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = frameworks/Result.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,8 +138,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD081A191AB09ABC00B8E948 /* SwiftGit2.framework in Frameworks */,
-				BDFA10C31C39566100C58B71 /* Result.framework in Frameworks */,
+				BD1835D81CCC1D1300B79D0F /* SwiftGit2.framework in Frameworks */,
+				BD1835D41CCC1CEA00B79D0F /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +147,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDD0021E1ABA278A00F8E34A /* SwiftGit2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,8 +156,8 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BDFA10C21C39566100C58B71 /* Result.framework */,
-				BD081A151AB09AA600B8E948 /* SwiftGit2.framework */,
+				BD1835D21CCC1CEA00B79D0F /* Result.framework */,
+				BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

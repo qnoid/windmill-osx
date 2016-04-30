@@ -113,29 +113,32 @@ final public class Windmill
 
     private func deployGitRepo(repoName: String, origin: String)
     {
-        let taskOnCommit = NSTask.taskOnCommit(repoName, origin: origin)
+        let taskCheckout = NSTask.taskCheckout(repoName, origin: origin)
         
         guard let user = try? self.keychain.findWindmillUser() else {
             Windmill.logger.log(.ERROR, "\(__FUNCTION__) A windmill user account should have been created.")
             return
         }
         
-        taskOnCommit.launch()
-        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunch(.OnCommit))
+        taskCheckout.launch()
+        
+        let notification = NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Checkout.rawValue, "origin":origin])
+        
+        NSNotificationCenter.defaultCenter().postNotification(notification)
 
-        taskOnCommit.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)] status in
+        taskCheckout.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), nightlyDeployGitRepoForUserTask = NSTask.taskNightly(repoName, origin: origin, forUser:user)] status in
             
-            defaultCenter.postNotification(NSTask.Notifications.taskDidExit(.OnCommit, terminationStatus: status))
+            defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Checkout, terminationStatus: status))
             
             nightlyDeployGitRepoForUserTask.launch()
-            defaultCenter.postNotification(NSTask.Notifications.taskDidLaunch(.Nightly))
+            defaultCenter.postNotification(NSTask.Notifications.taskDidLaunchNotification(["type": TaskType.Nightly.rawValue, "origin":origin]))
             
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
                 
                 let status = nightlyDeployGitRepoForUserTask.waitUntilStatus()
                 
                 dispatch_async(dispatch_get_main_queue()){[defaultCenter = NSNotificationCenter.defaultCenter()] in
-                    defaultCenter.postNotification(NSTask.Notifications.taskDidExit(.Nightly, terminationStatus: status))
+                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Nightly, terminationStatus: status))
                 }
             }
             

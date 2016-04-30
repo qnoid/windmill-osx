@@ -30,8 +30,9 @@ class ProjectDetailViewController: NSViewController {
         let type = TaskType(rawValue: aNotification.userInfo!["type"] as! String)!
 
         switch(type){
-        case .OnCommit:
+        case .Checkout:
             self.checkoutProgressIndicator.startAnimation(self)
+            self.originTextField.stringValue = aNotification.userInfo!["origin"] as! String
         case .Nightly:
             self.buildProgressIndicator.startAnimation(self)
         }
@@ -42,7 +43,7 @@ class ProjectDetailViewController: NSViewController {
         let type = TaskType(rawValue: aNotification.userInfo!["type"] as! String)!
         
         switch(type){
-        case .OnCommit:
+        case .Checkout:
             self.checkoutProgressIndicator.stopAnimation(self)
         case .Nightly:
             self.buildProgressIndicator.stopAnimation(self)
