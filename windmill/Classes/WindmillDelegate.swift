@@ -10,6 +10,8 @@ import Foundation
 
 protocol WindmillDelegate
 {
+    func windmill(windmill: Windmill, willDeployProject project: Project)
+
     /**
     Callback when Windmill#add: succesfully added a project
     

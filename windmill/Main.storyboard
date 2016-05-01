@@ -28,7 +28,7 @@
         <!--Main View Controller Scene-->
         <scene sceneID="pHJ-l6-QGn">
             <objects>
-                <splitViewController title="foo" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController title="Windmill" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
                         <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
@@ -129,7 +129,7 @@
                                                         <constraint firstItem="gC9-M6-y5D" firstAttribute="top" secondItem="JdJ-vv-N26" secondAttribute="top" id="mfC-IQ-bGd"/>
                                                     </constraints>
                                                     <connections>
-                                                        <outlet property="imageView" destination="gC9-M6-y5D" id="v8K-1N-h2m"/>
+                                                        <outlet property="imageView" destination="gC9-M6-y5D" id="CxE-yE-A26"/>
                                                         <outlet property="textField" destination="JdJ-vv-N26" id="wZ6-V9-f5W"/>
                                                     </connections>
                                                 </tableCellView>
@@ -165,38 +165,104 @@
                         <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rH9-xF-M3e">
-                                <rect key="frame" x="92" y="413" width="79" height="31"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="checkout" id="oWA-62-ngk">
-                                    <font key="font" size="18" name="AvenirNext-Regular"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ljg-f9-WXg">
-                                <rect key="frame" x="175" y="413" width="47" height="31"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="build" id="Uv9-0L-XVZ">
-                                    <font key="font" size="18" name="AvenirNext-Regular"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <imageView toolTip="Keep the windmill spinning!" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="b81-dN-eNy" userLabel="activityIndicatorImageView">
-                                <rect key="frame" x="20" y="369" width="44" height="44"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill-activity-indicator" id="pgf-K7-67P"/>
+                                <rect key="frame" x="20" y="364" width="44" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="0Lc-h0-8Nj"/>
+                                    <constraint firstAttribute="height" constant="50" id="Yfa-k8-5At"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill-activity-indicator-inactive" id="pgf-K7-67P"/>
                             </imageView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-vk-iA5" userLabel="activity">
+                                <rect key="frame" x="18" y="333" width="39" height="23"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="active" id="Cu7-M4-32H">
+                                    <font key="font" size="13" name="AvenirNext-Regular"/>
+                                    <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                                <rect key="frame" x="94" y="364" width="120" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
+                                    <constraint firstAttribute="height" constant="80" id="oiO-mA-I9r"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="checkout"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-checkout"/>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                                <rect key="frame" x="214" y="364" width="120" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
+                                    <constraint firstAttribute="height" constant="80" id="GiW-gK-orz"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="build"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-build"/>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                                <rect key="frame" x="334" y="364" width="120" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
+                                    <constraint firstAttribute="height" constant="80" id="VnY-Lz-ERM"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="test"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-test"/>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                                <rect key="frame" x="454" y="364" width="120" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
+                                    <constraint firstAttribute="width" constant="120" id="fgF-3l-vdS"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="archive"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-archive"/>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dvm-4Y-JmU">
+                                <rect key="frame" x="92" y="333" width="484" height="23"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="https://windmill.io/qnoid/com.qnoid.brainmap/brainmap.plist" id="0By-8r-1Qu">
+                                    <font key="font" size="13" name="AvenirNext-Regular"/>
+                                    <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="b81-dN-eNy" firstAttribute="top" secondItem="rH9-xF-M3e" secondAttribute="bottom" id="Epp-AK-ZFX"/>
-                            <constraint firstItem="rH9-xF-M3e" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="trailing" constant="30" id="K0p-Ud-Dy9"/>
+                            <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="1y8-gi-M0v"/>
+                            <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
+                            <constraint firstItem="UBj-vk-iA5" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="leading" id="5eS-qY-1Ol"/>
+                            <constraint firstAttribute="trailing" secondItem="RWe-v3-81B" secondAttribute="trailing" constant="14" id="9VN-J6-ErJ"/>
+                            <constraint firstAttribute="trailing" secondItem="Dvm-4Y-JmU" secondAttribute="trailing" constant="14" id="EdF-Hi-25g"/>
+                            <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="b81-dN-eNy" secondAttribute="bottom" constant="8" id="Gyc-tw-CPr"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="trailing" constant="30" id="NbJ-gB-2Xk"/>
+                            <constraint firstItem="Dvm-4Y-JmU" firstAttribute="baseline" secondItem="UBj-vk-iA5" secondAttribute="baseline" id="R8E-lz-MS2"/>
+                            <constraint firstItem="Dvm-4Y-JmU" firstAttribute="leading" secondItem="bvb-g2-0Id" secondAttribute="leading" id="RMQ-xR-Nih"/>
                             <constraint firstItem="b81-dN-eNy" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="20" id="SCW-ba-mTO"/>
-                            <constraint firstItem="rH9-xF-M3e" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" constant="36" id="dks-hm-ET4"/>
-                            <constraint firstItem="ljg-f9-WXg" firstAttribute="leading" secondItem="rH9-xF-M3e" secondAttribute="trailing" constant="8" id="exW-m8-7om"/>
-                            <constraint firstItem="ljg-f9-WXg" firstAttribute="top" secondItem="rH9-xF-M3e" secondAttribute="top" id="qi9-h1-Ygh"/>
+                            <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
+                            <constraint firstItem="b81-dN-eNy" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" constant="30" id="YSD-5a-16q"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="UBj-vk-iA5" secondAttribute="trailing" id="g7K-LH-rZf"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" constant="36" id="hh1-Ab-B8q"/>
+                            <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="bottom" constant="8" id="iMK-f8-pjQ"/>
+                            <constraint firstItem="RWe-v3-81B" firstAttribute="top" secondItem="dmf-os-213" secondAttribute="top" id="ta7-EF-JCs"/>
+                            <constraint firstItem="RWe-v3-81B" firstAttribute="leading" secondItem="dmf-os-213" secondAttribute="trailing" id="uQc-ac-f5w"/>
+                            <constraint firstItem="CN9-ls-yLA" firstAttribute="leading" secondItem="bvb-g2-0Id" secondAttribute="trailing" id="ufr-5Q-9C2"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicatorImageView" destination="b81-dN-eNy" id="Cgk-3T-zNF"/>
+                        <outlet property="activityTextfield" destination="UBj-vk-iA5" id="EGd-rS-MDj"/>
+                        <outlet property="archiveActivityView" destination="RWe-v3-81B" id="1xC-cH-ScX"/>
+                        <outlet property="buildActivityView" destination="CN9-ls-yLA" id="qpB-kt-nGs"/>
+                        <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
+                        <outlet property="packageActivityView" destination="RWe-v3-81B" id="guT-5L-WW0"/>
+                        <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
                     </connections>
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -438,7 +504,11 @@
         </scene>
     </scenes>
     <resources>
+        <image name="lights-archive" width="110" height="44"/>
+        <image name="lights-build" width="110" height="44"/>
+        <image name="lights-checkout" width="110" height="44"/>
+        <image name="lights-test" width="110" height="44"/>
         <image name="windmill" width="16" height="16"/>
-        <image name="windmill-activity-indicator" width="44" height="44"/>
+        <image name="windmill-activity-indicator-inactive" width="44" height="44"/>
     </resources>
 </document>

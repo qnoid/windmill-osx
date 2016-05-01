@@ -39,9 +39,21 @@ public class ProjectsOutlineViewDelegate : NSObject, NSOutlineViewDelegate
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, header: Header) -> NSTableCellView
     {
         let cell = outlineView.makeViewWithIdentifier("HeaderCell")
+        
         cell.textField?.stringValue = header
         
         return cell
+    }
+    
+    public func outlineView(outlineView: NSOutlineView, willDisplayOutlineCell cell: AnyObject, forTableColumn tableColumn: NSTableColumn?, item: AnyObject) {
+        
+        guard let _ = item as? Project, let tableCellView = cell as? NSTableCellView else {
+            return
+        }
+        
+        tableCellView.imageView!.wantsLayer = true
+        CALayer.Windmill.positionAnchorPoint(tableCellView.imageView!.layer!)
+        tableCellView.imageView!.layer!.addAnimation(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
     }
 
 }

@@ -21,57 +21,72 @@ extension CALayer {
 }
 
 class ProjectDetailViewController: NSViewController {
-
-    struct Windmill {
-        static let spinAnimation: CAAnimation = {
-            let basicAnimation = CABasicAnimation(keyPath:"transform.rotation")
-            basicAnimation.fromValue = 0.0
-            basicAnimation.toValue = NSNumber(double: 2.0 * M_PI)
-            basicAnimation.duration = 1.0
-            basicAnimation.repeatCount = Float.infinity
-            
-            return basicAnimation
-        }()
-    }
     
     @IBOutlet weak var activityIndicatorImageView: NSImageView! {
         didSet{
             activityIndicatorImageView.wantsLayer = true
         }
     }
+    @IBOutlet weak var activityTextfield: NSTextField!
+    @IBOutlet weak var checkoutActivityView: ActivityView!
+    @IBOutlet weak var buildActivityView: ActivityView!
+    @IBOutlet weak var testActivityView: ActivityView!
+    @IBOutlet weak var archiveActivityView: ActivityView!
+    
+    lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
+        return [.Checkout: self.checkoutActivityView, .Build: self.buildActivityView, .Test: self.testActivityView, .Archive: self.archiveActivityView]
+    }()
     
     let defaultCenter = NSNotificationCenter.defaultCenter()
     var scheduler: Scheduler!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.wantsLayer = true
+        self.view.layer?.backgroundColor = NSColor.blackColor().CGColor
 
-        
+
         self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidLaunch):"), name: NSTask.Notifications.taskDidLaunch, object: nil)
         self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidExit):"), name: NSTask.Notifications.taskDidExit, object: nil)
     }
     
-    func taskDidLaunch(aNotification: NSNotification)
-    {
+    override func viewDidAppear() {
         CALayer.Windmill.positionAnchorPoint(self.activityIndicatorImageView.layer!)
-
-        let type = TaskType(rawValue: aNotification.userInfo!["type"] as! String)!
-
-        switch(type){
-            case .Checkout, .Build, .Test, .Package:
-                self.activityIndicatorImageView.image = NSImage(named: type.imageName)
-            case .Deploy:
-                debugPrint("DEBUG: \(__FILE__):\(__FUNCTION__):\(__LINE__)")
-            case .Nightly:
-                self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator")
+        self.activityIndicatorImageView.layer?.addAnimation(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
+    }
+    
+    func windmill(windmill: Windmill, willDeployProject project: Project) {
+        self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
+        for activityView in self.activityViews.values {
+            activityView.hidden = true
+            activityView.alphaValue = 0.5
         }
+    }
+    
+    func taskDidLaunch(aNotification: NSNotification) {
         
-        self.activityIndicatorImageView.layer?.addAnimation(Windmill.spinAnimation, forKey: "spinAnimation")
+        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+
+        switch(activityType){
+            case .Checkout, .Build, .Test, .Archive:
+                self.activityIndicatorImageView.image = NSImage(named: activityType.imageName)
+                self.activityTextfield.stringValue = activityType.description
+                self.activityViews[activityType]?.hidden = false
+            case .Deploy:
+                self.activityTextfield.stringValue = activityType.description
+        }
     }
     
-    func taskDidExit(aNotification: NSNotification)
-    {
-        _ = TaskType(rawValue: aNotification.userInfo!["type"] as! String)!
+    func taskDidExit(aNotification: NSNotification) {
+        
+        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+        
+        switch(activityType){
+        case .Checkout, .Build, .Test, .Archive:
+            self.activityViews[activityType]?.alphaValue = 1.0
+        case .Deploy:
+            self.activityTextfield.stringValue = activityType.description
+        }
+            self.activityTextfield.stringValue = "monitoring"
     }
-    
 }

@@ -31,13 +31,18 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
         return outlineViewDataSource
     }()
     
+    weak var projectDetailViewController: ProjectDetailViewController!
+    
+    public override func viewDidLoad() {
+        
+    }
     /**
      
      Causes the #outlineview to refresh
      
      */
-    func reloadData()
-    {
+    func reloadData() {
+        
         self.outlineView.reloadData()
     }
     
@@ -62,6 +67,10 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
             alert(error, window: self.view.window!)
             return false
         }
+    }
+    
+    func windmill(windmill: Windmill, willDeployProject project: Project) {
+        self.projectDetailViewController.windmill(windmill, willDeployProject:project)
     }
     
     func created(windmill: Windmill, projects: Array<Project>, project: Project) {

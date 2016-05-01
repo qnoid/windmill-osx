@@ -11,7 +11,9 @@ import AppKit
 class MainViewController: NSSplitViewController {
 
     var projectsViewController: ProjectsViewController {
-        return self.splitViewItems[0].viewController as! ProjectsViewController
+        let projectsViewController = self.splitViewItems[0].viewController as! ProjectsViewController
+        projectsViewController.projectDetailViewController = self.projectDetailViewController
+        return projectsViewController
     }
 
     var projectDetailViewController: ProjectDetailViewController {
