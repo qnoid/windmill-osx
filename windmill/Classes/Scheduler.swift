@@ -13,37 +13,58 @@ import Foundation
 */
 final public class Scheduler
 {
-    static var dispatch_queue_global_utility : dispatch_queue_t {
-        return dispatch_get_global_queue(QOS_CLASS_UTILITY, 0)
-    }
-
-    static var dispatch_queue_serial : dispatch_queue_t {
-        return dispatch_queue_create("io.windmil.queue", DISPATCH_QUEUE_SERIAL)
-    }
-
     let delayInSeconds = 0.5 * 60
     
-    required public init()
-    {
+    private func dispatch_block_create_for(task: ActivityTask) -> dispatch_block_t {
+        return dispatch_block_create(dispatch_block_flags_t(0)) { [_task = task] in
+            _task.launch()
+            
+            dispatch_async(dispatch_get_main_queue()) {[_activityType = _task.activityType, defaultCenter = NSNotificationCenter.defaultCenter()] in
+                defaultCenter.postNotification(NSTask.Notifications.taskDidLaunchNotification(_activityType))
+            }
+            
+            _task.waitUntilStatus { status in
+                dispatch_async(dispatch_get_main_queue()) { [_activityType = _task.activityType, defaultCenter = NSNotificationCenter.defaultCenter()] in
+                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(_activityType, terminationStatus: status))
+                }
+            }
+        }
+    }
+    
+    func queue(tasks: ActivityTask...) {
+        for task in tasks {
+            dispatch_async(Windmill.dispatch_queue_serial, dispatch_block_create_for(task))
+        }
     }
     
     func schedule(@autoclosure(escaping) taskProvider taskProvider: TaskProvider, ifDirty callback: () -> Void)
     {
         let when = dispatch_time(DISPATCH_TIME_NOW, Int64(self.delayInSeconds) * Int64(NSEC_PER_SEC))
         
-        let task = taskProvider()
-        
-        dispatch_after(when, Scheduler.dispatch_queue_serial) { [unowned self] in
+        dispatch_after(when, Windmill.dispatch_queue_serial) { [_task = taskProvider(), weak self] in
             
-            task.launch()
-            let terminationStatus = task.waitUntilStatus()
+            guard let _self = self else {
+                return
+            }
             
-            switch terminationStatus
-            {
-            case .AlreadyUpToDate:
-                self.schedule(taskProvider: taskProvider, ifDirty: callback)
-            case .Dirty:
-                callback()
+            _task.launch()
+            
+            dispatch_async(dispatch_get_main_queue()) { [_activityType = _task.activityType, defaultCenter = NSNotificationCenter.defaultCenter()] in
+                defaultCenter.postNotification(NSTask.Notifications.taskDidLaunchNotification(_activityType))
+            }
+            
+            _task.waitUntilStatus { status in
+             
+                dispatch_async(dispatch_get_main_queue()) { [_activityType = _task.activityType, defaultCenter = NSNotificationCenter.defaultCenter()] in
+                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(_activityType, terminationStatus: status))
+                }
+                
+                switch status {
+                case .AlreadyUpToDate:
+                    _self.schedule(taskProvider: taskProvider, ifDirty: callback)
+                case .Dirty:
+                    callback()
+                }
             }
         }
     }

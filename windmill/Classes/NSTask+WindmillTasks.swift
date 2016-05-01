@@ -57,6 +57,7 @@ enum ActivityType: String, CustomStringConvertible
     case Test
     case Archive
     case Deploy
+    case Poll
     
     var imageName: String {
         switch (self){
@@ -69,6 +70,8 @@ enum ActivityType: String, CustomStringConvertible
         case .Archive:
             return "windmill-activity-indicator-archive"
         case .Deploy:
+            return "windmill-activity-indicator"
+        case .Poll:
             return "windmill-activity-indicator"
         }
     }
@@ -84,6 +87,8 @@ enum ActivityType: String, CustomStringConvertible
         case .Archive:
             return "lights-archive"
         case .Deploy:
+            return ""
+        case .Poll:
             return ""
         }
     }
@@ -101,11 +106,41 @@ enum ActivityType: String, CustomStringConvertible
             return "archiving"
         case .Deploy:
             return "deploying"
+        case .Poll:
+            return "monitoring"
         }
     }
 }
 
-typealias TaskProvider = () -> NSTask
+typealias TaskProvider = () -> Task
+
+protocol ActivityTask {
+    var activityType: ActivityType { get }
+    
+    func launch()
+    func waitUntilStatus(block: (TerminationStatus) -> Void)
+}
+
+public struct Task: ActivityTask {
+    let activityType: ActivityType
+    let task: NSTask
+    
+    init(activityType: ActivityType, task: NSTask) {
+        self.activityType = activityType
+        self.task = task
+    }
+    
+    func launch() {        
+        self.task.launch()
+    }
+    
+    
+    func waitUntilStatus(block: (TerminationStatus) -> Void) {
+        let status = self.task.waitUntilStatus()
+        block(status)
+    }
+
+}
 
 extension NSTask
 {
@@ -113,8 +148,8 @@ extension NSTask
         static let taskDidLaunch = "taskDidLaunch"
         static let taskDidExit = "taskDidExit"
 
-        static func taskDidLaunchNotification(userInfo: [String: AnyObject] ) -> NSNotification {
-            return NSNotification(name: taskDidLaunch, object: nil, userInfo: userInfo)
+        static func taskDidLaunchNotification(type: ActivityType) -> NSNotification {
+            return NSNotification(name: taskDidLaunch, object: nil, userInfo: ["activity":type.rawValue])
         }
         static func taskDidExitNotification(type: ActivityType, terminationStatus: TerminationStatus) -> NSNotification {
             return NSNotification(name: taskDidExit, object: nil, userInfo: ["activity":type.rawValue, "status":terminationStatus.rawValue])
@@ -125,85 +160,68 @@ extension NSTask
         return NSBundle.mainBundle().pathForResource(name, ofType:nil);
     }
 
-    /**
-
-    :directoryPath:
-    :buildProjectWithName:
-    :scheme:
-    */
-    public static func taskBuild(directoryPath directoryPath: String, scheme: String) -> NSTask
-    {
-        let task = NSTask()
-        task.currentDirectoryPath = directoryPath        
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        task.arguments = [scheme]
-        
-        return task;
-    }
-
-    public static func taskCheckout(repoName: String, origin: String) -> NSTask {
+    public static func taskCheckout(repoName: String, origin: String) -> Task {
         
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Git.CHECKOUT, ofType: "sh")!
         task.arguments = [repoName, origin, self.pathForDir("scripts")]
         
-        return task;
+        return Task(activityType: ActivityType.Checkout, task: task)
     }
 
-    public static func taskTest(directoryPath directoryPath: String, scheme: String, simulatorName: String = "iPhone 4s") -> NSTask {
+    public static func taskBuild(directoryPath directoryPath: String, scheme: String) -> Task {
+        
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.BUILD, ofType: "sh")!
+        task.arguments = [scheme]
+        
+        return Task(activityType: ActivityType.Build, task: task)
+    }
+    
+
+    public static func taskTest(directoryPath directoryPath: String, scheme: String, simulatorName: String = "iPhone 4s") -> Task {
         
         let task = NSTask()
         task.currentDirectoryPath = directoryPath
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.TEST, ofType: "sh")!
         task.arguments = [scheme, simulatorName]
         
-        return task;
+        return Task(activityType: ActivityType.Test, task: task)
     }
 
-    public static func taskArchive(directoryPath directoryPath: String, projectName name: String) -> NSTask {
+    public static func taskArchive(directoryPath directoryPath: String, projectName name: String) -> Task {
         
         let task = NSTask()
         task.currentDirectoryPath = directoryPath
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
         task.arguments = [name, self.pathForDir("resources")]
         
-        return task;
+        return Task(activityType: ActivityType.Archive, task: task)
     }
 
-    public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> NSTask {
+    public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> Task {
         
         let task = NSTask()
         task.currentDirectoryPath = directoryPath
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
         task.arguments = [name, user, WINDMILL_BASE_URL]
         
-        return task;
+        return Task(activityType: ActivityType.Deploy, task: task)
     }
     
-    static func taskPoll(repoName: String) -> NSTask
+    static func taskPoll(repoName: String) -> Task
     {
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Git.POLL, ofType: "sh")!
         task.arguments = [repoName, self.pathForDir("scripts"), "master"]
         
-    return task;
+    return Task(activityType: ActivityType.Poll, task: task);
     }
     
-    public func waitUntilStatus() -> TerminationStatus
-    {
+    public func waitUntilStatus() -> TerminationStatus {
+        
         self.waitUntilExit()
         return TerminationStatus(rawValue: Int(self.terminationStatus))!
-    }
-    
-    func whenExit(block: (TerminationStatus) -> Void)
-    {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) { [self]
- 
-            let status = self.waitUntilStatus()
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                block(status)
-            }
-        }
     }
 }

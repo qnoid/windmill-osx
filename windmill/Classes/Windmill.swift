@@ -11,7 +11,7 @@ import SwiftGit2
 import Result
 
 
-public typealias WindmillProvider = () -> Windmill
+typealias WindmillProvider = () -> Windmill
 
 /// domain is WindmillDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
 public typealias WindmillError = NSError
@@ -20,45 +20,17 @@ typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-public func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
+final class Windmill
 {
-    Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
+    static var dispatch_queue_serial = dispatch_queue_create("io.windmil.queue", DISPATCH_QUEUE_SERIAL)
     
-    let localGitRepoURL: NSURL? = NSURL(fileURLWithPath: localGitRepo, isDirectory: true)
-    
-    guard let _localGitRepoURL = localGitRepoURL else {
-        Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
+    static func dispatch_after(seconds: UInt64, queue: dispatch_queue_t = dispatch_queue_serial, block: dispatch_block_t) {
         
-        return Result.Failure(NSError.errorNoRepo(localGitRepo))
+        let when = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * NSEC_PER_SEC))
+        
+        dispatch_after(when, queue: queue, block: block)
     }
-    
-    let repo = Repository.atURL(_localGitRepoURL)
-    
-    guard let _repo = repo.value else {
-        Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
-        return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
-    }
-    
-    let latestCommit: Result<Commit, NSError> = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
-    
-    guard let _latestCommit = latestCommit.value else {
-        Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
-        return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
-    }
-    
-    Windmill.logger.log(.INFO, "Latest Commit: \(_latestCommit.message) by \(_latestCommit.author.name)")
-    
-    let name = _localGitRepoURL.lastPathComponent!
-    let origin = _repo.allRemotes().value![0].URL
-    
-    Windmill.logger.log(.DEBUG, "Project name: \(name)")
-    Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
-    
-    return Result.Success(Project(name: name, origin: origin))
-}
 
-final public class Windmill
-{
     class func windmill(keychain: Keychain) -> Windmill
     {
         let projects = read(NSInputStream.inputStreamOnProjects())
@@ -71,6 +43,44 @@ final public class Windmill
         return windmill
     }
     
+    static func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
+    {
+        Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
+        
+        let localGitRepoURL: NSURL? = NSURL(fileURLWithPath: localGitRepo, isDirectory: true)
+        
+        guard let _localGitRepoURL = localGitRepoURL else {
+            Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
+            
+            return Result.Failure(NSError.errorNoRepo(localGitRepo))
+        }
+        
+        let repo = Repository.atURL(_localGitRepoURL)
+        
+        guard let _repo = repo.value else {
+            Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
+            return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
+        }
+        
+        let latestCommit: Result<Commit, NSError> = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
+        
+        guard let _latestCommit = latestCommit.value else {
+            Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
+            return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
+        }
+        
+        Windmill.logger.log(.INFO, "Latest Commit: \(_latestCommit.message) by \(_latestCommit.author.name)")
+        
+        let name = _localGitRepoURL.lastPathComponent!
+        let origin = _repo.allRemotes().value![0].URL
+        
+        Windmill.logger.log(.DEBUG, "Project name: \(name)")
+        Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
+        
+        return Result.Success(Project(name: name, origin: origin))
+    }
+
+    
     static let logger : ConsoleLog = ConsoleLog()
     
     var delegate: WindmillDelegate?
@@ -80,22 +90,22 @@ final public class Windmill
     
     var projects : Array<Project>
     
-    public convenience init()
+    convenience init()
     {
         self.init(scheduler: Scheduler(), keychain: Keychain.defaultKeychain())
     }
-    
+
     convenience init(keychain: Keychain)
     {
         self.init(scheduler: Scheduler(), keychain: keychain)
     }
-    
+
     convenience init(scheduler: Scheduler)
     {
         self.init(scheduler: scheduler, keychain: Keychain.defaultKeychain())
     }
-    
-    required public init(scheduler: Scheduler, keychain: Keychain)
+
+    required init(scheduler: Scheduler, keychain: Keychain)
     {
         self.scheduler = scheduler
         self.keychain = keychain
@@ -107,94 +117,61 @@ final public class Windmill
         self.projects.append(project)
         
         write(self.projects, outputStream: NSOutputStream.outputStreamOnProjects())
-        
-        self.delegate?.created(self, projects:self.projects, project: project)
+    }
+
+    private func monitor(project: Project) {
+        self.scheduler.schedule(taskProvider: NSTask.taskPoll(project.name), ifDirty: { [weak self] in
+            
+            guard let _self = self else {
+                return
+            }
+            
+            _self.deploy(project)
+            })
     }
     
-    private func deployGitRepo(repoName: String, origin: String)
+    private func deploy(project: Project)
     {
         guard let user = try? self.keychain.findWindmillUser() else {
             Windmill.logger.log(.ERROR, "\(__FUNCTION__) A windmill user account should have been created.")
             return
         }
-
-        self.delegate?.windmill(self, willDeployProject: Project(name: repoName, origin: origin))
-
-        let taskCheckout = NSTask.taskCheckout(repoName, origin: origin)
-        taskCheckout.launch()
         
-        let notification = NSTask.Notifications.taskDidLaunchNotification(["activity": ActivityType.Checkout.rawValue, "origin":origin])
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        self.delegate?.windmill(self, willDeployProject: project)
         
-        let directoryPath = "\(NSFileManager.defaultManager().windmill)\(repoName)"
+        let name = project.name
+
+        let directoryPath = "\(NSFileManager.defaultManager().windmill)\(name)"
         debugPrint(directoryPath)
-        taskCheckout.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), buildTask = NSTask.taskBuild(directoryPath: directoryPath, scheme: repoName)] status in
-            
-            defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Checkout, terminationStatus: status))
-            
-            buildTask.launch()
-            let notification = NSTask.Notifications.taskDidLaunchNotification(["activity": ActivityType.Build.rawValue])
-            NSNotificationCenter.defaultCenter().postNotification(notification)
-            
-            buildTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), testTask = NSTask.taskTest(directoryPath: directoryPath, scheme:repoName)] status in
-                
-                defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Build, terminationStatus: status))
-                
-                testTask.launch()
-                let notification = NSTask.Notifications.taskDidLaunchNotification(["activity": ActivityType.Test.rawValue])
-                NSNotificationCenter.defaultCenter().postNotification(notification)
-                
-                testTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), archiveTask = NSTask.taskArchive(directoryPath: directoryPath, projectName: repoName)] status in
-                    
-                    defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Test, terminationStatus: status))
-                    
-                    archiveTask.launch()
-                    let notification = NSTask.Notifications.taskDidLaunchNotification(["activity": ActivityType.Archive.rawValue])
-                    NSNotificationCenter.defaultCenter().postNotification(notification)
-                    
-                    archiveTask.whenExit { [defaultCenter = NSNotificationCenter.defaultCenter(), deployTask = NSTask.taskDeploy(directoryPath: directoryPath, projectName: repoName, forUser:user)] status in
-                        
-                        defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Archive, terminationStatus: status))
-                        
-                        deployTask.launch()
-                        let notification = NSTask.Notifications.taskDidLaunchNotification(["activity": ActivityType.Deploy.rawValue])
-                        NSNotificationCenter.defaultCenter().postNotification(notification)
-                        
-                        deployTask.whenExit { status in
-                            
-                            defaultCenter.postNotification(NSTask.Notifications.taskDidExitNotification(.Deploy, terminationStatus: status))
-                            
-                            self.scheduler.schedule(taskProvider: NSTask.taskPoll(repoName), ifDirty: { [unowned self] in
-                                self.deployGitRepo(repoName, origin: origin)
-                                })
-                        }
-                    }
-                }
-            }
-        }
+
+        self.scheduler.queue(NSTask.taskCheckout(name, origin: project.origin),
+            NSTask.taskBuild(directoryPath: directoryPath, scheme: name),
+            NSTask.taskTest(directoryPath: directoryPath, scheme:name),
+            NSTask.taskArchive(directoryPath: directoryPath, projectName: name),
+            NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
     }
     
     /**
-     
-     /**
-     
-     Adds the given *project* to the list of projects.
-     
-     If #delegate is set, you will receive a callback to WindmillDelegate#created(self, projects:self.projects, project: project)
-     if the project was
-     
-     - precondition: the given *project* must have a valid remote origin
-     
-     - parameter project: the project to add to Windmill
-     - returns: true if the 'project' was added, false if already added
-     */
-     
-     project was added
-     project not be added
-     project failed to create
-     
-     */
-    public func deploy(project: Project) -> Bool
+
+    /**
+    
+    Adds the given *project* to the list of projects.
+    
+    If #delegate is set, you will receive a callback to WindmillDelegate#created(self, projects:self.projects, project: project)
+    if the project was
+
+    - precondition: the given *project* must have a valid remote origin
+    
+    - parameter project: the project to add to Windmill
+    - returns: true if the 'project' was added, false if already added
+    */
+
+    project was added
+    project not be added
+    project failed to create
+    
+    */
+    func create(project: Project) -> Bool
     {
         guard !self.projects.contains(project) else {
             Windmill.logger.log(.INFO, "Project already added: \(project)")
@@ -202,14 +179,17 @@ final public class Windmill
         }
         
         self.add(project)
-        self.deployGitRepo(project.name, origin: project.origin)
+        self.delegate?.windmill(self, projects:self.projects, addedProject: project)
+        self.deploy(project)
+        self.monitor(project)
         
         return true
     }
     
-    public func start(){
+    func start(){
         for project in self.projects {
-            self.deployGitRepo(project.name, origin: project.origin)
+            self.deploy(project)
+            self.monitor(project)
         }
     }
 }

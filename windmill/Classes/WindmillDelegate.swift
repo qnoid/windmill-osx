@@ -19,5 +19,5 @@ protocol WindmillDelegate
     - parameter projects: the total number of projects in windmill
     - parameter project: the project for the given 'localGitRepo' at the time #add: was called
     */
-    func created(windmill: Windmill, projects:Array<Project>, project: Project)    
+    func windmill(windmill: Windmill, projects:Array<Project>, addedProject project: Project)
 }

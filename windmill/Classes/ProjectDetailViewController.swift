@@ -66,15 +66,17 @@ class ProjectDetailViewController: NSViewController {
     func taskDidLaunch(aNotification: NSNotification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
-
+        debugPrint("DEBUG: \(__FUNCTION__) \(activityType)")
+        
         switch(activityType){
             case .Checkout, .Build, .Test, .Archive:
                 self.activityIndicatorImageView.image = NSImage(named: activityType.imageName)
-                self.activityTextfield.stringValue = activityType.description
                 self.activityViews[activityType]?.hidden = false
-            case .Deploy:
-                self.activityTextfield.stringValue = activityType.description
+            default:
+            break
         }
+        
+        self.activityTextfield.stringValue = activityType.description
     }
     
     func taskDidExit(aNotification: NSNotification) {
@@ -84,9 +86,8 @@ class ProjectDetailViewController: NSViewController {
         switch(activityType){
         case .Checkout, .Build, .Test, .Archive:
             self.activityViews[activityType]?.alphaValue = 1.0
-        case .Deploy:
-            self.activityTextfield.stringValue = activityType.description
+        default:
+            break
         }
-            self.activityTextfield.stringValue = "monitoring"
     }
 }

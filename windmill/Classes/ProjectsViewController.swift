@@ -56,24 +56,23 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
         }
         
         ProjectsViewController.logger.log(.INFO, folder)
-        let result = parse(fullPathOfLocalGitRepo: folder)
+        let result = Windmill.parse(fullPathOfLocalGitRepo: folder)
         
         switch result
         {
         case .Success(let project):
-            self.windmill.deploy(project)
-            return true
+            return self.windmill.create(project)
         case .Failure(let error):
             alert(error, window: self.view.window!)
             return false
         }
     }
     
-    func windmill(windmill: Windmill, willDeployProject project: Project) {
-        self.projectDetailViewController.windmill(windmill, willDeployProject:project)
+    func windmill(windmill: Windmill, projects: Array<Project>, addedProject project: Project) {
+        self.outlineViewDataSource.projects = projects
     }
     
-    func created(windmill: Windmill, projects: Array<Project>, project: Project) {
-        self.outlineViewDataSource.projects = projects
+    func windmill(windmill: Windmill, willDeployProject project: Project) {
+        self.projectDetailViewController.windmill(windmill, willDeployProject:project)
     }
 }
