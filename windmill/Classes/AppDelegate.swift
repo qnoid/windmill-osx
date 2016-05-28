@@ -38,6 +38,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         }
     }
     
+    var mainWindowViewController: MainWindowController!
+    
     var mainViewController: MainViewController! {
         didSet{
             mainViewController.projectsViewController.windmill = self.windmill
@@ -59,11 +61,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         self.windmill.start()
     }
     
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        
+        if(!flag) {
+            self.mainWindowViewController.window?.setIsVisible(true)
+        }
+        
+        return true
     }
     
     func mainWindowDidLoad(aNotification: NSNotification) {
         let mainWindowViewController = aNotification.object as! MainWindowController
+        self.mainWindowViewController = mainWindowViewController
         self.mainViewController = mainWindowViewController.contentViewController as! MainViewController
     }
     

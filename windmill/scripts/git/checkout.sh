@@ -39,4 +39,4 @@ function git_clone(){
 directory_exist_at_path "$WINDMILL_ROOT/$REPO_NAME" git_pull git_clone
 
 ) 2>&1 | tee "$WINDMILL_ROOT/$PROJECT_NAME.log"
-) 2>&1 | tee "$WINDMILL_ROOT/windmill.log"
+) 2>&1 | tee -a "$WINDMILL_ROOT/windmill.log"

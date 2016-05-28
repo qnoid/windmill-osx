@@ -12,10 +12,6 @@
 		BD081A5E1AB1A53500B8E948 /* ProjectsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD081A641AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */; };
-		BD1835D41CCC1CEA00B79D0F /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D21CCC1CEA00B79D0F /* Result.framework */; };
-		BD1835D71CCC1D1300B79D0F /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D21CCC1CEA00B79D0F /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BD1835D81CCC1D1300B79D0F /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */; };
-		BD1835D91CCC1D1300B79D0F /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A881C42B7240015A13A /* ProjectsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A871C42B7240015A13A /* ProjectsViewController.swift */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
@@ -55,6 +51,10 @@
 		BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Scripts.swift */; };
 		BDD002231ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */; };
 		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
+		BDD1E95B1CDA920700976074 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E9581CDA920700976074 /* SwiftGit2.framework */; };
+		BDD1E95C1CDA920700976074 /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E9581CDA920700976074 /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BDD1E98B1CDA9C3100976074 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E98A1CDA9C3100976074 /* Result.framework */; };
+		BDD1E98D1CDA9C3900976074 /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E98A1CDA9C3100976074 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 /* End PBXBuildFile section */
 
@@ -69,14 +69,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		BD081A1B1AB09ABC00B8E948 /* Embed Frameworks */ = {
+		BDD1E95D1CDA920800976074 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BD1835D91CCC1D1300B79D0F /* SwiftGit2.framework in Embed Frameworks */,
-				BD1835D71CCC1D1300B79D0F /* Result.framework in Embed Frameworks */,
+				BDD1E95C1CDA920700976074 /* SwiftGit2.framework in Embed Frameworks */,
+				BDD1E98D1CDA9C3900976074 /* Result.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,8 +89,6 @@
 		BD081A5D1AB1A53500B8E948 /* ProjectsDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsDataSource.swift; path = Classes/ProjectsDataSource.swift; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD081A631AB1F00400B8E948 /* ProjectsOutlineViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProjectsOutlineViewDelegate.swift; path = Classes/ProjectsOutlineViewDelegate.swift; sourceTree = "<group>"; };
-		BD1835D21CCC1CEA00B79D0F /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = frameworks/Result.framework; sourceTree = "<group>"; };
-		BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A871C42B7240015A13A /* ProjectsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectsViewController.swift; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
@@ -136,6 +134,8 @@
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
 		BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasksTest.swift"; sourceTree = "<group>"; };
 		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
+		BDD1E9581CDA920700976074 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
+		BDD1E98A1CDA9C3100976074 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = frameworks/Result.framework; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,8 +144,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD1835D81CCC1D1300B79D0F /* SwiftGit2.framework in Frameworks */,
-				BD1835D41CCC1CEA00B79D0F /* Result.framework in Frameworks */,
+				BDD1E95B1CDA920700976074 /* SwiftGit2.framework in Frameworks */,
+				BDD1E98B1CDA9C3100976074 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,8 +162,8 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BD1835D21CCC1CEA00B79D0F /* Result.framework */,
-				BD1835D31CCC1CEA00B79D0F /* SwiftGit2.framework */,
+				BDD1E98A1CDA9C3100976074 /* Result.framework */,
+				BDD1E9581CDA920700976074 /* SwiftGit2.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -327,7 +327,7 @@
 				BDB6D53719440392001340B4 /* Sources */,
 				BDB6D53819440392001340B4 /* Frameworks */,
 				BDB6D53919440392001340B4 /* Resources */,
-				BD081A1B1AB09ABC00B8E948 /* Embed Frameworks */,
+				BDD1E95D1CDA920800976074 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -596,11 +596,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/frameworks",
 				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../frameworks $(CONFIGURATION_BUILD_DIR)";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.windmill.$(PRODUCT_NAME:rfc1034identifier)";

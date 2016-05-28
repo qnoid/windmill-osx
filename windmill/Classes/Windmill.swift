@@ -127,6 +127,7 @@ final class Windmill
             }
             
             _self.deploy(project)
+            _self.monitor(project)
             })
     }
     

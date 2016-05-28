@@ -8,7 +8,7 @@
 
 import Foundation
 
-let WINDMILL_BASE_URL_PRODUCTION = "http://ec2-52-50-52-225.eu-west-1.compute.amazonaws.com"
+let WINDMILL_BASE_URL_PRODUCTION = "http://api.windmill.io:8080"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
 #if DEBUG
@@ -19,6 +19,7 @@ let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
 
 public enum TerminationStatus : Int, CustomStringConvertible
 {
+    case Unknown = -1
     case AlreadyUpToDate = 0
     case Dirty = 1
     
@@ -28,6 +29,8 @@ public enum TerminationStatus : Int, CustomStringConvertible
             return "Already up-to-date."
         case .Dirty:
             return "Dirty"
+        default:
+            return "Unknown"
         }
     }
 }
@@ -222,6 +225,13 @@ extension NSTask
     public func waitUntilStatus() -> TerminationStatus {
         
         self.waitUntilExit()
-        return TerminationStatus(rawValue: Int(self.terminationStatus))!
+        
+        if let terminationStatus = TerminationStatus(rawValue: Int(self.terminationStatus)) {
+            return terminationStatus
+        }
+        
+        debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown termination status: \(self.terminationStatus)")
+        
+        return TerminationStatus.Unknown
     }
 }

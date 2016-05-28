@@ -13,7 +13,9 @@ class MainWindowController: NSWindowController {
     
     override func windowDidLoad() {
         print(__FUNCTION__)
-        
+        self.window!.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        self.window!.collectionBehavior = [self.window!.collectionBehavior, .FullScreenAllowsTiling]
+
         NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "mainWindowDidLoad", object: self))
     }
 }

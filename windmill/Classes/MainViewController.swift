@@ -22,5 +22,5 @@ class MainViewController: NSSplitViewController {
 
     func performDragOperation(info: NSDraggingInfo) -> Bool {
         return self.projectsViewController.performDragOperation(info)
-    }
+    }    
 }

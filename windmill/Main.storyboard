@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15E65" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
     </dependencies>
     <scenes>
         <!--Window Controller-->
@@ -13,9 +13,10 @@
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="0.0" y="397" width="768" height="480"/>
+                        <rect key="contentRect" x="0.0" y="397" width="588" height="480"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-                        <value key="minSize" type="size" width="768" height="480"/>
+                        <value key="minFullScreenContentSize" type="size" width="320" height="480"/>
+                        <value key="maxFullScreenContentSize" type="size" width="10000" height="10000"/>
                     </window>
                     <connections>
                         <segue destination="oqp-ch-CgG" kind="relationship" relationship="window.shadowedContentViewController" id="Log-CC-6gj"/>
@@ -30,11 +31,11 @@
             <objects>
                 <splitViewController title="Windmill" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
-                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
+                        <splitViewItem canCollapse="YES" collapsed="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
                         <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
                     </splitViewItems>
                     <splitView key="splitView" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" id="6mY-wz-wVC">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
@@ -45,7 +46,7 @@
                 </splitViewController>
                 <customObject id="9B1-cO-5va" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="483" y="130"/>
+            <point key="canvasLocation" x="578" y="144"/>
         </scene>
         <!--Projects View Controller-->
         <scene sceneID="SCC-BM-DWi">
@@ -155,7 +156,7 @@
                 </viewController>
                 <customObject id="qEN-ro-2j1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="189" y="793"/>
+            <point key="canvasLocation" x="161" y="803"/>
         </scene>
         <!--Project Detail View Controller-->
         <scene sceneID="Amb-BC-0eG">
@@ -177,7 +178,7 @@
                                 <rect key="frame" x="18" y="333" width="39" height="23"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="active" id="Cu7-M4-32H">
                                     <font key="font" size="13" name="AvenirNext-Regular"/>
-                                    <color key="textColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
@@ -225,25 +226,14 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-archive"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Dvm-4Y-JmU">
-                                <rect key="frame" x="92" y="333" width="484" height="23"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" placeholderString="https://windmill.io/qnoid/com.qnoid.brainmap/brainmap.plist" id="0By-8r-1Qu">
-                                    <font key="font" size="13" name="AvenirNext-Regular"/>
-                                    <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="1y8-gi-M0v"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
                             <constraint firstItem="UBj-vk-iA5" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="leading" id="5eS-qY-1Ol"/>
                             <constraint firstAttribute="trailing" secondItem="RWe-v3-81B" secondAttribute="trailing" constant="14" id="9VN-J6-ErJ"/>
-                            <constraint firstAttribute="trailing" secondItem="Dvm-4Y-JmU" secondAttribute="trailing" constant="14" id="EdF-Hi-25g"/>
                             <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="b81-dN-eNy" secondAttribute="bottom" constant="8" id="Gyc-tw-CPr"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="b81-dN-eNy" secondAttribute="trailing" constant="30" id="NbJ-gB-2Xk"/>
-                            <constraint firstItem="Dvm-4Y-JmU" firstAttribute="baseline" secondItem="UBj-vk-iA5" secondAttribute="baseline" id="R8E-lz-MS2"/>
-                            <constraint firstItem="Dvm-4Y-JmU" firstAttribute="leading" secondItem="bvb-g2-0Id" secondAttribute="leading" id="RMQ-xR-Nih"/>
                             <constraint firstItem="b81-dN-eNy" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="20" id="SCW-ba-mTO"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
                             <constraint firstItem="b81-dN-eNy" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" constant="30" id="YSD-5a-16q"/>
@@ -261,7 +251,6 @@
                         <outlet property="archiveActivityView" destination="RWe-v3-81B" id="1xC-cH-ScX"/>
                         <outlet property="buildActivityView" destination="CN9-ls-yLA" id="qpB-kt-nGs"/>
                         <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
-                        <outlet property="packageActivityView" destination="RWe-v3-81B" id="guT-5L-WW0"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
                     </connections>
                 </viewController>
@@ -442,6 +431,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="nzx-Ov-Mal">
                                     <items>
+                                        <menuItem title="Show Sidebar" keyEquivalent="s" id="HE9-vz-oUp">
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="toggleSidebar:" target="aS9-1w-R0E" id="Vai-lD-h27"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="5jI-cp-Huu">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -455,7 +450,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Window" systemMenu="window" id="Vi2-ur-FVk">
                                     <items>
-                                        <menuItem title="Minimize" keyEquivalent="m" id="vnq-UW-jjv"/>
+                                        <menuItem title="Minimize" keyEquivalent="m" id="vnq-UW-jjv">
+                                            <connections>
+                                                <action selector="miniaturize:" target="aS9-1w-R0E" id="jG9-aQ-Fb0"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Zoom" id="Htg-eV-68e">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
