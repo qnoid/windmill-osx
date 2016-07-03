@@ -22,16 +22,13 @@ extension CALayer {
 
 class ProjectDetailViewController: NSViewController {
     
-    @IBOutlet weak var activityIndicatorImageView: NSImageView! {
-        didSet{
-            activityIndicatorImageView.wantsLayer = true
-        }
-    }
+    @IBOutlet weak var activityIndicatorImageView: NSImageView!
     @IBOutlet weak var activityTextfield: NSTextField!
     @IBOutlet weak var checkoutActivityView: ActivityView!
     @IBOutlet weak var buildActivityView: ActivityView!
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
+    weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
         return [.Checkout: self.checkoutActivityView, .Build: self.buildActivityView, .Test: self.testActivityView, .Archive: self.archiveActivityView]
@@ -40,9 +37,25 @@ class ProjectDetailViewController: NSViewController {
     let defaultCenter = NSNotificationCenter.defaultCenter()
     var scheduler: Scheduler!
     
+    override func updateViewConstraints() {
+        
+        if(self.topConstraint == nil) {
+        
+            let topAnchor = self.view.window!.contentLayoutGuide!.topAnchor
+        
+            let topConstraint = self.checkoutActivityView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 8)
+        
+            topConstraint!.active = true
+        
+            self.topConstraint = topConstraint
+        }
+        
+        super.updateViewConstraints()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.wantsLayer = true
+        self.view.layerContentsRedrawPolicy = .OnSetNeedsDisplay
         self.view.layer?.backgroundColor = NSColor.blackColor().CGColor
 
 

@@ -22,5 +22,10 @@ class MainViewController: NSSplitViewController {
 
     func performDragOperation(info: NSDraggingInfo) -> Bool {
         return self.projectsViewController.performDragOperation(info)
-    }    
+    }
+    
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        self.view.window!.titleVisibility = .Hidden
+    }
 }

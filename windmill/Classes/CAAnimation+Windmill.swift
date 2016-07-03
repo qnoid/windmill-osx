@@ -13,8 +13,8 @@ extension CAAnimation {
     struct Windmill {
         static let spinAnimation: CAAnimation = {
             let basicAnimation = CABasicAnimation(keyPath:"transform.rotation")
-            basicAnimation.fromValue = 0.0
-            basicAnimation.toValue = NSNumber(double: 2.0 * M_PI)
+            basicAnimation.fromValue = 2.0 * M_PI
+            basicAnimation.toValue = NSNumber(double: 0.0)
             basicAnimation.duration = 1.0
             basicAnimation.repeatCount = Float.infinity
             
