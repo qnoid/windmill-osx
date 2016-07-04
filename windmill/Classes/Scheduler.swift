@@ -12,9 +12,10 @@ protocol SchedulerDelegate: class {
     
     func didLaunch(task: ActivityTask, scheduler: Scheduler)
     
-    func didExit(task: ActivityTask, withStatus status: TaskStatus, scheduler: Scheduler)
+    func didExit(task: ActivityTask, error: TaskError?, scheduler: Scheduler)
 }
 
+typealias TaskCompletionBlock = (task: ActivityTask, error: TaskError?) -> Void
 /**
 
 */
@@ -29,14 +30,14 @@ final public class Scheduler
     weak var delegate: SchedulerDelegate?
     
     var key: UInt8 = 0
-    var cancel: Bool = true
+    var error: Bool = true
     
-    private func dispatch_block_create_for(queue: dispatch_queue_t, task: ActivityTask, completion: TaskStatusCallback = {status in }) -> dispatch_block_t {
+    private func dispatch_block_create_for(queue: dispatch_queue_t, task: ActivityTask, completion: TaskCompletionBlock = {status in }) -> dispatch_block_t {
         return dispatch_block_create(dispatch_block_flags_t(0)) {
             
-            let cancel = dispatch_queue_get_specific(queue, &self.key)
+            let error = dispatch_queue_get_specific(queue, &self.key)
             
-            guard cancel == nil else {
+            guard error == nil else {
                 return
             }
             
@@ -46,16 +47,17 @@ final public class Scheduler
                 self.delegate?.didLaunch(task, scheduler: self)
             }
             
-            task.waitUntilExit { status in
+            task.waitUntilExit { error in
+                
+                if error != nil {
+                    dispatch_queue_set_specific(Windmill.dispatch_queue_serial, &self.key, &self.error, nil)
+                }
+
                 dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                    self.delegate?.didExit(task, withStatus: status, scheduler: self)
+                    self.delegate?.didExit(task, error: error, scheduler: self)
                 }
                 
-                completion(task: task, withStatus: status)
-                
-                if status.value != 0 {
-                    dispatch_queue_set_specific(Windmill.dispatch_queue_serial, &self.key, &self.cancel, nil)
-                }
+                completion(task: task, error: error)
             }
         }
     }
@@ -66,7 +68,7 @@ final public class Scheduler
         }
     }
     
-    func schedule(queue: dispatch_queue_t = Windmill.dispatch_queue_serial, task: ActivityTask, completion: TaskStatusCallback)
+    func schedule(queue: dispatch_queue_t = Windmill.dispatch_queue_serial, task: ActivityTask, completion: TaskCompletionBlock)
     {
         let when = dispatch_time(DISPATCH_TIME_NOW, Int64(self.delayInSeconds) * Int64(NSEC_PER_SEC))
         

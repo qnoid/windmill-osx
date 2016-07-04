@@ -17,163 +17,68 @@ let WINDMILL_BASE_URL = WINDMILL_BASE_URL_DEVELOPMENT
 let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
 #endif
 
-public protocol TaskStatus : CustomStringConvertible {
-    var value: Int { get }
+public protocol TaskError: ErrorType {
+    var code: Int { get }
 }
 
-extension TaskStatus {
-    public var description : String {
-        switch self.value {
-        case 0:
-            return "OK"
-        default:
-            return "unknown"
-        }
-    }
-}
-
-public enum CheckoutTaskStatus: Int, TaskStatus {
+public enum BuildTaskError: Int, TaskError {
     
-    case Unknown = -1
-    case Success = 0
-    
-    public var value: Int {
-        return self.rawValue
-    }
-}
-
-public enum BuildTaskStatus: Int, TaskStatus {
-    
-    case Unknown = -1
-    case OK = 0
     case SchemeNotFound = 65
     
-    public var value: Int {
+    public var code: Int {
         return self.rawValue
-    }
-    
-    public var description: String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .OK:
-            return "OK"
-        case .SchemeNotFound:
-            return "Scheme not found."
-        }
     }
 }
 
-public enum TestTaskStatus: Int, TaskStatus {
+public enum TestTaskError: Int, TaskError {
     
-    case Unknown = -1
-    case OK = 0
-    case Failed = 65 //or xcodebuild: error: The project named "soldo" does not contain a scheme named "com.soldo.soldo". The "-list" option can be used to find the names of the schemes in the project.
+    /**
+        Causes
+     
+     * "Test Suite \'(Selected|All) tests\' (failed)"
+     * xcodebuild: error: The project named "soldo" does not contain a scheme named "com.soldo.soldo". The "-list" option can be used to find the names of the schemes in the project.
+ 
+    */
+    case Failed = 65
     
-    public var value: Int {
+    public var code: Int {
         return self.rawValue
-    }
-    
-    public var description: String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .OK:
-            return "OK"
-        case .Failed:
-            return "Test Suite \'(Selected|All) tests\' (failed)"
-        }
     }
 }
 
-public enum ArchiveTaskStatus: Int, TaskStatus {
+public enum ArchiveTaskError: Int, TaskError {
     
-    case Unknown = -1
-    case OK = 0
-    case CodeSignError = 65
+    case CodeSignError = 65 //"Code Sign error: No code signing identities found: No valid signing identities (i.e. certificate and private key pair) were found."
     
-    public var value: Int {
+    public var code: Int {
         return self.rawValue
-    }
-    
-    public var description: String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .OK:
-            return "OK"
-        case .CodeSignError:
-            return "Code Sign error: No code signing identities found: No valid signing identities (i.e. certificate and private key pair) were found."
-        }
     }
 }
 
-public enum DeployTaskStatus: Int, TaskStatus {
+public enum DeployTaskError: Int, TaskError {
     
-    case Unknown = -1
-    case OK = 0
-    case FailedToConnect = 7
+    case FailedToConnect = 7 //"curl: (7) Failed to connect: Connection refused"
     
-    public var value: Int {
+    public var code: Int {
         return self.rawValue
-    }
-    
-    public var description: String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .OK:
-            return "OK"
-        case .FailedToConnect:
-            return "curl: (7) Failed to connect: Connection refused"
-        }
     }
 }
 
-public enum ExportTaskError : Int, TaskStatus {
+public enum ExportTaskError : Int, TaskError {
     
-    case Unknown = -1
-    case OK = 0
-    case AdHocProvisioningNotFound = 70
+    case AdHocProvisioningNotFound = 70 //"No matching provisioning profiles found"
     
-    public var value: Int {
+    public var code: Int {
         return self.rawValue
-    }
-
-    public var description : String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .OK:
-            return "OK"
-        case .AdHocProvisioningNotFound:
-            return "No matching provisioning profiles found"
-        }
     }
 }
 
-public enum PollTaskStatus : Int, TaskStatus
-{
-    case Unknown = -1
-    case AlreadyUpToDate = 0
-    case Dirty = 1
-    case Fatal = 128
+public enum PollTaskError : Int, TaskError {
     
-    public var value: Int {
+    case Fatal = 128 //"ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
+    
+    public var code: Int {
         return self.rawValue
-    }
-
-    public var description : String {
-        switch self{
-        case .Unknown:
-            return "unknown"
-        case .AlreadyUpToDate:
-            return "Already up-to-date."
-        case .Dirty:
-            return "Dirty"
-        case .Fatal:
-            return "ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
-        }
     }
 }
 
@@ -245,78 +150,84 @@ enum ActivityType: String, CustomStringConvertible
         }
     }
     
-    func map(terminationStatus: Int) -> TaskStatus {
+    func status(terminationStatus: Int) -> ActivityTaskStatus? {
+        return ActivityTaskStatus(rawValue: terminationStatus) ?? nil
+    }
+    
+    func map(terminationStatus: Int) -> TaskError? {
         
         switch (self, terminationStatus){
-        case (.Checkout, let status):
-            if let status =  CheckoutTaskStatus(rawValue: status) {
-                return status
+        case (.Checkout, let code):
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown checkout code: \(code)")
+            return nil
+        case (.Build, let code):
+            if let code =  BuildTaskError(rawValue: code) {
+                return code
             }
             
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown checkout status: \(status)")
-            return CheckoutTaskStatus.Unknown
-        case (.Build, let status):
-            if let status =  BuildTaskStatus(rawValue: status) {
-                return status
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown build code: \(code)")
+            return nil
+        case (.Test, let code):
+            if let code =  TestTaskError(rawValue: code) {
+                return code
             }
             
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown build status: \(status)")
-            return BuildTaskStatus.Unknown
-
-        case (.Test, let status):
-            if let status =  TestTaskStatus(rawValue: status) {
-                return status
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown test code: \(code)")
+            return nil
+        case (.Archive, let code):
+            if let code =  ArchiveTaskError(rawValue: code) {
+                return code
             }
             
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown test status: \(status)")
-            return TestTaskStatus.Unknown
-
-        case (.Archive, let status):
-            if let status =  ArchiveTaskStatus(rawValue: status) {
-                return status
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown archive status: \(status)")
-            return ArchiveTaskStatus.Unknown
-
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown archive code: \(code)")
+            return nil
         case (.Export, let code):
             if let error =  ExportTaskError(rawValue: code) {
                 return error
             }
             
             debugPrint("WARN: \(#file):\(#function):\(#line) unknown export code: \(code)")
-            return ExportTaskError.Unknown
-
-        case (.Deploy, let status):
-            if let status =  DeployTaskStatus(rawValue: status) {
-                return status
+            return nil
+        case (.Deploy, let code):
+            if let code =  DeployTaskError(rawValue: code) {
+                return code
             }
             
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown deploy status: \(status)")
-            return DeployTaskStatus.Unknown
-        case (.Poll, let status):
-            if let status =  PollTaskStatus(rawValue: status) {
-                return status
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown deploy status: \(code)")
+            return nil
+        case (.Poll, let code):
+            if let code =  PollTaskError(rawValue: code) {
+                return code
             }
-
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown poll status: \(status)")
-            return PollTaskStatus.Unknown
+            
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown poll code: \(code)")
+            return nil
         }
     }
 }
 
-typealias TaskStatusCallback = (task: ActivityTask, withStatus: TaskStatus) -> Void
-typealias ExitStatus = (TaskStatus) -> Void
+enum ActivityTaskStatus: Int {
+    case Succesful = 0
+    case BranchBehindOrigin = 255
+}
 
 protocol ActivityTask {
+    
     var activityType: ActivityType { get }
     
+    var status: ActivityTaskStatus? { get }
+    
     func launch()
-    func waitUntilExit(callback: ExitStatus)
+    func waitUntilExit(completion: (TaskError?) -> Void)
 }
 
 public struct Task: ActivityTask {
     let activityType: ActivityType
+    
+    var status: ActivityTaskStatus? {
+        return self.activityType.status(Int(self.task.terminationStatus))
+    }
+    
     let task: NSTask
     
     init(activityType: ActivityType, task: NSTask) {
@@ -328,12 +239,17 @@ public struct Task: ActivityTask {
         self.task.launch()
     }
     
-    func waitUntilExit(callback: ExitStatus) {
+    func waitUntilExit(completion: (TaskError?) -> Void) {
         self.task.waitUntilExit()
         
         let terminationStatus = Int(self.task.terminationStatus)
         
-        callback(self.activityType.map(terminationStatus))
+        if case ActivityTaskStatus.Succesful? = ActivityTaskStatus(rawValue: terminationStatus) {
+            completion(nil)
+        return
+        }
+        
+        completion(self.activityType.map(terminationStatus))
     }
     
 }
@@ -351,7 +267,7 @@ extension NSTask
         static func taskDErrorNotification(type: ActivityType) -> NSNotification {
             return NSNotification(name: taskError, object: nil, userInfo: ["activity":type.rawValue])
         }
-        static func taskDidExitNotification(type: ActivityType, terminationStatus: TaskStatus) -> NSNotification {
+        static func taskDidExitNotification(type: ActivityType) -> NSNotification {
             return NSNotification(name: taskDidExit, object: nil, userInfo: ["activity":type.rawValue])
         }
     }
@@ -399,7 +315,7 @@ extension NSTask
         
         return Task(activityType: ActivityType.Archive, task: task)
     }
-
+    
     public static func taskExport(directoryPath directoryPath: String, projectName name: String) -> Task {
         
         let task = NSTask()
@@ -409,7 +325,7 @@ extension NSTask
         
         return Task(activityType: ActivityType.Archive, task: task)
     }
-
+    
     public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> Task {
         
         let task = NSTask()
@@ -420,11 +336,11 @@ extension NSTask
         return Task(activityType: ActivityType.Deploy, task: task)
     }
     
-    static func taskPoll(repoName: String) -> Task
+    static func taskPoll(repoName: String, branch: String = "master") -> Task
     {
         let task = NSTask()
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Git.POLL, ofType: "sh")!
-        task.arguments = [repoName, self.pathForDir("scripts"), "master"]
+        task.arguments = [repoName, self.pathForDir("scripts"), branch]
         
         return Task(activityType: ActivityType.Poll, task: task);
     }

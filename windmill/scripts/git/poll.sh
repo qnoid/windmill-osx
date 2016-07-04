@@ -32,6 +32,6 @@ if ! diff "$BUILD_DIR/latest_head" "$BUILD_DIR/prev_head" > /dev/null ;
 then
 echo "[windmill] [debug] [Requires update.]"
 cat "$BUILD_DIR/latest_head" > "$BUILD_DIR/prev_head"
-exit 1
+exit 255
 fi
 fi

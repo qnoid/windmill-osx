@@ -120,29 +120,25 @@ final class Windmill: SchedulerDelegate
         write(self.projects, outputStream: NSOutputStream.outputStreamOnProjects())
     }
 
-    private func poll(project: Project, ifDirty callback: dispatch_block_t) {
+    private func poll(project: Project, ifCaseOfBranchBehindOrigin callback: dispatch_block_t) {
         
-        self.scheduler.schedule(task: NSTask.taskPoll(project.name)) { [weak weakSelf = self] task, status in
-            
-            guard let _status = status as? PollTaskStatus else {
-                return
-            }
-            
+        self.scheduler.schedule(task: NSTask.taskPoll(project.name)) { [weak weakSelf = self] task, error in
+
             guard let _self = weakSelf else {
                 return
             }
             
-            switch _status {
-            case PollTaskStatus.AlreadyUpToDate, PollTaskStatus.Unknown, PollTaskStatus.Fatal:
-                _self.poll(project, ifDirty: callback)
-            case PollTaskStatus.Dirty:
+            if case ActivityTaskStatus.BranchBehindOrigin? = task.status {
                 callback()
+                return
             }
+            
+            _self.poll(project, ifCaseOfBranchBehindOrigin: callback)
         }
     }
     
     private func monitor(project: Project) {
-        self.poll(project, ifDirty: {
+        self.poll(project, ifCaseOfBranchBehindOrigin: {
             self.deploy(project)
             self.monitor(project)
         })
@@ -174,14 +170,14 @@ final class Windmill: SchedulerDelegate
         NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunchNotification(task.activityType))
     }
     
-    func didExit(task: ActivityTask, withStatus status: TaskStatus, scheduler: Scheduler) {
+    func didExit(task: ActivityTask, error: TaskError?, scheduler: Scheduler) {
 
-        guard status.value == 0 else {
-            NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDErrorNotification(task.activityType))
+        if case ActivityTaskStatus.Succesful? = task.status {
+            NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidExitNotification(task.activityType))
             return
         }
-        
-        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidExitNotification(task.activityType, terminationStatus: status))
+
+        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDErrorNotification(task.activityType))
     }
     
     /**
