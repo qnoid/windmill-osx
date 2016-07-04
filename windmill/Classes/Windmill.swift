@@ -20,7 +20,7 @@ typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-final class Windmill
+final class Windmill: SchedulerDelegate
 {
     static var dispatch_queue_serial = dispatch_queue_create("io.windmil.queue", DISPATCH_QUEUE_SERIAL)
     
@@ -110,6 +110,7 @@ final class Windmill
         self.scheduler = scheduler
         self.keychain = keychain
         self.projects = []
+        self.scheduler.delegate = self
     }
     
     private func add(project: Project)
@@ -119,16 +120,32 @@ final class Windmill
         write(self.projects, outputStream: NSOutputStream.outputStreamOnProjects())
     }
 
-    private func monitor(project: Project) {
-        self.scheduler.schedule(taskProvider: NSTask.taskPoll(project.name), ifDirty: { [weak self] in
+    private func poll(project: Project, ifDirty callback: dispatch_block_t) {
+        
+        self.scheduler.schedule(task: NSTask.taskPoll(project.name)) { [weak weakSelf = self] task, status in
             
-            guard let _self = self else {
+            guard let _status = status as? PollTaskStatus else {
                 return
             }
             
-            _self.deploy(project)
-            _self.monitor(project)
-            })
+            guard let _self = weakSelf else {
+                return
+            }
+            
+            switch _status {
+            case PollTaskStatus.AlreadyUpToDate, PollTaskStatus.Unknown:
+                _self.poll(project, ifDirty: callback)
+            case PollTaskStatus.Dirty:
+                callback()
+            }
+        }
+    }
+    
+    private func monitor(project: Project) {
+        self.poll(project, ifDirty: {
+            self.deploy(project)
+            self.monitor(project)
+        })
     }
     
     private func deploy(project: Project)
@@ -145,11 +162,25 @@ final class Windmill
         let directoryPath = "\(NSFileManager.defaultManager().windmill)\(name)"
         debugPrint(directoryPath)
 
-        self.scheduler.queue(NSTask.taskCheckout(name, origin: project.origin),
+        self.scheduler.queue(tasks: NSTask.taskCheckout(name, origin: project.origin),
             NSTask.taskBuild(directoryPath: directoryPath, scheme: name),
             NSTask.taskTest(directoryPath: directoryPath, scheme:name),
             NSTask.taskArchive(directoryPath: directoryPath, projectName: name),
             NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
+    }
+    
+    func didLaunch(task: ActivityTask, scheduler: Scheduler) {
+        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunchNotification(task.activityType))
+    }
+    
+    func didExit(task: ActivityTask, withStatus status: TaskStatus, scheduler: Scheduler) {
+
+        guard status.value == 0 else {
+            NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDErrorNotification(task.activityType))
+            return
+        }
+        
+        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidExitNotification(task.activityType, terminationStatus: status))
     }
     
     /**

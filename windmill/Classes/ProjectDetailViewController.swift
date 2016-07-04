@@ -20,6 +20,17 @@ extension CALayer {
     }
 }
 
+extension NSImageView {
+    
+    func startSpinning() {
+        self.layer?.addAnimation(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
+    }
+    
+    func stopSpinning() {
+        self.layer?.removeAnimationForKey("spinAnimation")
+    }
+}
+
 class ProjectDetailViewController: NSViewController {
     
     @IBOutlet weak var activityIndicatorImageView: NSImageView!
@@ -41,7 +52,7 @@ class ProjectDetailViewController: NSViewController {
         
         if(self.topConstraint == nil) {
         
-            let topAnchor = self.view.window!.contentLayoutGuide!.topAnchor
+            let topAnchor = self.view.window?.contentLayoutGuide!.topAnchor
         
             let topConstraint = self.checkoutActivityView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 8)
         
@@ -60,12 +71,13 @@ class ProjectDetailViewController: NSViewController {
 
 
         self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidLaunch):"), name: NSTask.Notifications.taskDidLaunch, object: nil)
+        self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskError):"), name: NSTask.Notifications.taskError, object: nil)
         self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidExit):"), name: NSTask.Notifications.taskDidExit, object: nil)
     }
     
     override func viewDidAppear() {
         CALayer.Windmill.positionAnchorPoint(self.activityIndicatorImageView.layer!)
-        self.activityIndicatorImageView.layer?.addAnimation(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
+        self.activityIndicatorImageView.startSpinning()
     }
     
     func windmill(windmill: Windmill, willDeployProject project: Project) {
@@ -91,7 +103,14 @@ class ProjectDetailViewController: NSViewController {
         
         self.activityTextfield.stringValue = activityType.description
     }
-    
+
+    func taskError(aNotification: NSNotification) {
+        self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
+        self.activityIndicatorImageView.stopSpinning()
+        
+        self.activityTextfield.stringValue = "stopped"
+    }
+
     func taskDidExit(aNotification: NSNotification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!

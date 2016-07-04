@@ -8,21 +8,28 @@
 
 import Foundation
 import XCTest
-import windmill
+@testable import windmill
 
 class NSTaskTest : XCTestCase
 {
-    func testDevelopmentBuildProjectIsCreated()
+    func testGivenArchiveTaskAssertStatus()
     {
-        _ = NSTask.taskDevelopmentBuildProject(directoryPath: "foo")
+        let expectation = self.expectationWithDescription(__FUNCTION__)
+        let archive = NSTask.taskArchive(directoryPath: "~/.windmill/brainmap", projectName: "brainmap")
+
+        var actual: TaskStatus?
         
-        XCTAssertTrue(true, "Task created without any exceptions")
-    }
-    
-    func testDevelopmentBuildWorkspaceIsCreated()
-    {
-        _ = NSTask.taskDevelopmentBuildWorkspace(directoryPath: "foo")
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)){
+            archive.launch()
+            archive.waitUntilStatus{ status in
+                actual = status
+                expectation.fulfill()
+            }
+        }
         
-        XCTAssertTrue(true, "Task created without any exceptions")
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+
+        XCTAssertNotNil(actual)
+        XCTAssertEqual(actual?.value, 65, actual!.description)
     }
 }

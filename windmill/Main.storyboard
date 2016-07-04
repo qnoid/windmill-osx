@@ -29,7 +29,7 @@
         <!--Main View Controller Scene-->
         <scene sceneID="pHJ-l6-QGn">
             <objects>
-                <splitViewController title="Windmill" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController title="Windmill" storyboardIdentifier="MainViewController" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" collapsed="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
                         <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
