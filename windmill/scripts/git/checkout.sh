@@ -30,7 +30,7 @@ echo "[windmill] [debug] git -C $PROJECT_NAME pull"
 }
 
 function git_clone(){
-(cd $WINDMILL_ROOT; git clone $REMOTE $PROJECT_NAME)
+(cd $WINDMILL_ROOT; git clone -b master $REMOTE $PROJECT_NAME)
 }
 
 (
