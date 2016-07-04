@@ -133,7 +133,7 @@ final class Windmill: SchedulerDelegate
             }
             
             switch _status {
-            case PollTaskStatus.AlreadyUpToDate, PollTaskStatus.Unknown:
+            case PollTaskStatus.AlreadyUpToDate, PollTaskStatus.Unknown, PollTaskStatus.Fatal:
                 _self.poll(project, ifDirty: callback)
             case PollTaskStatus.Dirty:
                 callback()
@@ -166,6 +166,7 @@ final class Windmill: SchedulerDelegate
             NSTask.taskBuild(directoryPath: directoryPath, scheme: name),
             NSTask.taskTest(directoryPath: directoryPath, scheme:name),
             NSTask.taskArchive(directoryPath: directoryPath, projectName: name),
+            NSTask.taskExport(directoryPath: directoryPath, projectName: name),
             NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
     }
     

@@ -2,15 +2,9 @@
 
 # Requires the following variables to be set
 # SCHEME_NAME
-
-WINDMILL_ROOT="$HOME/.windmill"
-
 set -e
 
 PROJECT_NAME=$1
-
-(
-(
 
 xcodebuild -scheme $PROJECT_NAME -configuration Debug clean build -derivedDataPath build
 
@@ -21,6 +15,3 @@ xcodebuild -scheme $PROJECT_NAME -configuration Debug clean build -derivedDataPa
 #fi
 
 #xcodebuild -scheme $PROJECT_NAME -configuration Debug clean build -derivedDataPath build
-
-) 2>&1 | tee -a "$WINDMILL_ROOT/$PROJECT_NAME.log"
-) 2>&1 | tee -a "$WINDMILL_ROOT/windmill.log"

@@ -45,10 +45,22 @@ public enum CheckoutTaskStatus: Int, TaskStatus {
 public enum BuildTaskStatus: Int, TaskStatus {
     
     case Unknown = -1
-    case Success = 0
+    case OK = 0
+    case SchemeNotFound = 65
     
     public var value: Int {
         return self.rawValue
+    }
+    
+    public var description: String {
+        switch self{
+        case .Unknown:
+            return "unknown"
+        case .OK:
+            return "OK"
+        case .SchemeNotFound:
+            return "Scheme not found."
+        }
     }
 }
 
@@ -56,7 +68,7 @@ public enum TestTaskStatus: Int, TaskStatus {
     
     case Unknown = -1
     case OK = 0
-    case Failed = 65
+    case Failed = 65 //or xcodebuild: error: The project named "soldo" does not contain a scheme named "com.soldo.soldo". The "-list" option can be used to find the names of the schemes in the project.
     
     public var value: Int {
         return self.rawValue
@@ -96,11 +108,33 @@ public enum ArchiveTaskStatus: Int, TaskStatus {
     }
 }
 
-public enum DeployTaskStatus : Int, TaskStatus {
+public enum DeployTaskStatus: Int, TaskStatus {
     
     case Unknown = -1
-    case Success = 0
-    case Error = 1
+    case OK = 0
+    case FailedToConnect = 7
+    
+    public var value: Int {
+        return self.rawValue
+    }
+    
+    public var description: String {
+        switch self{
+        case .Unknown:
+            return "unknown"
+        case .OK:
+            return "OK"
+        case .FailedToConnect:
+            return "curl: (7) Failed to connect: Connection refused"
+        }
+    }
+}
+
+public enum ExportTaskError : Int, TaskStatus {
+    
+    case Unknown = -1
+    case OK = 0
+    case AdHocProvisioningNotFound = 70
     
     public var value: Int {
         return self.rawValue
@@ -108,12 +142,12 @@ public enum DeployTaskStatus : Int, TaskStatus {
 
     public var description : String {
         switch self{
-        case .Success:
-            return "Successfuly deployed IPA."
-        case .Error:
-            return "Error deploying IPA"
-        default:
-            return "Unknown"
+        case .Unknown:
+            return "unknown"
+        case .OK:
+            return "OK"
+        case .AdHocProvisioningNotFound:
+            return "No matching provisioning profiles found"
         }
     }
 }
@@ -123,6 +157,7 @@ public enum PollTaskStatus : Int, TaskStatus
     case Unknown = -1
     case AlreadyUpToDate = 0
     case Dirty = 1
+    case Fatal = 128
     
     public var value: Int {
         return self.rawValue
@@ -130,12 +165,14 @@ public enum PollTaskStatus : Int, TaskStatus
 
     public var description : String {
         switch self{
+        case .Unknown:
+            return "unknown"
         case .AlreadyUpToDate:
             return "Already up-to-date."
         case .Dirty:
             return "Dirty"
-        default:
-            return "Unknown"
+        case .Fatal:
+            return "ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
         }
     }
 }
@@ -146,6 +183,7 @@ enum ActivityType: String, CustomStringConvertible
     case Build
     case Test
     case Archive
+    case Export
     case Deploy
     case Poll
     
@@ -158,6 +196,8 @@ enum ActivityType: String, CustomStringConvertible
         case .Test:
             return "windmill-activity-indicator-test"
         case .Archive:
+            return "windmill-activity-indicator-archive"
+        case .Export:
             return "windmill-activity-indicator-archive"
         case .Deploy:
             return "windmill-activity-indicator"
@@ -175,6 +215,8 @@ enum ActivityType: String, CustomStringConvertible
         case .Test:
             return "lights-test"
         case .Archive:
+            return "lights-archive"
+        case .Export:
             return "lights-archive"
         case .Deploy:
             return ""
@@ -194,6 +236,8 @@ enum ActivityType: String, CustomStringConvertible
             return "testing"
         case .Archive:
             return "archiving"
+        case .Export:
+            return "exporting"
         case .Deploy:
             return "deploying"
         case .Poll:
@@ -234,6 +278,14 @@ enum ActivityType: String, CustomStringConvertible
             
             debugPrint("WARN: \(#file):\(#function):\(#line) unknown archive status: \(status)")
             return ArchiveTaskStatus.Unknown
+
+        case (.Export, let code):
+            if let error =  ExportTaskError(rawValue: code) {
+                return error
+            }
+            
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown export code: \(code)")
+            return ExportTaskError.Unknown
 
         case (.Deploy, let status):
             if let status =  DeployTaskStatus(rawValue: status) {
@@ -347,7 +399,17 @@ extension NSTask
         
         return Task(activityType: ActivityType.Archive, task: task)
     }
-    
+
+    public static func taskExport(directoryPath directoryPath: String, projectName name: String) -> Task {
+        
+        let task = NSTask()
+        task.currentDirectoryPath = directoryPath
+        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.EXPORT, ofType: "sh")!
+        task.arguments = [name, self.pathForDir("resources")]
+        
+        return Task(activityType: ActivityType.Archive, task: task)
+    }
+
     public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> Task {
         
         let task = NSTask()
