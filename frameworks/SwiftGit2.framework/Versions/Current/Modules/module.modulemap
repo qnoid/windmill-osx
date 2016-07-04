@@ -1,5 +1,5 @@
 
-framework module SwiftGit2 {
+framework module SwiftGit2 [system] {
 	umbrella header "SwiftGit2.h"
   
 	header "git2/annotated_commit.h"

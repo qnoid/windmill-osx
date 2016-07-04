@@ -209,14 +209,14 @@ enum ActivityType: String, CustomStringConvertible
                 return status
             }
             
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown checkout status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown checkout status: \(status)")
             return CheckoutTaskStatus.Unknown
         case (.Build, let status):
             if let status =  BuildTaskStatus(rawValue: status) {
                 return status
             }
             
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown build status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown build status: \(status)")
             return BuildTaskStatus.Unknown
 
         case (.Test, let status):
@@ -224,7 +224,7 @@ enum ActivityType: String, CustomStringConvertible
                 return status
             }
             
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown test status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown test status: \(status)")
             return TestTaskStatus.Unknown
 
         case (.Archive, let status):
@@ -232,7 +232,7 @@ enum ActivityType: String, CustomStringConvertible
                 return status
             }
             
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown archive status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown archive status: \(status)")
             return ArchiveTaskStatus.Unknown
 
         case (.Deploy, let status):
@@ -240,14 +240,14 @@ enum ActivityType: String, CustomStringConvertible
                 return status
             }
             
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown deploy status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown deploy status: \(status)")
             return DeployTaskStatus.Unknown
         case (.Poll, let status):
             if let status =  PollTaskStatus(rawValue: status) {
                 return status
             }
 
-            debugPrint("WARN: \(__FILE__):\(__FUNCTION__):\(__LINE__) unknown poll status: \(status)")
+            debugPrint("WARN: \(#file):\(#function):\(#line) unknown poll status: \(status)")
             return PollTaskStatus.Unknown
         }
     }

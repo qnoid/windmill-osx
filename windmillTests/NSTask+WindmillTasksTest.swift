@@ -14,7 +14,7 @@ class NSTaskTest : XCTestCase
 {
     func testGivenArchiveTaskAssertStatus()
     {
-        let expectation = self.expectationWithDescription(__FUNCTION__)
+        let expectation = self.expectationWithDescription(#function)
         let archive = NSTask.taskArchive(directoryPath: "~/.windmill/brainmap", projectName: "brainmap")
 
         var actual: TaskStatus?

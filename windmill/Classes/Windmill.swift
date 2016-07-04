@@ -43,7 +43,7 @@ final class Windmill: SchedulerDelegate
         return windmill
     }
     
-    static func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, WindmillError>
+    static func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, NSError>
     {
         Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
         
@@ -62,7 +62,7 @@ final class Windmill: SchedulerDelegate
             return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
         }
         
-        let latestCommit: Result<Commit, NSError> = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
+        let latestCommit: Result = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
         
         guard let _latestCommit = latestCommit.value else {
             Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
@@ -151,7 +151,7 @@ final class Windmill: SchedulerDelegate
     private func deploy(project: Project)
     {
         guard let user = try? self.keychain.findWindmillUser() else {
-            Windmill.logger.log(.ERROR, "\(__FUNCTION__) A windmill user account should have been created.")
+            Windmill.logger.log(.ERROR, "\(#function) A windmill user account should have been created.")
             return
         }
         

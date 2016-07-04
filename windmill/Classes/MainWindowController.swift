@@ -13,7 +13,7 @@ class MainWindowController: NSWindowController {
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        print(__FUNCTION__)
+        print(#function)
         self.window!.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
         self.window!.collectionBehavior = [self.window!.collectionBehavior, .FullScreenAllowsTiling]
 

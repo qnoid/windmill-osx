@@ -91,7 +91,7 @@ class ProjectDetailViewController: NSViewController {
     func taskDidLaunch(aNotification: NSNotification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
-        debugPrint("DEBUG: \(__FUNCTION__) \(activityType)")
+        debugPrint("DEBUG: \(#function) \(activityType)")
         
         switch(activityType){
             case .Checkout, .Build, .Test, .Archive:

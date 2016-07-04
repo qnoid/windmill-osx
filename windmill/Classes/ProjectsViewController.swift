@@ -49,7 +49,7 @@ public class ProjectsViewController: NSViewController, WindmillDelegate
     /// callback from #outlineViewDatasource when a drag operation is performed by the user
     func performDragOperation(info: NSDraggingInfo) -> Bool
     {
-        print(__FUNCTION__);
+        print(#function);
         
         guard let folder = info.draggingPasteboard().firstFilename() else {
             return false

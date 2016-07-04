@@ -21,7 +21,7 @@ public class ProjectsOutlineViewDelegate : NSObject, NSOutlineViewDelegate
             return self.outlineView(outlineView, viewForTableColumn: tableColumn, header: header)
         }
 
-        ProjectsOutlineViewDelegate.logger.log(.WARN, __FUNCTION__)
+        ProjectsOutlineViewDelegate.logger.log(.WARN, #function)
         ProjectsOutlineViewDelegate.logger.log(.WARN, "Unrecognized data type for the item. Check what types does ProjectsDataSource return")
         
         return nil

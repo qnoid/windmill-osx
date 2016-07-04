@@ -3,4 +3,4 @@
 	url = https://github.com/antitypical/Result.git
 [submodule "Carthage/Checkouts/SwiftGit2"]
 	path = Carthage/Checkouts/SwiftGit2
-	url = https://github.com/SwiftGit2/SwiftGit2.git
+	url = https://github.com/tombooth/SwiftGit2.git

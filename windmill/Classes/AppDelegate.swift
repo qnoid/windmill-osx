@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     @IBOutlet weak var menu: NSMenu! {
         didSet{
             self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
-                action: "mouseDown:",
+                action: #selector(AppDelegate.mouseDown(_:)),
                 target: self,
                 mask: NSEventMask.LeftMouseDownMask
                 ))
@@ -52,7 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 
     override init() {
         super.init()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("mainWindowDidLoad:"), name: "mainWindowDidLoad", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: "mainWindowDidLoad", object: nil)
     }
     
     func applicationDidFinishLaunching(notification: NSNotification)
@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
     {
-        print(__FUNCTION__);
+        print(#function);
         return .Copy;
     }
     
@@ -98,12 +98,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     func draggingExited(sender: NSDraggingInfo!)
     {
-        print(__FUNCTION__);
+        print(#function);
     }
     
     func prepareForDragOperation(sender: NSDraggingInfo) -> Bool
     {
-        print(__FUNCTION__);
+        print(#function);
         return true;
         
     }
