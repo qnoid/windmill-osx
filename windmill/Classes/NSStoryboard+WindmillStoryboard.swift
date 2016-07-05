@@ -19,13 +19,5 @@ extension NSStoryboard
         static func mainWindowController() -> MainWindowController {
             return self.mainStoryboard().instantiateInitialController() as! MainWindowController
         }
-
-        static func mainViewController() -> MainViewController {
-            return self.mainStoryboard().instantiateControllerWithIdentifier("MainViewController") as! MainViewController
-        }
-
-        static func projectsViewController() -> ProjectsViewController {
-            return self.mainStoryboard().instantiateControllerWithIdentifier("ProjectsViewController") as! ProjectsViewController
-        }
     }
 }

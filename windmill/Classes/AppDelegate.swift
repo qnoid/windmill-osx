@@ -42,8 +42,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     var mainViewController: MainViewController! {
         didSet{
-            mainViewController.projectsViewController.windmill = self.windmill
-            mainViewController.projectDetailViewController.scheduler = self.windmill.scheduler
+            mainViewController.scheduler = self.windmill.scheduler
+            self.windmill.delegate = mainViewController
         }
     }
     
@@ -109,7 +109,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     }
     
     func performDragOperation(info: NSDraggingInfo) -> Bool {
-        return self.mainViewController.performDragOperation(info)
+        print(#function)
+        
+        guard let folder = info.draggingPasteboard().firstFilename() else {
+            return false
+        }
+        
+        AppDelegate.logger.log(.INFO, folder)
+        let result = Windmill.parse(fullPathOfLocalGitRepo: folder)
+        
+        switch result
+        {
+        case .Success(let project):
+            return self.windmill.create(project)
+        case .Failure(let error):
+            alert(error, window: self.mainWindowViewController.window!)
+            return false
+        }
+
     }
 }
 

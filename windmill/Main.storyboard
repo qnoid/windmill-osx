@@ -19,149 +19,17 @@
                         <value key="maxFullScreenContentSize" type="size" width="10000" height="10000"/>
                     </window>
                     <connections>
-                        <segue destination="oqp-ch-CgG" kind="relationship" relationship="window.shadowedContentViewController" id="Log-CC-6gj"/>
+                        <segue destination="Hwi-w3-Rle" kind="relationship" relationship="window.shadowedContentViewController" id="DQX-oy-Kui"/>
                     </connections>
                 </windowController>
                 <customObject id="DBm-IY-qca" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-397" y="138"/>
         </scene>
-        <!--Main View Controller Scene-->
-        <scene sceneID="pHJ-l6-QGn">
-            <objects>
-                <splitViewController title="Windmill" storyboardIdentifier="MainViewController" id="oqp-ch-CgG" userLabel="Main View Controller Scene" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <splitViewItems>
-                        <splitViewItem canCollapse="YES" collapsed="YES" holdingPriority="260" behavior="sidebar" id="9tM-uJ-Rgn"/>
-                        <splitViewItem holdingPriority="255" behavior="contentList" id="4fn-TK-xj2"/>
-                    </splitViewItems>
-                    <splitView key="splitView" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" id="6mY-wz-wVC">
-                        <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </splitView>
-                    <connections>
-                        <outlet property="view" destination="6mY-wz-wVC" id="p7e-ng-1DA"/>
-                        <segue destination="CLr-JN-nba" kind="relationship" relationship="splitItems" id="5Su-ep-NRa"/>
-                        <segue destination="Hwi-w3-Rle" kind="relationship" relationship="splitItems" id="Xnn-Vs-f6F"/>
-                    </connections>
-                </splitViewController>
-                <customObject id="9B1-cO-5va" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="578" y="144"/>
-        </scene>
-        <!--Projects View Controller-->
-        <scene sceneID="SCC-BM-DWi">
-            <objects>
-                <viewController storyboardIdentifier="ProjectsViewController" id="CLr-JN-nba" customClass="ProjectsViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <scrollView key="view" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" id="olU-Jr-aod">
-                        <rect key="frame" x="0.0" y="0.0" width="180" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" drawsBackground="NO" id="eIj-lL-CPI">
-                            <rect key="frame" x="1" y="1" width="178" height="478"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <outlineView toolTip="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo." appearanceType="vibrantLight" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="16" outlineTableColumn="IYb-OR-B3W" id="sYh-bU-Ug6">
-                                    <rect key="frame" x="0.0" y="0.0" width="178" height="0.0"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                    <tableColumns>
-                                        <tableColumn width="175" minWidth="16" maxWidth="1000" id="IYb-OR-B3W">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Projects">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                            </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="d0I-4F-zLX">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            <prototypeCellViews>
-                                                <tableCellView identifier="HeaderCell" id="0A8-9W-H6c">
-                                                    <rect key="frame" x="1" y="1" width="175" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GvD-aO-Vvr">
-                                                            <rect key="frame" x="0.0" y="1" width="145" height="14"/>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Projects" id="vAL-zD-3nx">
-                                                                <font key="font" metaFont="smallSystemBold"/>
-                                                                <color key="textColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="GvD-aO-Vvr" secondAttribute="trailing" constant="32" id="0Ot-M9-CdB"/>
-                                                        <constraint firstItem="GvD-aO-Vvr" firstAttribute="leading" secondItem="0A8-9W-H6c" secondAttribute="leading" constant="2" id="aQq-nW-RxE"/>
-                                                        <constraint firstItem="GvD-aO-Vvr" firstAttribute="centerY" secondItem="0A8-9W-H6c" secondAttribute="centerY" id="koz-It-jOE"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <outlet property="textField" destination="GvD-aO-Vvr" id="hjX-pO-ozt"/>
-                                                    </connections>
-                                                </tableCellView>
-                                                <tableCellView identifier="DataCell" id="qr6-n9-R6n">
-                                                    <rect key="frame" x="1" y="20" width="175" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <imageView translatesAutoresizingMaskIntoConstraints="NO" id="gC9-M6-y5D">
-                                                            <rect key="frame" x="3" y="0.0" width="17" height="17"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="17" id="7Jn-sB-bg6"/>
-                                                            </constraints>
-                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill" id="9ud-Iy-oc2"/>
-                                                        </imageView>
-                                                        <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JdJ-vv-N26">
-                                                            <rect key="frame" x="25" y="0.0" width="120" height="17"/>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" placeholderString="project name" id="NBy-dC-Tu4">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                            </textFieldCell>
-                                                        </textField>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="JdJ-vv-N26" firstAttribute="centerY" secondItem="qr6-n9-R6n" secondAttribute="centerY" id="1Rr-VW-Rej"/>
-                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="bottom" secondItem="JdJ-vv-N26" secondAttribute="bottom" id="2fB-5H-7ps"/>
-                                                        <constraint firstItem="JdJ-vv-N26" firstAttribute="leading" secondItem="gC9-M6-y5D" secondAttribute="trailing" constant="7" id="3X1-qd-L6k"/>
-                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="leading" secondItem="qr6-n9-R6n" secondAttribute="leading" constant="3" id="Aeh-ab-Jkk"/>
-                                                        <constraint firstAttribute="trailing" secondItem="JdJ-vv-N26" secondAttribute="trailing" constant="32" id="Nmh-vI-o1c"/>
-                                                        <constraint firstItem="gC9-M6-y5D" firstAttribute="top" secondItem="JdJ-vv-N26" secondAttribute="top" id="mfC-IQ-bGd"/>
-                                                    </constraints>
-                                                    <connections>
-                                                        <outlet property="imageView" destination="gC9-M6-y5D" id="CxE-yE-A26"/>
-                                                        <outlet property="textField" destination="JdJ-vv-N26" id="wZ6-V9-f5W"/>
-                                                    </connections>
-                                                </tableCellView>
-                                            </prototypeCellViews>
-                                        </tableColumn>
-                                    </tableColumns>
-                                </outlineView>
-                            </subviews>
-                            <nil key="backgroundColor"/>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="g6V-fB-adw">
-                            <rect key="frame" x="1" y="475" width="178" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="UpG-ZA-6mP">
-                            <rect key="frame" x="224" y="17" width="15" height="102"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                    </scrollView>
-                    <connections>
-                        <outlet property="outlineView" destination="sYh-bU-Ug6" id="kzP-yR-k3u"/>
-                    </connections>
-                </viewController>
-                <customObject id="qEN-ro-2j1" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="161" y="803"/>
-        </scene>
-        <!--Project Detail View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="Amb-BC-0eG">
             <objects>
-                <viewController id="Hwi-w3-Rle" customClass="ProjectDetailViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="6j5-vW-ygG">
                         <rect key="frame" x="0.0" y="0.0" width="588" height="480"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -256,7 +124,7 @@
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="578" y="793"/>
+            <point key="canvasLocation" x="265" y="138"/>
         </scene>
         <!--Application-->
         <scene sceneID="6gf-Vf-nel">
@@ -431,12 +299,6 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" id="nzx-Ov-Mal">
                                     <items>
-                                        <menuItem title="Show Sidebar" keyEquivalent="s" id="HE9-vz-oUp">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleSidebar:" target="aS9-1w-R0E" id="Vai-lD-h27"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="5jI-cp-Huu">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -507,7 +369,6 @@
         <image name="lights-build" width="110" height="44"/>
         <image name="lights-checkout" width="110" height="44"/>
         <image name="lights-test" width="110" height="44"/>
-        <image name="windmill" width="16" height="16"/>
         <image name="windmill-activity-indicator-inactive" width="44" height="44"/>
     </resources>
 </document>
