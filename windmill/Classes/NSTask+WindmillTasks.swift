@@ -48,7 +48,14 @@ public enum TestTaskError: Int, TaskError {
 
 public enum ArchiveTaskError: Int, TaskError {
     
-    case CodeSignError = 65 //"Code Sign error: No code signing identities found: No valid signing identities (i.e. certificate and private key pair) were found."
+    /**
+     Cases
+     
+        * "Code Sign error: No code signing identities found: No valid signing identities (i.e. certificate and private key pair) were found."
+        * "Code Sign error: No matching provisioning profiles found: No provisioning profiles matching an applicable signing identity were found."
+
+     */
+    case CodeSignError = 65
     
     public var code: Int {
         return self.rawValue

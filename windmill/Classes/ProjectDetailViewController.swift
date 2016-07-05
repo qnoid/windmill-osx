@@ -81,6 +81,7 @@ class ProjectDetailViewController: NSViewController {
     }
     
     func windmill(windmill: Windmill, willDeployProject project: Project) {
+        self.view.window?.title = project.name        
         self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
         for activityView in self.activityViews.values {
             activityView.hidden = true
