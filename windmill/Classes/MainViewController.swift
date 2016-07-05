@@ -26,6 +26,5 @@ class MainViewController: NSSplitViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        self.view.window!.titleVisibility = .Hidden
     }
 }

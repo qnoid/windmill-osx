@@ -186,7 +186,7 @@ final class Windmill: SchedulerDelegate
     
     Adds the given *project* to the list of projects.
     
-    If #delegate is set, you will receive a callback to WindmillDelegate#created(self, projects:self.projects, project: project)
+    If #delegate is set, you will receive a callback to WindmillDelegate#windmillself, projects:self.projects, addedProject project: project)
     if the project was
 
     - precondition: the given *project* must have a valid remote origin
