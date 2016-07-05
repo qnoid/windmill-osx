@@ -13,6 +13,7 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     static let toDictionary : (Project) -> Dictionary<String, AnyObject> = { project in
         return [
             "name": project.name,
+            "scheme": project.scheme,
             "origin": project.origin ]
     }
     
@@ -30,20 +31,24 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     
     let name : String
     
+    let scheme : String
+    
     /// the origin of the git repo as returned by 'git remote -v', i.e. git@bitbucket.org:qnoid/balance.git
     let origin : String
     
-    public required init(name: String, origin: String)
+    public required init(name: String, scheme: String, origin: String)
     {
         self.name = name
+        self.scheme = scheme
         self.origin = origin
     }
 
     convenience public init(dictionary aDictionary: Dictionary<String, AnyObject>)
     {
         let name = aDictionary["name"] as! String
+        let scheme = aDictionary["scheme"] as! String
         let origin = aDictionary["origin"] as! String
         
-        self.init(name:name, origin:origin)
+        self.init(name:name, scheme: scheme, origin:origin)
     }
 }

@@ -77,7 +77,7 @@ final class Windmill: SchedulerDelegate
         Windmill.logger.log(.DEBUG, "Project name: \(name)")
         Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
         
-        return Result.Success(Project(name: name, origin: origin))
+        return Result.Success(Project(name: name, scheme: name, origin: origin))
     }
 
     
@@ -159,9 +159,9 @@ final class Windmill: SchedulerDelegate
         debugPrint(directoryPath)
 
         self.scheduler.queue(tasks: NSTask.taskCheckout(name, origin: project.origin),
-            NSTask.taskBuild(directoryPath: directoryPath, scheme: name),
-            NSTask.taskTest(directoryPath: directoryPath, scheme:name),
-            NSTask.taskArchive(directoryPath: directoryPath, projectName: name),
+            NSTask.taskBuild(directoryPath: directoryPath, scheme: project.scheme),
+            NSTask.taskTest(directoryPath: directoryPath, scheme: project.scheme),
+            NSTask.taskArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: name),
             NSTask.taskExport(directoryPath: directoryPath, projectName: name),
             NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
     }

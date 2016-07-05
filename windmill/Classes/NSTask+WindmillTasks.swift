@@ -306,12 +306,12 @@ extension NSTask
         return Task(activityType: ActivityType.Test, task: task)
     }
     
-    public static func taskArchive(directoryPath directoryPath: String, projectName name: String) -> Task {
+    public static func taskArchive(directoryPath directoryPath: String, scheme: String, projectName name: String) -> Task {
         
         let task = NSTask()
         task.currentDirectoryPath = directoryPath
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        task.arguments = [name, self.pathForDir("resources")]
+        task.arguments = [scheme, name, self.pathForDir("resources")]
         
         return Task(activityType: ActivityType.Archive, task: task)
     }
