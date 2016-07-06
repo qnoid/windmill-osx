@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     var statusItem: NSStatusItem! {
         didSet{
-            statusItem.toolTip = NSLocalizedString("applicationDidFinishLaunching.statusItem.toolTip", comment: "")
+            statusItem.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
             
             let image = NSImage(named:"statusItem")!
             image.template = true

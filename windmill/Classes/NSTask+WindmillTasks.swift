@@ -218,14 +218,27 @@ enum ActivityTaskStatus: Int {
     case BranchBehindOrigin = 255
 }
 
+protocol ActivityTaskDelegate: class {
+ 
+    func didReceive(task: ActivityTask, standardOutput: String)
+    
+    func didReceive(task: ActivityTask, standardError: String)
+}
+
 protocol ActivityTask {
     
     var activityType: ActivityType { get }
     
     var status: ActivityTaskStatus? { get }
-    
+
+    weak var delegate: ActivityTaskDelegate? { get set }
+
     func launch()
     func waitUntilExit(completion: (TaskError?) -> Void)
+    
+    func waitForStandardOutputInBackground()
+    
+    func waitForStandardErrorInBackground()
 }
 
 public struct Task: ActivityTask {
@@ -235,11 +248,36 @@ public struct Task: ActivityTask {
         return self.activityType.status(Int(self.task.terminationStatus))
     }
     
+    weak var delegate: ActivityTaskDelegate?
+    
     let task: NSTask
     
     init(activityType: ActivityType, task: NSTask) {
         self.activityType = activityType
         self.task = task
+    }
+    
+    private func waitForDataInBackground(pipe: NSPipe, callback: (data: String) -> Void) {
+        
+        pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+
+        NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading , queue: nil) { [weak pipe = pipe] notification in
+            
+            guard let _pipe = pipe else {
+                return
+            }
+            
+            let availableData = _pipe.fileHandleForReading.availableData
+            let availableString = String(data: availableData, encoding: NSUTF8StringEncoding) ?? ""
+            
+            if !availableString.isEmpty {
+                dispatch_async(dispatch_get_main_queue()){
+                    callback(data: availableString)
+                }
+            }
+            
+            _pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+        }
     }
     
     func launch() {
@@ -259,6 +297,23 @@ public struct Task: ActivityTask {
         completion(self.activityType.map(terminationStatus))
     }
     
+    func waitForStandardOutputInBackground() {
+        let standardOutputPipe = NSPipe()
+        self.task.standardOutput = standardOutputPipe
+        
+        self.waitForDataInBackground(standardOutputPipe) { availableString in
+            self.delegate?.didReceive(self, standardOutput: availableString)
+        }
+    }
+    
+    func waitForStandardErrorInBackground() {
+        let standardErrorPipe = NSPipe()
+        self.task.standardError = standardErrorPipe
+        
+        self.waitForDataInBackground(standardErrorPipe){ availableString in
+            self.delegate?.didReceive(self, standardError: availableString)
+        }
+    }
 }
 
 extension NSTask

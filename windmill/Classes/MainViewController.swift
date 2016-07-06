@@ -20,26 +20,37 @@ extension CALayer {
     }
 }
 
-extension NSImageView {
+extension NSView {
     
-    func startSpinning() {
+    func startAnimation() {
         self.layer?.addAnimation(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
     }
     
-    func stopSpinning() {
+    func stopAnimation() {
         self.layer?.removeAnimationForKey("spinAnimation")
     }
 }
 
 class MainViewController: NSViewController, WindmillDelegate {
     
-    @IBOutlet weak var activityIndicatorImageView: NSImageView!
+    let logger : ConsoleLog = ConsoleLog()
+    
+    @IBOutlet weak var windmillButton: NSButton! {
+        didSet{
+            windmillButton.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
+            windmillButton.showsBorderOnlyWhileMouseInside = true
+        }
+    }
     @IBOutlet weak var activityTextfield: NSTextField!
     @IBOutlet weak var checkoutActivityView: ActivityView!
     @IBOutlet weak var buildActivityView: ActivityView!
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
+    @IBOutlet var textView: NSTextView!
+    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
+    
     weak var topConstraint: NSLayoutConstraint!
+    
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
         return [.Checkout: self.checkoutActivityView, .Build: self.buildActivityView, .Test: self.testActivityView, .Archive: self.archiveActivityView]
@@ -76,17 +87,38 @@ class MainViewController: NSViewController, WindmillDelegate {
     }
     
     override func viewDidAppear() {
-        CALayer.Windmill.positionAnchorPoint(self.activityIndicatorImageView.layer!)
-        self.activityIndicatorImageView.startSpinning()
+        CALayer.Windmill.positionAnchorPoint(self.windmillButton.layer!)
     }
+
+    func append(textView: NSTextView, output: String) {
+        let string = textView.string ?? ""
+        let _output = string + "\n" + output
+        textView.string = _output
+        
+        let range = NSRange(location:_output.characters.count,length:0)
+        textView.scrollRangeToVisible(range)
+    }
+    
+    func windmill(windmill: Windmill, standardOutput: String) {
+        self.append(self.textView, output: standardOutput)
+    }
+    
+    func windmill(windmill: Windmill, standardError: String) {
+        self.append(self.textView, output: standardError)
+        self.textViewHeightConstraint.animator().constant = 105
+    }
+
     
     func windmill(windmill: Windmill, projects: Array<Project>, addedProject project: Project) {
 
     }
     
     func windmill(windmill: Windmill, willDeployProject project: Project) {
+        self.textView.string = ""
+        self.windmillButton.startAnimation()
+        self.windmillButton.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.view.window?.title = project.name        
-        self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
+        self.windmillButton.image = NSImage(named: "windmill-activity-indicator-inactive")
         for activityView in self.activityViews.values {
             activityView.hidden = true
             activityView.alphaValue = 0.5
@@ -96,11 +128,11 @@ class MainViewController: NSViewController, WindmillDelegate {
     func taskDidLaunch(aNotification: NSNotification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
-        debugPrint("DEBUG: \(#function) \(activityType)")
+        self.logger.log(.DEBUG,  activityType)
         
         switch(activityType){
             case .Checkout, .Build, .Test, .Archive:
-                self.activityIndicatorImageView.image = NSImage(named: activityType.imageName)
+                self.windmillButton.image = NSImage(named: activityType.imageName)
                 self.activityViews[activityType]?.hidden = false
             default:
             break
@@ -110,8 +142,8 @@ class MainViewController: NSViewController, WindmillDelegate {
     }
 
     func taskError(aNotification: NSNotification) {
-        self.activityIndicatorImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
-        self.activityIndicatorImageView.stopSpinning()
+        self.windmillButton.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
+        self.windmillButton.stopAnimation()
         
         self.activityTextfield.stringValue = "stopped"
     }

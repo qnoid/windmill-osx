@@ -20,7 +20,7 @@ typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-final class Windmill: SchedulerDelegate
+final class Windmill: SchedulerDelegate, ActivityTaskDelegate
 {
     static var dispatch_queue_serial = dispatch_queue_create("io.windmil.queue", DISPATCH_QUEUE_SERIAL)
     
@@ -166,7 +166,24 @@ final class Windmill: SchedulerDelegate
             NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
     }
     
+    func willLaunch(task: ActivityTask, scheduler: Scheduler) {
+        var task = task
+        task.delegate = self
+        task.waitForStandardOutputInBackground()
+        task.waitForStandardErrorInBackground()
+    }
+    
+    func didReceive(task: ActivityTask, standardOutput: String) {
+        self.delegate?.windmill(self, standardOutput: standardOutput)
+    }
+    
+    func didReceive(task: ActivityTask, standardError: String) {
+        self.delegate?.windmill(self, standardError: standardError)
+    }
+
+    
     func didLaunch(task: ActivityTask, scheduler: Scheduler) {
+    
         NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunchNotification(task.activityType))
     }
     

@@ -10,6 +10,8 @@ import Foundation
 
 protocol SchedulerDelegate: class {
     
+    func willLaunch(task: ActivityTask, scheduler: Scheduler)
+    
     func didLaunch(task: ActivityTask, scheduler: Scheduler)
     
     func didExit(task: ActivityTask, error: TaskError?, scheduler: Scheduler)
@@ -41,6 +43,8 @@ final public class Scheduler
                 return
             }
             
+            self.delegate?.willLaunch(task, scheduler: self)
+
             task.launch()
             
             dispatch_async(dispatch_get_main_queue()) { [unowned self] in

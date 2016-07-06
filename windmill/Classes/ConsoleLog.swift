@@ -21,19 +21,18 @@ public class ConsoleLog {
         
             switch self{
             case DEBUG:
-                return "DEBUG"
+                return "debug"
             case INFO:
-                return "INFO"
+                return "info"
             case WARN:
-                return "WARN"
+                return "warn"
             case ERROR:
-                return "ERROR"
+                return "error"
             }
         }
     }
     
-    public func log<T>(level : Level, _ value : T)
-    {
-        print("[windmill] [\(level):] \(value)")
+    public func log<T>(level : Level, _ value : T) {
+        print("[windmill] [\(level)] \(value)")
     }    
 }

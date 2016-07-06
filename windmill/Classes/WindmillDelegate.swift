@@ -10,6 +10,10 @@ import Foundation
 
 protocol WindmillDelegate
 {
+    func windmill(windmill: Windmill, standardOutput: String)
+    
+    func windmill(windmill: Windmill, standardError: String)
+
     func windmill(windmill: Windmill, willDeployProject project: Project)
 
     /**
