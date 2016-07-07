@@ -261,22 +261,28 @@ public struct Task: ActivityTask {
         
         pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
 
-        NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading , queue: nil) { [weak pipe = pipe] notification in
+        let queue = NSOperationQueue()
+        queue.qualityOfService = .UserInitiated
+        
+        var observer: AnyObject!
+        
+        observer = NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading , queue: queue) { [weak fileHandleForReading = pipe.fileHandleForReading] notification in
             
-            guard let _pipe = pipe else {
+            guard let _fileHandleForReading = fileHandleForReading else {
                 return
             }
             
-            let availableData = _pipe.fileHandleForReading.availableData
-            let availableString = String(data: availableData, encoding: NSUTF8StringEncoding) ?? ""
-            
-            if !availableString.isEmpty {
-                dispatch_async(dispatch_get_main_queue()){
-                    callback(data: availableString)
-                }
+            guard case let availableData = _fileHandleForReading.availableData where availableData.length != 0 else {
+                NSNotificationCenter.defaultCenter().removeObserver(observer)
+                return
             }
             
-            _pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+            let availableString = String(data: availableData, encoding: NSUTF8StringEncoding) ?? ""
+            
+            dispatch_async(dispatch_get_main_queue()){
+                callback(data: availableString)
+                _fileHandleForReading.waitForDataInBackgroundAndNotify()
+            }
         }
     }
     

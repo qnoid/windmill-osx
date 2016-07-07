@@ -51,7 +51,6 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     weak var topConstraint: NSLayoutConstraint!
     
-    
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
         return [.Checkout: self.checkoutActivityView, .Build: self.buildActivityView, .Test: self.testActivityView, .Archive: self.archiveActivityView]
     }()
@@ -75,15 +74,21 @@ class MainViewController: NSViewController, WindmillDelegate {
         super.updateViewConstraints()
     }
     
+    override func loadView() {
+        super.loadView()
+        
+        self.view.window?.addTitlebarAccessoryViewController(ProjectTitlebarAccessoryViewController())
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.layerContentsRedrawPolicy = .OnSetNeedsDisplay
         self.view.layer?.backgroundColor = NSColor.blackColor().CGColor
 
 
-        self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidLaunch):"), name: NSTask.Notifications.taskDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskError):"), name: NSTask.Notifications.taskError, object: nil)
-        self.defaultCenter.addObserver(self, selector: Selector("\(NSTask.Notifications.taskDidExit):"), name: NSTask.Notifications.taskDidExit, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskDidLaunch(_:)), name: NSTask.Notifications.taskDidLaunch, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskError(_:)), name: NSTask.Notifications.taskError, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskDidExit(_:)), name: NSTask.Notifications.taskDidExit, object: nil)
     }
     
     override func viewDidAppear() {
@@ -91,11 +96,9 @@ class MainViewController: NSViewController, WindmillDelegate {
     }
 
     func append(textView: NSTextView, output: String) {
-        let string = textView.string ?? ""
-        let _output = string + "\n" + output
-        textView.string = _output
+        textView.string?.appendContentsOf("\n \(output)")
         
-        let range = NSRange(location:_output.characters.count,length:0)
+        let range = NSRange(location:textView.string!.characters.count,length:0)
         textView.scrollRangeToVisible(range)
     }
     
@@ -110,7 +113,6 @@ class MainViewController: NSViewController, WindmillDelegate {
 
     
     func windmill(windmill: Windmill, projects: Array<Project>, addedProject project: Project) {
-
     }
     
     func windmill(windmill: Windmill, willDeployProject project: Project) {
@@ -123,6 +125,10 @@ class MainViewController: NSViewController, WindmillDelegate {
             activityView.hidden = true
             activityView.alphaValue = 0.5
         }
+        
+        
+        let projectTitlebarAccessoryViewController = self.view.window?.titlebarAccessoryViewControllers[0] as! ProjectTitlebarAccessoryViewController
+        projectTitlebarAccessoryViewController.project = project        
     }
     
     func taskDidLaunch(aNotification: NSNotification) {

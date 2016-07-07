@@ -85,7 +85,7 @@
                                     <rect key="frame" x="1" y="1" width="586" height="1"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView editable="NO" importsGraphics="NO" richText="NO" findStyle="panel" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" id="Ihv-oZ-d6M">
+                                        <textView canDrawConcurrently="YES" editable="NO" importsGraphics="NO" richText="NO" findStyle="panel" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" id="Ihv-oZ-d6M">
                                             <rect key="frame" x="0.0" y="0.0" width="604" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -401,6 +401,61 @@
                 </customObject>
             </objects>
             <point key="canvasLocation" x="69" y="-211"/>
+        </scene>
+        <!--Project Titlebar Accessory View Controller-->
+        <scene sceneID="fBe-UX-8Ua">
+            <objects>
+                <viewController storyboardIdentifier="ProjectTitlebarAccessoryViewController" id="mqQ-CE-iue" customClass="ProjectTitlebarAccessoryViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="at2-To-Pqi">
+                        <rect key="frame" x="0.0" y="0.0" width="588" height="26"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ge7-Vv-08o" userLabel="Scheme">
+                                <rect key="frame" x="6" y="4" width="57" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scheme:" id="FaG-xp-H7h">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gO2-Dd-QB7">
+                                <rect key="frame" x="67" y="4" width="104" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="dPG-1L-dFI"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" placeholderString="com.soldo.soldo" id="rIf-0e-OEb">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ce1-n4-1MQ">
+                                <rect key="frame" x="171" y="-5" width="75" height="32"/>
+                                <buttonCell key="cell" type="push" title="Apply" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="d8A-pi-Gmk">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="didTouchUpInsideApplyButton:" target="mqQ-CE-iue" id="38z-A0-OmX"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="gO2-Dd-QB7" firstAttribute="centerY" secondItem="Ge7-Vv-08o" secondAttribute="centerY" id="8I5-zc-dG3"/>
+                            <constraint firstItem="Ge7-Vv-08o" firstAttribute="centerY" secondItem="at2-To-Pqi" secondAttribute="centerY" id="IHb-Gq-fkP"/>
+                            <constraint firstItem="Ce1-n4-1MQ" firstAttribute="centerY" secondItem="gO2-Dd-QB7" secondAttribute="centerY" id="OFY-65-fWE"/>
+                            <constraint firstItem="gO2-Dd-QB7" firstAttribute="leading" secondItem="Ge7-Vv-08o" secondAttribute="trailing" constant="8" id="VIH-Jg-zpm"/>
+                            <constraint firstItem="Ge7-Vv-08o" firstAttribute="leading" secondItem="at2-To-Pqi" secondAttribute="leading" constant="8" id="au9-gT-PKo"/>
+                            <constraint firstItem="Ce1-n4-1MQ" firstAttribute="leading" secondItem="gO2-Dd-QB7" secondAttribute="trailing" constant="8" id="k0c-z8-Rsk"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="schemeTextField" destination="gO2-Dd-QB7" id="UKx-yV-2FP"/>
+                    </connections>
+                </viewController>
+                <customObject id="Xf2-fy-sdI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="553" y="-85"/>
         </scene>
     </scenes>
     <resources>

@@ -42,8 +42,10 @@ final public class Scheduler
             guard error == nil else {
                 return
             }
-            
-            self.delegate?.willLaunch(task, scheduler: self)
+
+            dispatch_sync(dispatch_get_main_queue()) { [unowned self] in
+                self.delegate?.willLaunch(task, scheduler: self)
+            }
 
             task.launch()
             

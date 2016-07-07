@@ -33,7 +33,7 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
 
     class func windmill(keychain: Keychain) -> Windmill
     {
-        let projects = read(NSInputStream.inputStreamOnProjects())
+        let projects = NSInputStream.inputStreamOnProjects().read()
         
         self.logger.log(.DEBUG, projects)
         
@@ -117,7 +117,7 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
     {
         self.projects.append(project)
         
-        write(self.projects, outputStream: NSOutputStream.outputStreamOnProjects())
+        NSOutputStream.outputStreamOnProjects().write(self.projects)
     }
 
     private func poll(project: Project, ifCaseOfBranchBehindOrigin callback: dispatch_block_t) {

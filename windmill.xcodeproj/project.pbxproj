@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F9ECDE91D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */; };
 		BD081A121AB05EFA00B8E948 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A111AB05EFA00B8E948 /* Project.swift */; };
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
 		BD081A111AB05EFA00B8E948 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 				BDC9D4951C43164C00FA018E /* MainWindowController.swift */,
 				BD25DB781C9ED2700001FEDF /* MainViewController.swift */,
 				BDCEFE481CD6B58D004D2890 /* Windmill.swift */,
+				0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -417,6 +420,7 @@
 				BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */,
 				BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */,
 				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
+				0F9ECDE91D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift in Sources */,
 				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
 				BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */,
 				BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */,
