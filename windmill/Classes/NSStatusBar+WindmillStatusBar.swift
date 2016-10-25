@@ -33,7 +33,7 @@ extension NSStatusBar
         let statusItem = self.systemStatusItem(menu)
         statusItem.action = event.action
         statusItem.target = event.target
-        statusItem.sendActionOn(Int(event.mask.rawValue))
+        statusItem.sendActionOn(NSEventMask(rawValue: UInt64(Int(event.mask.rawValue))))
         
         return statusItem
     }

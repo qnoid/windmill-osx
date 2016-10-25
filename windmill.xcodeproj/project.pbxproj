@@ -11,6 +11,7 @@
 		BD081A121AB05EFA00B8E948 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A111AB05EFA00B8E948 /* Project.swift */; };
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
+		BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
 		BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25DB781C9ED2700001FEDF /* MainViewController.swift */; };
@@ -46,10 +47,7 @@
 		BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Scripts.swift */; };
 		BDD002231ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */; };
 		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
-		BDD1E95B1CDA920700976074 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E9581CDA920700976074 /* SwiftGit2.framework */; };
-		BDD1E95C1CDA920700976074 /* SwiftGit2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E9581CDA920700976074 /* SwiftGit2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		BDD1E98B1CDA9C3100976074 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E98A1CDA9C3100976074 /* Result.framework */; };
-		BDD1E98D1CDA9C3900976074 /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDD1E98A1CDA9C3100976074 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 /* End PBXBuildFile section */
 
@@ -70,8 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				BDD1E95C1CDA920700976074 /* SwiftGit2.framework in Embed Frameworks */,
-				BDD1E98D1CDA9C3900976074 /* Result.framework in Embed Frameworks */,
+				BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +80,7 @@
 		BD081A111AB05EFA00B8E948 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
+		BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
 		BD25DB761C9EC5290001FEDF /* windmill.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = windmill.xcconfig; sourceTree = "<group>"; };
@@ -124,8 +122,6 @@
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
 		BDD002221ABAF0A600F8E34A /* NSTask+WindmillTasksTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTask+WindmillTasksTest.swift"; sourceTree = "<group>"; };
 		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
-		BDD1E9581CDA920700976074 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = frameworks/SwiftGit2.framework; sourceTree = "<group>"; };
-		BDD1E98A1CDA9C3100976074 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = frameworks/Result.framework; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,8 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDD1E95B1CDA920700976074 /* SwiftGit2.framework in Frameworks */,
-				BDD1E98B1CDA9C3100976074 /* Result.framework in Frameworks */,
+				BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,8 +147,7 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				BDD1E98A1CDA9C3100976074 /* Result.framework */,
-				BDD1E9581CDA920700976074 /* SwiftGit2.framework */,
+				BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -349,14 +343,16 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = qnoid.com;
 				TargetAttributes = {
 					BDB6D53A19440392001340B4 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0800;
 					};
 					BDB6D54C19440392001340B4 = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0800;
 						TestTargetID = BDB6D53A19440392001340B4;
 					};
 				};
@@ -487,8 +483,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -496,6 +494,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -530,8 +529,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
@@ -539,6 +540,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -561,13 +563,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../frameworks $(CONFIGURATION_BUILD_DIR)";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.windmill.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -580,13 +583,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/frameworks",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../frameworks $(CONFIGURATION_BUILD_DIR)";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.windmill.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -609,6 +613,7 @@
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.qnoid.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -628,6 +633,7 @@
 				METAL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.qnoid.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;

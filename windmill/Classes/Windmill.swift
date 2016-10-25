@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import SwiftGit2
-import Result
+import ObjectiveGit
 
 
 typealias WindmillProvider = () -> Windmill
@@ -43,7 +42,7 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
         return windmill
     }
     
-    static func parse(fullPathOfLocalGitRepo localGitRepo: String) -> Result<Project, NSError>
+    static func parse(fullPathOfLocalGitRepo localGitRepo: String) throws -> Project
     {
         Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
         
@@ -52,32 +51,31 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
         guard let _localGitRepoURL = localGitRepoURL else {
             Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
             
-            return Result.Failure(NSError.errorNoRepo(localGitRepo))
+            throw NSError.errorNoRepo(localGitRepo)
         }
         
-        let repo = Repository.atURL(_localGitRepoURL)
-        
-        guard let _repo = repo.value else {
-            Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
-            return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
+        do {
+            let repo = try GTRepository(URL: _localGitRepoURL)
+            
+            let latestCommit = try repo.lookUpObjectByOID(repo.headReference().OID) //.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
+            
+            Windmill.logger.log(.INFO, "Latest Commit: \(latestCommit.message!!) by \(latestCommit.author!!.name)")
+            
+            let name = _localGitRepoURL.lastPathComponent!
+            let origin = try! repo.configuration().remotes?.filter { remote in
+                return remote.name == "origin"
+            }[0].URLString!
+            
+            Windmill.logger.log(.DEBUG, "Project name: \(name)")
+            Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
+            
+            return Project(name: name, scheme: name, origin: origin!)
+            
         }
-        
-        let latestCommit: Result = _repo.HEAD().flatMap { commit in _repo.commitWithOID(commit.oid) }
-        
-        guard let _latestCommit = latestCommit.value else {
-            Windmill.logger.log(.ERROR, "Could not open repository: \(repo.error)")
-            return Result.Failure(NSError.errorRepo(localGitRepo, underlyingError:repo.error!))
+        catch let error as NSError {
+            Windmill.logger.log(.ERROR, "Could not open repository: \(error)")
+            throw NSError.errorRepo(localGitRepo, underlyingError:error)
         }
-        
-        Windmill.logger.log(.INFO, "Latest Commit: \(_latestCommit.message) by \(_latestCommit.author.name)")
-        
-        let name = _localGitRepoURL.lastPathComponent!
-        let origin = _repo.allRemotes().value![0].URL
-        
-        Windmill.logger.log(.DEBUG, "Project name: \(name)")
-        Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
-        
-        return Result.Success(Project(name: name, scheme: name, origin: origin))
     }
 
     

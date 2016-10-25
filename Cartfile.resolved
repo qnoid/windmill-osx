@@ -1,2 +1,1 @@
-github "antitypical/Result" "2.1.2"
-github "tombooth/SwiftGit2" "2064c1666f2ea837f326c45d7f2cc6b46da8a204"
+github "libgit2/objective-git" "0.12.0"

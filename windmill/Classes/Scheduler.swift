@@ -34,6 +34,18 @@ final public class Scheduler
     var key: UInt8 = 0
     var error: Bool = true
     
+    private func willLaunch(task: ActivityTask) {
+        self.delegate?.willLaunch(task, scheduler: self)
+    }
+    
+    private func didLaunch(task: ActivityTask) {
+        self.delegate?.didLaunch(task, scheduler: self)
+    }
+    
+    private func didExit(task: ActivityTask, error: TaskError?) {
+        self.delegate?.didExit(task, error: error, scheduler: self)
+    }
+    
     private func dispatch_block_create_for(queue: dispatch_queue_t, task: ActivityTask, completion: TaskCompletionBlock = {status in }) -> dispatch_block_t {
         return dispatch_block_create(dispatch_block_flags_t(0)) {
             
@@ -43,14 +55,14 @@ final public class Scheduler
                 return
             }
 
-            dispatch_sync(dispatch_get_main_queue()) { [unowned self] in
-                self.delegate?.willLaunch(task, scheduler: self)
+            dispatch_sync(dispatch_get_main_queue()) { [weak self] in
+                self?.willLaunch(task)
             }
 
             task.launch()
             
-            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                self.delegate?.didLaunch(task, scheduler: self)
+            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                self?.didLaunch(task)
             }
             
             task.waitUntilExit { error in
@@ -59,8 +71,8 @@ final public class Scheduler
                     dispatch_queue_set_specific(Windmill.dispatch_queue_serial, &self.key, &self.error, nil)
                 }
 
-                dispatch_async(dispatch_get_main_queue()) { [unowned self] in
-                    self.delegate?.didExit(task, error: error, scheduler: self)
+                dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                    self?.didExit(task, error: error)
                 }
                 
                 completion(task: task, error: error)

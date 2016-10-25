@@ -64,9 +64,9 @@ class MainViewController: NSViewController, WindmillDelegate {
         
             let topAnchor = self.view.window?.contentLayoutGuide!.topAnchor
         
-            let topConstraint = self.checkoutActivityView.topAnchor.constraintEqualToAnchor(topAnchor, constant: 8)
+            let topConstraint = self.checkoutActivityView.topAnchor.constraintEqualToAnchor(topAnchor!, constant: 8)
         
-            topConstraint!.active = true
+            topConstraint.active = true
         
             self.topConstraint = topConstraint
         }

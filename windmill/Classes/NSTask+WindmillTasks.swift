@@ -39,7 +39,9 @@ public enum TestTaskError: Int, TaskError {
      * xcodebuild: error: The project named "soldo" does not contain a scheme named "com.soldo.soldo". The "-list" option can be used to find the names of the schemes in the project.
  
     */
+    case One = 1
     case Failed = 65
+    case Seventy = 70
     
     public var code: Int {
         return self.rawValue
@@ -391,7 +393,7 @@ extension NSTask
         task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.EXPORT, ofType: "sh")!
         task.arguments = [name, self.pathForDir("resources")]
         
-        return Task(activityType: ActivityType.Archive, task: task)
+        return Task(activityType: ActivityType.Export, task: task)
     }
     
     public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> Task {

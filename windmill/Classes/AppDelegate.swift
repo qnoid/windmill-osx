@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
                 action: #selector(AppDelegate.mouseDown(_:)),
                 target: self,
-                mask: NSEventMask.LeftMouseDownMask
+                mask: NSEventMask.LeftMouseDown
                 ))
         }
     }
@@ -116,17 +116,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         }
         
         AppDelegate.logger.log(.INFO, folder)
-        let result = Windmill.parse(fullPathOfLocalGitRepo: folder)
         
-        switch result
-        {
-        case .Success(let project):
+        do {
+            let project = try Windmill.parse(fullPathOfLocalGitRepo: folder)
+            
             return self.windmill.create(project)
-        case .Failure(let error):
+        } catch let error as NSError {
             alert(error, window: self.mainWindowViewController.window!)
             return false
         }
-
     }
 }
 

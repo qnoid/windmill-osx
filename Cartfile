@@ -1,1 +1,1 @@
-github "tombooth/SwiftGit2" "develop"
+github "libgit2/objective-git"
