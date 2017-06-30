@@ -8,12 +8,15 @@
 
 import Foundation
 import ObjectiveGit
+import os
 
 
 typealias WindmillProvider = () -> Windmill
 
 /// domain is WindmillDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
-public typealias WindmillError = NSError
+protocol WindmillError: TaskError {
+    
+}
 
 typealias Domain = String
 
@@ -21,20 +24,17 @@ let WindmillDomain : Domain = "io.windmill"
 
 final class Windmill: SchedulerDelegate, ActivityTaskDelegate
 {
-    static var dispatch_queue_serial = dispatch_queue_create("io.windmil.queue", DISPATCH_QUEUE_SERIAL)
+    static var dispatch_queue_serial = DispatchQueue(label: "io.windmil.queue", attributes: [])
     
-    static func dispatch_after(seconds: UInt64, queue: dispatch_queue_t = dispatch_queue_serial, block: dispatch_block_t) {
-        
-        let when = dispatch_time(DISPATCH_TIME_NOW, Int64(seconds * NSEC_PER_SEC))
-        
-        dispatch_after(when, queue: queue, block: block)
+    static func dispatch_after(_ seconds: Int, queue: DispatchQueue = dispatch_queue_serial, block: @escaping ()->()) {
+        queue.asyncAfter(deadline: DispatchTime.now() + .seconds(seconds), execute: block)
     }
 
-    class func windmill(keychain: Keychain) -> Windmill
+    class func windmill(_ keychain: Keychain) -> Windmill
     {
-        let projects = NSInputStream.inputStreamOnProjects().read()
+        let projects = InputStream.inputStreamOnProjects().read()
         
-        self.logger.log(.DEBUG, projects)
+        os_log("%{public}@", log: .default, type: .debug, projects)
         
         let windmill = Windmill(keychain: keychain)
         windmill.projects = projects
@@ -44,43 +44,42 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
     
     static func parse(fullPathOfLocalGitRepo localGitRepo: String) throws -> Project
     {
-        Windmill.logger.log(.DEBUG, "Using: \(localGitRepo)")
+        os_log("%{public}@", log: .default, type: .debug, "Using: \(localGitRepo)")
         
-        let localGitRepoURL: NSURL? = NSURL(fileURLWithPath: localGitRepo, isDirectory: true)
+        let localGitRepoURL: URL? = URL(fileURLWithPath: localGitRepo, isDirectory: true)
         
         guard let _localGitRepoURL = localGitRepoURL else {
-            Windmill.logger.log(.ERROR, "Error parsing location of local git repo: \(localGitRepo)")
-            
+            os_log("%{public}@", log: .default, type: .error, "Error parsing location of local git repo: \(localGitRepo)")
             throw NSError.errorNoRepo(localGitRepo)
         }
         
         do {
-            let repo = try GTRepository(URL: _localGitRepoURL)
+            let repo = try GTRepository(url: _localGitRepoURL)
             
-            let latestCommit = try repo.lookUpObjectByOID(repo.headReference().OID) //.HEAD().flatMap { commit in repo.commitWithOID(commit.oid) }
+            guard let head = try repo.headReference().oid, let latestCommit:GTCommit = try repo.lookUpObject(by: head) as? GTCommit else {
+                os_log("%{public}@", log: .default, type: .error, "Could not fetch head")
+                throw NSError.errorRepo(localGitRepo, underlyingError:nil)
+            }
             
-            Windmill.logger.log(.INFO, "Latest Commit: \(latestCommit.message!!) by \(latestCommit.author!!.name)")
+            os_log("%{public}@", log: .default, type: .info, "Latest Commit: \(latestCommit.message ?? "") by \(latestCommit.author?.name ?? "")")
             
-            let name = _localGitRepoURL.lastPathComponent!
+            let name = _localGitRepoURL.lastPathComponent
             let origin = try! repo.configuration().remotes?.filter { remote in
                 return remote.name == "origin"
-            }[0].URLString!
+            }[0].urlString!
             
-            Windmill.logger.log(.DEBUG, "Project name: \(name)")
-            Windmill.logger.log(.DEBUG, "Found remote repo at: \(origin)")
+            os_log("%{public}@", log: .default, type: .debug, "Project name: \(name)")
+            os_log("%{public}@", log: .default, type: .debug, "Found remote repo at: \(String(describing: origin))")
             
             return Project(name: name, scheme: name, origin: origin!)
             
         }
         catch let error as NSError {
-            Windmill.logger.log(.ERROR, "Could not open repository: \(error)")
+            os_log("%{public}@", log: .default, type: .error, "Could not open repository: \(error)")
             throw NSError.errorRepo(localGitRepo, underlyingError:error)
         }
     }
-
-    
-    static let logger : ConsoleLog = ConsoleLog()
-    
+        
     var delegate: WindmillDelegate?
     
     let scheduler: Scheduler
@@ -111,41 +110,36 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
         self.scheduler.delegate = self
     }
     
-    private func add(project: Project)
+    private func add(_ project: Project)
     {
         self.projects.append(project)
         
-        NSOutputStream.outputStreamOnProjects().write(self.projects)
+        OutputStream.outputStreamOnProjects().write(self.projects)
     }
 
-    private func poll(project: Project, ifCaseOfBranchBehindOrigin callback: dispatch_block_t) {
+    private func poll(_ project: Project, ifCaseOfBranchBehindOrigin callback: @escaping ()->()) {
         
-        self.scheduler.schedule(task: NSTask.taskPoll(project.name)) { [weak weakSelf = self] task, error in
-
-            guard let _self = weakSelf else {
-                return
-            }
-            
-            if case ActivityTaskStatus.BranchBehindOrigin? = task.status {
+        self.scheduler.schedule(task: Process.taskPoll(project.name)) { [weak self] task, error in
+            if let error = error as? PollTaskError, case .branchBehindOrigin = error {
                 callback()
                 return
             }
             
-            _self.poll(project, ifCaseOfBranchBehindOrigin: callback)
+            self?.poll(project, ifCaseOfBranchBehindOrigin: callback)
         }
     }
     
-    private func monitor(project: Project) {
+    private func monitor(_ project: Project) {
         self.poll(project, ifCaseOfBranchBehindOrigin: {
             self.deploy(project)
             self.monitor(project)
         })
     }
     
-    private func deploy(project: Project)
+    private func deploy(_ project: Project)
     {
         guard let user = try? self.keychain.findWindmillUser() else {
-            Windmill.logger.log(.ERROR, "\(#function) A windmill user account should have been created.")
+            os_log("%{public}@", log: .default, type: .error, "A windmill user account should have been created.")
             return
         }
         
@@ -153,46 +147,49 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
         
         let name = project.name
 
-        let directoryPath = "\(NSFileManager.defaultManager().windmill)\(name)"
-        debugPrint(directoryPath)
-
-        self.scheduler.queue(tasks: NSTask.taskCheckout(name, origin: project.origin),
-            NSTask.taskBuild(directoryPath: directoryPath, scheme: project.scheme),
-            NSTask.taskTest(directoryPath: directoryPath, scheme: project.scheme),
-            NSTask.taskArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: name),
-            NSTask.taskExport(directoryPath: directoryPath, projectName: name),
-            NSTask.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
+        let directoryPath = "\(FileManager.default.windmill)\(name)"
+        os_log("%{public}@", log: .default, type: .debug, directoryPath)
+        
+        self.scheduler.queue(tasks: Process.taskCheckout(name, origin: project.origin),
+            Process.taskBuild(directoryPath: directoryPath, scheme: project.scheme),
+            Process.taskTest(directoryPath: directoryPath, scheme: project.scheme),
+            Process.taskArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: name),
+            Process.taskExport(directoryPath: directoryPath, projectName: name),
+            Process.taskDeploy(directoryPath: directoryPath, projectName: name, forUser: user))
     }
     
-    func willLaunch(task: ActivityTask, scheduler: Scheduler) {
+    func willLaunch(_ task: ActivityTask, scheduler: Scheduler) {
         var task = task
         task.delegate = self
         task.waitForStandardOutputInBackground()
         task.waitForStandardErrorInBackground()
     }
     
-    func didReceive(task: ActivityTask, standardOutput: String) {
-        self.delegate?.windmill(self, standardOutput: standardOutput)
+    func didReceive(_ task: ActivityTask, standardOutput: String, count: Int) {
+        let log = OSLog(subsystem: "io.windmill.windmill", category: task.activityType.rawValue)
+        os_log("%{public}@", log: log, type: .debug, standardOutput)
+        self.delegate?.windmill(self, standardOutput: standardOutput, count: count)
     }
     
-    func didReceive(task: ActivityTask, standardError: String) {
-        self.delegate?.windmill(self, standardError: standardError)
-    }
-
-    
-    func didLaunch(task: ActivityTask, scheduler: Scheduler) {
-    
-        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidLaunchNotification(task.activityType))
+    func didReceive(_ task: ActivityTask, standardError: String, count: Int) {
+        let log = OSLog(subsystem: "io.windmill.windmill", category: task.activityType.rawValue)
+        os_log("%{public}@", log: log, type: .error, standardError)
+        self.delegate?.windmill(self, standardError: standardError, count: count)
     }
     
-    func didExit(task: ActivityTask, error: TaskError?, scheduler: Scheduler) {
-
-        if case ActivityTaskStatus.Succesful? = task.status {
-            NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDidExitNotification(task.activityType))
-            return
+    func didLaunch(_ task: ActivityTask, scheduler: Scheduler) {
+    
+        NotificationCenter.default.post(Process.Notifications.taskDidLaunchNotification(task.activityType))
+    }
+    
+    func didExit(_ task: ActivityTask, error: Error?, scheduler: Scheduler) {
+        
+        guard case .succesful = task.status else {
+            NotificationCenter.default.post(Process.Notifications.taskDErrorNotification(task.activityType))
+        return
         }
-
-        NSNotificationCenter.defaultCenter().postNotification(NSTask.Notifications.taskDErrorNotification(task.activityType))
+        
+        NotificationCenter.default.post(Process.Notifications.taskDidExitNotification(task.activityType))
     }
     
     /**
@@ -215,10 +212,10 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
     project failed to create
     
     */
-    func create(project: Project) -> Bool
+    func create(_ project: Project) -> Bool
     {
         guard !self.projects.contains(project) else {
-            Windmill.logger.log(.INFO, "Project already added: \(project)")
+            os_log("%{public}@", log: .default, type: .info, "Project already added: \(project)")
             return false
         }
         

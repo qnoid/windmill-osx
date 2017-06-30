@@ -13,11 +13,11 @@ extension NSPasteboard
 {
     func firstFilename() -> String?
     {
-        if (self.availableTypeFromArray(["NSFilenamesPboardType"]) == nil) {
+        if (self.availableType(from: ["NSFilenamesPboardType"]) == nil) {
             return nil
         }
         
-        let files = self.propertyListForType(NSFilenamesPboardType) as! NSArray
+        let files = self.propertyList(forType: NSFilenamesPboardType) as! NSArray
         let folder = files.firstObject as! String
 
     return folder

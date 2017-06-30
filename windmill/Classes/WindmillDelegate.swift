@@ -10,11 +10,11 @@ import Foundation
 
 protocol WindmillDelegate
 {
-    func windmill(windmill: Windmill, standardOutput: String)
+    func windmill(_ windmill: Windmill, standardOutput: String, count: Int)
     
-    func windmill(windmill: Windmill, standardError: String)
+    func windmill(_ windmill: Windmill, standardError: String, count: Int)
 
-    func windmill(windmill: Windmill, willDeployProject project: Project)
+    func windmill(_ windmill: Windmill, willDeployProject project: Project)
 
     /**
     Callback when Windmill#add: succesfully added a project
@@ -23,5 +23,5 @@ protocol WindmillDelegate
     - parameter projects: the total number of projects in windmill
     - parameter project: the project for the given 'localGitRepo' at the time #add: was called
     */
-    func windmill(windmill: Windmill, projects:Array<Project>, addedProject project: Project)
+    func windmill(_ windmill: Windmill, projects:Array<Project>, addedProject project: Project)
 }

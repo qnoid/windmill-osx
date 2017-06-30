@@ -12,3 +12,7 @@
 "windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\nDo 'git init'.\nAdd a remote origin using\n'git remote add origin <url>'";
 "windmill.latestCommit.error.description"="No commit found in remote repository";
 "windmill.latestCommit.error.failureReason"="Have you made your first commit yet?\nDid you push?\n'git push -u origin master'";
+"windmill.ui.toolbar.view.showDebugArea"="Show Debug Area";
+"windmill.ui.toolbar.view.hideDebugArea"="Hide Debug Area";
+"windmill.ui.activityTextfield.idle"="idle";
+"windmill.ui.activityTextfield.stopped"="stopped";

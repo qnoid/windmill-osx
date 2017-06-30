@@ -10,7 +10,7 @@ import AppKit
 
 extension NSOutlineView
 {
-    func makeViewWithIdentifier(identifier: String) -> NSTableCellView {
-        return self.makeViewWithIdentifier(identifier, owner: nil) as! NSTableCellView
+    func makeViewWithIdentifier(_ identifier: String) -> NSTableCellView {
+        return self.make(withIdentifier: identifier, owner: nil) as! NSTableCellView
     }
 }

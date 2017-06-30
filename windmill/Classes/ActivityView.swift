@@ -13,7 +13,7 @@ class ActivityView: NSView {
 
     lazy var loadView: () -> Void = { [unowned self] in
         var topLevelObjects: NSArray?
-        NSBundle(forClass: self.dynamicType).loadNibNamed("ActivityView", owner: self, topLevelObjects: &topLevelObjects)
+        Bundle(for: type(of: self)).loadNibNamed("ActivityView", owner: self, topLevelObjects: &topLevelObjects)
         
         for object in topLevelObjects! {
             if let containerView = object as? NSView {

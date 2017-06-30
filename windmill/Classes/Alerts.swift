@@ -8,11 +8,11 @@
 
 import AppKit
 
-func alert(error: NSError, window: NSWindow)
+func alert(_ error: NSError, window: NSWindow)
 {
     let alert = NSAlert()
     alert.messageText = error.localizedDescription
     alert.informativeText = error.localizedFailureReason!
-    alert.alertStyle = .Critical
-    alert.beginSheetModalForWindow(window, completionHandler: nil)
+    alert.alertStyle = .critical
+    alert.beginSheetModal(for: window, completionHandler: nil)
 }

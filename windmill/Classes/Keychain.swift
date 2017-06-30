@@ -16,40 +16,40 @@ struct KeychainAccount
 
 final public class Keychain
 {
-    var keychain:SecKeychainRef?
+    var keychain:SecKeychain?
     
     public class func defaultKeychain() -> Keychain {
         return Keychain()
     }
     
-    func addGenericPassword(account:KeychainAccount, password:String) -> OSStatus
+    func addGenericPassword(_ account:KeychainAccount, password:String) -> OSStatus
     {
         
-        let attributes: [NSObject: AnyObject] = [
+        let attributes: [AnyHashable: Any] = [
             kSecClass: kSecClassGenericPassword as String,
             kSecAttrService: account.serviceName,
             kSecAttrAccount: account.name,
-            kSecValueData: password.dataUsingEncoding(NSUTF8StringEncoding)!
+            kSecValueData: password.data(using: String.Encoding.utf8)!
         ]
                 
-        return SecItemAdd(attributes, nil);
+        return SecItemAdd(attributes as CFDictionary, nil);
     }
     
-    func findGenericPassword(account:KeychainAccount) -> (status:OSStatus, password:String?) {
+    func findGenericPassword(_ account:KeychainAccount) -> (status:OSStatus, password:String?) {
 
         var password: AnyObject? = nil
         
-        let attributes: [NSObject: AnyObject] = [
+        let attributes: [AnyHashable: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: account.serviceName,
             kSecAttrAccount: account.name,
             kSecReturnData: true
         ]
 
-        let status = SecItemCopyMatching(attributes, &password)
+        let status = SecItemCopyMatching(attributes as CFDictionary, &password)
         
         if status == OSStatus(errSecSuccess) {
-        return (status, String(data: password as! NSData, encoding: NSUTF8StringEncoding))
+        return (status, String(data: password as! Data, encoding: String.Encoding.utf8))
         }
         return (status, nil)
     }

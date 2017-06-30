@@ -8,20 +8,19 @@
 
 import AppKit
 import Foundation
+import os
 
-private let userIdentifier = NSUUID().UUIDString;
+private let userIdentifier = UUID().uuidString;
 
-
+@NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 {
-    static let logger : ConsoleLog = ConsoleLog()
-
     @IBOutlet weak var menu: NSMenu! {
         didSet{
             self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
                 action: #selector(AppDelegate.mouseDown(_:)),
                 target: self,
-                mask: NSEventMask.LeftMouseDown
+                mask: NSEventMask.leftMouseDown
                 ))
         }
     }
@@ -31,8 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             statusItem.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
             
             let image = NSImage(named:"statusItem")!
-            image.template = true
+            image.isTemplate = true
             statusItem.button?.image = image
+            statusItem.button?.wantsLayer = true
+            statusItem.button?.startAnimation()
             self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
             self.statusItem.button?.window?.delegate = self
         }
@@ -42,6 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     var mainViewController: MainViewController! {
         didSet{
+            mainViewController.windmill = self.windmill
             mainViewController.scheduler = self.windmill.scheduler
             self.windmill.delegate = mainViewController
         }
@@ -52,16 +54,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 
     override init() {
         super.init()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: "mainWindowDidLoad", object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.taskError(_:)), name: Process.Notifications.taskError, object: nil)
     }
     
-    func applicationDidFinishLaunching(notification: NSNotification)
+    func applicationDidFinishLaunching(_ notification: Notification)
     {
         self.keychain.createUser(userIdentifier)
         self.windmill.start()
     }
     
-    func applicationShouldHandleReopen(sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         
         if(!flag) {
             self.mainWindowViewController.window?.setIsVisible(true)
@@ -70,52 +73,51 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         return true
     }
     
-    func mainWindowDidLoad(aNotification: NSNotification) {
+    func mainWindowDidLoad(_ aNotification: Notification) {
         let mainWindowViewController = aNotification.object as! MainWindowController
         self.mainWindowViewController = mainWindowViewController
         self.mainViewController = mainWindowViewController.contentViewController as! MainViewController
     }
     
-    func mouseDown(theEvent: NSEvent)
+    func mouseDown(_ theEvent: NSEvent)
     {
-        let statusItem = self.statusItem
-        dispatch_async(dispatch_get_main_queue()){
-            statusItem.popUpStatusItemMenu(statusItem.menu!)
+        guard let statusItem = self.statusItem else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            statusItem.popUpMenu(statusItem.menu!)
         }
     }
     
-    func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation
+    func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        print(#function);
-        return .Copy;
+        return .copy;
     }
     
-    func draggingUpdated(sender: NSDraggingInfo) -> NSDragOperation
+    func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .Copy;
+        return .copy;
         
     }
     
-    func draggingExited(sender: NSDraggingInfo!)
+    func draggingExited(_ sender: NSDraggingInfo!)
     {
-        print(#function);
     }
     
-    func prepareForDragOperation(sender: NSDraggingInfo) -> Bool
+    func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool
     {
-        print(#function);
         return true;
         
     }
     
-    func performDragOperation(info: NSDraggingInfo) -> Bool {
-        print(#function)
+    func performDragOperation(_ info: NSDraggingInfo) -> Bool {
         
         guard let folder = info.draggingPasteboard().firstFilename() else {
             return false
         }
         
-        AppDelegate.logger.log(.INFO, folder)
+        os_log("%{public}@", log: .default, type: .info, folder)
         
         do {
             let project = try Windmill.parse(fullPathOfLocalGitRepo: folder)
@@ -125,6 +127,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             alert(error, window: self.mainWindowViewController.window!)
             return false
         }
+    }
+    
+    func taskError(_ aNotification: Notification) {
+        statusItem.button?.stopAnimation()
     }
 }
 
