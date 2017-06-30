@@ -9,19 +9,26 @@
 import AppKit
 
 
-class MainWindowController: NSWindowController {
+class MainWindowController: NSWindowController, NSToolbarDelegate {
     
-    private lazy var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController = { [weak storyboard = self.storyboard] in
-        storyboard?.instantiateControllerWithIdentifier("ProjectTitlebarAccessoryViewController") as! ProjectTitlebarAccessoryViewController
+    @IBOutlet weak var toolbar: NSToolbar! {
+        didSet {
+            toolbar.delegate = self
+        }
+    }
+    
+    fileprivate lazy var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController = { [weak storyboard = self.storyboard] in
+        storyboard?.instantiateController(withIdentifier: "ProjectTitlebarAccessoryViewController") as! ProjectTitlebarAccessoryViewController
         }()
     
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.window!.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
-        self.window!.collectionBehavior = [self.window!.collectionBehavior, .FullScreenAllowsTiling]
+        self.window?.collectionBehavior = [self.window!.collectionBehavior, .fullScreenAllowsTiling]
         self.window?.addTitlebarAccessoryViewController(self.projectTitlebarAccessoryViewController)
-
-        NSNotificationCenter.defaultCenter().postNotification(NSNotification(name: "mainWindowDidLoad", object: self))
-    }
+        self.window?.titleVisibility = .hidden
+        self.window?.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        
+        NotificationCenter.default.post(name: Notification.Name("mainWindowDidLoad"), object: self)
+    }    
 }

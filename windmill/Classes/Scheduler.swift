@@ -7,89 +7,89 @@
 //
 
 import Foundation
+import os
 
 protocol SchedulerDelegate: class {
     
-    func willLaunch(task: ActivityTask, scheduler: Scheduler)
+    func willLaunch(_ task: ActivityTask, scheduler: Scheduler)
     
-    func didLaunch(task: ActivityTask, scheduler: Scheduler)
+    func didLaunch(_ task: ActivityTask, scheduler: Scheduler)
     
-    func didExit(task: ActivityTask, error: TaskError?, scheduler: Scheduler)
+    func didExit(_ task: ActivityTask, error: Error?, scheduler: Scheduler)
 }
 
-typealias TaskCompletionBlock = (task: ActivityTask, error: TaskError?) -> Void
+typealias TaskCompletionBlock = (_ task: ActivityTask, _ error: Error?) -> Void
 /**
 
 */
 final public class Scheduler
 {
     #if DEBUG
-    let delayInSeconds = 10
+    let delayInSeconds:Int = 10
     #else
-    let delayInSeconds = 0.5 * 60
+    let delayInSeconds:Int = 30
     #endif
     
     weak var delegate: SchedulerDelegate?
     
-    var key: UInt8 = 0
+    var key: DispatchSpecificKey = DispatchSpecificKey<Bool>()
     var error: Bool = true
     
-    private func willLaunch(task: ActivityTask) {
+    fileprivate func willLaunch(_ task: ActivityTask) {
         self.delegate?.willLaunch(task, scheduler: self)
     }
     
-    private func didLaunch(task: ActivityTask) {
+    fileprivate func didLaunch(_ task: ActivityTask) {
         self.delegate?.didLaunch(task, scheduler: self)
     }
     
-    private func didExit(task: ActivityTask, error: TaskError?) {
+    fileprivate func didExit(_ task: ActivityTask, error: Error?) {
         self.delegate?.didExit(task, error: error, scheduler: self)
     }
     
-    private func dispatch_block_create_for(queue: dispatch_queue_t, task: ActivityTask, completion: TaskCompletionBlock = {status in }) -> dispatch_block_t {
-        return dispatch_block_create(dispatch_block_flags_t(0)) {
+    fileprivate func dispatch_block_create_for(_ queue: DispatchQueue, task: ActivityTask, completion: @escaping TaskCompletionBlock = {status in }) -> DispatchWorkItem {
+        return DispatchWorkItem { [weak self] in
             
-            let error = dispatch_queue_get_specific(queue, &self.key)
-            
-            guard error == nil else {
+            guard queue.getSpecific(key: self!.key) == nil else {
+                os_log("error key in queue %{public}@. Execution will stop.", log: .default, type: .debug, queue)
                 return
             }
 
-            dispatch_sync(dispatch_get_main_queue()) { [weak self] in
+            DispatchQueue.main.sync {
                 self?.willLaunch(task)
             }
 
             task.launch()
             
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+            DispatchQueue.main.async {
                 self?.didLaunch(task)
             }
             
             task.waitUntilExit { error in
                 
                 if error != nil {
-                    dispatch_queue_set_specific(Windmill.dispatch_queue_serial, &self.key, &self.error, nil)
+                    queue.setSpecific(key: self!.key, value: self!.error)
                 }
 
-                dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                DispatchQueue.main.async {
                     self?.didExit(task, error: error)
                 }
                 
-                completion(task: task, error: error)
+                DispatchQueue.main.async {
+                    completion(task, error)
+                }
             }
         }
     }
     
-    func queue(queue: dispatch_queue_t = Windmill.dispatch_queue_serial, tasks: ActivityTask...) {
+    func queue(_ queue: DispatchQueue = Windmill.dispatch_queue_serial, tasks: ActivityTask...) {
         for task in tasks {
-            dispatch_async(queue, dispatch_block_create_for(queue, task: task))
+            queue.async(execute: dispatch_block_create_for(queue, task: task))
         }
     }
     
-    func schedule(queue: dispatch_queue_t = Windmill.dispatch_queue_serial, task: ActivityTask, completion: TaskCompletionBlock)
+    func schedule(_ queue: DispatchQueue = Windmill.dispatch_queue_serial, task: ActivityTask, completion: @escaping TaskCompletionBlock)
     {
-        let when = dispatch_time(DISPATCH_TIME_NOW, Int64(self.delayInSeconds) * Int64(NSEC_PER_SEC))
-        
-        dispatch_after(when, queue, dispatch_block_create_for(queue, task: task, completion: completion))
+        queue.asyncAfter(deadline: DispatchTime.now() + .seconds(self.delayInSeconds), execute: dispatch_block_create_for(queue, task: task, completion: completion))
     }
 }

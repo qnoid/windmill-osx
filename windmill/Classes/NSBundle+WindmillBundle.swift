@@ -26,7 +26,7 @@ public struct BundleKey : RawRepresentable
     }
 }
 
-extension NSBundle
+extension Bundle
 {
     func CFBundleName() -> String {
     return self.infoDictionary?[BundleKey.CFBundleName.rawValue] as! String

@@ -10,14 +10,14 @@ import Foundation
 
 final public class Project : Hashable, Equatable, CustomStringConvertible
 {
-    static let toDictionary : (Project) -> Dictionary<String, AnyObject> = { project in
+    static let toDictionary : (Project) -> Dictionary<String, Any> = { project in
         return [
             "name": project.name,
             "scheme": project.scheme,
             "origin": project.origin ]
     }
     
-    static let fromDictionary : (object : AnyObject) -> Project = { (object : AnyObject) -> Project in
+    static let fromDictionary : (_ object : Any) -> Project = { (object : Any) -> Project in
         return Project(dictionary: object as! Dictionary<String, AnyObject>)
     }
     

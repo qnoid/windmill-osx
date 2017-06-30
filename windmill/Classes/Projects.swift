@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import os
 
-typealias ProjectsInputStream = NSInputStream
-typealias ProjectsOutputStream = NSOutputStream
+typealias ProjectsInputStream = InputStream
+typealias ProjectsOutputStream = OutputStream
 
-extension NSInputStream
+extension InputStream
 {
     class func inputStreamOnProjects() -> ProjectsInputStream {
-        return NSInputStream(URL: ApplicationDirectory().file("projects.json").URL)!
+        return InputStream(url: ApplicationDirectory().file("projects.json").URL)!
     }
     
     func read() -> Array<Project>
@@ -26,43 +27,45 @@ extension NSInputStream
             }
             
             self.open()
-            let object: AnyObject? = try NSJSONSerialization.JSONObjectWithStream(self, options: NSJSONReadingOptions())
+            let object = try JSONSerialization.jsonObject(with: self, options: JSONSerialization.ReadingOptions())
             
             let projects = Array((object as! NSArray)).map(Project.fromDictionary)
             
             return projects
-        } catch let error {
-            Windmill.logger.log(.ERROR, error)
+        } catch let error as NSError {
+            os_log("%{public}@", log: .default, type: .error, error)
             
             return []
         }
     }
 }
 
-extension NSOutputStream
+extension OutputStream
 {
     class func outputStreamOnProjects() -> ProjectsOutputStream {
-        return NSOutputStream(URL: ApplicationDirectory().file("projects.json").URL, append: false)!
+        return OutputStream(url: ApplicationDirectory().file("projects.json").URL, append: false)!
     }
     
-    func write(projects: Array<Project>)
+    func write(_ projects: Array<Project>)
     {
         self.open()
         var error : NSError?
         
-        NSJSONSerialization.writeJSONObject(projects.map(Project.toDictionary), toStream: self, options: NSJSONWritingOptions.PrettyPrinted, error:&error)
+        JSONSerialization.writeJSONObject(projects.map(Project.toDictionary), to: self, options: JSONSerialization.WritingOptions.prettyPrinted, error:&error)
         
         self.close()
         
-        print(error)
+        if let error = error {
+            os_log("%{errorno}@", log: .default, type: .error, error)
+        }
     }
 
 }
 
-extension NSFileManager {
+extension FileManager {
     
-    var foo: NSURL {
-        return try! self.URLForDirectory(.UserDirectory, inDomain: .UserDomainMask, appropriateForURL: nil, create: false)
+    var foo: URL {
+        return try! self.url(for: .userDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
     }
     
     var windmill: String {

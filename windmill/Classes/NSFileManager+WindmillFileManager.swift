@@ -8,30 +8,30 @@
 
 import Foundation
 
-public extension NSFileManager
+public extension FileManager
 {
-    public typealias UserLibraryDirectoryView = (URL:NSURL, directory:UserLibraryDirectory)
-    public typealias UserApplicationSupportDirectoryView = (URL:NSURL, directory:ApplicationSupportDirectory)
+    public typealias UserLibraryDirectoryView = (URL:URL, directory:UserLibraryDirectory)
+    public typealias UserApplicationSupportDirectoryView = (URL:URL, directory:ApplicationSupportDirectory)
     
-    func directory(URL:NSURL) -> Directory {
+    func directory(_ URL:Foundation.URL) -> Directory {
     return Directory(URL: URL, fileManager: self)
     }
     
     func userLibraryDirectoryView() -> UserLibraryDirectoryView
     {
-        let URLForUserLibraryDirectory = try! self.URLForDirectory(.LibraryDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false)
+        let URLForUserLibraryDirectory = try! self.url(for: .libraryDirectory, in:FileManager.SearchPathDomainMask.userDomainMask, appropriateFor:nil, create:false)
         
         return (URL: URLForUserLibraryDirectory, directory:directory(URLForUserLibraryDirectory))
     }
     
     func userApplicationSupportDirectoryView() -> UserApplicationSupportDirectoryView
     {
-        let URLForUserApplicationSupportDirectory = try! self.URLForDirectory(.ApplicationSupportDirectory, inDomain:NSSearchPathDomainMask.UserDomainMask, appropriateForURL:nil, create:false)
+        let URLForUserApplicationSupportDirectory = try! self.url(for: .applicationSupportDirectory, in:FileManager.SearchPathDomainMask.userDomainMask, appropriateFor:nil, create:false)
         
         return (URL: URLForUserApplicationSupportDirectory, directory:directory(URLForUserApplicationSupportDirectory))
     }
 
-    func fileExists(filename: String, atURL URL:NSURL) -> Bool {
-        return self.fileExistsAtPath((URL.path! as NSString).stringByAppendingPathComponent(filename))
+    func fileExists(_ filename: String, atURL URL:Foundation.URL) -> Bool {
+        return self.fileExists(atPath: (URL.path as NSString).appendingPathComponent(filename))
     }
 }

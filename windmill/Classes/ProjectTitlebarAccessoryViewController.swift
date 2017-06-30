@@ -1,3 +1,4 @@
+
 //
 //  ProjectTitlebarAccessoryViewController.swift
 //  windmill
@@ -17,12 +18,12 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         }
     }
     
-    @IBAction func didTouchUpInsideApplyButton(button: NSButton) {
+    @IBAction func didTouchUpInsideApplyButton(_ button: NSButton) {
         
         let scheme = self.schemeTextField.stringValue
         
         let project = Project(name: self.project.name, scheme: scheme, origin: self.project.origin)
         
-        NSOutputStream.outputStreamOnProjects().write([project])
+        OutputStream.outputStreamOnProjects().write([project])
     }
 }

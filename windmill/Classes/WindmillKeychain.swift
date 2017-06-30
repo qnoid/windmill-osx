@@ -14,16 +14,16 @@ typealias KeychainFindUser = () throws -> String
 
 let KeychainWindmillAccount = KeychainAccount(serviceName: "io.windmill", name: "io.windmill.account")
 
-enum KeychainError: ErrorType
+enum KeychainError: Error
 {
-    case Instance(OSStatus)
+    case instance(OSStatus)
 }
 
 extension Keychain
 {
-    private var createWindmillUser : KeychainCreateUser
+    fileprivate var createWindmillUser : KeychainCreateUser
     {
-        func createUser(user:String) -> OSStatus {
+        func createUser(_ user:String) -> OSStatus {
         return self.addGenericPassword(KeychainWindmillAccount, password:user)
         }
         
@@ -37,7 +37,7 @@ extension Keychain
             let account = self.findGenericPassword(KeychainWindmillAccount);
             
             guard let user = account.password else {
-                throw KeychainError.Instance(account.status)
+                throw KeychainError.instance(account.status)
             }
             
         return user
@@ -54,7 +54,7 @@ extension Keychain
     @param user the user to create
     @return true if created, false otherwise
     */
-    func createUser(user:String) -> Bool
+    @discardableResult func createUser(_ user:String) -> Bool
     {
         guard let _ = try? self.findWindmillUser() else {
             self.createWindmillUser(user)

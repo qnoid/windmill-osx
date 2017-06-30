@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16F73" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13122.19"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Window Controller-->
@@ -18,20 +19,44 @@
                         <value key="minSize" type="size" width="588" height="130"/>
                         <value key="minFullScreenContentSize" type="size" width="588" height="130"/>
                         <value key="maxFullScreenContentSize" type="size" width="10000" height="10000"/>
+                        <toolbar key="toolbar" implicitIdentifier="AC398DAC-DA28-4CF7-8F5F-CBE6815E270B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="g38-IE-MjZ">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="84D24695-66F7-4E66-857F-B4554690E24A" label="" paletteLabel="" id="EBh-fb-7rc">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="82" height="32"/>
+                                    <size key="maxSize" width="82" height="32"/>
+                                    <button key="view" verticalHuggingPriority="750" id="a8m-Vy-VmQ">
+                                        <rect key="frame" x="0.0" y="14" width="82" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Run" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="6hY-jI-wYa">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="run:" target="DBm-IY-qca" id="mDV-kq-9KF"/>
+                                        </connections>
+                                    </button>
+                                </toolbarItem>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="EBh-fb-7rc"/>
+                            </defaultToolbarItems>
+                        </toolbar>
                     </window>
                     <connections>
+                        <outlet property="toolbar" destination="g38-IE-MjZ" id="Tvf-JY-OCS"/>
                         <segue destination="Hwi-w3-Rle" kind="relationship" relationship="window.shadowedContentViewController" id="DQX-oy-Kui"/>
                     </connections>
                 </windowController>
                 <customObject id="DBm-IY-qca" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-72" y="-84.5"/>
+            <point key="canvasLocation" x="-64" y="-33"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="Amb-BC-0eG">
             <objects>
-                <viewController id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="6j5-vW-ygG">
+                <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" wantsLayer="YES" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="588" height="130"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -79,34 +104,31 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-archive"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tiw-1K-zCA">
-                                <rect key="frame" x="0.0" y="0.0" width="588" height="3"/>
-                                <clipView key="contentView" id="WaK-Pi-rTH">
-                                    <rect key="frame" x="1" y="1" width="586" height="1"/>
+                            <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="50" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tiw-1K-zCA">
+                                <rect key="frame" x="0.0" y="0.0" width="588" height="0.0"/>
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="WaK-Pi-rTH">
+                                    <rect key="frame" x="0.0" y="0.0" width="588" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView canDrawConcurrently="YES" editable="NO" importsGraphics="NO" richText="NO" findStyle="panel" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" id="Ihv-oZ-d6M">
-                                            <rect key="frame" x="0.0" y="0.0" width="604" height="14"/>
+                                        <textView canDrawConcurrently="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" allowsCharacterPickerTouchBarItem="NO" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="Ihv-oZ-d6M">
+                                            <rect key="frame" x="0.0" y="0.0" width="588" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="586" height="1"/>
-                                            <size key="maxSize" width="622" height="10000000"/>
+                                            <size key="minSize" width="588" height="0.0"/>
+                                            <size key="maxSize" width="606" height="10000000"/>
                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="586" height="1"/>
-                                            <size key="maxSize" width="622" height="10000000"/>
                                         </textView>
                                     </subviews>
-                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="750" id="3Mn-Wy-V2d"/>
+                                    <constraint firstAttribute="height" id="J71-P2-rWk"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Pxp-rN-MJy">
                                     <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
-                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="ccr-F0-ZxB">
-                                    <rect key="frame" x="-100" y="-100" width="15" height="103"/>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="ccr-F0-ZxB">
+                                    <rect key="frame" x="572" y="0.0" width="16" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
@@ -118,13 +140,17 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PE8-MR-CeU">
+                                <rect key="frame" x="8" y="42" width="44" height="44"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill-activity-indicator-inactive" id="hqH-2H-sWQ"/>
+                            </imageView>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="w16-iw-hpx">
                                 <rect key="frame" x="8" y="42" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="PUb-bJ-Ngf"/>
                                     <constraint firstAttribute="height" constant="44" id="hHO-U7-ry5"/>
                                 </constraints>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="windmill-activity-indicator" imagePosition="only" alignment="center" alternateImage="windmill-activity-indicator-inactive" state="on" inset="2" id="2Fy-D9-c5P">
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" state="on" inset="2" id="2Fy-D9-c5P">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -134,20 +160,24 @@
                             <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="1y8-gi-M0v"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
                             <constraint firstAttribute="bottom" secondItem="Tiw-1K-zCA" secondAttribute="bottom" id="6zi-rq-Eho"/>
+                            <constraint firstItem="PE8-MR-CeU" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="8Bs-3t-qtp"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="PE8-MR-CeU" secondAttribute="trailing" constant="42" id="IVm-1J-iym"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="w16-iw-hpx" secondAttribute="trailing" constant="42" id="JVq-Ym-JRF"/>
                             <constraint firstItem="Tiw-1K-zCA" firstAttribute="centerX" secondItem="6j5-vW-ygG" secondAttribute="centerX" id="JuQ-zB-Iid"/>
+                            <constraint firstItem="PE8-MR-CeU" firstAttribute="leading" secondItem="UBj-vk-iA5" secondAttribute="leading" id="Osw-s9-LAP"/>
                             <constraint firstItem="w16-iw-hpx" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="QhB-XI-5q3"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
                             <constraint firstItem="w16-iw-hpx" firstAttribute="leading" secondItem="UBj-vk-iA5" secondAttribute="leading" id="ZFj-fY-Rup"/>
-                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="top" secondItem="UBj-vk-iA5" secondAttribute="bottom" constant="8" id="aRZ-r5-x0t"/>
+                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="top" secondItem="UBj-vk-iA5" secondAttribute="bottom" constant="11" id="aRZ-r5-x0t"/>
                             <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="w16-iw-hpx" secondAttribute="bottom" constant="8" id="bBu-w9-cDb"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="UBj-vk-iA5" secondAttribute="trailing" id="g7K-LH-rZf"/>
+                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="width" secondItem="6j5-vW-ygG" secondAttribute="width" id="gl2-jy-Rrv"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" constant="8" placeholder="YES" id="hh1-Ab-B8q"/>
                             <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="bottom" constant="8" id="iMK-f8-pjQ"/>
-                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="width" secondItem="6j5-vW-ygG" secondAttribute="width" id="mO7-3b-50R"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="top" secondItem="dmf-os-213" secondAttribute="top" id="ta7-EF-JCs"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="leading" secondItem="dmf-os-213" secondAttribute="trailing" id="uQc-ac-f5w"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="leading" secondItem="bvb-g2-0Id" secondAttribute="trailing" id="ufr-5Q-9C2"/>
+                            <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="PE8-MR-CeU" secondAttribute="bottom" constant="8" id="zIb-b7-VaY"/>
                         </constraints>
                     </view>
                     <connections>
@@ -157,13 +187,13 @@
                         <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
                         <outlet property="textView" destination="Ihv-oZ-d6M" id="GDr-bd-j5O"/>
-                        <outlet property="textViewHeightConstraint" destination="3Mn-Wy-V2d" id="n5q-Kh-yxN"/>
-                        <outlet property="windmillButton" destination="w16-iw-hpx" id="iCS-kQ-QMp"/>
+                        <outlet property="textViewHeightConstraint" destination="J71-P2-rWk" id="oC4-mK-DUF"/>
+                        <outlet property="windmillImageView" destination="PE8-MR-CeU" id="Jcd-Qv-2UU"/>
                     </connections>
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-72" y="178.5"/>
+            <point key="canvasLocation" x="-64" y="367"/>
         </scene>
         <!--Application-->
         <scene sceneID="6gf-Vf-nel">
@@ -336,12 +366,37 @@
                             </menuItem>
                             <menuItem title="View" id="zWd-oC-Sd3">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="View" id="nzx-Ov-Mal">
+                                <menu key="submenu" title="View" id="tuG-LY-sRg" userLabel="Debug Area">
                                     <items>
-                                        <menuItem title="Enter Full Screen" keyEquivalent="f" id="5jI-cp-Huu">
+                                        <menuItem title="Debug Area" id="fGd-lG-drg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Debug Area" id="nOh-K4-TO3">
+                                                <items>
+                                                    <menuItem title="Show Debug Area" tag="1" alternate="YES" keyEquivalent="Y" id="86b-Mo-8r7" userLabel="Show Debug Area">
+                                                        <connections>
+                                                            <action selector="showDebugArea:" target="aS9-1w-R0E" id="kQk-CV-eHc"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="v4t-Ld-sXN"/>
+                                        <menuItem title="Enter Full Screen" keyEquivalent="f" id="d6k-0d-WJj">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
-                                                <action selector="toggleFullScreen:" target="aS9-1w-R0E" id="3z5-Gf-wJ0"/>
+                                                <action selector="toggleFullScreen:" target="aS9-1w-R0E" id="mIh-db-YON"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Product" id="oEy-tP-65O">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Product" systemMenu="help" id="ecY-b3-fSp">
+                                    <items>
+                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
+                                            <connections>
+                                                <action selector="run:" target="aS9-1w-R0E" id="jzQ-zt-Guh"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -369,9 +424,9 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Help" id="oEy-tP-65O">
+                            <menuItem title="Help" id="RsK-uP-iZl">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Help" systemMenu="help" id="ecY-b3-fSp">
+                                <menu key="submenu" title="Help" systemMenu="help" id="PSG-tx-AM4">
                                     <items>
                                         <menuItem title="Windmill Help" keyEquivalent="?" id="1Eq-Qr-NHr"/>
                                     </items>
@@ -399,8 +454,15 @@
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
                     </connections>
                 </customObject>
+                <menu title="View" id="r1r-Ng-cbe">
+                    <items>
+                        <menuItem title="Enter Full Screen" keyEquivalent="f" id="FiO-Gg-IFz">
+                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                        </menuItem>
+                    </items>
+                </menu>
             </objects>
-            <point key="canvasLocation" x="69" y="-211"/>
+            <point key="canvasLocation" x="442" y="-221"/>
         </scene>
         <!--Project Titlebar Accessory View Controller-->
         <scene sceneID="fBe-UX-8Ua">
@@ -423,7 +485,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="dPG-1L-dFI"/>
                                 </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" placeholderString="com.soldo.soldo" id="rIf-0e-OEb">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" placeholderString="" id="rIf-0e-OEb">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -459,11 +521,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="lights-archive" width="110" height="44"/>
-        <image name="lights-build" width="110" height="44"/>
-        <image name="lights-checkout" width="110" height="44"/>
-        <image name="lights-test" width="110" height="44"/>
-        <image name="windmill-activity-indicator" width="44" height="44"/>
+        <image name="lights-archive" width="55" height="22"/>
+        <image name="lights-build" width="55" height="22"/>
+        <image name="lights-checkout" width="55" height="22"/>
+        <image name="lights-test" width="55" height="22"/>
         <image name="windmill-activity-indicator-inactive" width="44" height="44"/>
     </resources>
 </document>

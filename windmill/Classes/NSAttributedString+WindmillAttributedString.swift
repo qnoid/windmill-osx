@@ -10,7 +10,7 @@ import AppKit
 
 extension NSAttributedString
 {
-    class func commitBuildString(commitNumber: String, branchName: String) -> NSAttributedString
+    class func commitBuildString(_ commitNumber: String, branchName: String) -> NSAttributedString
     {
         let commitString = NSAttributedString(string: "\(commitNumber) ", attributes: [NSForegroundColorAttributeName: NSColor.yellowCommitColor()])
         
@@ -18,10 +18,10 @@ extension NSAttributedString
         let branchString = NSAttributedString(string: branchName, attributes: [NSForegroundColorAttributeName: NSColor.greenBranchColor()])
         
         let buildString = NSMutableAttributedString(string: "* ")
-        buildString.appendAttributedString(commitString)
-        buildString.appendAttributedString(NSAttributedString(string: "(", attributes: [NSForegroundColorAttributeName: NSColor.yellowCommitColor()]))
-        buildString.appendAttributedString(branchString)
-        buildString.appendAttributedString(NSAttributedString(string: ")", attributes: [NSForegroundColorAttributeName: NSColor.yellowCommitColor()]))
+        buildString.append(commitString)
+        buildString.append(NSAttributedString(string: "(", attributes: [NSForegroundColorAttributeName: NSColor.yellowCommitColor()]))
+        buildString.append(branchString)
+        buildString.append(NSAttributedString(string: ")", attributes: [NSForegroundColorAttributeName: NSColor.yellowCommitColor()]))
         
         return buildString
     }

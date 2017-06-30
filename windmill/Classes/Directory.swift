@@ -7,16 +7,17 @@
 //
 
 import Foundation
+import os
 
 public protocol DirectoryType
 {
-    var URL : NSURL { get }
+    var URL : Foundation.URL { get }
     
-    func file(filename: String) -> DirectoryType
+    func file(_ filename: String) -> DirectoryType
     
-    func fileExists(filename: String) -> Bool
+    func fileExists(_ filename: String) -> Bool
     
-    func traverse(pathComponent: PathComponent) -> DirectoryType
+    func traverse(_ pathComponent: PathComponent) -> DirectoryType
     
     /**
     Creates the directory that returned as part of calling #traverse:
@@ -38,40 +39,38 @@ public protocol ApplicationSupportDirectory : DirectoryType
 
 func ApplicationDirectory() -> DirectoryType
 {
-    let applicationName = NSBundle.mainBundle().bundleIdentifier!
+    let applicationName = Bundle.main.bundleIdentifier!
     let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
-    let applicationDirectory = NSFileManager.defaultManager().userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
+    let applicationDirectory = FileManager.default.userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
     
     let created = applicationDirectory.create()
     
-    Windmill.logger.log(.DEBUG, "Was <windmill> application directory created?: \(created)")
+    os_log("%{public}@", log: .default, type: .debug, "Was <windmill> application directory created?: \(created)")
 
     return applicationDirectory
 }
 
 public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory
 {
-    static let logger : ConsoleLog = ConsoleLog()
-
-    public let URL : NSURL
-    let fileManager : NSFileManager
+    public let URL : Foundation.URL
+    let fileManager : FileManager
     
-    public func file(filename: String) -> DirectoryType
+    public func file(_ filename: String) -> DirectoryType
     {
-        let URLForFilename = NSURL(fileURLWithPath: (self.URL.path! as NSString).stringByAppendingPathComponent(filename), isDirectory: false)
+        let URLForFilename = Foundation.URL(fileURLWithPath: (self.URL.path as NSString).appendingPathComponent(filename), isDirectory: false)
         
         return Directory(URL:URLForFilename, fileManager: self.fileManager)
     }
     
-    public func fileExists(filename: String) -> Bool {
-        return self.fileManager.fileExistsAtPath((self.URL.path! as NSString).stringByAppendingPathComponent(filename))
+    public func fileExists(_ filename: String) -> Bool {
+        return self.fileManager.fileExists(atPath: (self.URL.path as NSString).appendingPathComponent(filename))
     }
     
-    public func traverse(pathComponent: PathComponent) -> DirectoryType
+    public func traverse(_ pathComponent: PathComponent) -> DirectoryType
     {
-        let path = (self.URL.path! as NSString).stringByExpandingTildeInPath
+        let path = (self.URL.path as NSString).expandingTildeInPath
         
-        let URLForPathComponent = NSURL(fileURLWithPath: (path as NSString).stringByAppendingPathComponent(pathComponent.rawValue), isDirectory: true)
+        let URLForPathComponent = Foundation.URL(fileURLWithPath: (path as NSString).appendingPathComponent(pathComponent.rawValue), isDirectory: true)
         
         return Directory(URL: URLForPathComponent, fileManager: self.fileManager)
     }
@@ -87,10 +86,10 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     {
         let created: Bool
         do {
-            try self.fileManager.createDirectoryAtURL(self.URL, withIntermediateDirectories:false, attributes: nil)
+            try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:false, attributes: nil)
             created = true
         } catch let error as NSError {
-            Directory.logger.log(.ERROR, error)
+            os_log("%{public}@", log: .default, type: .error, error)
             created = false
         }
         

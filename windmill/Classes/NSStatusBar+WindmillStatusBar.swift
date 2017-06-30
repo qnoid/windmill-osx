@@ -18,22 +18,22 @@ struct Event {
 
 extension NSStatusBar
 {
-    class func systemStatusItem(menu: NSMenu) -> NSStatusItem
+    class func systemStatusItem(_ menu: NSMenu) -> NSStatusItem
     {
-        let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-2)
+        let statusItem = NSStatusBar.system().statusItem(withLength: -2)
         statusItem.menu = menu
-        statusItem.enabled = true
+        statusItem.isEnabled = true
         statusItem.highlightMode = true
 
     return statusItem
     }
     
-    class func systemStatusItem(menu: NSMenu, event: Event) -> NSStatusItem
+    class func systemStatusItem(_ menu: NSMenu, event: Event) -> NSStatusItem
     {
         let statusItem = self.systemStatusItem(menu)
         statusItem.action = event.action
         statusItem.target = event.target
-        statusItem.sendActionOn(NSEventMask(rawValue: UInt64(Int(event.mask.rawValue))))
+        statusItem.sendAction(on: NSEventMask(rawValue: UInt64(Int(event.mask.rawValue))))
         
         return statusItem
     }

@@ -17,13 +17,29 @@ let WINDMILL_BASE_URL = WINDMILL_BASE_URL_DEVELOPMENT
 let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
 #endif
 
-public protocol TaskError: ErrorType {
+public protocol TaskError: Error {
     var code: Int { get }
+}
+
+public enum CheckoutTaskError: Int, TaskError {
+    
+    case branchBehindOrigin = 255
+    
+    public var code: Int {
+        return self.rawValue
+    }
 }
 
 public enum BuildTaskError: Int, TaskError {
     
-    case SchemeNotFound = 65
+    /**
+     Cases
+     
+     * scheme not found
+     * "The “Swift Language Version” (SWIFT_VERSION) build setting must be set to a supported value for targets which use Swift. This setting can be set in the build settings editor."
+     "
+     */
+    case failed = 65
     
     public var code: Int {
         return self.rawValue
@@ -39,9 +55,17 @@ public enum TestTaskError: Int, TaskError {
      * xcodebuild: error: The project named "soldo" does not contain a scheme named "com.soldo.soldo". The "-list" option can be used to find the names of the schemes in the project.
  
     */
-    case One = 1
-    case Failed = 65
-    case Seventy = 70
+    case one = 1
+    case failed = 65
+    case seventy = 70
+    
+    /**
+ 
+     2017-06-30 21:39:20.591698+0100 xcodebuild[50470:15852836] [MT] DVTAssertions: ASSERTION FAILURE in /Library/Caches/com.apple.xbs/Sources/IDEFrameworks/IDEFrameworks-13158.29/IDEFoundation/Testing/IDETestRunSession.m:333
+     Details:  (testableSummaryFilePath) should not be nil.
+ 
+     */
+    case assertionFailure = 134
     
     public var code: Int {
         return self.rawValue
@@ -57,7 +81,7 @@ public enum ArchiveTaskError: Int, TaskError {
         * "Code Sign error: No matching provisioning profiles found: No provisioning profiles matching an applicable signing identity were found."
 
      */
-    case CodeSignError = 65
+    case codeSignError = 65
     
     public var code: Int {
         return self.rawValue
@@ -66,7 +90,7 @@ public enum ArchiveTaskError: Int, TaskError {
 
 public enum DeployTaskError: Int, TaskError {
     
-    case FailedToConnect = 7 //"curl: (7) Failed to connect: Connection refused"
+    case failedToConnect = 7 //"curl: (7) Failed to connect: Connection refused"
     
     public var code: Int {
         return self.rawValue
@@ -75,7 +99,7 @@ public enum DeployTaskError: Int, TaskError {
 
 public enum ExportTaskError : Int, TaskError {
     
-    case AdHocProvisioningNotFound = 70 //"No matching provisioning profiles found"
+    case adHocProvisioningNotFound = 70 //"No matching provisioning profiles found"
     
     public var code: Int {
         return self.rawValue
@@ -84,7 +108,9 @@ public enum ExportTaskError : Int, TaskError {
 
 public enum PollTaskError : Int, TaskError {
     
-    case Fatal = 128 //"ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
+    case fatal = 128 //"ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
+    
+    case branchBehindOrigin = 255
     
     public var code: Int {
         return self.rawValue
@@ -159,84 +185,42 @@ enum ActivityType: String, CustomStringConvertible
         }
     }
     
-    func status(terminationStatus: Int) -> ActivityTaskStatus? {
-        return ActivityTaskStatus(rawValue: terminationStatus) ?? nil
+    func status(_ terminationStatus: Int) -> TerminationStatus {
+        return TerminationStatus(rawValue: terminationStatus) ?? TerminationStatus.unknown
     }
     
-    func map(terminationStatus: Int) -> TaskError? {
-        
-        switch (self, terminationStatus){
-        case (.Checkout, let code):
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown checkout code: \(code)")
-            return nil
-        case (.Build, let code):
-            if let code =  BuildTaskError(rawValue: code) {
-                return code
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown build code: \(code)")
-            return nil
-        case (.Test, let code):
-            if let code =  TestTaskError(rawValue: code) {
-                return code
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown test code: \(code)")
-            return nil
-        case (.Archive, let code):
-            if let code =  ArchiveTaskError(rawValue: code) {
-                return code
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown archive code: \(code)")
-            return nil
-        case (.Export, let code):
-            if let error =  ExportTaskError(rawValue: code) {
-                return error
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown export code: \(code)")
-            return nil
-        case (.Deploy, let code):
-            if let code =  DeployTaskError(rawValue: code) {
-                return code
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown deploy status: \(code)")
-            return nil
-        case (.Poll, let code):
-            if let code =  PollTaskError(rawValue: code) {
-                return code
-            }
-            
-            debugPrint("WARN: \(#file):\(#function):\(#line) unknown poll code: \(code)")
-            return nil
-        }
+    func map(_ terminationStatus: Int) -> Error {
+        return NSError.errorTermination(for: self, status: terminationStatus)
     }
 }
 
-enum ActivityTaskStatus: Int {
-    case Succesful = 0
-    case BranchBehindOrigin = 255
+enum TerminationStatus: Int {
+    case succesful = 0
+    case unknown
 }
 
 protocol ActivityTaskDelegate: class {
  
-    func didReceive(task: ActivityTask, standardOutput: String)
+    func didReceive(_ task: ActivityTask, standardOutput: String, count: Int)
     
-    func didReceive(task: ActivityTask, standardError: String)
+    func didReceive(_ task: ActivityTask, standardError: String, count: Int)
 }
 
+/**
+ 
+ 
+ - SeeAlso: Task
+ */
 protocol ActivityTask {
     
     var activityType: ActivityType { get }
     
-    var status: ActivityTaskStatus? { get }
+    var status: TerminationStatus { get }
 
     weak var delegate: ActivityTaskDelegate? { get set }
 
     func launch()
-    func waitUntilExit(completion: (TaskError?) -> Void)
+    func waitUntilExit(_ completion: (Error?) -> Void)
     
     func waitForStandardOutputInBackground()
     
@@ -246,44 +230,41 @@ protocol ActivityTask {
 public struct Task: ActivityTask {
     let activityType: ActivityType
     
-    var status: ActivityTaskStatus? {
+    var status: TerminationStatus {
         return self.activityType.status(Int(self.task.terminationStatus))
     }
     
     weak var delegate: ActivityTaskDelegate?
     
-    let task: NSTask
+    let task: Process
     
-    init(activityType: ActivityType, task: NSTask) {
+    init(activityType: ActivityType, task: Process) {
         self.activityType = activityType
         self.task = task
     }
     
-    private func waitForDataInBackground(pipe: NSPipe, callback: (data: String) -> Void) {
+    fileprivate func waitForDataInBackground(_ pipe: Pipe, callback: @escaping (_ data: String, _ count: Int) -> Void) {
         
         pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
 
-        let queue = NSOperationQueue()
-        queue.qualityOfService = .UserInitiated
+        let queue = OperationQueue()
+        queue.qualityOfService = .utility
         
-        var observer: AnyObject!
-        
-        observer = NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading , queue: queue) { [weak fileHandleForReading = pipe.fileHandleForReading] notification in
+        NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: queue) { notification in
             
-            guard let _fileHandleForReading = fileHandleForReading else {
+            guard let fileHandleForReading = notification.object as? FileHandle else {
                 return
             }
             
-            guard case let availableData = _fileHandleForReading.availableData where availableData.length != 0 else {
-                NSNotificationCenter.defaultCenter().removeObserver(observer)
+            guard case let availableData = fileHandleForReading.availableData, availableData.count != 0 else {
                 return
             }
             
-            let availableString = String(data: availableData, encoding: NSUTF8StringEncoding) ?? ""
+            let availableString = String(data: availableData, encoding: .utf8) ?? ""
             
-            dispatch_async(dispatch_get_main_queue()){
-                callback(data: availableString)
-                _fileHandleForReading.waitForDataInBackgroundAndNotify()
+            DispatchQueue.main.async {
+                callback(availableString, availableData.count)
+                fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
         }
     }
@@ -292,12 +273,12 @@ public struct Task: ActivityTask {
         self.task.launch()
     }
     
-    func waitUntilExit(completion: (TaskError?) -> Void) {
+    func waitUntilExit(_ completion: (Error?) -> Void) {
         self.task.waitUntilExit()
         
         let terminationStatus = Int(self.task.terminationStatus)
         
-        if case ActivityTaskStatus.Succesful? = ActivityTaskStatus(rawValue: terminationStatus) {
+        if case .succesful = activityType.status(terminationStatus) {
             completion(nil)
         return
         }
@@ -306,110 +287,110 @@ public struct Task: ActivityTask {
     }
     
     func waitForStandardOutputInBackground() {
-        let standardOutputPipe = NSPipe()
+        let standardOutputPipe = Pipe()
         self.task.standardOutput = standardOutputPipe
         
-        self.waitForDataInBackground(standardOutputPipe) { availableString in
-            self.delegate?.didReceive(self, standardOutput: availableString)
+        self.waitForDataInBackground(standardOutputPipe) { availableString, count in
+            self.delegate?.didReceive(self, standardOutput: availableString, count: count)
         }
     }
     
     func waitForStandardErrorInBackground() {
-        let standardErrorPipe = NSPipe()
+        let standardErrorPipe = Pipe()
         self.task.standardError = standardErrorPipe
         
-        self.waitForDataInBackground(standardErrorPipe){ availableString in
-            self.delegate?.didReceive(self, standardError: availableString)
+        self.waitForDataInBackground(standardErrorPipe){ availableString, count in
+            self.delegate?.didReceive(self, standardError: availableString, count: count)
         }
     }
 }
 
-extension NSTask
+extension Process
 {
     struct Notifications {
-        static let taskDidLaunch = "taskDidLaunch"
-        static let taskError = "taskError"
-        static let taskDidExit = "taskDidExit"
+        static let taskDidLaunch = Notification.Name("taskDidLaunch")
+        static let taskError = Notification.Name("taskError")
+        static let taskDidExit = Notification.Name("taskDidExit")
         
-        static func taskDidLaunchNotification(type: ActivityType) -> NSNotification {
-            return NSNotification(name: taskDidLaunch, object: nil, userInfo: ["activity":type.rawValue])
+        static func taskDidLaunchNotification(_ type: ActivityType) -> Notification {
+            return Notification(name: taskDidLaunch, object: nil, userInfo: ["activity":type.rawValue])
         }
-        static func taskDErrorNotification(type: ActivityType) -> NSNotification {
-            return NSNotification(name: taskError, object: nil, userInfo: ["activity":type.rawValue])
+        static func taskDErrorNotification(_ type: ActivityType) -> Notification {
+            return Notification(name: taskError, object: nil, userInfo: ["activity":type.rawValue])
         }
-        static func taskDidExitNotification(type: ActivityType) -> NSNotification {
-            return NSNotification(name: taskDidExit, object: nil, userInfo: ["activity":type.rawValue])
+        static func taskDidExitNotification(_ type: ActivityType) -> Notification {
+            return Notification(name: taskDidExit, object: nil, userInfo: ["activity":type.rawValue])
         }
     }
     
-    private class func pathForDir(name: String) -> String! {
-        return NSBundle.mainBundle().pathForResource(name, ofType:nil);
+    fileprivate class func pathForDir(_ name: String) -> String! {
+        return Bundle.main.path(forResource: name, ofType:nil);
     }
     
-    public static func taskCheckout(repoName: String, origin: String) -> Task {
+    public static func taskCheckout(_ repoName: String, origin: String) -> Task {
         
-        let task = NSTask()
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Git.CHECKOUT, ofType: "sh")!
+        let task = Process()
+        task.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
         task.arguments = [repoName, origin, self.pathForDir("scripts")]
         
         return Task(activityType: ActivityType.Checkout, task: task)
     }
     
-    public static func taskBuild(directoryPath directoryPath: String, scheme: String) -> Task {
+    public static func taskBuild(directoryPath: String, scheme: String) -> Task {
         
-        let task = NSTask()
+        let task = Process()
         task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.BUILD, ofType: "sh")!
+        task.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
         task.arguments = [scheme]
         
         return Task(activityType: ActivityType.Build, task: task)
     }
     
     
-    public static func taskTest(directoryPath directoryPath: String, scheme: String, simulatorName: String = "iPhone 4s") -> Task {
+    public static func taskTest(directoryPath: String, scheme: String, simulatorName: String = "iPhone 4s") -> Task {
         
-        let task = NSTask()
+        let task = Process()
         task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.TEST, ofType: "sh")!
+        task.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST, ofType: "sh")!
         task.arguments = [scheme, simulatorName]
         
         return Task(activityType: ActivityType.Test, task: task)
     }
     
-    public static func taskArchive(directoryPath directoryPath: String, scheme: String, projectName name: String) -> Task {
+    public static func taskArchive(directoryPath: String, scheme: String, projectName name: String) -> Task {
         
-        let task = NSTask()
+        let task = Process()
         task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
+        task.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
         task.arguments = [scheme, name, self.pathForDir("resources")]
         
         return Task(activityType: ActivityType.Archive, task: task)
     }
     
-    public static func taskExport(directoryPath directoryPath: String, projectName name: String) -> Task {
+    public static func taskExport(directoryPath: String, projectName name: String) -> Task {
         
-        let task = NSTask()
+        let task = Process()
         task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.EXPORT, ofType: "sh")!
+        task.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
         task.arguments = [name, self.pathForDir("resources")]
         
         return Task(activityType: ActivityType.Export, task: task)
     }
     
-    public static func taskDeploy(directoryPath directoryPath: String, projectName name: String, forUser user:String) -> Task {
+    public static func taskDeploy(directoryPath: String, projectName name: String, forUser user:String) -> Task {
         
-        let task = NSTask()
+        let task = Process()
         task.currentDirectoryPath = directoryPath
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
+        task.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
         task.arguments = [name, user, WINDMILL_BASE_URL]
         
         return Task(activityType: ActivityType.Deploy, task: task)
     }
     
-    static func taskPoll(repoName: String, branch: String = "master") -> Task
+    static func taskPoll(_ repoName: String, branch: String = "master") -> Task
     {
-        let task = NSTask()
-        task.launchPath = NSBundle.mainBundle().pathForResource(Scripts.Git.POLL, ofType: "sh")!
+        let task = Process()
+        task.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
         task.arguments = [repoName, self.pathForDir("scripts"), branch]
         
         return Task(activityType: ActivityType.Poll, task: task);
