@@ -11,8 +11,6 @@ PROJECT_NAME=$1
 ACCOUNT=$2
 WINDMILL_BASE_URL=$3
 
-BINARY_LENGTH=$(ls -alF build/$PROJECT_NAME.ipa | cut -d ' ' -f 8)
-
 echo "$WINDMILL_BASE_URL/account/$ACCOUNT/windmill"
 
-curl -i -H "binary-length: $BINARY_LENGTH" -F "ipa=@build/$PROJECT_NAME.ipa" -F "plist=@build/manifest.plist" "$WINDMILL_BASE_URL/account/$ACCOUNT/windmill"
+curl -i -F "ipa=@exportArchive/$PROJECT_NAME.ipa" -F "plist=@exportArchive/manifest.plist" "$WINDMILL_BASE_URL/account/$ACCOUNT/windmill"

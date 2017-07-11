@@ -12,10 +12,10 @@ import AppKit
 class ActivityView: NSView {
 
     lazy var loadView: () -> Void = { [unowned self] in
-        var topLevelObjects: NSArray?
+        var topLevelObjects = NSArray()
         Bundle(for: type(of: self)).loadNibNamed("ActivityView", owner: self, topLevelObjects: &topLevelObjects)
         
-        for object in topLevelObjects! {
+        for object in topLevelObjects {
             if let containerView = object as? NSView {
                 self.addSubview(containerView)
             }

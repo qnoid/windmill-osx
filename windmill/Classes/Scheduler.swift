@@ -82,13 +82,13 @@ final public class Scheduler
         }
     }
     
-    func queue(_ queue: DispatchQueue = Windmill.dispatch_queue_serial, tasks: ActivityTask...) {
+    func queue(queue: DispatchQueue, tasks: ActivityTask...) {
         for task in tasks {
             queue.async(execute: dispatch_block_create_for(queue, task: task))
         }
     }
     
-    func schedule(_ queue: DispatchQueue = Windmill.dispatch_queue_serial, task: ActivityTask, completion: @escaping TaskCompletionBlock)
+    func schedule(queue: DispatchQueue, task: ActivityTask, completion: @escaping TaskCompletionBlock)
     {
         queue.asyncAfter(deadline: DispatchTime.now() + .seconds(self.delayInSeconds), execute: dispatch_block_create_for(queue, task: task, completion: completion))
     }

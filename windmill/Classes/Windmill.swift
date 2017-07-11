@@ -119,7 +119,7 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
 
     private func poll(_ project: Project, ifCaseOfBranchBehindOrigin callback: @escaping ()->()) {
         
-        self.scheduler.schedule(task: Process.taskPoll(project.name)) { [weak self] task, error in
+        self.scheduler.schedule(queue: Windmill.dispatch_queue_serial, task: Process.taskPoll(project.name)) { [weak self] task, error in
             if let error = error as? PollTaskError, case .branchBehindOrigin = error {
                 callback()
                 return
@@ -150,7 +150,7 @@ final class Windmill: SchedulerDelegate, ActivityTaskDelegate
         let directoryPath = "\(FileManager.default.windmill)\(name)"
         os_log("%{public}@", log: .default, type: .debug, directoryPath)
         
-        self.scheduler.queue(tasks: Process.taskCheckout(name, origin: project.origin),
+        self.scheduler.queue(queue: Windmill.dispatch_queue_serial, tasks: Process.taskCheckout(name, origin: project.origin),
             Process.taskBuild(directoryPath: directoryPath, scheme: project.scheme),
             Process.taskTest(directoryPath: directoryPath, scheme: project.scheme),
             Process.taskArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: name),

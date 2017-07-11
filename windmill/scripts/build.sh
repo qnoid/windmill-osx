@@ -12,12 +12,12 @@
 
 function xcodebuild_xcworkspace(){
 #xcodebuild -workspace $APPLICATION_NAME.xcworkspace -scheme $APPLICATION_NAME -configuration Release clean build -derivedDataPath build PROVISIONING_PROFILE=$mobileprovisionUUID
-xcodebuild -workspace $APPLICATION_NAME.xcworkspace -scheme $APPLICATION_NAME -configuration Release clean build -derivedDataPath build
+xcodebuild -workspace $APPLICATION_NAME.xcworkspace -scheme $APPLICATION_NAME -configuration Release clean build-for-testing -derivedDataPath build
 }
 
 function xcodebuild_xcodeproj(){
 #xcodebuild -project $APPLICATION_NAME.xcodeproj -scheme $APPLICATION_NAME -configuration Release clean build -derivedDataPath build PROVISIONING_PROFILE=$mobileprovisionUUID
-xcodebuild -project $APPLICATION_NAME.xcodeproj -scheme $APPLICATION_NAME -configuration Release clean build -derivedDataPath build
+xcodebuild -project $APPLICATION_NAME.xcodeproj -scheme $APPLICATION_NAME -configuration Release clean build-for-testing -derivedDataPath build
 }
 
 function find_xcworkspace_info(){
