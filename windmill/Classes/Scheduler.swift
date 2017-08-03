@@ -11,85 +11,71 @@ import os
 
 protocol SchedulerDelegate: class {
     
-    func willLaunch(_ task: ActivityTask, scheduler: Scheduler)
+    func willLaunch(process: Process, type: ActivityType, scheduler: Scheduler)
     
-    func didLaunch(_ task: ActivityTask, scheduler: Scheduler)
+    func didLaunch(process: Process, type: ActivityType, scheduler: Scheduler)
     
-    func didExit(_ task: ActivityTask, error: Error?, scheduler: Scheduler)
+    func didExitSuccesfully(process: Process, type: ActivityType, scheduler: Scheduler)
 }
 
-typealias TaskCompletionBlock = (_ task: ActivityTask, _ error: Error?) -> Void
 /**
 
 */
 final public class Scheduler
 {
-    #if DEBUG
-    let delayInSeconds:Int = 10
-    #else
-    let delayInSeconds:Int = 30
-    #endif
+    let dispatch_queue_serial = DispatchQueue(label: "io.windmil.scheduler", attributes: [])
     
     weak var delegate: SchedulerDelegate?
     
-    var key: DispatchSpecificKey = DispatchSpecificKey<Bool>()
-    var error: Bool = true
-    
-    fileprivate func willLaunch(_ task: ActivityTask) {
-        self.delegate?.willLaunch(task, scheduler: self)
+    fileprivate func willLaunch(process: Process, type: ActivityType) {
+        self.delegate?.willLaunch(process:process, type: type, scheduler: self)
     }
     
-    fileprivate func didLaunch(_ task: ActivityTask) {
-        self.delegate?.didLaunch(task, scheduler: self)
+    fileprivate func didLaunch(process: Process, type: ActivityType) {
+        self.delegate?.didLaunch(process:process, type: type, scheduler: self)
     }
     
-    fileprivate func didExit(_ task: ActivityTask, error: Error?) {
-        self.delegate?.didExit(task, error: error, scheduler: self)
+    fileprivate func didExitSuccesfully(process: Process, type: ActivityType) {
+        self.delegate?.didExitSuccesfully(process:process, type: type, scheduler: self)
     }
     
-    fileprivate func dispatch_block_create_for(_ queue: DispatchQueue, task: ActivityTask, completion: @escaping TaskCompletionBlock = {status in }) -> DispatchWorkItem {
-        return DispatchWorkItem { [weak self] in
+    func makeExecute(_ processProvider: @escaping @autoclosure () -> Process, type: ActivityType) -> Execute {
+        return {
+            let process = processProvider()
             
-            guard queue.getSpecific(key: self!.key) == nil else {
-                os_log("error key in queue %{public}@. Execution will stop.", log: .default, type: .debug, queue)
-                return
-            }
-
-            DispatchQueue.main.sync {
-                self?.willLaunch(task)
-            }
-
-            task.launch()
-            
-            DispatchQueue.main.async {
-                self?.didLaunch(task)
+            DispatchQueue.main.sync { [weak self] in
+                self?.willLaunch(process: process, type: type)
             }
             
-            task.waitUntilExit { error in
-                
-                if error != nil {
-                    queue.setSpecific(key: self!.key, value: self!.error)
-                }
-
-                DispatchQueue.main.async {
-                    self?.didExit(task, error: error)
-                }
-                
-                DispatchQueue.main.async {
-                    completion(task, error)
-                }
+            process.launch()
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.didLaunch(process: process, type: type)
+            }
+            
+            process.waitUntilExit()
+            
+            let terminationStatus = Int(process.terminationStatus)
+            guard terminationStatus == 0 else {
+                throw NSError.errorTermination(for: type, status: terminationStatus)
+            }
+            
+            DispatchQueue.main.async { [weak self] in
+                self?.didExitSuccesfully(process: process, type: type)
             }
         }
     }
     
-    func queue(queue: DispatchQueue, tasks: ActivityTask...) {
-        for task in tasks {
-            queue.async(execute: dispatch_block_create_for(queue, task: task))
-        }
+    func queue(execute: DispatchWorkItem) {
+        self.dispatch_queue_serial.async(execute: execute)
     }
     
-    func schedule(queue: DispatchQueue, task: ActivityTask, completion: @escaping TaskCompletionBlock)
+    func queue(process: Process, type: ActivityType, delayInSeconds: Int, completionHandler: @escaping CompletionHandler)
     {
-        queue.asyncAfter(deadline: DispatchTime.now() + .seconds(self.delayInSeconds), execute: dispatch_block_create_for(queue, task: task, completion: completion))
+        let execute = makeExecute( process, type: type )
+        let forwardExecution = ForwardExecution( execute: execute )        
+        let dispatchWorkItem = forwardExecution.dispatchWorkItem(completionHandler: completionHandler)
+        
+        self.dispatch_queue_serial.asyncAfter(deadline: DispatchTime.now() + .seconds(delayInSeconds), execute: dispatchWorkItem)
     }
 }

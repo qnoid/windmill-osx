@@ -81,7 +81,7 @@ class MainViewController: NSViewController, WindmillDelegate {
     weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
-        return [.Checkout: self.checkoutActivityView, .Build: self.buildActivityView, .Test: self.testActivityView, .Archive: self.archiveActivityView]
+        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView]
     }()
     
     let defaultCenter = NotificationCenter.default
@@ -127,9 +127,9 @@ class MainViewController: NSViewController, WindmillDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskDidLaunch(_:)), name: Process.Notifications.taskDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskError(_:)), name: Process.Notifications.taskError, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.taskDidExit(_:)), name: Process.Notifications.taskDidExit, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
     }
     
     func append(_ textView: NSTextView, output: String, count: Int) {
@@ -148,7 +148,6 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     func windmill(_ windmill: Windmill, standardError: String, count: Int) {
         self.append(self.textView, output: standardError, count: count)
-        self.textViewHeightConstraint.animator().constant = 105
     }
 
     
@@ -174,17 +173,14 @@ class MainViewController: NSViewController, WindmillDelegate {
         projectTitlebarAccessoryViewController.project = project        
     }
     
-    func taskDidLaunch(_ aNotification: Notification) {
+    func activityDidLaunch(_ aNotification: Notification) {
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
         
         switch(activityType){
-            case .Checkout, .Build, .Test, .Archive:
-                self.windmillImageView.image = NSImage(named: activityType.imageName)
+            case .checkout, .build, .test, .archive:
                 self.activityViews[activityType]?.isHidden = false
-            case .Deploy:
-                textView.isSelectable = true
         default:
             break
         }
@@ -192,26 +188,28 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.activityTextfield.stringValue = activityType.description
     }
 
-    func taskError(_ aNotification: Notification) {
+    func activityError(_ aNotification: Notification) {
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
-        os_log("%{public}@", log: log, type: .debug, activityType.description)
+        os_log("%{public}@", log: log, type: .error, activityType.description)
         
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
         self.windmillImageView.stopAnimation()
         
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        self.textView.isSelectable = false
+        self.textViewHeightConstraint.animator().constant = 105
+        self.textView.isSelectable = true
     }
 
-    func taskDidExit(_ aNotification: Notification) {
+    func activityDidExitSuccesfully(_ aNotification: Notification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
 
         switch(activityType){
-        case .Checkout, .Build, .Test, .Archive:
+        case .checkout, .build, .test, .archive:
+            self.windmillImageView.image = NSImage(named: activityType.imageName)
             self.activityViews[activityType]?.alphaValue = 1.0
         default:
             break
@@ -219,14 +217,15 @@ class MainViewController: NSViewController, WindmillDelegate {
     }
     
     @IBAction func run(_ sender: Any) {
+        self.windmill.projects = InputStream.inputStreamOnProjects().read()
         self.windmill.start()
     }
     
     @IBAction func showDebugArea(_ menuItem: NSMenuItem) {
         let isClosed = self.textViewHeightConstraint.constant == 0.0
-        
-        
+
         menuItem.title = isClosed ? NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "")
         self.textViewHeightConstraint.animator().constant = isClosed ? 105.0 : 0.0
+        textView.isSelectable = !isClosed
     }
 }

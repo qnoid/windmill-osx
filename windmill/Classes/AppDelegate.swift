@@ -33,7 +33,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             image.isTemplate = true
             statusItem.button?.image = image
             statusItem.button?.wantsLayer = true
-            statusItem.button?.startAnimation()
             self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
             self.statusItem.button?.window?.delegate = self
         }
@@ -55,13 +54,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.taskError(_:)), name: Process.Notifications.taskError, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityError(_:)), name: Process.Notifications.activityError, object: nil)
     }
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
         self.keychain.createUser(userIdentifier)
-        self.windmill.start()
+        let started = self.windmill.start()
+        if started {
+            statusItem.button?.startAnimation()
+        }
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -120,17 +122,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         os_log("%{public}@", log: .default, type: .info, folder)
         
         do {
-            let project = try Windmill.parse(fullPathOfLocalGitRepo: folder)
+            let project = try Project.parse(fullPathOfLocalGitRepo: folder)
             
-            return self.windmill.create(project)
+            let created = self.windmill.create(project)
+            
+            if created {
+                statusItem.button?.startAnimation()
+            }
+            
+            return created
         } catch let error as NSError {
             alert(error, window: self.mainWindowViewController.window!)
             return false
         }
     }
     
-    func taskError(_ aNotification: Notification) {
+    func activityError(_ aNotification: Notification) {
         statusItem.button?.stopAnimation()
     }
 }
-

@@ -35,3 +35,8 @@ cat "$BUILD_DIR/latest_head" > "$BUILD_DIR/prev_head"
 exit 255
 fi
 fi
+
+## Poll
+#
+#fatal = 128 //"ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
+#branchBehindOrigin = 255

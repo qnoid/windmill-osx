@@ -4,6 +4,8 @@
 <dict>
 	<key>method</key>
 	<string>ad-hoc</string>
+	<key>compileBitcode</key>
+	<string>false</string>
 	<key>manifest</key>
 	<dict>
 		<key>appURL</key>
