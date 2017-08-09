@@ -36,6 +36,8 @@ final class Windmill: SchedulerDelegate
         return windmill
     }
     
+    let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
+    
     var delegate: WindmillDelegate?
     
     let scheduler: Scheduler
@@ -149,8 +151,8 @@ final class Windmill: SchedulerDelegate
     }
     
     func willLaunch(process: Process, type: ActivityType, scheduler: Scheduler) {
-        waitForStandardOutputInBackground(process: process, type: type)
-        waitForStandardErrorInBackground(process: process, type: type)
+        waitForStandardOutputInBackground(process: process, queue: dispatch_queue_serial, type: type)
+        waitForStandardErrorInBackground(process: process, queue: dispatch_queue_serial, type: type)
     }
     
     func didLaunch(process: Process, type: ActivityType, scheduler: Scheduler) {

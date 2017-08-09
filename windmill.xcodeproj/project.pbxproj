@@ -51,6 +51,7 @@
 		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
 		BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
+		BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +128,7 @@
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
 		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
+		BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,6 +248,7 @@
 				BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */,
 				BDCB38281F06B9BA000825C1 /* SchedulerTest.swift */,
 				BDCB382A1F06B9FB000825C1 /* MainViewControllerTest.swift */,
+				BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */,
+				BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */,
 				BDCB38291F06B9BA000825C1 /* SchedulerTest.swift in Sources */,
 				BDCB382B1F06B9FB000825C1 /* MainViewControllerTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,

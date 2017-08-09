@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13168.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13178.6"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -60,11 +60,11 @@
             <objects>
                 <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="588" height="130"/>
+                        <rect key="frame" x="0.0" y="0.0" width="588" height="124"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="94" y="42" width="120" height="80"/>
+                                <rect key="frame" x="94" y="36" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
                                     <constraint firstAttribute="height" constant="80" id="oiO-mA-I9r"/>
@@ -75,7 +75,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="214" y="42" width="120" height="80"/>
+                                <rect key="frame" x="214" y="36" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
                                     <constraint firstAttribute="height" constant="80" id="GiW-gK-orz"/>
@@ -86,7 +86,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="334" y="42" width="120" height="80"/>
+                                <rect key="frame" x="334" y="36" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
                                     <constraint firstAttribute="height" constant="80" id="VnY-Lz-ERM"/>
@@ -97,7 +97,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="454" y="42" width="120" height="80"/>
+                                <rect key="frame" x="454" y="36" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
                                     <constraint firstAttribute="width" constant="120" id="fgF-3l-vdS"/>
@@ -136,19 +136,19 @@
                                 </scroller>
                             </scrollView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-vk-iA5" userLabel="activity">
-                                <rect key="frame" x="6" y="11" width="31" height="23"/>
+                                <rect key="frame" x="6" y="11" width="30" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="idle" placeholderString="" id="Cu7-M4-32H">
-                                    <font key="font" size="13" name="AvenirNext-Regular"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PE8-MR-CeU">
-                                <rect key="frame" x="8" y="42" width="44" height="44"/>
+                                <rect key="frame" x="8" y="36" width="44" height="44"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="windmill-activity-indicator-inactive" id="hqH-2H-sWQ"/>
                             </imageView>
                             <button translatesAutoresizingMaskIntoConstraints="NO" id="w16-iw-hpx">
-                                <rect key="frame" x="8" y="42" width="44" height="44"/>
+                                <rect key="frame" x="8" y="36" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="PUb-bJ-Ngf"/>
                                     <constraint firstAttribute="height" constant="44" id="hHO-U7-ry5"/>

@@ -20,35 +20,43 @@ let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
 
 extension Process {
     
-    fileprivate func windmill_waitForDataInBackground(_ pipe: Pipe, callback: @escaping (_ data: String, _ count: Int) -> Void) {
+    /* fileprivate */ func windmill_waitForDataInBackground(_ pipe: Pipe, queue: DispatchQueue, callback: @escaping (_ data: String, _ count: Int) -> Void) {
         
-        pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+        let fileDescriptor = pipe.fileHandleForReading.fileDescriptor
+        let readSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: queue)
         
-        NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: pipe.fileHandleForReading , queue: OperationQueue.main) { notification in
+        readSource.setEventHandler {
+            let estimated = Int(readSource.data)
             
-            guard let fileHandleForReading = notification.object as? FileHandle else {
-                return
-            }
+            var buffer = [UInt8](repeating: 0, count: estimated)
+            let count = read(fileDescriptor, &buffer, estimated)
             
-            guard case let availableData = fileHandleForReading.availableData, availableData.count != 0 else {
+            guard case let availableData = Data(buffer), count > 0 else {
                 return
             }
             
             let availableString = String(data: availableData, encoding: .utf8) ?? ""
-            
-            callback(availableString, availableData.count)
-            fileHandleForReading.waitForDataInBackgroundAndNotify()
+
+            DispatchQueue.main.async {
+                callback(availableString, availableString.count)
+            }
         }
+        
+        readSource.setCancelHandler {
+            close(fileDescriptor)
+        }
+        
+        readSource.activate()
     }
 }
 
 extension Windmill {
     
-    func waitForStandardOutputInBackground(process: Process, type: ActivityType) {
+    func waitForStandardOutputInBackground(process: Process, queue: DispatchQueue, type: ActivityType) {
         let standardOutputPipe = Pipe()
         process.standardOutput = standardOutputPipe
         
-        process.windmill_waitForDataInBackground(standardOutputPipe) { [weak process] availableString, count in
+        process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process] availableString, count in
             guard let process = process else {
                 return
             }
@@ -57,11 +65,11 @@ extension Windmill {
         }
     }
     
-    func waitForStandardErrorInBackground(process: Process, type: ActivityType) {
+    func waitForStandardErrorInBackground(process: Process, queue: DispatchQueue, type: ActivityType) {
         let standardErrorPipe = Pipe()
         process.standardError = standardErrorPipe
         
-        process.windmill_waitForDataInBackground(standardErrorPipe){ [weak process] availableString, count in
+        process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process] availableString, count in
             guard let process = process else {
                 return
             }

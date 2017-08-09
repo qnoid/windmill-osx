@@ -26,7 +26,7 @@ file_does_not_exist_at_path "$BUILD_DIR/prev_head" store_prev_head
 git -C "$WINDMILL_ROOT/$REPO_NAME" fetch
 if [ $? -eq 0 ]
 then
-git -C "$WINDMILL_ROOT/$REPO_NAME" merge FETCH_HEAD
+git -C "$WINDMILL_ROOT/$REPO_NAME" merge FETCH_HEAD > /dev/null
 git -C "$WINDMILL_ROOT/$REPO_NAME" rev-parse "$BRANCH" > "$BUILD_DIR/latest_head"
 if ! diff "$BUILD_DIR/latest_head" "$BUILD_DIR/prev_head" > /dev/null ;
 then
