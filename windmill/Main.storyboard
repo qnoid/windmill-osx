@@ -210,6 +210,9 @@
                                     <items>
                                         <menuItem title="About Windmill" id="eHV-2w-Re1" userLabel="About Windmill">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="orderFrontStandardAboutPanel:" target="aS9-1w-R0E" id="7wj-11-Gj7"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="v6Q-34-Buh"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2"/>
