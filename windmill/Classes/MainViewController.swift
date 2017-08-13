@@ -126,7 +126,8 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
@@ -151,10 +152,8 @@ class MainViewController: NSViewController, WindmillDelegate {
     }
 
     
-    func windmill(_ windmill: Windmill, projects: Array<Project>, addedProject project: Project) {
-    }
-    
-    func windmill(_ windmill: Windmill, willDeployProject project: Project) {
+    func windmillWillDeployProject(_ aNotification: Notification) {
+        let project = aNotification.object as! Project
         self.buffer = ""
         self.location = 0
         self.textView.string = ""

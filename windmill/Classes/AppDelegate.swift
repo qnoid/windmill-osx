@@ -55,15 +55,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityError(_:)), name: Process.Notifications.activityError, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
     }
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
         self.keychain.createUser(userIdentifier)
-        let started = self.windmill.start()
-        if started {
-            statusItem.button?.startAnimation()
-        }
+        self.windmill.start()
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -124,17 +122,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         do {
             let project = try Project.parse(fullPathOfLocalGitRepo: folder)
             
-            let created = self.windmill.create(project)
-            
-            if created {
-                statusItem.button?.startAnimation()
-            }
-            
-            return created
+            return self.windmill.create(project)
         } catch let error as NSError {
             alert(error, window: self.mainWindowViewController.window!)
             return false
         }
+    }
+    
+    func windmillWillDeployProject(_ aNotification: Notification) {
+        statusItem.button?.startAnimation()
     }
     
     func activityError(_ aNotification: Notification) {
