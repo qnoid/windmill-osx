@@ -229,6 +229,6 @@ class MainViewController: NSViewController, WindmillDelegate {
 
         menuItem.title = isClosed ? NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "")
         self.textViewHeightConstraint.animator().constant = isClosed ? 105.0 : 0.0
-        textView.isSelectable = !isClosed
+        textView.isSelectable = isClosed
     }
 }
