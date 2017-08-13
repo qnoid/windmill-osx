@@ -24,6 +24,10 @@ let WindmillDomain : Domain = "io.windmill"
 
 final class Windmill: SchedulerDelegate
 {
+    struct Notifications {
+        static let willDeployProject = Notification.Name("WindmillWillDeployProject")
+    }
+    
     class func windmill(_ keychain: Keychain) -> Windmill
     {
         let projects = InputStream.inputStreamOnProjects().read()
@@ -38,6 +42,7 @@ final class Windmill: SchedulerDelegate
     
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
     
+    let notificationCenter = NotificationCenter.default
     var delegate: WindmillDelegate?
     
     let scheduler: Scheduler
@@ -109,7 +114,7 @@ final class Windmill: SchedulerDelegate
             return
         }
         
-        self.delegate?.windmill(self, willDeployProject: project)
+        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project)
         
         let name = project.name
 
@@ -183,7 +188,7 @@ final class Windmill: SchedulerDelegate
     project failed to create
     
     */
-    func create(_ project: Project) -> Bool
+    @discardableResult func create(_ project: Project) -> Bool
     {
         guard !self.projects.contains(project) else {
             os_log("%{public}@", log: .default, type: .info, "Project already added: \(project)")
@@ -191,7 +196,6 @@ final class Windmill: SchedulerDelegate
         }
         
         self.add(project)
-        self.delegate?.windmill(self, projects:self.projects, addedProject: project)
         self.deploy(project) {
             self.monitor(project)
         }
@@ -199,7 +203,7 @@ final class Windmill: SchedulerDelegate
         return true
     }
     
-    func start() -> Bool {
+    @discardableResult func start() -> Bool {
         for project in self.projects {
             self.deploy(project) {
                 self.monitor(project)
