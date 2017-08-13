@@ -59,7 +59,11 @@ class MainViewController: NSViewController, WindmillDelegate {
         }
     }
     
-    @IBOutlet weak var activityTextfield: NSTextField!
+    @IBOutlet weak var activityTextfield: NSTextField! {
+        didSet {
+            activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.idle", comment: "")
+        }
+    }
     @IBOutlet weak var checkoutActivityView: ActivityView!
     @IBOutlet weak var buildActivityView: ActivityView!
     @IBOutlet weak var testActivityView: ActivityView!

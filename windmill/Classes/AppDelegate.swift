@@ -37,7 +37,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             self.statusItem.button?.window?.delegate = self
         }
     }
-    
+
+    @IBOutlet weak var activityMenuItem: NSMenuItem! {
+        didSet{
+            activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.idle", comment: "")
+        }
+    }
+
     var mainWindowViewController: MainWindowController!
     
     var mainViewController: MainViewController! {
@@ -54,6 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityError(_:)), name: Process.Notifications.activityError, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
     }
@@ -133,7 +140,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         statusItem.button?.startAnimation()
     }
     
+    func activityDidLaunch(_ aNotification: Notification) {
+        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+
+        self.activityMenuItem.title = activityType.description
+    }
+
     func activityError(_ aNotification: Notification) {
+        self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         statusItem.button?.stopAnimation()
     }
 }
