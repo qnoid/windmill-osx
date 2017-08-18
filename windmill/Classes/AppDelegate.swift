@@ -49,7 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     var mainViewController: MainViewController! {
         didSet{
             mainViewController.windmill = self.windmill
-            mainViewController.scheduler = self.windmill.scheduler
             self.windmill.delegate = mainViewController
         }
     }

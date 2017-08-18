@@ -22,7 +22,7 @@ typealias Domain = String
 
 let WindmillDomain : Domain = "io.windmill"
 
-final class Windmill: SchedulerDelegate
+/* final */ class Windmill: ProcessManagerDelegate
 {
     struct Notifications {
         static let willDeployProject = Notification.Name("WindmillWillDeployProject")
@@ -45,32 +45,23 @@ final class Windmill: SchedulerDelegate
     let notificationCenter = NotificationCenter.default
     var delegate: WindmillDelegate?
     
-    let scheduler: Scheduler
     let keychain: Keychain
+    var processManager: ProcessManager
     
     var projects : Array<Project>
     
     convenience init()
     {
-        self.init(scheduler: Scheduler(), keychain: Keychain.defaultKeychain())
+        self.init(keychain: Keychain.defaultKeychain())
     }
-
-    convenience init(keychain: Keychain)
+    
+    init(keychain: Keychain, processManager: ProcessManager = ProcessManager())
     {
-        self.init(scheduler: Scheduler(), keychain: keychain)
-    }
 
-    convenience init(scheduler: Scheduler)
-    {
-        self.init(scheduler: scheduler, keychain: Keychain.defaultKeychain())
-    }
-
-    required init(scheduler: Scheduler, keychain: Keychain)
-    {
-        self.scheduler = scheduler
         self.keychain = keychain
+        self.processManager = processManager
         self.projects = []
-        self.scheduler.delegate = self
+        self.processManager.delegate = self
     }
     
     private func add(_ project: Project)
@@ -79,7 +70,7 @@ final class Windmill: SchedulerDelegate
         
         OutputStream.outputStreamOnProjects().write(self.projects)
     }
-
+    
     private func poll(_ project: Project, ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
         
         #if DEBUG
@@ -87,60 +78,100 @@ final class Windmill: SchedulerDelegate
         #else
             let delayInSeconds:Int = 30
         #endif
-
-        self.scheduler.queue(process: Process.makePoll(project.name), type: .poll, delayInSeconds: delayInSeconds) { [weak self] success, error in
-            
+        
+        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(project.name), type: .poll) { [weak self] type, success, error in
             if let error = (error as NSError?), error.code == 255 {
                 callback()
                 return
             }
             
             self?.poll(project, ifCaseOfBranchBehindOrigin: callback)
+            
         }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(delayInSeconds), execute: poll)
     }
     
     private func monitor(_ project: Project) {
         self.poll(project, ifCaseOfBranchBehindOrigin: {
-            self.deploy(project) {
+            self.deploy(project: project) {_,_,_ in
                 self.monitor(project)
             }
         })
     }
     
-    private func deploy(_ project: Project, success completionHandler: @escaping () -> Void)
+    /* fileprivate */ func deploy(project: Project, at directoryPath: String, for user: String, completionHandler: @escaping ProcessCompletionHandler)
     {
+        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project, userInfo: ["directoryPath":directoryPath, "user":user])
+        
+        let didComplete: ProcessCompletionHandler = { type, success, error in
+            self.didComplete(type: type, success: success, error: error)
+        }
+
+        let deploy: ProcessCompletionHandler = { type, success, error in
+            let deploy = self.processManager.makeDispatchWorkItem(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: completionHandler))
+            
+            deploy.perform()
+        }
+
+        let export: ProcessCompletionHandler = { type, success, error in
+            let export = self.processManager.makeDispatchWorkItem(process: Process.makeExport(directoryPath: directoryPath, projectName: project.name), type: .export, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: deploy))
+            
+            export.perform()
+        }
+        
+        let archive: ProcessCompletionHandler = { type, success, error in
+            let archive = self.processManager.makeDispatchWorkItem(process: Process.makeArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: project.name), type: .archive, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: export))
+            
+            archive.perform()
+        }
+
+        let test: ProcessCompletionHandler = { type, success, error in
+            let test = self.processManager.makeDispatchWorkItem(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: archive))
+            
+            test.perform()
+        }
+
+        let build: ProcessCompletionHandler = { type, success, error in
+            let build = self.processManager.makeDispatchWorkItem(process: Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: test))
+            
+            build.perform()
+        }
+        
+        let checkout = self.processManager.makeDispatchWorkItem(
+            process: Process.makeCheckout(directoryPath: directoryPath, repoName: project.name, origin: project.origin),
+            type: .checkout,
+            completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: build))
+        
+        checkout.perform()
+
+    }
+    
+    /* fileprivate */ func deploy(project: Project, at directoryPath: String, completionHandler: @escaping ProcessCompletionHandler) {
+        
         guard let user = try? self.keychain.findWindmillUser() else {
             os_log("A windmill user account should have been created.", log: .default, type: .error)
             return
         }
         
-        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project)
+        self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)
+    }
+    
+    /* fileprivate */ func deploy(project: Project, for user: String, completionHandler: @escaping ProcessCompletionHandler) {
         
-        let name = project.name
-
-        let directoryPath = "\(FileManager.default.windmill)\(name)"
+        let directoryPath = "\(FileManager.default.windmill)\(project.name)"
         os_log("%{public}@", log: .default, type: .debug, directoryPath)
         
-        let forwardExecution = ForwardExecution(execute: scheduler.makeExecute(Process.makeCheckout(name, origin: project.origin), type: .checkout) )
-            .then( scheduler.makeExecute(Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build) )
-            .then( scheduler.makeExecute(Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test))
-            .then( scheduler.makeExecute(Process.makeArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: name), type: .archive))
-            .then( scheduler.makeExecute(Process.makeExport(directoryPath: directoryPath, projectName: name), type: .export))
-            .then( scheduler.makeExecute(Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy))
-
-        scheduler.queue(execute: forwardExecution.dispatchWorkItem { success, error in
-            
-            guard success else {
-                if let error = (error as NSError?), let type = error.userInfo["type"] as? ActivityType {
-                    
-                    let notification = Process.Notifications.makeErrorNotification(type)
-                    NotificationCenter.default.post(notification)
-                }
-                return
-            }
-            
-            completionHandler()
-        })
+        self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)
+    }
+    
+    /* fileprivate */ func deploy(project: Project, completionHandler: @escaping ProcessCompletionHandler) {
+        
+        guard let user = try? self.keychain.findWindmillUser() else {
+            os_log("A windmill user account should have been created.", log: .default, type: .error)
+            return
+        }
+        
+        self.deploy(project: project, for: user, completionHandler: completionHandler)
     }
     
     func didReceive(process: Process, type: ActivityType, standardOutput: String, count: Int) {
@@ -155,39 +186,49 @@ final class Windmill: SchedulerDelegate
         self.delegate?.windmill(self, standardError: standardError, count: count)
     }
     
-    func willLaunch(process: Process, type: ActivityType, scheduler: Scheduler) {
+    func willLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
         waitForStandardOutputInBackground(process: process, queue: dispatch_queue_serial, type: type)
         waitForStandardErrorInBackground(process: process, queue: dispatch_queue_serial, type: type)
     }
     
-    func didLaunch(process: Process, type: ActivityType, scheduler: Scheduler) {
+    func didLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
         NotificationCenter.default.post(Process.Notifications.makeDidLaunchNotification(type))
     }
     
-    func didExitSuccesfully(process: Process, type: ActivityType, scheduler: Scheduler) {
+    func didComplete(type: ActivityType, success: Bool, error: Error?) {
+        
+        guard success else {
+            if let error = (error as NSError?), let type = error.userInfo["type"] as? ActivityType {
+                let notification = Process.Notifications.makeErrorNotification(type)
+                NotificationCenter.default.post(notification)
+            } else {
+                os_log("Error does not hold an ActivityType for its 'type' key. Double check what instance 'type' is.", log: .default, type: .error)
+            }
+            return
+        }
         NotificationCenter.default.post(Process.Notifications.makeDidExitSuccesfullyNotification(type))
     }
     
     /**
-
-    /**
-    
-    Adds the given *project* to the list of projects.
-    
-    If #delegate is set, you will receive a callback to WindmillDelegate#windmillself, projects:self.projects, addedProject project: project)
-    if the project was added.
-
-    - precondition: the given *project* must have a valid remote origin
-    
-    - parameter project: the project to add to Windmill
-    - returns: true if the 'project' was added, false if already added.
-    */
-
-    project was added
-    project not be added
-    project failed to create
-    
-    */
+     
+     /**
+     
+     Adds the given *project* to the list of projects.
+     
+     If #delegate is set, you will receive a callback to WindmillDelegate#windmillself, projects:self.projects, addedProject project: project)
+     if the project was added.
+     
+     - precondition: the given *project* must have a valid remote origin
+     
+     - parameter project: the project to add to Windmill
+     - returns: true if the 'project' was added, false if already added.
+     */
+     
+     project was added
+     project not be added
+     project failed to create
+     
+     */
     @discardableResult func create(_ project: Project) -> Bool
     {
         guard !self.projects.contains(project) else {
@@ -196,7 +237,7 @@ final class Windmill: SchedulerDelegate
         }
         
         self.add(project)
-        self.deploy(project) {
+        self.deploy(project: project) {_,_,_ in
             self.monitor(project)
         }
         
@@ -205,7 +246,7 @@ final class Windmill: SchedulerDelegate
     
     @discardableResult func start() -> Bool {
         for project in self.projects {
-            self.deploy(project) {
+            self.deploy(project: project) {_,_,_ in
                 self.monitor(project)
             }
         }

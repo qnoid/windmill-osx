@@ -90,7 +90,6 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     let defaultCenter = NotificationCenter.default
     var windmill: Windmill!
-    var scheduler: Scheduler!
     
     var location: Int = 0
     var buffer: String = ""

@@ -101,11 +101,11 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil);
     }
     
-    public static func makeCheckout(_ repoName: String, origin: String) -> Process {
+    public static func makeCheckout(directoryPath: String = FileManager.default.windmill, repoName: String, origin: String) -> Process {
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [repoName, origin, self.pathForDir("scripts")]
+        process.arguments = [directoryPath, repoName, origin, self.pathForDir("scripts")]
         process.qualityOfService = .utility
         
         return process

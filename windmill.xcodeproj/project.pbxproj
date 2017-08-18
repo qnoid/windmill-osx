@@ -12,6 +12,8 @@
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D17FE1F44BC670015C13C /* ProcessManager.swift */; };
+		BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
 		BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25DB781C9ED2700001FEDF /* MainViewController.swift */; };
@@ -29,13 +31,11 @@
 		BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */; };
 		BDBD520B1CD6030B0023F460 /* ActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDBD520A1CD6030B0023F460 /* ActivityView.xib */; };
 		BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD520C1CD6053B0023F460 /* ActivityView.swift */; };
-		BDBE325C1F30B0B400BCE4D9 /* ForwardExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE325B1F30B0B400BCE4D9 /* ForwardExecution.swift */; };
 		BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE325E1F31301200BCE4D9 /* ActivityType.swift */; };
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
 		BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC9D4951C43164C00FA018E /* MainWindowController.swift */; };
-		BDCB38291F06B9BA000825C1 /* SchedulerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCB38281F06B9BA000825C1 /* SchedulerTest.swift */; };
+		BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCB38281F06B9BA000825C1 /* WindmillTest.swift */; };
 		BDCB382B1F06B9FB000825C1 /* MainViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCB382A1F06B9FB000825C1 /* MainViewControllerTest.swift */; };
-		BDCEFE431CD69B98004D2890 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCEFE421CD69B98004D2890 /* Scheduler.swift */; };
 		BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCEFE481CD6B58D004D2890 /* Windmill.swift */; };
 		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
 		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
@@ -84,6 +84,8 @@
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
+		BD1D17FE1F44BC670015C13C /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
+		BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManagerTest.swift; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
 		BD25DB761C9EC5290001FEDF /* windmill.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = windmill.xcconfig; sourceTree = "<group>"; };
@@ -106,13 +108,11 @@
 		BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Windmill.swift"; sourceTree = "<group>"; };
 		BDBD520A1CD6030B0023F460 /* ActivityView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ActivityView.xib; path = ../../ActivityView.xib; sourceTree = "<group>"; };
 		BDBD520C1CD6053B0023F460 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
-		BDBE325B1F30B0B400BCE4D9 /* ForwardExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardExecution.swift; sourceTree = "<group>"; };
 		BDBE325E1F31301200BCE4D9 /* ActivityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityType.swift; sourceTree = "<group>"; };
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
 		BDC9D4951C43164C00FA018E /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
-		BDCB38281F06B9BA000825C1 /* SchedulerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerTest.swift; sourceTree = "<group>"; };
+		BDCB38281F06B9BA000825C1 /* WindmillTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindmillTest.swift; sourceTree = "<group>"; };
 		BDCB382A1F06B9FB000825C1 /* MainViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerTest.swift; sourceTree = "<group>"; };
-		BDCEFE421CD69B98004D2890 /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		BDCEFE481CD6B58D004D2890 /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
 		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		BDD002021AB2F26400F8E34A /* PathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathComponent.swift; sourceTree = "<group>"; };
@@ -174,10 +174,17 @@
 			name = ProjectsOutlineView;
 			sourceTree = "<group>";
 		};
+		BD1D17FD1F44BC560015C13C /* ProcessManager */ = {
+			isa = PBXGroup;
+			children = (
+				BD1D17FE1F44BC670015C13C /* ProcessManager.swift */,
+			);
+			path = ProcessManager;
+			sourceTree = "<group>";
+		};
 		BD3015FF19BB0F79001134F8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				BDCEFE421CD69B98004D2890 /* Scheduler.swift */,
 				BDBD520A1CD6030B0023F460 /* ActivityView.xib */,
 				BDBD520C1CD6053B0023F460 /* ActivityView.swift */,
 				BD30160019BB0F79001134F8 /* AppDelegate.swift */,
@@ -217,6 +224,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BD1D17FD1F44BC560015C13C /* ProcessManager */,
 				BDD0021F1ABA3EBB00F8E34A /* scripts */,
 				BDD0020C1AB6F36A00F8E34A /* Windmill */,
 				BD081A5C1AB1A50900B8E948 /* ProjectsOutlineView */,
@@ -246,9 +254,10 @@
 				BDB6D55119440392001340B4 /* Supporting Files */,
 				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
 				BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */,
-				BDCB38281F06B9BA000825C1 /* SchedulerTest.swift */,
+				BDCB38281F06B9BA000825C1 /* WindmillTest.swift */,
 				BDCB382A1F06B9FB000825C1 /* MainViewControllerTest.swift */,
 				BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */,
+				BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -278,7 +287,6 @@
 				BDABB0451ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift */,
 				BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */,
 				BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */,
-				BDBE325B1F30B0B400BCE4D9 /* ForwardExecution.swift */,
 				BDBE325E1F31301200BCE4D9 /* ActivityType.swift */,
 			);
 			name = Common;
@@ -424,6 +432,7 @@
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
 				BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */,
 				BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */,
+				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
 				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
 				0F9ECDE91D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift in Sources */,
 				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
@@ -433,12 +442,10 @@
 				BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
 				BDD002161AB87B7900F8E34A /* WindmillDelegate.swift in Sources */,
-				BDBE325C1F30B0B400BCE4D9 /* ForwardExecution.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BDABB0461ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift in Sources */,
 				BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
-				BDCEFE431CD69B98004D2890 /* Scheduler.swift in Sources */,
 				BD30160E19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift in Sources */,
 				BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */,
 				BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */,
@@ -455,8 +462,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */,
+				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
 				BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */,
-				BDCB38291F06B9BA000825C1 /* SchedulerTest.swift in Sources */,
+				BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */,
 				BDCB382B1F06B9FB000825C1 /* MainViewControllerTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
 			);

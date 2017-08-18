@@ -59,7 +59,7 @@ extension NSError
     
     class func errorTermination(for activityType: ActivityType, status code: Int) -> Error
     {
-        let failureDescription = "Activity type '\(activityType) exited with error"
+        let failureDescription = "Activity '\(String(describing: activityType.rawValue))' exited with error"
         
         return NSError(domain: WindmillDomain, code: code, userInfo:
             [NSLocalizedDescriptionKey: failureDescription, "type": activityType])

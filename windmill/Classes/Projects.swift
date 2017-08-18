@@ -64,8 +64,8 @@ extension OutputStream
 
 extension FileManager {
     
-    var foo: URL {
-        return try! self.url(for: .userDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    var trashDirectoryURL: URL {
+        return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
     }
     
     var windmill: String {
