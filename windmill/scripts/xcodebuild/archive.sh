@@ -6,7 +6,7 @@ PROJECT_NAME=$2
 RESOURCES_ROOT=$3
 
 
-xcodebuild -scheme $SCHEME_NAME -configuration Release archive -derivedDataPath build -archivePath build/$PROJECT_NAME.xcarchive
+xcodebuild -scheme $SCHEME_NAME -configuration Release archive -derivedDataPath build -archivePath build/$SCHEME_NAME.xcarchive
 
 ## Archive
 #

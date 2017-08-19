@@ -56,12 +56,12 @@ extension Windmill {
         let standardOutputPipe = Pipe()
         process.standardOutput = standardOutputPipe
         
-        process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process] availableString, count in
+        process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
             guard let process = process else {
                 return
             }
             
-            self.didReceive(process: process, type: type, standardOutput: availableString, count: count)
+            self?.didReceive(process: process, type: type, standardOutput: availableString, count: count)
         }
     }
     
@@ -69,12 +69,12 @@ extension Windmill {
         let standardErrorPipe = Pipe()
         process.standardError = standardErrorPipe
         
-        process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process] availableString, count in
+        process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
             guard let process = process else {
                 return
             }
 
-            self.didReceive(process: process, type: type, standardError: availableString, count: count)
+            self?.didReceive(process: process, type: type, standardError: availableString, count: count)
         }
     }
 }

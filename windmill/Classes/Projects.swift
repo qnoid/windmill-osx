@@ -61,15 +61,3 @@ extension OutputStream
     }
 
 }
-
-extension FileManager {
-    
-    var trashDirectoryURL: URL {
-        return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
-    }
-    
-    var windmill: String {
-        return "\(NSHomeDirectory())/.windmill/"
-    }
-
-}

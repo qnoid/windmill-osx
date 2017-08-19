@@ -82,7 +82,7 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     
     /// ApplicationSupportDirectory
     
-    public func create() -> Bool
+    @discardableResult public func create() -> Bool
     {
         let created: Bool
         do {

@@ -12,7 +12,31 @@ public extension FileManager
 {
     public typealias UserLibraryDirectoryView = (URL:URL, directory:UserLibraryDirectory)
     public typealias UserApplicationSupportDirectoryView = (URL:URL, directory:ApplicationSupportDirectory)
+
+    var trashDirectoryURL: URL {
+        return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
+    }
     
+    var windmillHomeDirectoryURL: URL  {
+        return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")
+    }
+
+    var windmill: String {
+        return "\(NSHomeDirectory())/.windmill/"
+    }
+    
+    func buildDirectoryURL(forProject name: String) -> URL {
+        return windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("build")
+    }
+
+    func archiveURL(forProject projectName: String, inArchive archiveName: String) -> URL {
+        return buildDirectoryURL(forProject: projectName).appendingPathComponent("\(archiveName).xcarchive")
+    }
+
+    func archiveInfoURL(forProject projectName: String, inArchive archiveName: String) -> URL {
+        return self.archiveURL(forProject: projectName, inArchive: archiveName).appendingPathComponent("Info.plist")
+    }
+
     func directory(_ URL:Foundation.URL) -> Directory {
     return Directory(URL: URL, fileManager: self)
     }

@@ -88,8 +88,20 @@ class MainViewController: NSViewController, WindmillDelegate {
         return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView]
     }()
     
+    @IBOutlet weak var archiveView: ArchiveView!
+    let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/YYYY, HH:mm")
+        
+        return dateFormatter
+    }()
+
     let defaultCenter = NotificationCenter.default
-    var windmill: Windmill!
+    var windmill: Windmill! {
+        didSet {
+            windmill.delegate = self
+        }
+    }
     
     var location: Int = 0
     var buffer: String = ""
@@ -134,11 +146,12 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.didArchiveSuccesfully(_:)), name: Notification.Name("archive"), object: nil)
     }
     
     func append(_ textView: NSTextView, output: String, count: Int) {
         
-        self.buffer.append("\n \(output)")
+        self.buffer.append(output)
         self.location = self.location + count
         
         textView.string = self.buffer
@@ -170,6 +183,7 @@ class MainViewController: NSViewController, WindmillDelegate {
             activityView.isHidden = true
             activityView.alphaValue = 0.5
         }
+        self.archiveView.isHidden = true
         
         let projectTitlebarAccessoryViewController = self.view.window?.titlebarAccessoryViewControllers[0] as! ProjectTitlebarAccessoryViewController
         projectTitlebarAccessoryViewController.project = project        
@@ -218,9 +232,17 @@ class MainViewController: NSViewController, WindmillDelegate {
         }
     }
     
-    @IBAction func run(_ sender: Any) {
-        self.windmill.projects = InputStream.inputStreamOnProjects().read()
-        self.windmill.start()
+    func didArchiveSuccesfully(_ aNotification: Notification) {
+        let archive = aNotification.userInfo!["archive"] as! Archive
+        let info = archive.info
+        
+        self.archiveView.titleTextField.stringValue = info.name
+        self.archiveView.versionTextField.stringValue = "\(info.bundleShortVersion) (\(info.bundleVersion))"
+        let creationDate = info.creationDate ?? Date()
+        
+        self.archiveView.dateTextField.stringValue = self.dateFormatter.string(from: creationDate)
+        self.archiveView.archive = archive
+        self.archiveView.isHidden = false
     }
     
     @IBAction func showDebugArea(_ menuItem: NSMenuItem) {

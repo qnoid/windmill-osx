@@ -52,3 +52,10 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         self.init(name:name, scheme: scheme, origin:origin)
     }
 }
+
+extension Project {
+    
+    var directoryPathURL: URL {
+        return FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(self.name)
+    }
+}
