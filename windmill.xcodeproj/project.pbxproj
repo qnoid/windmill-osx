@@ -23,13 +23,18 @@
 		BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160B19BCBE30001134F8 /* NSPasteboard.swift */; };
 		BD30160E19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */; };
 		BD4762061F16496F00F5188C /* Project+ObjectiveGit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */; };
+		BD6963F21F4C91910041847B /* Xcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6963F11F4C91910041847B /* Xcode.swift */; };
 		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
-		BD79D70F1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */; };
+		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
+		BD91A70D1F41E758004CA64B /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A70C1F41E758004CA64B /* ArchiveView.swift */; };
+		BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD91A70F1F41E78D004CA64B /* ActivityView.xib */; };
+		BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD91A7101F41E791004CA64B /* ArchiveView.xib */; };
+		BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7131F420665004CA64B /* NSView+Windmill.swift */; };
+		BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */; };
 		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
 		BDABB0461ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDABB0451ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */; };
-		BDBD520B1CD6030B0023F460 /* ActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDBD520A1CD6030B0023F460 /* ActivityView.xib */; };
 		BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD520C1CD6053B0023F460 /* ActivityView.swift */; };
 		BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE325E1F31301200BCE4D9 /* ActivityType.swift */; };
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
@@ -50,6 +55,9 @@
 		BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Scripts.swift */; };
 		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
 		BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
+		BDF00B641F47582300572D03 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF00B631F47582300572D03 /* Archive.swift */; };
+		BDF00B661F475A5C00572D03 /* ArchiveTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF00B651F475A5C00572D03 /* ArchiveTest.swift */; };
+		BDF00B691F475B5100572D03 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDF00B681F475AC400572D03 /* Info.plist */; };
 		BDF6B75C199A428D008B09D9 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = BDF6B75B199A428C008B09D9 /* resources */; };
 		BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */; };
 /* End PBXBuildFile section */
@@ -96,8 +104,14 @@
 		BD30160B19BCBE30001134F8 /* NSPasteboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPasteboard.swift; sourceTree = "<group>"; };
 		BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStatusBar+WindmillStatusBar.swift"; sourceTree = "<group>"; };
 		BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+ObjectiveGit.swift"; sourceTree = "<group>"; };
+		BD6963F11F4C91910041847B /* Xcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Xcode.swift; sourceTree = "<group>"; };
 		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
-		BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+WindmillFileManager.swift"; sourceTree = "<group>"; };
+		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
+		BD91A70C1F41E758004CA64B /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
+		BD91A70F1F41E78D004CA64B /* ActivityView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityView.xib; sourceTree = "<group>"; };
+		BD91A7101F41E791004CA64B /* ArchiveView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchiveView.xib; sourceTree = "<group>"; };
+		BD91A7131F420665004CA64B /* NSView+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Windmill.swift"; sourceTree = "<group>"; };
+		BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
 		BDABB0451ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+WindmillAttributedString.swift"; sourceTree = "<group>"; };
 		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,7 +120,6 @@
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Windmill.swift"; sourceTree = "<group>"; };
-		BDBD520A1CD6030B0023F460 /* ActivityView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ActivityView.xib; path = ../../ActivityView.xib; sourceTree = "<group>"; };
 		BDBD520C1CD6053B0023F460 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		BDBE325E1F31301200BCE4D9 /* ActivityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityType.swift; sourceTree = "<group>"; };
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
@@ -127,6 +140,9 @@
 		BDD002191AB8B5AD00F8E34A /* Alerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
 		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
+		BDF00B631F47582300572D03 /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
+		BDF00B651F475A5C00572D03 /* ArchiveTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveTest.swift; sourceTree = "<group>"; };
+		BDF00B681F475AC400572D03 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDF6B75B199A428C008B09D9 /* resources */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resources; sourceTree = "<group>"; };
 		BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -185,8 +201,8 @@
 		BD3015FF19BB0F79001134F8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				BDBD520A1CD6030B0023F460 /* ActivityView.xib */,
 				BDBD520C1CD6053B0023F460 /* ActivityView.swift */,
+				BD91A70F1F41E78D004CA64B /* ActivityView.xib */,
 				BD30160019BB0F79001134F8 /* AppDelegate.swift */,
 				BD30160919BCBCFD001134F8 /* Process+Windmill.swift */,
 				BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */,
@@ -198,6 +214,17 @@
 				BDCEFE481CD6B58D004D2890 /* Windmill.swift */,
 				0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */,
 				BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */,
+				BD91A7101F41E791004CA64B /* ArchiveView.xib */,
+				BD91A70C1F41E758004CA64B /* ArchiveView.swift */,
+				BDF00B631F47582300572D03 /* Archive.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		BD91A7151F42E9AE004CA64B /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -251,6 +278,8 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
+				BDF00B671F475ABC00572D03 /* ArchiveTest */,
+				BD91A7151F42E9AE004CA64B /* Classes */,
 				BDB6D55119440392001340B4 /* Supporting Files */,
 				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
 				BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */,
@@ -258,6 +287,7 @@
 				BDCB382A1F06B9FB000825C1 /* MainViewControllerTest.swift */,
 				BDFF4EA61F3B3DA2004C1B1E /* ProcessTest.swift */,
 				BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */,
+				BDF00B651F475A5C00572D03 /* ArchiveTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -277,7 +307,7 @@
 				BD30160B19BCBE30001134F8 /* NSPasteboard.swift */,
 				BD30160D19BCC52D001134F8 /* NSStatusBar+WindmillStatusBar.swift */,
 				BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */,
-				BD79D70E1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift */,
+				BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */,
 				BDD002001AB2F24F00F8E34A /* Directory.swift */,
 				BDD002021AB2F26400F8E34A /* PathComponent.swift */,
 				BDD0020F1AB7610000F8E34A /* NSBundle+WindmillBundle.swift */,
@@ -288,6 +318,8 @@
 				BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */,
 				BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */,
 				BDBE325E1F31301200BCE4D9 /* ActivityType.swift */,
+				BD91A7131F420665004CA64B /* NSView+Windmill.swift */,
+				BD6963F11F4C91910041847B /* Xcode.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -311,6 +343,14 @@
 				BDD002201ABA3ECD00F8E34A /* Scripts.swift */,
 			);
 			name = scripts;
+			sourceTree = "<group>";
+		};
+		BDF00B671F475ABC00572D03 /* ArchiveTest */ = {
+			isa = PBXGroup;
+			children = (
+				BDF00B681F475AC400572D03 /* Info.plist */,
+			);
+			path = ArchiveTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -400,9 +440,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BDBD520B1CD6030B0023F460 /* ActivityView.xib in Resources */,
 				BD243A861C42AB570015A13A /* Main.storyboard in Resources */,
+				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
+				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
 				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
@@ -413,6 +454,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDF00B691F475B5100572D03 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,8 +466,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */,
+				BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */,
 				BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */,
-				BD79D70F1AB210CD00596928 /* NSFileManager+WindmillFileManager.swift in Sources */,
+				BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */,
 				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,
 				BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */,
 				BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */,
@@ -440,8 +483,11 @@
 				BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */,
 				BDD002101AB7610000F8E34A /* NSBundle+WindmillBundle.swift in Sources */,
 				BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */,
+				BD6963F21F4C91910041847B /* Xcode.swift in Sources */,
+				BDF00B641F47582300572D03 /* Archive.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
 				BDD002161AB87B7900F8E34A /* WindmillDelegate.swift in Sources */,
+				BD91A70D1F41E758004CA64B /* ArchiveView.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BDABB0461ABB2693008CD8EA /* NSAttributedString+WindmillAttributedString.swift in Sources */,
 				BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */,
@@ -463,9 +509,11 @@
 			files = (
 				BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */,
 				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
+				BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */,
 				BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */,
 				BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */,
 				BDCB382B1F06B9FB000825C1 /* MainViewControllerTest.swift in Sources */,
+				BDF00B661F475A5C00572D03 /* ArchiveTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

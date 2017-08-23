@@ -13,9 +13,13 @@ typealias ProcessCompletionHandler = (_ type: ActivityType, _ success: Bool, _ e
 struct ProcessCompletionHandlerChain {
     let completionHandler: ProcessCompletionHandler
     
-    func `case`(success: @escaping ProcessCompletionHandler) -> ProcessCompletionHandler {
+    func success(completionHandler: @escaping ProcessCompletionHandler) -> ProcessCompletionHandler {
+        return chain(success: completionHandler).completionHandler
+    }
+
+    func chain(success: @escaping ProcessCompletionHandler) -> ProcessCompletionHandlerChain {
         
-        return { [completionHandler = self.completionHandler] type, isSuccess, error in
+        return ProcessCompletionHandlerChain { [completionHandler = self.completionHandler] type, isSuccess, error in
             completionHandler(type, isSuccess, error)
             
             guard isSuccess else {
@@ -39,10 +43,20 @@ struct ProcessManagerChain {
     let dispatchWorkItem: (_ completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem
 }
 
+struct DispatchWorkItemCompute {
+    var dispatchWorkItem: (_ queue: DispatchQueue, _ completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem
+}
+
 struct ProcessManager {
     
     weak var delegate: ProcessManagerDelegate?
     
+    /* private */ func makeCompute(process: Process, type: ActivityType) -> DispatchWorkItemCompute {
+        return DispatchWorkItemCompute { queue , completionHandler in
+            return self.makeDispatchWorkItem(process: process, type: type, queue: queue, completionHandler: completionHandler)
+        }
+    }
+
     /* private */ func makeDispatchWorkItem(process processProvider: @escaping @autoclosure () -> Process, type: ActivityType, queue: DispatchQueue = .main, completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem {
         
         return DispatchWorkItem {

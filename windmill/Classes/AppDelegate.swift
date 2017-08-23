@@ -49,7 +49,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     var mainViewController: MainViewController! {
         didSet{
             mainViewController.windmill = self.windmill
-            self.windmill.delegate = mainViewController
         }
     }
     
@@ -148,5 +147,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     func activityError(_ aNotification: Notification) {
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         statusItem.button?.stopAnimation()
+    }
+    
+    @IBAction func run(_ sender: Any) {
+        self.windmill = Windmill.windmill(self.keychain)
+        self.mainViewController.windmill = self.windmill
+        self.windmill.start()
     }
 }

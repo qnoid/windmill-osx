@@ -11,17 +11,6 @@ import AppKit
 @IBDesignable
 class ActivityView: NSView {
 
-    lazy var loadView: () -> Void = { [unowned self] in
-        var topLevelObjects = NSArray()
-        Bundle(for: type(of: self)).loadNibNamed("ActivityView", owner: self, topLevelObjects: &topLevelObjects)
-        
-        for object in topLevelObjects {
-            if let containerView = object as? NSView {
-                self.addSubview(containerView)
-            }
-        }
-    }
-    
     @IBOutlet weak var titleLabel: NSTextField!
     @IBOutlet weak var imageView: NSImageView!
     
@@ -43,11 +32,11 @@ class ActivityView: NSView {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.loadView()
+        wml_addSubview(view: wml_load(view: ActivityView.self)!, layout: .centered)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.loadView()
-    }
+        wml_addSubview(view: wml_load(view: ActivityView.self)!, layout: .centered)
+    }    
 }

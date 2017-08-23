@@ -92,9 +92,9 @@ let WindmillDomain : Domain = "io.windmill"
     }
     
     private func monitor(_ project: Project) {
-        self.poll(project, ifCaseOfBranchBehindOrigin: {
-            self.deploy(project: project) {_,_,_ in
-                self.monitor(project)
+        self.poll(project, ifCaseOfBranchBehindOrigin: { [weak self] in
+            self?.deploy(project: project) {_,_,_ in
+                self?.monitor(project)
             }
         })
     }
@@ -103,47 +103,35 @@ let WindmillDomain : Domain = "io.windmill"
     {
         self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project, userInfo: ["directoryPath":directoryPath, "user":user])
         
-        let didComplete: ProcessCompletionHandler = { type, success, error in
-            self.didComplete(type: type, success: success, error: error)
-        }
+        let checkout = self.processManager.makeCompute(process: Process.makeCheckout(directoryPath: directoryPath, repoName: project.name, origin: project.origin),type: .checkout)
+        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build)
+        let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test)
+        let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, scheme: project.scheme, projectName: project.name), type: .archive)
+        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, projectName: project.name), type: .export)
+        let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy)
 
-        let deploy: ProcessCompletionHandler = { type, success, error in
-            let deploy = self.processManager.makeDispatchWorkItem(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: completionHandler))
-            
-            deploy.perform()
-        }
-
-        let export: ProcessCompletionHandler = { type, success, error in
-            let export = self.processManager.makeDispatchWorkItem(process: Process.makeExport(directoryPath: directoryPath, projectName: project.name), type: .export, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: deploy))
-            
-            export.perform()
-        }
+        let alwaysChain = ProcessCompletionHandlerChain(completionHandler: self.didComplete)
         
-        let archive: ProcessCompletionHandler = { type, success, error in
-            let archive = self.processManager.makeDispatchWorkItem(process: Process.makeArchive(directoryPath: directoryPath, scheme: project.scheme, projectName: project.name), type: .archive, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: export))
-            
-            archive.perform()
-        }
-
-        let test: ProcessCompletionHandler = { type, success, error in
-            let test = self.processManager.makeDispatchWorkItem(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: archive))
-            
-            test.perform()
-        }
-
-        let build: ProcessCompletionHandler = { type, success, error in
-            let build = self.processManager.makeDispatchWorkItem(process: Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build, completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: test))
-            
-            build.perform()
-        }
-        
-        let checkout = self.processManager.makeDispatchWorkItem(
-            process: Process.makeCheckout(directoryPath: directoryPath, repoName: project.name, origin: project.origin),
-            type: .checkout,
-            completionHandler: ProcessCompletionHandlerChain(completionHandler: didComplete).case(success: build))
-        
-        checkout.perform()
-
+        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+            build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                    archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                        
+                        do {
+                            let archive = try Archive.make(forProject: project, name: project.scheme)
+                            NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["archive":archive])
+                        }
+                        catch let error as NSError {
+                            os_log("%{public}@", log:.default, type: .error, error)
+                        }
+                        
+                        export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                            deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success(completionHandler: completionHandler)).perform()
+                        }).perform()
+                    }).perform()
+                }).perform()
+            }).perform()
+        }).perform()
     }
     
     /* fileprivate */ func deploy(project: Project, at directoryPath: String, completionHandler: @escaping ProcessCompletionHandler) {
@@ -237,8 +225,8 @@ let WindmillDomain : Domain = "io.windmill"
         }
         
         self.add(project)
-        self.deploy(project: project) {_,_,_ in
-            self.monitor(project)
+        self.deploy(project: project) {[weak self] _,_,_ in
+            self?.monitor(project)
         }
         
         return true
@@ -246,8 +234,8 @@ let WindmillDomain : Domain = "io.windmill"
     
     @discardableResult func start() -> Bool {
         for project in self.projects {
-            self.deploy(project: project) {_,_,_ in
-                self.monitor(project)
+            self.deploy(project: project) {[weak self] _,_,_ in
+                self?.monitor(project)
             }
         }
         
