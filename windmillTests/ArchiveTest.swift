@@ -17,7 +17,7 @@ class ArchiveTest: XCTestCase {
     func testGivenInfoAtURLAssertInfo() {
         let url = Bundle(for: ArchiveTest.self).url(forResource: "Info", withExtension: "plist")!
         
-        let info = try! Archive.Info.parse(url: url)!
+        let info = try! Archive.Info.parse(url: url)
         
         XCTAssertEqual(info.name, "windmill")
         XCTAssertEqual(info.bundleShortVersion, "1.0")
