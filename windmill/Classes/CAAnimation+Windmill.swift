@@ -20,5 +20,25 @@ extension CAAnimation {
             
             return basicAnimation
         }()
+        
+        static func lightsAnimation(size: CGSize, animations images: [NSImage]) -> CAAnimation {
+            let layer = CALayer()
+            let keyPath = "contents"
+            let keyframeAnimation = CAKeyframeAnimation(keyPath: keyPath)
+            keyframeAnimation.calculationMode = kCAAnimationDiscrete
+            
+            let durationOfAnimation: CFTimeInterval = 2.0
+            keyframeAnimation.duration = durationOfAnimation
+            keyframeAnimation.repeatCount = .infinity
+            
+            keyframeAnimation.values = images
+            
+            let layerRect = CGRect(origin: CGPoint.zero, size: size)
+            layer.frame = layerRect
+            layer.bounds = layerRect
+            layer.add(keyframeAnimation, forKey: keyPath)
+            
+            return keyframeAnimation
+        }
     }
 }

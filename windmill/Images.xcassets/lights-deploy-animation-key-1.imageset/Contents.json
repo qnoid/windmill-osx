@@ -2,12 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "windmill-activity-indicator-inactive.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "windmill-activity-indicator-inactive@2x.png",
+      "filename" : "lights-checkout-animation-key-1@2x.png",
       "scale" : "2x"
     },
     {

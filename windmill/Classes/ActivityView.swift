@@ -38,5 +38,21 @@ class ActivityView: NSView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         wml_addSubview(view: wml_load(view: ActivityView.self)!, layout: .centered)
-    }    
+    }
+    
+    func animations(activityType: ActivityType) -> [NSImage] {
+        let type = String(describing: activityType.rawValue)
+        
+        return [NSImage(named: "lights-\(type)-animation-key-1")!, NSImage(named: "lights-\(type)-animation-key-2")!, NSImage(named: "lights-\(type)-animation-key-3")!]
+    }
+
+    func startLightsAnimation(activityType: ActivityType) {
+        let animations = self.animations(activityType: activityType)
+        
+        self.imageView.layer?.add(CAAnimation.Windmill.lightsAnimation(size: self.imageView.bounds.size, animations: animations), forKey: "lights")
+    }
+    
+    func stopLightsAnimation() {
+        self.imageView.layer?.removeAnimation(forKey: "lights")
+    }
 }
