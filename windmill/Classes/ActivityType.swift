@@ -29,9 +29,9 @@ public enum ActivityType: String, CustomStringConvertible
         case .archive:
             return "windmill-activity-indicator-archive"
         case .export:
-            return "windmill-activity-indicator-archive"
+            return "windmill-activity-indicator-export"
         case .deploy:
-            return "windmill-activity-indicator"
+            return "windmill-activity-indicator-deploy"
         case .poll:
             return "windmill-activity-indicator"
         }
@@ -48,9 +48,9 @@ public enum ActivityType: String, CustomStringConvertible
         case .archive:
             return "lights-archive"
         case .export:
-            return "lights-archive"
+            return "lights-export"
         case .deploy:
-            return ""
+            return "lights-deploy"
         case .poll:
             return ""
         }
@@ -73,5 +73,5 @@ public enum ActivityType: String, CustomStringConvertible
         case .poll:
             return "monitoring"
         }
-    }
+    }    
 }

@@ -68,6 +68,9 @@ class MainViewController: NSViewController, WindmillDelegate {
     @IBOutlet weak var buildActivityView: ActivityView!
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
+    @IBOutlet weak var exportActivityView: ActivityView!
+    @IBOutlet weak var deployActivityView: ActivityView!
+    
     @IBOutlet var textView: NSTextView! {
         didSet {
             textView.wantsLayer = true
@@ -85,7 +88,7 @@ class MainViewController: NSViewController, WindmillDelegate {
     weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
-        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView]
+        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .deploy: self.deployActivityView]
     }()
     
     @IBOutlet weak var archiveView: ArchiveView!
@@ -118,7 +121,7 @@ class MainViewController: NSViewController, WindmillDelegate {
         
             let topAnchor = (self.view.window?.contentLayoutGuide as AnyObject?)?.topAnchor
         
-            let topConstraint = self.checkoutActivityView.topAnchor.constraint(equalTo: topAnchor!, constant: 11)
+            let topConstraint = self.windmillImageView.topAnchor.constraint(equalTo: topAnchor!, constant: 20)
         
             topConstraint.isActive = true
         
@@ -178,10 +181,8 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.windmillImageView.startAnimation()
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.view.window?.title = project.name        
-        self.windmillImageView.image = NSImage(named: "windmill-activity-indicator-inactive")
         for activityView in self.activityViews.values {
             activityView.isHidden = true
-            activityView.alphaValue = 0.5
         }
         self.archiveView.isHidden = true
         
@@ -194,12 +195,9 @@ class MainViewController: NSViewController, WindmillDelegate {
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
         
-        switch(activityType){
-            case .checkout, .build, .test, .archive:
-                self.activityViews[activityType]?.isHidden = false
-        default:
-            break
-        }
+        self.windmillImageView.image = NSImage(named: activityType.imageName)
+        self.activityViews[activityType]?.isHidden = false
+        self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
         
         self.activityTextfield.stringValue = activityType.description
     }
@@ -212,6 +210,9 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
         self.windmillImageView.stopAnimation()
         
+        self.activityViews[activityType]?.alphaValue = 0.1
+        self.activityViews[activityType]?.imageView.layer?.removeAnimation(forKey: "lights")
+        
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         self.textViewHeightConstraint.animator().constant = 105
         self.textView.isSelectable = true
@@ -223,13 +224,8 @@ class MainViewController: NSViewController, WindmillDelegate {
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
 
-        switch(activityType){
-        case .checkout, .build, .test, .archive:
-            self.windmillImageView.image = NSImage(named: activityType.imageName)
-            self.activityViews[activityType]?.alphaValue = 1.0
-        default:
-            break
-        }
+        self.activityViews[activityType]?.alphaValue = 1.0
+        self.activityViews[activityType]?.stopLightsAnimation()
     }
     
     func didArchiveSuccesfully(_ aNotification: Notification) {
