@@ -110,21 +110,15 @@ let WindmillDomain : Domain = "io.windmill"
         let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, projectName: project.name), type: .export)
         let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy)
 
-        let alwaysChain = ProcessCompletionHandlerChain(completionHandler: self.didComplete)
+        let alwaysChain = ProcessCompletionHandlerChain { [weak self] (type, isSuccess, error) in
+            self?.didComplete(type: type, success: isSuccess, error: error)
+        }
         
-        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (type, isSuccess, error) in
             build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                 test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                     archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                        
-                        do {
-                            let archive = try Archive.make(forProject: project, name: project.scheme)
-                            NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["archive":archive])
-                        }
-                        catch let error as NSError {
-                            os_log("%{public}@", log:.default, type: .error, error)
-                        }
-                        
+                        self?.didArchive(project: project)
                         export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                             deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success(completionHandler: completionHandler)).perform()
                         }).perform()
@@ -195,6 +189,16 @@ let WindmillDomain : Domain = "io.windmill"
             return
         }
         NotificationCenter.default.post(Process.Notifications.makeDidExitSuccesfullyNotification(type))
+    }
+    
+    func didArchive(project: Project) {
+        do {
+            let archive = try Archive.make(forProject: project, name: project.scheme)
+            NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["archive":archive])
+        }
+        catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+        }
     }
     
     /**
