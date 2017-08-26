@@ -20,10 +20,6 @@ public extension FileManager
     var windmillHomeDirectoryURL: URL  {
         return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")
     }
-
-    var windmill: String {
-        return "\(NSHomeDirectory())/.windmill/"
-    }
     
     func buildDirectoryURL(forProject name: String) -> URL {
         return windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("build")

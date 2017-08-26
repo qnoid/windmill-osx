@@ -24,6 +24,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
                 ))
         }
     }
+    @IBOutlet weak var debugAreaMenuItem: NSMenuItem!
+    @IBOutlet weak var runMenuItem: NSMenuItem!
+    @IBOutlet weak var cleanMenu: NSMenuItem!
+    @IBOutlet weak var cleanProjectMenu: NSMenuItem!
     
     var statusItem: NSStatusItem! {
         didSet{
@@ -136,6 +140,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     
     func windmillWillDeployProject(_ aNotification: Notification) {
         statusItem.button?.startAnimation()
+        self.cleanMenu.isEnabled = false
+        self.cleanProjectMenu.isEnabled = false
     }
     
     func activityDidLaunch(_ aNotification: Notification) {
@@ -147,11 +153,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     func activityError(_ aNotification: Notification) {
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         statusItem.button?.stopAnimation()
+        self.cleanMenu.isEnabled = true
+        self.cleanProjectMenu.isEnabled = true
     }
     
     @IBAction func run(_ sender: Any) {
         self.windmill = Windmill.windmill(self.keychain)
         self.mainViewController.windmill = self.windmill
+        self.mainViewController.toggleDebugArea(debugAreaMenuItem)
         self.windmill.start()
+    }
+    
+    @IBAction func cleanBuildFolder(_ sender: Any) {
+        self.mainViewController.cleanBuildFolder()
+    }
+    
+    @IBAction func cleanProjectFolder(_ sender: Any) {
+
+        let alert = NSAlert()
+        alert.addButton(withTitle: "Remove")
+        alert.addButton(withTitle: "Cancel")
+        alert.messageText = "Remove the checkout folder?"
+        alert.informativeText = "This will perform a new checkout of the repository and `Run` again."
+        alert.alertStyle = .warning
+        alert.window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+
+        alert.beginSheetModal(for: self.mainWindowViewController.window!) { response in
+            
+            guard response == NSAlertFirstButtonReturn else {
+                return
+            }
+            
+            if self.mainViewController.cleanProjectFolder() {
+                self.run(self.runMenuItem)
+            }
+        }
     }
 }

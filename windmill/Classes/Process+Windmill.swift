@@ -101,11 +101,11 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil);
     }
     
-    public static func makeCheckout(directoryPath: String = FileManager.default.windmill, repoName: String, origin: String) -> Process {
+    public static func makeCheckout(windmillHomeDirectoryURL: URL = FileManager.default.windmillHomeDirectoryURL, repoName: String, origin: String) -> Process {
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [directoryPath, repoName, origin, self.pathForDir("scripts")]
+        process.arguments = [windmillHomeDirectoryURL.path, repoName, origin, self.pathForDir("scripts")]
         process.qualityOfService = .utility
         
         return process
@@ -142,12 +142,12 @@ extension Process
         return process
     }
     
-    public static func makeExport(directoryPath: String, projectName name: String) -> Process {
+    public static func makeExport(directoryPath: String, scheme: String) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
-        process.arguments = [name, self.pathForDir("resources")]
+        process.arguments = [scheme, self.pathForDir("resources")]
         
         return process
     }
@@ -166,7 +166,7 @@ extension Process
     {
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-        process.arguments = [repoName, self.pathForDir("scripts"), branch]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, repoName, self.pathForDir("scripts"), branch]
         
         return process
     }

@@ -51,6 +51,10 @@ class ArchiveView: NSView {
             savePanel.nameFieldStringValue = archive.name(dateFormatter: fullDateFormatter)
             savePanel.beginSheetModal(for: self.window!) { response in
                 
+                guard response == NSModalResponseOK else {
+                    return
+                }
+
                 do {
                     let url = savePanel.url
                     try FileManager.default.copyItem(at: self.archive.url, to: url!)

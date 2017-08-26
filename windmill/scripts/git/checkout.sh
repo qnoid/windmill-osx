@@ -19,10 +19,10 @@ set -e
 . $SCRIPTS_ROOT/common.sh
 
 function mkdir_windmill() {
-mkdir ~/.windmill
+mkdir "$WINDMILL_ROOT"
 }
 
-directory_does_not_exist_at_path ~/.windmill mkdir_windmill
+directory_does_not_exist_at_path "$WINDMILL_ROOT" mkdir_windmill
 
 function git_pull(){
 echo "[windmill] [debug] git -C $PROJECT_NAME pull"
