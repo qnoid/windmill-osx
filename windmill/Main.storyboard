@@ -402,9 +402,9 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Debug Area" id="nOh-K4-TO3">
                                                 <items>
-                                                    <menuItem title="Show Debug Area" tag="1" alternate="YES" keyEquivalent="Y" id="86b-Mo-8r7" userLabel="Show Debug Area">
+                                                    <menuItem title="Show Debug Area" tag="1" keyEquivalent="Y" id="86b-Mo-8r7" userLabel="Show Debug Area">
                                                         <connections>
-                                                            <action selector="showDebugArea:" target="aS9-1w-R0E" id="kQk-CV-eHc"/>
+                                                            <action selector="toggleDebugArea:" target="aS9-1w-R0E" id="1oY-Py-Rjw"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -422,11 +422,23 @@
                             </menuItem>
                             <menuItem title="Product" id="oEy-tP-65O">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Product" systemMenu="help" id="ecY-b3-fSp">
+                                <menu key="submenu" title="Product" autoenablesItems="NO" id="ecY-b3-fSp">
                                     <items>
                                         <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
                                             <connections>
-                                                <action selector="run:" target="aS9-1w-R0E" id="jzQ-zt-Guh"/>
+                                                <action selector="cleanBuildFolder:" target="jgg-ZM-qio" id="EhI-xZ-nNA"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="T7h-Ho-NMg"/>
+                                        <menuItem title="Clean Build Folder" enabled="NO" keyEquivalent="K" id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
+                                            <connections>
+                                                <action selector="cleanBuildFolder:" target="jgg-ZM-qio" id="tjj-rz-UuP"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Remove Checkout Folder..." enabled="NO" alternate="YES" keyEquivalent="K" id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="cleanProjectFolder:" target="jgg-ZM-qio" id="Qik-OH-9Fj"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -486,7 +498,11 @@
                 <customObject id="jgg-ZM-qio" customClass="AppDelegate" customModule="windmill" customModuleProvider="target">
                     <connections>
                         <outlet property="activityMenuItem" destination="fyt-9a-x0h" id="q48-pz-ygM"/>
+                        <outlet property="cleanMenu" destination="bkO-ZH-pFj" id="o4d-ES-cYe"/>
+                        <outlet property="cleanProjectMenu" destination="Xk5-Xr-W0f" id="hY9-gb-Vp0"/>
+                        <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="hfc-Pg-eLn"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
+                        <outlet property="runMenuItem" destination="RUs-Xt-SEm" id="5qh-xc-PfA"/>
                     </connections>
                 </customObject>
                 <menu title="View" id="r1r-Ng-cbe">

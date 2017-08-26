@@ -3,10 +3,10 @@
 #  poll.sh
 #  ref: http://stackoverflow.com/questions/7166509/how-to-build-a-git-polling-build-bot
 
-REPO_NAME=$1
-WINDMILL_ROOT="$HOME/.windmill"
-SCRIPTS_ROOT=$2
-BRANCH=$3
+WINDMILL_ROOT=$1
+REPO_NAME=$2
+SCRIPTS_ROOT=$3
+BRANCH=$4
 
 . $SCRIPTS_ROOT/common.sh
 

@@ -103,18 +103,18 @@ let WindmillDomain : Domain = "io.windmill"
     {
         self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project, userInfo: ["directoryPath":directoryPath, "user":user])
         
-        let checkout = self.processManager.makeCompute(process: Process.makeCheckout(directoryPath: directoryPath, repoName: project.name, origin: project.origin),type: .checkout)
+        let checkout = self.processManager.makeCompute(process: Process.makeCheckout(repoName: project.name, origin: project.origin),type: .checkout)
         let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build)
         let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test)
         let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, scheme: project.scheme, projectName: project.name), type: .archive)
-        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, projectName: project.name), type: .export)
+        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, scheme: project.scheme), type: .export)
         let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy)
 
         let alwaysChain = ProcessCompletionHandlerChain { [weak self] (type, isSuccess, error) in
             self?.didComplete(type: type, success: isSuccess, error: error)
         }
         
-        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (type, isSuccess, error) in
+        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (type, isSuccess, error) in            
             build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                 test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                     archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
@@ -140,7 +140,7 @@ let WindmillDomain : Domain = "io.windmill"
     
     /* fileprivate */ func deploy(project: Project, for user: String, completionHandler: @escaping ProcessCompletionHandler) {
         
-        let directoryPath = "\(FileManager.default.windmill)\(project.name)"
+        let directoryPath = "\(FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(project.name).path)"
         os_log("%{public}@", log: .default, type: .debug, directoryPath)
         
         self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)

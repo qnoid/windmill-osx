@@ -106,6 +106,7 @@ class MainViewController: NSViewController, WindmillDelegate {
         }
     }
     
+    var project: Project?
     var location: Int = 0
     var buffer: String = ""
     
@@ -173,6 +174,9 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     func windmillWillDeployProject(_ aNotification: Notification) {
         let project = aNotification.object as! Project
+        
+        self.project = project
+        
         self.buffer = ""
         self.location = 0
         self.textView.string = ""
@@ -197,6 +201,7 @@ class MainViewController: NSViewController, WindmillDelegate {
         
         self.windmillImageView.image = NSImage(named: activityType.imageName)
         self.activityViews[activityType]?.isHidden = false
+        self.activityViews[activityType]?.alphaValue = 1.0
         self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
         
         self.activityTextfield.stringValue = activityType.description
@@ -214,6 +219,7 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.activityViews[activityType]?.imageView.layer?.removeAnimation(forKey: "lights")
         
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
+        
         self.textViewHeightConstraint.animator().constant = 105
         self.textView.isSelectable = true
     }
@@ -241,7 +247,40 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.archiveView.isHidden = false
     }
     
-    @IBAction func showDebugArea(_ menuItem: NSMenuItem) {
+    @discardableResult func cleanBuildFolder() -> Bool {
+        
+        guard let name = self.project?.name else {
+            return false
+        }
+        
+        do {
+            let url = FileManager.default.windmillHomeDirectoryURL.appendingPathComponent("\(name)/build/Build")
+            try FileManager.default.removeItem(at: url)
+            return true
+        } catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+            return false
+        }
+    }
+    
+    @discardableResult func cleanProjectFolder() -> Bool {
+
+        guard let name = self.project?.name else {
+            return false
+        }
+
+        let url = FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(name)
+        
+        do {
+            try FileManager.default.removeItem(at: url)
+            return true
+        } catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+            return false
+        }
+    }
+    
+    @IBAction func toggleDebugArea(_ menuItem: NSMenuItem) {
         let isClosed = self.textViewHeightConstraint.constant == 0.0
 
         menuItem.title = isClosed ? NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "")
