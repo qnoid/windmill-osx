@@ -9,7 +9,7 @@
 import Foundation
 import os
 
-let WINDMILL_BASE_URL_PRODUCTION = "http://api.windmill.io:8080"
+let WINDMILL_BASE_URL_PRODUCTION = "https://api.windmill.io"
 let WINDMILL_BASE_URL_DEVELOPMENT = "http://localhost:8080"
 
 #if DEBUG
