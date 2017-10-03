@@ -15,32 +15,23 @@ private let userIdentifier = UUID().uuidString;
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 {
-    @IBOutlet weak var menu: NSMenu! {
-        didSet{
-            self.statusItem = NSStatusBar.systemStatusItem(self.menu, event:Event(
-                action: #selector(AppDelegate.mouseDown(_:)),
-                target: self,
-                mask: NSEventMask.leftMouseDown
-                ))
-        }
-    }
+    @IBOutlet weak var menu: NSMenu!
     @IBOutlet weak var debugAreaMenuItem: NSMenuItem!
     @IBOutlet weak var runMenuItem: NSMenuItem!
     @IBOutlet weak var cleanMenu: NSMenuItem!
     @IBOutlet weak var cleanProjectMenu: NSMenuItem!
     
-    var statusItem: NSStatusItem! {
-        didSet{
-            statusItem.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
-            
-            let image = NSImage(named:"statusItem")!
-            image.isTemplate = true
-            statusItem.button?.image = image
-            statusItem.button?.wantsLayer = true
-            self.statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
-            self.statusItem.button?.window?.delegate = self
-        }
-    }
+    lazy var statusItem: NSStatusItem = { [unowned self] in
+        
+        let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
+        statusItem.menu = self.menu
+        statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
+        statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
+        statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
+        statusItem.button?.window?.delegate = self
+        
+        return statusItem
+    }()
 
     @IBOutlet weak var activityMenuItem: NSMenuItem! {
         didSet{
@@ -88,17 +79,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         self.mainViewController = mainWindowViewController.contentViewController as! MainViewController
     }
     
-    func mouseDown(_ theEvent: NSEvent)
-    {
-        guard let statusItem = self.statusItem else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            statusItem.popUpMenu(statusItem.menu!)
-        }
-    }
-    
     func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         return .copy;
@@ -139,7 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     }
     
     func windmillWillDeployProject(_ aNotification: Notification) {
-        statusItem.button?.startAnimation()
+        statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.cleanMenu.isEnabled = false
         self.cleanProjectMenu.isEnabled = false
     }
@@ -152,7 +132,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 
     func activityError(_ aNotification: Notification) {
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        statusItem.button?.stopAnimation()
+        statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         self.cleanMenu.isEnabled = true
         self.cleanProjectMenu.isEnabled = true
     }

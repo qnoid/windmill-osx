@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13189.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,10 +14,10 @@
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="852" y="727" width="850" height="396"/>
+                        <rect key="contentRect" x="852" y="727" width="850" height="406"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-                        <value key="minSize" type="size" width="850" height="396"/>
-                        <value key="minFullScreenContentSize" type="size" width="850" height="396"/>
+                        <value key="minSize" type="size" width="850" height="406"/>
+                        <value key="minFullScreenContentSize" type="size" width="850" height="406"/>
                         <toolbar key="toolbar" implicitIdentifier="AC398DAC-DA28-4CF7-8F5F-CBE6815E270B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="g38-IE-MjZ">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="84D24695-66F7-4E66-857F-B4554690E24A" label="" paletteLabel="" id="EBh-fb-7rc">
@@ -58,7 +58,7 @@
         <scene sceneID="Amb-BC-0eG">
             <objects>
                 <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
+                    <view key="view" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="850" height="396"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
@@ -141,7 +141,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="850" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView canDrawConcurrently="YES" editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" allowsCharacterPickerTouchBarItem="NO" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="Ihv-oZ-d6M">
+                                        <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="Ihv-oZ-d6M">
                                             <rect key="frame" x="0.0" y="0.0" width="850" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -220,7 +220,7 @@
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-11.5" y="552"/>
+            <point key="canvasLocation" x="-12" y="552"/>
         </scene>
         <!--Application-->
         <scene sceneID="6gf-Vf-nel">

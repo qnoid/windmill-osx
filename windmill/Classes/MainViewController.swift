@@ -38,6 +38,7 @@ class MainView: NSView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         
+        self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         self.layer?.backgroundColor = NSColor.black.cgColor
     }
@@ -45,6 +46,7 @@ class MainView: NSView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
+        self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
         self.layer?.backgroundColor = NSColor.black.cgColor
     }
