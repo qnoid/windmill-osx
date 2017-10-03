@@ -5,14 +5,16 @@
   Created by Markos Charatzas on 11/03/2015.
   Copyright (c) 2015 qnoid.com. All rights reserved.
 */
-"windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.";
+"windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will perform a full checkout of the remote repo and start monitoring.";
 "windmill.toolTip.error"="Keep the windmill spinning!";
 "windmill.toolTip.active"="There is a light breeze.";
 "windmill.repo.error.description"="No git repository under %@";
-"windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\nDo 'git init'.\nAdd a remote origin using\n'git remote add origin <url>'";
+"windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\n* `git init` to create a new git.\n* `git remote add origin <url>` to add a remote origin.\n* `git push` to push the folder to the repo.";
 "windmill.latestCommit.error.description"="No commit found in remote repository";
 "windmill.latestCommit.error.failureReason"="Have you made your first commit yet?\nDid you push?\n'git push -u origin master'";
 "windmill.ui.toolbar.view.showDebugArea"="Show Debug Area";
 "windmill.ui.toolbar.view.hideDebugArea"="Hide Debug Area";
+"windmill.ui.toolbar.view.showSidePanel"="Show Side Panel";
+"windmill.ui.toolbar.view.hideSidePanel"="Hide Side Panel";
 "windmill.ui.activityTextfield.idle"="idle";
 "windmill.ui.activityTextfield.stopped"="stopped";

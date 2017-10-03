@@ -56,6 +56,6 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
 extension Project {
     
     var directoryPathURL: URL {
-        return FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(self.name)
+        return FileManager.default.cachesDirectoryURL(forProject: self.name)
     }
 }

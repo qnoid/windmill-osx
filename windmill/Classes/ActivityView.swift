@@ -48,7 +48,7 @@ class ActivityView: NSView {
     func animations(activityType: ActivityType) -> [NSImage] {
         let type = String(describing: activityType.rawValue)
         
-        return [NSImage(named: "lights-\(type)-animation-key-1")!, NSImage(named: "lights-\(type)-animation-key-2")!, NSImage(named: "lights-\(type)-animation-key-3")!]
+        return [NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-1"))!, NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-2"))!, NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-3"))!]
     }
 
     func startLightsAnimation(activityType: ActivityType) {

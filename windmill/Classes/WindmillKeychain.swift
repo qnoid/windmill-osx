@@ -8,8 +8,6 @@
 
 import Foundation
 
-typealias KeychainCreateUser = (String) -> OSStatus
-
 typealias KeychainFindUser = () throws -> String
 
 let KeychainWindmillAccount = KeychainAccount(serviceName: "io.windmill", name: "io.windmill.account")
@@ -21,15 +19,6 @@ enum KeychainError: Error
 
 extension Keychain
 {
-    fileprivate var createWindmillUser : KeychainCreateUser
-    {
-        func createUser(_ user:String) -> OSStatus {
-        return self.addGenericPassword(KeychainWindmillAccount, password:user)
-        }
-        
-        return createUser;
-    }
-    
     var findWindmillUser : KeychainFindUser
     {
         func findUser() throws -> String
@@ -57,7 +46,7 @@ extension Keychain
     @discardableResult func createUser(_ user:String) -> Bool
     {
         guard let _ = try? self.findWindmillUser() else {
-            self.createWindmillUser(user)
+            self.addGenericPassword(KeychainWindmillAccount, password:user)
             return true
         }
         

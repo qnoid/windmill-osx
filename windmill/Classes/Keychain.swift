@@ -22,7 +22,7 @@ final public class Keychain
         return Keychain()
     }
     
-    func addGenericPassword(_ account:KeychainAccount, password:String) -> OSStatus
+    @discardableResult func addGenericPassword(_ account:KeychainAccount, password:String) -> OSStatus
     {
         
         let attributes: [AnyHashable: Any] = [

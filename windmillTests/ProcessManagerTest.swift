@@ -35,7 +35,7 @@ class ProcessManagerTest: XCTestCase {
         let manager = ProcessManager()
         let repoName = "with white space"
         let validOrigin = "git@github.com:windmill-io/blank.git"
-        let process = Process.makeCheckout(windmillHomeDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: validOrigin)
+        let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: validOrigin)
         
         defer {
             var trashDirectory = FileManager.default.trashDirectoryURL
@@ -61,7 +61,7 @@ class ProcessManagerTest: XCTestCase {
         let repoName = "any"
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(windmillHomeDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: "invalid")
+        let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: "invalid")
         
         defer {
             try? FileManager.default.removeItem(at: url)

@@ -15,19 +15,23 @@ private let userIdentifier = UUID().uuidString;
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
 {
-    @IBOutlet weak var menu: NSMenu!
+    @IBOutlet weak var menu: NSMenu! {
+        didSet {
+            statusItem.menu = self.menu
+        }
+    }
     @IBOutlet weak var debugAreaMenuItem: NSMenuItem!
+    @IBOutlet weak var sidePanelMenuItem: NSMenuItem!
     @IBOutlet weak var runMenuItem: NSMenuItem!
     @IBOutlet weak var cleanMenu: NSMenuItem!
     @IBOutlet weak var cleanProjectMenu: NSMenuItem!
     
     lazy var statusItem: NSStatusItem = { [unowned self] in
         
-        let statusItem = NSStatusBar.system().statusItem(withLength: NSSquareStatusItemLength)
-        statusItem.menu = self.menu
+        let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
-        statusItem.button?.window?.registerForDraggedTypes([NSFilenamesPboardType])
+        statusItem.button?.window?.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
         statusItem.button?.window?.delegate = self
         
         return statusItem
@@ -39,17 +43,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         }
     }
 
-    var mainWindowViewController: MainWindowController!
-    
-    var mainViewController: MainViewController! {
-        didSet{
-            mainViewController.windmill = self.windmill
+    var mainWindowViewController: MainWindowController? {
+        didSet {
+            guard let mainWindowViewController = mainWindowViewController else {
+                return
+            }
+        
+            mainWindowViewController.sidePanelMenuItem = sidePanelMenuItem
+            mainWindowViewController.debugAreaMenuItem = debugAreaMenuItem
+            mainViewController = mainWindowViewController.mainViewController
+            windmill.delegate = mainWindowViewController.bottomPanelSplitViewController?.consoleViewController
         }
     }
     
+    var mainViewController: MainViewController?
+    
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     lazy var windmill: Windmill = Windmill.windmill(self.keychain)
-
+    
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
@@ -67,40 +78,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         
         if(!flag) {
-            self.mainWindowViewController.window?.setIsVisible(true)
+            self.mainWindowViewController?.window?.setIsVisible(true)
         }
         
         return true
     }
     
-    func mainWindowDidLoad(_ aNotification: Notification) {
-        let mainWindowViewController = aNotification.object as! MainWindowController
+    @objc func mainWindowDidLoad(_ aNotification: Notification) {
+        guard let mainWindowViewController = aNotification.object as? MainWindowController else {
+            os_log("%{public}@", log:.default, type: .error, "`MainWindowController` did not send the `mainWindowDidLoad` notification. Did you set the `object` property?")
+            return
+        }
+        
         self.mainWindowViewController = mainWindowViewController
-        self.mainViewController = mainWindowViewController.contentViewController as! MainViewController
     }
     
-    func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
+    @objc func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         return .copy;
     }
     
-    func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
+    @objc func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
         return .copy;
         
     }
     
-    func draggingExited(_ sender: NSDraggingInfo!)
+    @objc func draggingExited(_ sender: NSDraggingInfo!)
     {
     }
     
-    func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool
+    @objc func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool
     {
         return true;
         
     }
     
-    func performDragOperation(_ info: NSDraggingInfo) -> Bool {
+    @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
         
         guard let folder = info.draggingPasteboard().firstFilename() else {
             return false
@@ -109,43 +123,76 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         os_log("%{public}@", log: .default, type: .info, folder)
         
         do {
-            let project = try Project.parse(fullPathOfLocalGitRepo: folder)
+            let commit = try Repository.parse(fullPathOfLocalGitRepo: folder)
+            let project = Project.make(repository: commit.repository)
             
             return self.windmill.create(project)
         } catch let error as NSError {
-            alert(error, window: self.mainWindowViewController.window!)
+            guard let window = self.mainWindowViewController?.window else {
+                return false
+            }
+            alert(error, window: window)
             return false
         }
     }
     
-    func windmillWillDeployProject(_ aNotification: Notification) {
+    @objc func windmillWillDeployProject(_ aNotification: Notification) {
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.cleanMenu.isEnabled = false
         self.cleanProjectMenu.isEnabled = false
     }
     
-    func activityDidLaunch(_ aNotification: Notification) {
+    @objc func activityDidLaunch(_ aNotification: Notification) {
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
 
         self.activityMenuItem.title = activityType.description
     }
 
-    func activityError(_ aNotification: Notification) {
+    @objc func activityError(_ aNotification: Notification) {
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         self.cleanMenu.isEnabled = true
         self.cleanProjectMenu.isEnabled = true
+        self.toggleDebugArea(isCollapsed: false)
+    }
+
+    func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
+        self.mainWindowViewController?.toggleDebugArea(isCollapsed: isCollapsed)
     }
     
+    @IBAction func toggleDebugArea(_ sender: Any) {
+        self.toggleDebugArea(sender: sender)
+    }
+    
+    func toggleSidePanel(sender: Any? = nil, isCollapsed: Bool? = nil) {
+        self.mainWindowViewController?.toggleSidePanel(isCollapsed: isCollapsed)
+    }
+
+    @IBAction func toggleSidePanel(_ sender: Any) {
+        self.toggleSidePanel(sender: sender)
+    }
+
+    @IBAction func performSegmentedControlAction(_ segmentedControl: NSSegmentedControl) {
+        switch segmentedControl.selectedSegment {
+        case 0:
+            self.toggleDebugArea(sender: segmentedControl)
+        case 1:
+            self.toggleSidePanel(sender: segmentedControl)
+        default:
+            os_log("Index of selected segment for NSSegmentedControl does not have a corresponding action associated.", log: .default, type: .debug)
+        }
+    }
+
     @IBAction func run(_ sender: Any) {
-        self.windmill = Windmill.windmill(self.keychain)
-        self.mainViewController.windmill = self.windmill
-        self.mainViewController.toggleDebugArea(debugAreaMenuItem)
+        let windmill = Windmill.windmill(self.keychain)
+        windmill.delegate = self.windmill.delegate
+        self.windmill = windmill
+        self.toggleDebugArea(sender: sender, isCollapsed: true)
         self.windmill.start()
     }
     
     @IBAction func cleanBuildFolder(_ sender: Any) {
-        self.mainViewController.cleanBuildFolder()
+        self.mainViewController?.cleanBuildFolder()
     }
     
     @IBAction func cleanProjectFolder(_ sender: Any) {
@@ -156,15 +203,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         alert.messageText = "Remove the checkout folder?"
         alert.informativeText = "This will perform a new checkout of the repository and `Run` again."
         alert.alertStyle = .warning
-        alert.window.appearance = NSAppearance(named: NSAppearanceNameVibrantDark)
+        alert.window.appearance = NSAppearance(named: .vibrantDark)
 
-        alert.beginSheetModal(for: self.mainWindowViewController.window!) { response in
+        guard let window = self.mainWindowViewController?.window else {
+            return
+        }
+        
+        alert.beginSheetModal(for: window) { response in
             
-            guard response == NSAlertFirstButtonReturn else {
+            guard response == .alertFirstButtonReturn else {
                 return
             }
             
-            if self.mainViewController.cleanProjectFolder() {
+            if self.mainViewController?.cleanProjectFolder() == true {
                 self.run(self.runMenuItem)
             }
         }

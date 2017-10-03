@@ -30,7 +30,7 @@ class NSFileManagerTest : XCTestCase
     func testGivenArchiveInfoURLAssertPath() {
         let archiveInfoURL = FileManager.default.archiveInfoURL(forProject: "foo", inArchive: "bar")
         
-        XCTAssertEqual("/Users/qnoid/.windmill/foo/build/bar.xcarchive/Info.plist", archiveInfoURL.path)
+        XCTAssertEqual("/Users/qnoid/.windmill/foo/archive/bar.xcarchive/Info.plist", archiveInfoURL.path)
     }
 
 }

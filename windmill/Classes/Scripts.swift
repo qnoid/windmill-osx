@@ -25,4 +25,8 @@ struct Scripts
         static let CHECKOUT : BashScript = "scripts/git/checkout"
         static let POLL : BashScript = "scripts/git/poll"
     }
+    
+    struct CommandLineTools {
+        static let READ_TEST_METADATA : BashScript = "scripts/commandlinetools/read_test_metadata"
+    }
 }

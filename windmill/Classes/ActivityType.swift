@@ -10,6 +10,7 @@ import Foundation
 
 public enum ActivityType: String, CustomStringConvertible
 {
+    case undefined
     case checkout
     case build
     case test
@@ -34,6 +35,8 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-deploy"
         case .poll:
             return "windmill-activity-indicator"
+        default:
+            return ""
         }
     }
     
@@ -51,7 +54,7 @@ public enum ActivityType: String, CustomStringConvertible
             return "lights-export"
         case .deploy:
             return "lights-deploy"
-        case .poll:
+        default:
             return ""
         }
     }
@@ -72,6 +75,8 @@ public enum ActivityType: String, CustomStringConvertible
             return "deploying"
         case .poll:
             return "monitoring"
+        default:
+            return ""
         }
     }    
 }

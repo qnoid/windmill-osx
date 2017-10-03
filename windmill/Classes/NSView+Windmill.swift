@@ -10,12 +10,19 @@ import AppKit
 
 enum Layout {
     case centered
+    case equalWidth
     
     func layout(superView: NSView, subView: NSView) {
-        superView.topAnchor.constraint(equalTo: subView.topAnchor).isActive = true
-        superView.bottomAnchor.constraint(equalTo: subView.bottomAnchor).isActive = true
-        superView.leadingAnchor.constraint(equalTo: subView.leadingAnchor).isActive = true
-        superView.trailingAnchor.constraint(equalTo: subView.trailingAnchor).isActive = true
+        switch self {
+        case .centered:
+            superView.topAnchor.constraint(equalTo: subView.topAnchor).isActive = true
+            superView.bottomAnchor.constraint(equalTo: subView.bottomAnchor).isActive = true
+            superView.leadingAnchor.constraint(equalTo: subView.leadingAnchor).isActive = true
+            superView.trailingAnchor.constraint(equalTo: subView.trailingAnchor).isActive = true
+        case .equalWidth:
+            superView.leadingAnchor.constraint(equalTo: subView.leadingAnchor).isActive = true
+            superView.widthAnchor.constraint(equalTo: subView.widthAnchor).isActive = true
+        }
     }
 }
 
@@ -23,10 +30,14 @@ extension NSView {
     
     func wml_load<T: NSView>(view: T.Type) -> NSView? {
         
-        var topLevelObjects = NSArray()
-        Bundle(for: type(of: self)).loadNibNamed(String(describing: view), owner: self, topLevelObjects: &topLevelObjects)
+        var topLevelObjects: NSArray?
+        Bundle(for: type(of: self)).loadNibNamed(NSNib.Name(rawValue: String(describing: view)), owner: self, topLevelObjects: &topLevelObjects)
         
-        for object in topLevelObjects {
+        guard let views = topLevelObjects else {
+            return nil
+        }
+        
+        for object in views {
             if let containerView = object as? NSView {
                 return containerView
             }
@@ -35,7 +46,7 @@ extension NSView {
         return nil
     }
     
-    func wml_addSubview(view: NSView, layout: Layout) {
+    func wml_addSubview(view: NSView, layout: Layout = .centered) {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         self.addSubview(view)

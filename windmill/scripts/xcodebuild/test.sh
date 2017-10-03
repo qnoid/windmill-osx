@@ -5,10 +5,13 @@
 
 set -e
 
-SCHEME_NAME=$1
+TEST_METADATA_FOR_PROJECT=$1
+SCHEME_NAME=$2
 
-SIMULATOR_NAME=`instruments -s devices | grep -o '^iPhone [a-zA-Z0-9 ]*' | uniq | sed 's/ $//g' | tail -n 1`
-xcodebuild test -scheme $SCHEME_NAME -destination "platform=iOS Simulator,name=$SIMULATOR_NAME"
+PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))[\"destination\"][\"name\"]"
+
+DESTINATION_NAME=$(python -c "$PARSE")
+xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,name=${DESTINATION_NAME}"
 
 ## Test
 #

@@ -10,6 +10,20 @@ import XCTest
 
 @testable import windmill
 
+class EphemeralFileManager: FileManager {
+    
+    let url: URL
+    
+    init(url: URL) {
+        self.url = url
+
+    }
+    
+    deinit {
+        try? self.removeItem(at: url)
+    }
+}
+
 class ProcessTest: XCTestCase {
 
     func testGivenProcessOutputAssertCallback() {
@@ -70,5 +84,31 @@ class ProcessTest: XCTestCase {
         self.waitForExpectations(timeout: 2 * 60.0, handler: nil)
         XCTAssertEqual(actualAvailableString, "🥑\n")
         XCTAssertEqual(actualCount, "🥑\n".count)
-    }    
+    }
+    
+    /**
+     - Precondition: a checked out project
+     */
+    func testGivenProjectAssertMakeTestConfigurationFileExists() {
+        
+        let project = Project(name: "windmill-ios", scheme: "windmill", origin: "foo")
+        
+        let metadata = MetadataJSONEncoded.testMetadata(for: project)
+        
+        let manager = EphemeralFileManager(url: metadata.url)
+        
+        let directoryPath = project.directoryPathURL.path
+        
+        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata)
+        
+        process.launch()
+        process.waitUntilExit()
+        
+        XCTAssertTrue(manager.fileExists(atPath: metadata.url.path))
+        
+        let deployment: [String: String] = metadata["deployment"]!
+        let destination: [String: String] = metadata["destination"]!
+        XCTAssertEqual(deployment["target"], "10.3")
+        XCTAssertEqual(destination["name"], "iPhone 5s")
+    }
 }

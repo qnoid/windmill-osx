@@ -24,7 +24,7 @@ public protocol DirectoryType
     
     - returns: true if created, false otherwise
     */
-    func create() -> Bool
+    @discardableResult func create() -> Bool
 }
 
 public protocol UserLibraryDirectory : DirectoryType
@@ -47,6 +47,19 @@ func ApplicationDirectory() -> DirectoryType
     
     os_log("%{public}@", log: .default, type: .debug, "Was <windmill> application directory created?: \(created)")
 
+    return applicationDirectory
+}
+
+public func ApplicationCachesDirectory() -> DirectoryType
+{
+    let applicationName = Bundle.main.bundleIdentifier!
+    let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
+    let applicationDirectory = FileManager.default.userApplicationCachesDirectoryView().directory.traverse(applicationDirectoryPathComponent)
+    
+    let created = applicationDirectory.create()
+    
+    os_log("%{public}@", log: .default, type: .debug, "Was <windmill> application caches directory created?: \(created)")
+    
     return applicationDirectory
 }
 
@@ -89,7 +102,7 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
             try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:false, attributes: nil)
             created = true
         } catch let error as NSError {
-            os_log("%{public}@", log: .default, type: .error, error)
+            os_log("%{public}@", log: .default, type: .debug, error)
             created = false
         }
         
