@@ -3,35 +3,31 @@
 #  poll.sh
 #  ref: http://stackoverflow.com/questions/7166509/how-to-build-a-git-polling-build-bot
 
-WINDMILL_ROOT=$1
-REPO_NAME=$2
-SCRIPTS_ROOT=$3
-BRANCH=$4
+POLL_DIRECTORY=$1
+SCRIPTS_ROOT=$2
+BRANCH=$3
 
 . $SCRIPTS_ROOT/common.sh
 
-PROJECT_NAME=$REPO_NAME
-BUILD_DIR="$WINDMILL_ROOT/$PROJECT_NAME/build"
-
 function store_prev_head()
 {
-echo "[windmill] [debug] [$FUNCNAME]"
-git -C "$WINDMILL_ROOT/$REPO_NAME" rev-parse "$BRANCH" > "$BUILD_DIR/prev_head"
+echo "[io.windmill.windmill] [poll] [debug] [$FUNCNAME]"
+git rev-parse "$BRANCH" > "$POLL_DIRECTORY/prev_head"
 }
 
 set -e
 
-file_does_not_exist_at_path "$BUILD_DIR/prev_head" store_prev_head
+file_does_not_exist_at_path "$POLL_DIRECTORY/prev_head" store_prev_head
 
-git -C "$WINDMILL_ROOT/$REPO_NAME" fetch
+git fetch 2>/dev/null
 if [ $? -eq 0 ]
 then
-git -C "$WINDMILL_ROOT/$REPO_NAME" merge FETCH_HEAD > /dev/null
-git -C "$WINDMILL_ROOT/$REPO_NAME" rev-parse "$BRANCH" > "$BUILD_DIR/latest_head"
-if ! diff "$BUILD_DIR/latest_head" "$BUILD_DIR/prev_head" > /dev/null ;
+git merge FETCH_HEAD > /dev/null
+git rev-parse "$BRANCH" > "$POLL_DIRECTORY/latest_head"
+if ! diff "$POLL_DIRECTORY/latest_head" "$POLL_DIRECTORY/prev_head" > /dev/null ;
 then
-echo "[windmill] [debug] [Requires update.]"
-cat "$BUILD_DIR/latest_head" > "$BUILD_DIR/prev_head"
+echo "[io.windmill.windmill] [poll] [debug] [Requires update.]"
+cat "$POLL_DIRECTORY/latest_head" > "$POLL_DIRECTORY/prev_head"
 exit 255
 fi
 fi
@@ -40,3 +36,4 @@ fi
 #
 #fatal = 128 //"ambiguous argument 'master': unknown revision or path not in the working tree. Use '--' to separate paths from revisions, like this: 'git <command> [<revision>...] -- [<file>...]"
 #branchBehindOrigin = 255
+

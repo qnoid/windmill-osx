@@ -1,11 +1,16 @@
 #!/bin/bash
 set -e
 
-PROJECT_NAME=$1
-RESOURCES_ROOT=$2
+WIDMILL_HOME=$1
+PROJECT_NAME=$2
+SCHEME=$3
+RESOURCES_ROOT=$4
 
+echo "[io.windmill.windmill] [export] [debug] windmill home ${WIDMILL_HOME}"
+echo "[io.windmill.windmill] [export] [debug] project name ${PROJECT_NAME}"
+echo "[io.windmill.windmill] [export] [debug] scheme ${SCHEME}"
 
-xcodebuild -exportArchive -archivePath build/$PROJECT_NAME.xcarchive -exportOptionsPlist $RESOURCES_ROOT/exportOptions.plist -exportPath exportArchive -allowProvisioningUpdates
+xcodebuild -exportArchive -archivePath ${WIDMILL_HOME}/${PROJECT_NAME}/archive/${SCHEME}.xcarchive -exportOptionsPlist ${RESOURCES_ROOT}/exportOptions.plist -exportPath ${WIDMILL_HOME}/${PROJECT_NAME}/export -allowProvisioningUpdates
 ## Export
 #
 #adHocProvisioningNotFound = 70 //"No matching provisioning profiles found"

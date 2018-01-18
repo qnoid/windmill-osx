@@ -11,6 +11,6 @@ import AppKit
 extension NSOutlineView
 {
     func makeViewWithIdentifier(_ identifier: String) -> NSTableCellView {
-        return self.make(withIdentifier: identifier, owner: nil) as! NSTableCellView
+        return self.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: identifier), owner: nil) as! NSTableCellView
     }
 }

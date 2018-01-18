@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>windmill.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>657F0FA303B56EC8C0EB55224B3C79BB92B1A70B</string>
+				<key>dateExpires</key>
+				<string>25/10/18</string>
+				<key>type</key>
+				<string>iOS Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+						<string>arm64</string>
+					</array>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>657F0FA303B56EC8C0EB55224B3C79BB92B1A70B</string>
+						<key>dateExpires</key>
+						<string>25/10/18</string>
+						<key>type</key>
+						<string>iOS Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>Alamofire.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>AQ2US2UQQ7</string>
+						<key>name</key>
+						<string>Markos Charatzas</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>AQ2US2UQQ7.io.windmill.windmill</string>
+				<key>aps-environment</key>
+				<string>production</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>AQ2US2UQQ7</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>windmill.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>b81f9149-343f-4d92-a677-52d3ed41d121</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: io.windmill.windmill</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>AQ2US2UQQ7</string>
+				<key>name</key>
+				<string>Markos Charatzas</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

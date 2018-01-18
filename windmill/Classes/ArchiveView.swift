@@ -51,7 +51,7 @@ class ArchiveView: NSView {
             savePanel.nameFieldStringValue = archive.name(dateFormatter: fullDateFormatter)
             savePanel.beginSheetModal(for: self.window!) { response in
                 
-                guard response == NSModalResponseOK else {
+                guard response == NSApplication.ModalResponse.OK else {
                     return
                 }
 

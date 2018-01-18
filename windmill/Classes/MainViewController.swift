@@ -40,7 +40,6 @@ class MainView: NSView {
         
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layer?.backgroundColor = NSColor.black.cgColor
     }
     
     required init?(coder: NSCoder) {
@@ -48,11 +47,14 @@ class MainView: NSView {
         
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layer?.backgroundColor = NSColor.black.cgColor
+    }
+    
+    override var intrinsicContentSize: NSSize {
+        return NSSize(width: 850, height: 524)
     }
 }
 
-class MainViewController: NSViewController, WindmillDelegate {
+class MainViewController: NSViewController {
     
     @IBOutlet var windmillImageView: NSImageView! {
         didSet{
@@ -73,20 +75,6 @@ class MainViewController: NSViewController, WindmillDelegate {
     @IBOutlet weak var exportActivityView: ActivityView!
     @IBOutlet weak var deployActivityView: ActivityView!
     
-    @IBOutlet var textView: NSTextView! {
-        didSet {
-            textView.wantsLayer = true
-            textView.isAutomaticSpellingCorrectionEnabled = false
-            textView.isAutomaticQuoteSubstitutionEnabled = false
-            textView.isAutomaticDashSubstitutionEnabled = false
-            textView.isAutomaticTextReplacementEnabled = false
-            textView.usesFontPanel = false
-            textView.usesFindPanel = false
-            textView.usesRuler = false
-        }
-    }
-    @IBOutlet weak var textViewHeightConstraint: NSLayoutConstraint!
-    
     weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
@@ -102,33 +90,22 @@ class MainViewController: NSViewController, WindmillDelegate {
     }()
 
     let defaultCenter = NotificationCenter.default
-    var windmill: Windmill! {
-        didSet {
-            windmill.delegate = self
-        }
-    }
     
     var project: Project?
-    var location: Int = 0
-    var buffer: String = ""
     
     static func make() -> MainViewController {
-        let mainStoryboard = NSStoryboard(name: "Main", bundle: Bundle(for: MainViewController.self))
+        let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: MainViewController.self))
         
-        return mainStoryboard.instantiateController(withIdentifier: String(describing: MainViewController.self)) as! MainViewController
+        return mainStoryboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: String(describing: MainViewController.self))) as! MainViewController
     }
     
     override func updateViewConstraints() {
         
-        if(self.topConstraint == nil) {
-        
-            let topAnchor = (self.view.window?.contentLayoutGuide as AnyObject?)?.topAnchor
-        
-            let topConstraint = self.windmillImageView.topAnchor.constraint(equalTo: topAnchor!, constant: 20)
-        
-            topConstraint.isActive = true
-        
-            self.topConstraint = topConstraint
+        if(self.topConstraint == nil) {        
+            if let topAnchor = (self.windmillImageView.window?.contentLayoutGuide as AnyObject).topAnchor {
+                topConstraint = self.windmillImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20)
+                topConstraint.isActive = true
+            }
         }
         
         super.updateViewConstraints()
@@ -155,34 +132,12 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.didArchiveSuccesfully(_:)), name: Notification.Name("archive"), object: nil)
     }
     
-    func append(_ textView: NSTextView, output: String, count: Int) {
-        
-        self.buffer.append(output)
-        self.location = self.location + count
-        
-        textView.string = self.buffer
-        let range = NSRange(location:location,length:0)
-        textView.scrollRangeToVisible(range)
-    }
-    
-    func windmill(_ windmill: Windmill, standardOutput: String, count: Int) {
-        self.append(self.textView, output: standardOutput, count: count)
-    }
-    
-    func windmill(_ windmill: Windmill, standardError: String, count: Int) {
-        self.append(self.textView, output: standardError, count: count)
-    }
-
-    
-    func windmillWillDeployProject(_ aNotification: Notification) {
-        let project = aNotification.object as! Project
+    @objc func windmillWillDeployProject(_ aNotification: Notification) {
+        guard let project = aNotification.object as? Project else {
+            return
+        }
         
         self.project = project
-        
-        self.buffer = ""
-        self.location = 0
-        self.textView.string = ""
-        textView.isSelectable = false
         
         self.windmillImageView.startAnimation()
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
@@ -196,12 +151,15 @@ class MainViewController: NSViewController, WindmillDelegate {
         projectTitlebarAccessoryViewController.project = project        
     }
     
-    func activityDidLaunch(_ aNotification: Notification) {
-        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+    @objc func activityDidLaunch(_ aNotification: Notification) {
+        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+            return
+        }
+        
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
         
-        self.windmillImageView.image = NSImage(named: activityType.imageName)
+        self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
         self.activityViews[activityType]?.isHidden = false
         self.activityViews[activityType]?.alphaValue = 1.0
         self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
@@ -209,7 +167,7 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.activityTextfield.stringValue = activityType.description
     }
 
-    func activityError(_ aNotification: Notification) {
+    @objc func activityError(_ aNotification: Notification) {
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .error, activityType.description)
@@ -217,16 +175,13 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
         self.windmillImageView.stopAnimation()
         
-        self.activityViews[activityType]?.alphaValue = 0.1
-        self.activityViews[activityType]?.imageView.layer?.removeAnimation(forKey: "lights")
-        
+        self.activityViews[activityType]?.alphaValue = 1.0
+        self.activityViews[activityType]?.stopLightsAnimation()
+
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        
-        self.textViewHeightConstraint.animator().constant = 105
-        self.textView.isSelectable = true
     }
 
-    func activityDidExitSuccesfully(_ aNotification: Notification) {
+    @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
@@ -236,27 +191,38 @@ class MainViewController: NSViewController, WindmillDelegate {
         self.activityViews[activityType]?.stopLightsAnimation()
     }
     
-    func didArchiveSuccesfully(_ aNotification: Notification) {
-        let archive = aNotification.userInfo!["archive"] as! Archive
-        let info = archive.info
-        
-        self.archiveView.titleTextField.stringValue = info.name
-        self.archiveView.versionTextField.stringValue = "\(info.bundleShortVersion) (\(info.bundleVersion))"
-        let creationDate = info.creationDate ?? Date()
-        
-        self.archiveView.dateTextField.stringValue = self.dateFormatter.string(from: creationDate)
-        self.archiveView.archive = archive
-        self.archiveView.isHidden = false
+    @objc func didArchiveSuccesfully(_ aNotification: Notification) {
+
+        guard let project = aNotification.userInfo?["project"] as? Project else {
+            return
+        }
+
+        do {
+            let archive = try Archive.make(forProject: project, name: project.scheme)
+            
+            let info = archive.info
+            
+            self.archiveView.titleTextField.stringValue = info.name
+            self.archiveView.versionTextField.stringValue = "\(info.bundleShortVersion) (\(info.bundleVersion))"
+            let creationDate = info.creationDate ?? Date()
+            
+            self.archiveView.dateTextField.stringValue = self.dateFormatter.string(from: creationDate)
+            self.archiveView.archive = archive
+            self.archiveView.isHidden = false
+        }
+        catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+        }
     }
     
     @discardableResult func cleanBuildFolder() -> Bool {
         
-        guard let name = self.project?.name else {
+        guard let project = self.project else {
             return false
         }
         
         do {
-            let url = FileManager.default.windmillHomeDirectoryURL.appendingPathComponent("\(name)/build/Build")
+            let url = FileManager.default.buildDirectoryURL(forProject: project.name).appendingPathComponent("/Build")
             try FileManager.default.removeItem(at: url)
             return true
         } catch let error as NSError {
@@ -267,26 +233,23 @@ class MainViewController: NSViewController, WindmillDelegate {
     
     @discardableResult func cleanProjectFolder() -> Bool {
 
-        guard let name = self.project?.name else {
+        guard let project = self.project else {
             return false
         }
 
-        let url = FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(name)
-        
         do {
-            try FileManager.default.removeItem(at: url)
+            try FileManager.default.removeItem(at: project.directoryPathURL)
+            return true
+        } catch let error as CocoaError {
+            guard let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? POSIXError, underlyingError.code == POSIXError.ENOTEMPTY else {
+                return false
+            }
+            
+            try? FileManager.default.removeItem(at: project.directoryPathURL)
             return true
         } catch let error as NSError {
             os_log("%{public}@", log:.default, type: .error, error)
             return false
         }
-    }
-    
-    @IBAction func toggleDebugArea(_ menuItem: NSMenuItem) {
-        let isClosed = self.textViewHeightConstraint.constant == 0.0
-
-        menuItem.title = isClosed ? NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "")
-        self.textViewHeightConstraint.animator().constant = isClosed ? 105.0 : 0.0
-        textView.isSelectable = isClosed
-    }
+    }    
 }

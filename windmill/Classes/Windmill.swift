@@ -71,24 +71,24 @@ let WindmillDomain : Domain = "io.windmill"
         OutputStream.outputStreamOnProjects().write(self.projects)
     }
     
-    private func poll(_ project: Project, ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
+    private func poll(_ project: Project, deadline:DispatchTime = DispatchTime.now(), ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
         
-        #if DEBUG
-            let delayInSeconds:Int = 5
-        #else
-            let delayInSeconds:Int = 30
-        #endif
-        
-        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(project.name), type: .poll) { [weak self] type, success, error in
+        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(directoryPath: project.directoryPathURL.path, project: project), type: .poll) { [weak self] type, success, error in
             if let error = (error as NSError?), error.code == 255 {
                 callback()
                 return
             }
-            
-            self?.poll(project, ifCaseOfBranchBehindOrigin: callback)
+
+            #if DEBUG
+                let delayInSeconds:Int = 5
+            #else
+                let delayInSeconds:Int = 30
+            #endif            
+
+            self?.poll(project, deadline: DispatchTime.now() + .seconds(delayInSeconds),  ifCaseOfBranchBehindOrigin: callback)
             
         }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(delayInSeconds), execute: poll)
+        DispatchQueue.main.asyncAfter(deadline: deadline, execute: poll)
     }
     
     private func monitor(_ project: Project) {
@@ -104,11 +104,16 @@ let WindmillDomain : Domain = "io.windmill"
         self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project, userInfo: ["directoryPath":directoryPath, "user":user])
         
         let checkout = self.processManager.makeCompute(process: Process.makeCheckout(repoName: project.name, origin: project.origin),type: .checkout)
-        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, scheme: project.scheme), type: .build)
-        let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme), type: .test)
-        let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, scheme: project.scheme, projectName: project.name), type: .archive)
-        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, scheme: project.scheme), type: .export)
-        let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, scheme: project.scheme, forUser: user), type: .deploy)
+        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, project: project), type: .build)
+        
+        let metadata = MetadataJSONEncoded.testMetadata(for: project)
+        
+        let readTestMetadata = self.processManager.makeCompute(process: Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata), type: .undefined)
+        let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata), type: .test)
+        
+        let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, project: project), type: .archive)
+        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, project: project), type: .export)
+        let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, project: project, forUser: user), type: .deploy)
 
         let alwaysChain = ProcessCompletionHandlerChain { [weak self] (type, isSuccess, error) in
             self?.didComplete(type: type, success: isSuccess, error: error)
@@ -116,11 +121,13 @@ let WindmillDomain : Domain = "io.windmill"
         
         checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (type, isSuccess, error) in            
             build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                    archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                        self?.didArchive(project: project)
-                        export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                            deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success(completionHandler: completionHandler)).perform()
+                readTestMetadata.dispatchWorkItem(DispatchQueue.main, { (type, isSuccess, error) in
+                    test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                        archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                            self?.didArchive(project: project)
+                            export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success(completionHandler: completionHandler)).perform()
+                            }).perform()
                         }).perform()
                     }).perform()
                 }).perform()
@@ -140,7 +147,7 @@ let WindmillDomain : Domain = "io.windmill"
     
     /* fileprivate */ func deploy(project: Project, for user: String, completionHandler: @escaping ProcessCompletionHandler) {
         
-        let directoryPath = "\(FileManager.default.windmillHomeDirectoryURL.appendingPathComponent(project.name).path)"
+        let directoryPath = project.directoryPathURL.path
         os_log("%{public}@", log: .default, type: .debug, directoryPath)
         
         self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)
@@ -169,12 +176,22 @@ let WindmillDomain : Domain = "io.windmill"
     }
     
     func willLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
+        if case .undefined = type {
+            return
+        }
+
         waitForStandardOutputInBackground(process: process, queue: dispatch_queue_serial, type: type)
         waitForStandardErrorInBackground(process: process, queue: dispatch_queue_serial, type: type)
     }
     
     func didLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
-        NotificationCenter.default.post(Process.Notifications.makeDidLaunchNotification(type))
+        if case .undefined = type {
+            return
+        }
+        
+        let notification = Process.Notifications.makeDidLaunchNotification(type)
+        
+        NotificationCenter.default.post(notification)
     }
     
     func didComplete(type: ActivityType, success: Bool, error: Error?) {
@@ -192,13 +209,7 @@ let WindmillDomain : Domain = "io.windmill"
     }
     
     func didArchive(project: Project) {
-        do {
-            let archive = try Archive.make(forProject: project, name: project.scheme)
-            NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["archive":archive])
-        }
-        catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-        }
+        NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["project":project])
     }
     
     /**

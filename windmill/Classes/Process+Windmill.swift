@@ -100,73 +100,91 @@ extension Process
     fileprivate class func pathForDir(_ name: String) -> String! {
         return Bundle.main.path(forResource: name, ofType:nil);
     }
-    
-    public static func makeCheckout(windmillHomeDirectoryURL: URL = FileManager.default.windmillHomeDirectoryURL, repoName: String, origin: String) -> Process {
+
+    public static func makeReadTestMetadata(directoryPath: String, forProject project: Project, metadata: Metadata) -> Process {
+        
+        let process = Process()
+        process.currentDirectoryPath = directoryPath
+        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_TEST_METADATA, ofType: "sh")!
+        process.arguments = [metadata.url.path, project.scheme]
+        process.qualityOfService = .utility
+        
+        return process
+    }
+
+    public static func makeCheckout(projectDirectoryURL: URL = ApplicationCachesDirectory().URL, branch: String = "master", repoName: String, origin: String) -> Process {
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [windmillHomeDirectoryURL.path, repoName, origin, self.pathForDir("scripts")]
+        process.arguments = [projectDirectoryURL.path, self.pathForDir("scripts"), repoName, branch, origin]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeBuild(directoryPath: String, scheme: String) -> Process {
+    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [scheme]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name]
+        process.qualityOfService = .utility
         
         return process
     }
     
     
-    public static func makeTest(directoryPath: String, scheme: String) -> Process {
+    static func makeTest(directoryPath: String, scheme: String, metadata: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST, ofType: "sh")!
-        process.arguments = [scheme]
+        process.arguments = [metadata.url.path, scheme]
+        process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeArchive(directoryPath: String, scheme: String, projectName name: String) -> Process {
+    public static func makeArchive(directoryPath: String, project: Project, configuration: Configuration = .release) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        process.arguments = [scheme, name, self.pathForDir("resources")]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name]
+        process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeExport(directoryPath: String, scheme: String) -> Process {
+    public static func makeExport(directoryPath: String, project: Project) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
-        process.arguments = [scheme, self.pathForDir("resources")]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, self.pathForDir("resources")]
+        process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeDeploy(directoryPath: String, scheme: String, forUser user:String) -> Process {
+    public static func makeDeploy(directoryPath: String, project: Project, forUser user:String) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
-        process.arguments = [scheme, user, WINDMILL_BASE_URL]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, user, WINDMILL_BASE_URL]
+        process.qualityOfService = .utility
         
         return process
     }
     
-    static func makePoll(_ repoName: String, branch: String = "master") -> Process
+    static func makePoll(directoryPath: String, projectDirectoryURL: URL = ApplicationCachesDirectory().URL, project: Project, branch: String = "master") -> Process
     {
         let process = Process()
+        process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, repoName, self.pathForDir("scripts"), branch]
+        process.arguments = [FileManager.default.pollDirectoryURL(forProject: project.name).path, self.pathForDir("scripts"), branch]
+        process.qualityOfService = .utility
         
         return process
     }

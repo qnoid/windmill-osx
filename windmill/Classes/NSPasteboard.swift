@@ -13,13 +13,14 @@ extension NSPasteboard
 {
     func firstFilename() -> String?
     {
-        if (self.availableType(from: ["NSFilenamesPboardType"]) == nil) {
+        guard self.availableType(from: [PasteboardType.fileURL]) != nil else {
             return nil
         }
         
-        let files = self.propertyList(forType: NSFilenamesPboardType) as! NSArray
-        let folder = files.firstObject as! String
-
-    return folder
+        guard let files = self.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? [String] else {
+            return nil
+        }
+        
+    return files.first
     }
 }

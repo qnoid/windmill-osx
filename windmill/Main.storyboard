@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13196"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,10 +13,10 @@
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="852" y="727" width="850" height="406"/>
+                        <rect key="contentRect" x="0.0" y="727" width="850" height="674"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-                        <value key="minSize" type="size" width="850" height="406"/>
-                        <value key="minFullScreenContentSize" type="size" width="850" height="406"/>
+                        <value key="minSize" type="size" width="850" height="674"/>
+                        <value key="minFullScreenContentSize" type="size" width="850" height="524"/>
                         <toolbar key="toolbar" implicitIdentifier="AC398DAC-DA28-4CF7-8F5F-CBE6815E270B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="g38-IE-MjZ">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="84D24695-66F7-4E66-857F-B4554690E24A" label="" paletteLabel="" id="EBh-fb-7rc">
@@ -36,9 +35,31 @@
                                         </connections>
                                     </button>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HvT-GS-ycv"/>
+                                <toolbarItem implicitItemIdentifier="1E150C1D-1269-4C11-8C29-4D8E32EE1965" label="Debug Area" paletteLabel="" id="THt-8f-Wrj">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="67" height="23"/>
+                                    <size key="maxSize" width="100" height="28"/>
+                                    <segmentedControl key="view" verticalHuggingPriority="750" id="ESA-yL-4Qj">
+                                        <rect key="frame" x="0.0" y="14" width="75" height="23"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectAny" id="6sZ-bs-Bt0">
+                                            <font key="font" metaFont="system"/>
+                                            <segments>
+                                                <segment toolTip="Hide or show the Debug Area" image="bottom panel" width="36"/>
+                                                <segment toolTip="Hide or show the Side Panel" image="right panel" width="32" tag="1"/>
+                                            </segments>
+                                        </segmentedCell>
+                                    </segmentedControl>
+                                    <connections>
+                                        <action selector="performSegmentedControlAction:" target="DBm-IY-qca" id="EwY-yz-gEF"/>
+                                    </connections>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="EBh-fb-7rc"/>
+                                <toolbarItem reference="HvT-GS-ycv"/>
+                                <toolbarItem reference="THt-8f-Wrj"/>
                             </defaultToolbarItems>
                         </toolbar>
                         <connections>
@@ -46,24 +67,92 @@
                         </connections>
                     </window>
                     <connections>
+                        <outlet property="panels" destination="ESA-yL-4Qj" id="AqR-iV-xqB"/>
                         <outlet property="toolbar" destination="g38-IE-MjZ" id="Tvf-JY-OCS"/>
-                        <segue destination="Hwi-w3-Rle" kind="relationship" relationship="window.shadowedContentViewController" id="DQX-oy-Kui"/>
+                        <segue destination="CyE-mz-XSv" kind="relationship" relationship="window.shadowedContentViewController" id="TSF-xG-Hgo"/>
                     </connections>
                 </windowController>
                 <customObject id="DBm-IY-qca" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-10.5" y="-24"/>
         </scene>
+        <!--Bottom Panel Split View Controller-->
+        <scene sceneID="1ax-Dm-cj8">
+            <objects>
+                <splitViewController id="e0O-BT-03d" customClass="BottomPanelSplitViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <splitViewItems>
+                        <splitViewItem id="5xq-V7-8cj"/>
+                        <splitViewItem canCollapse="YES" collapsed="YES" id="Xxb-TL-29N"/>
+                    </splitViewItems>
+                    <splitView key="splitView" dividerStyle="paneSplitter" id="Cng-vI-Hrm">
+                        <rect key="frame" x="0.0" y="0.0" width="859" height="501"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <outlet property="delegate" destination="e0O-BT-03d" id="v7i-UU-dkX"/>
+                        </connections>
+                    </splitView>
+                    <connections>
+                        <outlet property="bottomViewSplitViewItem" destination="Xxb-TL-29N" id="I8H-2S-ssf"/>
+                        <outlet property="mainViewSplitViewItem" destination="5xq-V7-8cj" id="8iU-kW-eMB"/>
+                        <outlet property="splitView" destination="Cng-vI-Hrm" id="fg0-Ye-dIh"/>
+                        <segue destination="Hwi-w3-Rle" kind="relationship" relationship="splitItems" id="ii6-xt-zFN"/>
+                        <segue destination="Pj9-T2-aOt" kind="relationship" relationship="splitItems" id="csJ-kq-TDG"/>
+                    </connections>
+                </splitViewController>
+                <customObject id="ETW-dW-QUk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1184.5" y="628.5"/>
+        </scene>
+        <!--Side Panel Split View Controller-->
+        <scene sceneID="qXm-6g-QeR">
+            <objects>
+                <splitViewController id="CyE-mz-XSv" customClass="SidePanelSplitViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <splitViewItems>
+                        <splitViewItem id="QHl-7F-Y0I"/>
+                        <splitViewItem canCollapse="YES" id="YdW-0h-7ou"/>
+                    </splitViewItems>
+                    <splitView key="splitView" misplaced="YES" dividerStyle="thin" vertical="YES" id="geB-Y6-ssq">
+                        <rect key="frame" x="0.0" y="0.0" width="850" height="524"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <outlet property="delegate" destination="CyE-mz-XSv" id="Wp9-nH-4Nc"/>
+                        </connections>
+                    </splitView>
+                    <connections>
+                        <outlet property="mainViewSplitViewItem" destination="QHl-7F-Y0I" id="pRF-aG-QZw"/>
+                        <outlet property="sideViewSplitViewItem" destination="YdW-0h-7ou" id="jtH-We-4TH"/>
+                        <outlet property="splitView" destination="geB-Y6-ssq" id="ZVO-9p-5uQ"/>
+                        <segue destination="e0O-BT-03d" kind="relationship" relationship="splitItems" id="XPZ-bt-ths"/>
+                        <segue destination="pJq-lF-WOV" kind="relationship" relationship="splitItems" id="g0E-lr-l8L"/>
+                    </connections>
+                </splitViewController>
+                <customObject id="Jas-Md-zsV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-11" y="640"/>
+        </scene>
+        <!--Side Panel View Controller-->
+        <scene sceneID="xlE-4N-cYx">
+            <objects>
+                <viewController id="pJq-lF-WOV" customClass="SidePanelViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="3FI-S7-Oze" customClass="SidePanelView" customModule="windmill" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="225" height="524"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="Drb-U6-kGK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="605" y="640"/>
+        </scene>
         <!--Main View Controller-->
         <scene sceneID="Amb-BC-0eG">
             <objects>
                 <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="850" height="396"/>
+                        <rect key="frame" x="0.0" y="0.0" width="850" height="524"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="112" y="316" width="120" height="80"/>
+                                <rect key="frame" x="112" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
                                     <constraint firstAttribute="height" constant="80" id="oiO-mA-I9r"/>
@@ -74,7 +163,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="232" y="316" width="120" height="80"/>
+                                <rect key="frame" x="232" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
                                     <constraint firstAttribute="height" constant="80" id="GiW-gK-orz"/>
@@ -85,7 +174,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="352" y="316" width="120" height="80"/>
+                                <rect key="frame" x="352" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
                                     <constraint firstAttribute="height" constant="80" id="VnY-Lz-ERM"/>
@@ -96,7 +185,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="472" y="316" width="120" height="80"/>
+                                <rect key="frame" x="472" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
                                     <constraint firstAttribute="width" constant="120" id="fgF-3l-vdS"/>
@@ -107,14 +196,14 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UFi-dW-WUB" customClass="ArchiveView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="472" y="176" width="203" height="132"/>
+                                <rect key="frame" x="472" y="304" width="203" height="132"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="132" id="9Ap-jk-dag"/>
                                     <constraint firstAttribute="width" constant="203" id="qz2-wk-leb"/>
                                 </constraints>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="592" y="316" width="120" height="80"/>
+                                <rect key="frame" x="592" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="elv-Xf-MpB"/>
                                     <constraint firstAttribute="width" constant="120" id="wW7-ef-2Ce"/>
@@ -125,7 +214,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="712" y="316" width="120" height="80"/>
+                                <rect key="frame" x="712" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="XEZ-IE-CsL"/>
                                     <constraint firstAttribute="height" constant="80" id="fff-eQ-PUw"/>
@@ -135,36 +224,8 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-deploy"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="50" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tiw-1K-zCA">
-                                <rect key="frame" x="0.0" y="0.0" width="850" height="0.0"/>
-                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="WaK-Pi-rTH">
-                                    <rect key="frame" x="0.0" y="0.0" width="850" height="0.0"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="Ihv-oZ-d6M">
-                                            <rect key="frame" x="0.0" y="0.0" width="850" height="14"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="850" height="0.0"/>
-                                            <size key="maxSize" width="928" height="10000000"/>
-                                            <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </textView>
-                                    </subviews>
-                                </clipView>
-                                <constraints>
-                                    <constraint firstAttribute="height" id="J71-P2-rWk"/>
-                                </constraints>
-                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Pxp-rN-MJy">
-                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="ccr-F0-ZxB">
-                                    <rect key="frame" x="834" y="0.0" width="16" height="0.0"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </scroller>
-                            </scrollView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-vk-iA5" userLabel="activity">
-                                <rect key="frame" x="41" y="283" width="30" height="17"/>
+                                <rect key="frame" x="41" y="411" width="30" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="idle" placeholderString="" id="Cu7-M4-32H">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -172,7 +233,7 @@
                                 </textFieldCell>
                             </textField>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PE8-MR-CeU">
-                                <rect key="frame" x="8" y="300" width="96" height="96"/>
+                                <rect key="frame" x="8" y="428" width="96" height="96"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="ApN-rg-OiG"/>
                                     <constraint firstAttribute="height" constant="96" id="ycV-pj-WBC"/>
@@ -186,17 +247,14 @@
                             <constraint firstItem="miV-du-5Xh" firstAttribute="leading" secondItem="RWe-v3-81B" secondAttribute="trailing" id="35L-V8-MHN"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
                             <constraint firstItem="PE8-MR-CeU" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="50L-ZD-ubj"/>
-                            <constraint firstAttribute="bottom" secondItem="Tiw-1K-zCA" secondAttribute="bottom" id="6zi-rq-Eho"/>
                             <constraint firstItem="PE8-MR-CeU" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="8Bs-3t-qtp"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="top" secondItem="RWe-v3-81B" secondAttribute="top" id="8mw-SB-RUo"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="PE8-MR-CeU" secondAttribute="trailing" constant="8" id="IVm-1J-iym"/>
-                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="centerX" secondItem="6j5-vW-ygG" secondAttribute="centerX" id="JuQ-zB-Iid"/>
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="top" secondItem="miV-du-5Xh" secondAttribute="top" id="S21-NR-RYC"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
                             <constraint firstItem="UFi-dW-WUB" firstAttribute="top" secondItem="RWe-v3-81B" secondAttribute="bottom" constant="8" symbolic="YES" id="TCd-e9-mOn"/>
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="leading" secondItem="miV-du-5Xh" secondAttribute="trailing" id="Zsh-7k-CpK"/>
                             <constraint firstItem="UFi-dW-WUB" firstAttribute="leading" secondItem="RWe-v3-81B" secondAttribute="leading" id="bmQ-bb-vC9"/>
-                            <constraint firstItem="Tiw-1K-zCA" firstAttribute="width" secondItem="6j5-vW-ygG" secondAttribute="width" id="gl2-jy-Rrv"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="top" secondItem="dmf-os-213" secondAttribute="top" id="ta7-EF-JCs"/>
                             <constraint firstItem="PE8-MR-CeU" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" placeholder="YES" id="uCZ-sc-I7w"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="leading" secondItem="dmf-os-213" secondAttribute="trailing" id="uQc-ac-f5w"/>
@@ -213,14 +271,53 @@
                         <outlet property="deployActivityView" destination="QRl-WA-0CJ" id="Fsx-NL-yad"/>
                         <outlet property="exportActivityView" destination="miV-du-5Xh" id="3fX-jA-mId"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
-                        <outlet property="textView" destination="Ihv-oZ-d6M" id="GDr-bd-j5O"/>
-                        <outlet property="textViewHeightConstraint" destination="J71-P2-rWk" id="oC4-mK-DUF"/>
                         <outlet property="windmillImageView" destination="PE8-MR-CeU" id="Jcd-Qv-2UU"/>
                     </connections>
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-12" y="552"/>
+            <point key="canvasLocation" x="-1189" y="1348"/>
+        </scene>
+        <!--Console View Controller-->
+        <scene sceneID="eWE-0B-wHp">
+            <objects>
+                <viewController storyboardIdentifier="ConsoleViewController" id="Pj9-T2-aOt" customClass="ConsoleViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <scrollView key="view" canDrawConcurrently="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="1kk-Jl-vm9">
+                        <rect key="frame" x="0.0" y="0.0" width="850" height="150"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" canDrawConcurrently="YES" id="wKf-nu-3c7">
+                            <rect key="frame" x="1" y="1" width="848" height="148"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView editable="NO" selectable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="VvI-IN-zZ7">
+                                    <rect key="frame" x="0.0" y="0.0" width="848" height="148"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="848" height="148"/>
+                                    <size key="maxSize" width="915" height="10000000"/>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="TPm-iV-z0o">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="gfU-Y7-RNJ">
+                            <rect key="frame" x="833" y="1" width="16" height="148"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <connections>
+                        <outlet property="scrollView" destination="1kk-Jl-vm9" id="Pdo-kr-ifr"/>
+                        <outlet property="textView" destination="VvI-IN-zZ7" id="uzL-ST-zaP"/>
+                        <outlet property="view" destination="1kk-Jl-vm9" id="Lew-jw-ep1"/>
+                    </connections>
+                </viewController>
+                <customObject id="jni-cP-76A" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1185" y="1800"/>
         </scene>
         <!--Application-->
         <scene sceneID="6gf-Vf-nel">
@@ -402,9 +499,22 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Debug Area" id="nOh-K4-TO3">
                                                 <items>
-                                                    <menuItem title="Show Debug Area" tag="1" keyEquivalent="Y" id="86b-Mo-8r7" userLabel="Show Debug Area">
+                                                    <menuItem title="Show Debug Area" tag="1" alternate="YES" keyEquivalent="Y" toolTip="Show the full log of each stage." id="86b-Mo-8r7" userLabel="Show Debug Area">
                                                         <connections>
                                                             <action selector="toggleDebugArea:" target="aS9-1w-R0E" id="1oY-Py-Rjw"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem title="Side Panel" id="m8G-em-wLh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Side Panel" id="v9o-8n-Jaf">
+                                                <items>
+                                                    <menuItem title="Show Side Panel" keyEquivalent="0" toolTip="Show detailed information of each stage." id="6k2-Q8-62V">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="toggleSidePanel:" target="jgg-ZM-qio" id="APa-QR-aiK"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -426,16 +536,16 @@
                                     <items>
                                         <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
                                             <connections>
-                                                <action selector="cleanBuildFolder:" target="jgg-ZM-qio" id="EhI-xZ-nNA"/>
+                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="T7h-Ho-NMg"/>
-                                        <menuItem title="Clean Build Folder" enabled="NO" keyEquivalent="K" id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
+                                        <menuItem title="Clean Build Folder" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
                                             <connections>
                                                 <action selector="cleanBuildFolder:" target="jgg-ZM-qio" id="tjj-rz-UuP"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Remove Checkout Folder..." enabled="NO" alternate="YES" keyEquivalent="K" id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
+                                        <menuItem title="Remove Checkout Folder and Run..." enabled="NO" alternate="YES" keyEquivalent="K" toolTip="Perform a full checkout on the next run; enabled in case of an error." id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="cleanProjectFolder:" target="jgg-ZM-qio" id="Qik-OH-9Fj"/>
@@ -500,20 +610,14 @@
                         <outlet property="activityMenuItem" destination="fyt-9a-x0h" id="q48-pz-ygM"/>
                         <outlet property="cleanMenu" destination="bkO-ZH-pFj" id="o4d-ES-cYe"/>
                         <outlet property="cleanProjectMenu" destination="Xk5-Xr-W0f" id="hY9-gb-Vp0"/>
-                        <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="hfc-Pg-eLn"/>
+                        <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="VKK-Wx-1FL"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
                         <outlet property="runMenuItem" destination="RUs-Xt-SEm" id="5qh-xc-PfA"/>
+                        <outlet property="sidePanelMenuItem" destination="6k2-Q8-62V" id="shh-N8-j4K"/>
                     </connections>
                 </customObject>
-                <menu title="View" id="r1r-Ng-cbe">
-                    <items>
-                        <menuItem title="Enter Full Screen" keyEquivalent="f" id="FiO-Gg-IFz">
-                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
-                        </menuItem>
-                    </items>
-                </menu>
             </objects>
-            <point key="canvasLocation" x="687" y="-211"/>
+            <point key="canvasLocation" x="765" y="-211"/>
         </scene>
         <!--Project Titlebar Accessory View Controller-->
         <scene sceneID="fBe-UX-8Ua">
@@ -568,16 +672,18 @@
                 </viewController>
                 <customObject id="Xf2-fy-sdI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="763" y="-124"/>
+            <point key="canvasLocation" x="841" y="-124"/>
         </scene>
     </scenes>
     <resources>
+        <image name="bottom panel" width="18" height="14"/>
         <image name="lights-archive" width="110" height="44"/>
         <image name="lights-build" width="110" height="44"/>
         <image name="lights-checkout" width="110" height="44"/>
         <image name="lights-deploy" width="110" height="44"/>
         <image name="lights-export" width="110" height="44"/>
         <image name="lights-test" width="110" height="44"/>
+        <image name="right panel" width="18" height="14"/>
         <image name="windmill-activity-indicator" width="48" height="48"/>
     </resources>
 </document>

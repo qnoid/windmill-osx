@@ -12,7 +12,12 @@ import AppKit
 class ActivityView: NSView {
 
     @IBOutlet weak var titleLabel: NSTextField!
-    @IBOutlet weak var imageView: NSImageView!
+    @IBOutlet weak var imageView: NSImageView! {
+        didSet{
+            imageView.layer = CALayer()
+            imageView.wantsLayer = true
+        }
+    }
     
     @IBInspectable var title: String? {
         didSet{
@@ -43,16 +48,16 @@ class ActivityView: NSView {
     func animations(activityType: ActivityType) -> [NSImage] {
         let type = String(describing: activityType.rawValue)
         
-        return [NSImage(named: "lights-\(type)-animation-key-1")!, NSImage(named: "lights-\(type)-animation-key-2")!, NSImage(named: "lights-\(type)-animation-key-3")!]
+        return [NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-1"))!, NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-2"))!, NSImage(named: NSImage.Name(rawValue: "lights-\(type)-animation-key-3"))!]
     }
 
     func startLightsAnimation(activityType: ActivityType) {
         let animations = self.animations(activityType: activityType)
         
-        self.imageView.layer?.add(CAAnimation.Windmill.lightsAnimation(size: self.imageView.bounds.size, animations: animations), forKey: "lights")
+        self.imageView.layer?.sublayers?[0].add(CAAnimation.Windmill.lightsAnimation(size: self.imageView.bounds.size, animations: animations), forKey: "lights")
     }
     
     func stopLightsAnimation() {
-        self.imageView.layer?.removeAnimation(forKey: "lights")
+        self.imageView.layer?.sublayers?[0].removeAnimation(forKey: "lights")
     }
 }

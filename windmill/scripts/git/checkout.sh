@@ -1,39 +1,37 @@
 #!/bin/bash
 
 # Requires the following variables to be set
-# WINDMILL_ROOT
+# PROJECT_DIRECTORY
 # REPO_NAME
 # REMOTE
 # SCRIPTS_ROOT
-# PROJECT_NAME
 
-WINDMILL_ROOT=$1
-REPO_NAME=$2
-REMOTE=$3
-SCRIPTS_ROOT=$4
-
-PROJECT_NAME=$REPO_NAME
+PROJECT_DIRECTORY=$1
+SCRIPTS_ROOT=$2
+REPO_NAME=$3
+BRANCH=$4
+REMOTE=$5
 
 set -e
 
 . $SCRIPTS_ROOT/common.sh
 
-function mkdir_windmill() {
-mkdir "$WINDMILL_ROOT"
-}
-
-directory_does_not_exist_at_path "$WINDMILL_ROOT" mkdir_windmill
+echo "[io.windmill.windmill] [checkout] [debug] using directory ${PROJECT_DIRECTORY}"
+echo "[io.windmill.windmill] [checkout] [debug] repo name ${REPO_NAME}"
+echo "[io.windmill.windmill] [checkout] [debug] branch ${BRANCH}"
+echo "[io.windmill.windmill] [checkout] [debug] remote ${REMOTE}"
 
 function git_pull(){
-echo "[windmill] [debug] git -C $PROJECT_NAME pull"
-(cd "$WINDMILL_ROOT"; git -C "$PROJECT_NAME" fetch; git -C "$PROJECT_NAME" reset --hard FETCH_HEAD)
+echo "[io.windmill.windmill] [checkout] [debug] git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard FETCH_HEAD"
+(cd "${PROJECT_DIRECTORY}"; git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard FETCH_HEAD)
 }
 
 function git_clone(){
-(cd "$WINDMILL_ROOT"; git clone -b master $REMOTE "$PROJECT_NAME")
+echo "[io.windmill.windmill] [checkout] [debug] git clone -b ${BRANCH} ${REMOTE} ${REPO_NAME}"
+(cd "${PROJECT_DIRECTORY}"; git clone -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
 }
 
-directory_exist_at_path "$WINDMILL_ROOT/$REPO_NAME" git_pull git_clone
+directory_exist_at_path "${PROJECT_DIRECTORY}/${REPO_NAME}" git_pull git_clone
 
 
 # Cases
