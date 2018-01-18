@@ -35,7 +35,7 @@ public extension FileManager
 
     func testDirectoryURL(forProject name: String) -> URL {
         let directory = self.directory(windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("test"))
-        directory.create()
+        directory.create(withIntermediateDirectories: true)
         return directory.URL
     }
     

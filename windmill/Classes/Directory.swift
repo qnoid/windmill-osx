@@ -25,6 +25,8 @@ public protocol DirectoryType
     - returns: true if created, false otherwise
     */
     @discardableResult func create() -> Bool
+    
+    @discardableResult func create(withIntermediateDirectories: Bool) -> Bool
 }
 
 public protocol UserLibraryDirectory : DirectoryType
@@ -95,11 +97,15 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     
     /// ApplicationSupportDirectory
     
-    @discardableResult public func create() -> Bool
+    @discardableResult public func create() -> Bool {
+        return self.create(withIntermediateDirectories: false)
+    }
+    
+    @discardableResult public func create(withIntermediateDirectories: Bool = false) -> Bool
     {
         let created: Bool
         do {
-            try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:false, attributes: nil)
+            try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:withIntermediateDirectories, attributes: nil)
             created = true
         } catch let error as NSError {
             os_log("%{public}@", log: .default, type: .debug, error)
