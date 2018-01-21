@@ -24,6 +24,10 @@ extension CALayer {
 extension NSView {
     
     func startAnimation() {
+        if let _ = self.layer?.animation(forKey: "spinAnimation") {
+            self.layer?.removeAnimation(forKey: "spinAnimation")
+        }
+        
         self.layer?.add(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
     }
     
@@ -143,7 +147,8 @@ class MainViewController: NSViewController {
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.view.window?.title = project.name        
         for activityView in self.activityViews.values {
-            activityView.isHidden = true
+            activityView.imageView.alphaValue = 0.1
+            activityView.stopLightsAnimation()
         }
         self.archiveView.isHidden = true
         
@@ -160,8 +165,7 @@ class MainViewController: NSViewController {
         os_log("%{public}@", log: log, type: .debug, activityType.description)
         
         self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
-        self.activityViews[activityType]?.isHidden = false
-        self.activityViews[activityType]?.alphaValue = 1.0
+        self.activityViews[activityType]?.imageView.alphaValue = 1.0
         self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
         
         self.activityTextfield.stringValue = activityType.description
@@ -175,7 +179,7 @@ class MainViewController: NSViewController {
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
         self.windmillImageView.stopAnimation()
         
-        self.activityViews[activityType]?.alphaValue = 1.0
+        self.activityViews[activityType]?.imageView.alphaValue = 0.1
         self.activityViews[activityType]?.stopLightsAnimation()
 
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
@@ -187,7 +191,6 @@ class MainViewController: NSViewController {
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
 
-        self.activityViews[activityType]?.alphaValue = 1.0
         self.activityViews[activityType]?.stopLightsAnimation()
     }
     

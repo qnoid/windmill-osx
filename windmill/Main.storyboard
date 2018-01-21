@@ -151,7 +151,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="850" height="524"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="112" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
@@ -162,7 +162,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-checkout"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="232" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
@@ -173,7 +173,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-build"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="352" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
@@ -184,7 +184,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-test"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="472" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
@@ -202,7 +202,7 @@
                                     <constraint firstAttribute="width" constant="203" id="qz2-wk-leb"/>
                                 </constraints>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="592" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="elv-Xf-MpB"/>
@@ -213,7 +213,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-export"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="712" y="444" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="XEZ-IE-CsL"/>
