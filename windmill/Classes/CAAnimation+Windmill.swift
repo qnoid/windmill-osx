@@ -40,5 +40,17 @@ extension CAAnimation {
             
             return keyframeAnimation
         }
+        
+        static func opacityAnimation() -> CABasicAnimation {
+            let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+            opacityAnimation.fromValue = 0.25
+            opacityAnimation.toValue = 1.0
+            opacityAnimation.duration = 0.75
+            opacityAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            opacityAnimation.autoreverses = true
+            opacityAnimation.repeatCount = .greatestFiniteMagnitude
+            
+            return opacityAnimation
+        }
     }
 }

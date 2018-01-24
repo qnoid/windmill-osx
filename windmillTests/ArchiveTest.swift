@@ -17,11 +17,12 @@ class ArchiveTest: XCTestCase {
     func testGivenInfoAtURLAssertInfo() {
         let url = Bundle(for: ArchiveTest.self).url(forResource: "Info", withExtension: "plist")!
         
-        let info = try! Archive.Info.parse(url: url)
+        let info = Archive.Info(metadata: MetadataPlistEncoded(url: url))
         
         XCTAssertEqual(info.name, "windmill")
         XCTAssertEqual(info.bundleShortVersion, "1.0")
         XCTAssertEqual(info.bundleVersion, "1")
         XCTAssertEqual(info.creationDate, dateFormatter.date(from: "2017-08-18T16:24:30Z"))
+        XCTAssertEqual(info.signingIdentity, "iPhone Developer: Markos Charatzas (YHA6TR5UG9)")
     }
 }

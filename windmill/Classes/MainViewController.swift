@@ -23,16 +23,16 @@ extension CALayer {
 
 extension NSView {
     
-    func startAnimation() {
-        if let _ = self.layer?.animation(forKey: "spinAnimation") {
-            self.layer?.removeAnimation(forKey: "spinAnimation")
+    func startAnimation(animation: CAAnimation = CAAnimation.Windmill.spinAnimation, key: String = "spinAnimation") {
+        if let _ = self.layer?.animation(forKey: key) {
+            self.layer?.removeAnimation(forKey: key)
         }
         
-        self.layer?.add(CAAnimation.Windmill.spinAnimation, forKey: "spinAnimation")
+        self.layer?.add(animation, forKey: key)
     }
     
-    func stopAnimation() {
-        self.layer?.removeAnimation(forKey: "spinAnimation")
+    func stopAnimation(key: String = "spinAnimation") {
+        self.layer?.removeAnimation(forKey: key)
     }
 }
 
@@ -54,7 +54,7 @@ class MainView: NSView {
     }
     
     override var intrinsicContentSize: NSSize {
-        return NSSize(width: 850, height: 524)
+        return NSSize(width: 850, height: 622)
     }
 }
 
@@ -85,14 +85,6 @@ class MainViewController: NSViewController {
         return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .deploy: self.deployActivityView]
     }()
     
-    @IBOutlet weak var archiveView: ArchiveView!
-    let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/YYYY, HH:mm")
-        
-        return dateFormatter
-    }()
-
     let defaultCenter = NotificationCenter.default
     
     var project: Project?
@@ -112,12 +104,14 @@ class MainViewController: NSViewController {
             }
         }
         
+        
         super.updateViewConstraints()
     }
     
     override func viewDidLayout() {
         super.viewDidLayout()
         CALayer.Windmill.positionAnchorPoint(self.windmillImageView.layer!)
+        
     }
     
     override func loadView() {
@@ -133,7 +127,6 @@ class MainViewController: NSViewController {
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.didArchiveSuccesfully(_:)), name: Notification.Name("archive"), object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
@@ -150,8 +143,6 @@ class MainViewController: NSViewController {
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
         }
-        self.archiveView.isHidden = true
-        
         let projectTitlebarAccessoryViewController = self.view.window?.titlebarAccessoryViewControllers[0] as! ProjectTitlebarAccessoryViewController
         projectTitlebarAccessoryViewController.project = project        
     }
@@ -172,7 +163,10 @@ class MainViewController: NSViewController {
     }
 
     @objc func activityError(_ aNotification: Notification) {
-        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+            return
+        }
+
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .error, activityType.description)
         
@@ -186,36 +180,14 @@ class MainViewController: NSViewController {
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
-        
-        let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
+        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+            return
+        }
+
         let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
         os_log("%{public}@", log: log, type: .debug, activityType.description)
 
         self.activityViews[activityType]?.stopLightsAnimation()
-    }
-    
-    @objc func didArchiveSuccesfully(_ aNotification: Notification) {
-
-        guard let project = aNotification.userInfo?["project"] as? Project else {
-            return
-        }
-
-        do {
-            let archive = try Archive.make(forProject: project, name: project.scheme)
-            
-            let info = archive.info
-            
-            self.archiveView.titleTextField.stringValue = info.name
-            self.archiveView.versionTextField.stringValue = "\(info.bundleShortVersion) (\(info.bundleVersion))"
-            let creationDate = info.creationDate ?? Date()
-            
-            self.archiveView.dateTextField.stringValue = self.dateFormatter.string(from: creationDate)
-            self.archiveView.archive = archive
-            self.archiveView.isHidden = false
-        }
-        catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-        }
     }
     
     @discardableResult func cleanBuildFolder() -> Bool {

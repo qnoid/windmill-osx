@@ -12,6 +12,22 @@ import os
 @IBDesignable
 class ArchiveView: NSView {
     
+    @IBOutlet weak var headerTextField: LinkLabel! {
+        didSet{
+            let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
+                .link : "http://help.apple.com/xcode/mac/current/#/dev442d7f2ca",
+                .font : headerTextField.font as Any])
+            headerTextField.attributedString = attributedString
+        }
+    }
+    
+    @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
+        didSet  {
+            self.stageIndicatorView.wantsLayer = true
+            self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.orange().cgColor
+        }
+    }
+    
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var versionTextField: NSTextField!
     @IBOutlet weak var dateTextField: NSTextField!
@@ -66,8 +82,6 @@ class ArchiveView: NSView {
         case 2:
             do {
                 let xcodeArchivesURL = archive.xcodeArchivesURL(dateFormatter: self.dateFormatter)
-                let directory = Directory(URL: xcodeArchivesURL, fileManager: FileManager.default)
-                directory.create()
                 
                 try FileManager.default.copyItem(
                     at: archive.url,
