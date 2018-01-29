@@ -26,6 +26,9 @@ let WindmillDomain : Domain = "io.windmill"
 {
     struct Notifications {
         static let willDeployProject = Notification.Name("WindmillWillDeployProject")
+        static let didArchiveProject = Notification.Name("didArchiveProject")
+        static let didExportProject = Notification.Name("export")
+        static let didDeployProject = Notification.Name("deploy")
     }
     
     class func windmill(_ keychain: Keychain) -> Windmill
@@ -126,7 +129,11 @@ let WindmillDomain : Domain = "io.windmill"
                         archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
                             self?.didArchive(project: project)
                             export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success(completionHandler: completionHandler)).perform()
+                                self?.didExport(project: project)
+                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success{ (type, isSuccess, error) in
+                                    self?.didDeploy(project: project)
+                                    completionHandler(type, isSuccess, error)
+                                }).perform()
                             }).perform()
                         }).perform()
                     }).perform()
@@ -209,9 +216,23 @@ let WindmillDomain : Domain = "io.windmill"
     }
     
     func didArchive(project: Project) {
-        NotificationCenter.default.post(name: Notification.Name("archive"), object: self, userInfo: ["project":project])
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.didArchiveProject, object: self, userInfo: ["project":project])
+        }
     }
-    
+
+    func didExport(project: Project) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.didExportProject, object: self, userInfo: ["project":project])
+        }
+    }
+
+    func didDeploy(project: Project) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.didDeployProject, object: self, userInfo: ["project":project])
+        }
+    }
+
     /**
      
      /**

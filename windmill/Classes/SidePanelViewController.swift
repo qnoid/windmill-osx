@@ -7,6 +7,7 @@
 //
 
 import AppKit
+import os
 
 @IBDesignable
 class SidePanelView: NSView {
@@ -141,13 +142,25 @@ class SidePanelViewController: NSViewController {
         archive.isHidden = true
         return archive
     }()
+
+    lazy var archiveScheme: NSTextField = {
+        let certificate = NSTextField(labelWithString: "Scheme:")
+        certificate.isHidden = true
+        return certificate
+    }()
     
+    lazy var archiveSchemeValue: NSTextField = {
+        let certificate = NSTextField(labelWithString: "[Scheme]")
+        certificate.isHidden = true
+        return certificate
+    }()
+
     lazy var archiveConfiguration: NSTextField = {
         let archiveConfiguration = NSTextField(labelWithString: "Configuration:")
         archiveConfiguration.isHidden = true
         return archiveConfiguration
     }()
-    
+
     lazy var archiveConfigurationValue: NSTextField = {
         let archiveConfigurationValue = NSTextField(labelWithString: "Release")
         archiveConfigurationValue.isHidden = true
@@ -155,6 +168,18 @@ class SidePanelViewController: NSViewController {
         return archiveConfigurationValue
     }()
     
+    lazy var archiveCertificate: NSTextField = {
+        let certificate = NSTextField(labelWithString: "Signing Certificate:")
+        certificate.isHidden = true
+        return certificate
+    }()
+
+    lazy var archiveCertificateValue: NSTextField = {
+        let certificate = NSTextField(labelWithString: "[Certificate]")
+        certificate.isHidden = true
+        return certificate
+    }()
+
     
     // MARK: Export views
     lazy var export: NSTextField = {
@@ -218,7 +243,15 @@ class SidePanelViewController: NSViewController {
     lazy var checkoutValues: (originValue: NSTextField, branchValue: NSTextField, commitValue: NSTextField) = { [unowned self] in
         return (originValue: self.originValue, branchValue: self.branchValue, commitValue: self.commitValue)
         }()
+
+    lazy var archiveSection: (configuration: NSTextField, scheme: NSTextField, certificate: NSTextField) = { [unowned self] in
+        return (configuration: archiveConfiguration, scheme: self.archiveScheme, certificate: self.archiveCertificate)
+        }()
     
+    lazy var archiveValues: (configurationValue: NSTextField, schemeValue: NSTextField, certificateValue: NSTextField) = { [unowned self] in
+        return (configurationValue: archiveConfigurationValue, schemeValue: self.archiveSchemeValue, certificateValue: self.archiveCertificateValue)
+        }()
+
     let defaultCenter = NotificationCenter.default
     
     var project: Project?
@@ -251,6 +284,8 @@ class SidePanelViewController: NSViewController {
             [destination, destinationValue],
             [archive, empty],
             [archiveConfiguration, archiveConfigurationValue],
+            [archiveScheme, archiveSchemeValue],
+            [archiveCertificate, archiveCertificateValue],
             [export, empty],
             [certificate, certificateValue],
             [provisioning, provisioningValue],
@@ -282,7 +317,7 @@ class SidePanelViewController: NSViewController {
         self.layout()
         self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
         self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
+        self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
@@ -329,9 +364,12 @@ class SidePanelViewController: NSViewController {
             self.destinationValue.stringValue = destination?["name"] ?? ""
         case .archive:
             self.archive.isHidden = false
-            self.archiveConfiguration.isHidden = false
-            self.archiveConfigurationValue.isHidden = false
-            self.archiveConfigurationValue.stringValue = Configuration.release.name
+            self.archiveSection.configuration.isHidden = false
+            self.archiveValues.configurationValue.isHidden = false
+            self.archiveValues.configurationValue.stringValue = Configuration.release.name
+            self.archiveSection.scheme.isHidden = false
+            self.archiveValues.schemeValue.isHidden = false
+            self.archiveValues.schemeValue.stringValue = project.scheme
         default:
             break
         }
@@ -363,18 +401,25 @@ class SidePanelViewController: NSViewController {
             self.checkoutSection.commit.isHidden = false
             self.checkoutValues.commitValue.stringValue = commit.shortSha
             self.checkoutValues.commitValue.isHidden = false
+        case .archive:            
+            let archive = Archive.make(forProject: project, name: project.scheme)
+            
+            let info = archive.info
+            
+            self.archiveSection.certificate.isHidden = false
+            self.archiveCertificateValue.isHidden = false
+            self.archiveCertificateValue.stringValue = info.signingIdentity
         case .export:
-            let metadata = MetadataPlistEncoded.exportMetadata(for: project)
-            let distributionOptions = DistributionOptions(project: project, metadata: metadata)
+            let distributionSummary = Export.DistributionSummary.make(for: project)
             
             self.export.isHidden = false
             self.certificate.isHidden = false
             self.certificateValue.isHidden = false
-            self.certificateValue.stringValue = distributionOptions.certificateType
+            self.certificateValue.stringValue = distributionSummary.certificateType
             
             self.provisioning.isHidden = false
             self.provisioningValue.isHidden = false
-            self.provisioningValue.stringValue = distributionOptions.profileName
+            self.provisioningValue.stringValue = distributionSummary.profileName
             
         case .deploy:
             self.deploy.isHidden = false

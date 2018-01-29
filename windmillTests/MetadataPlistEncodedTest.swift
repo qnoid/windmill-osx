@@ -27,8 +27,9 @@ class MetadataPlistEncodedTest: XCTestCase {
 
         let metadata = MetadataPlistEncoded(url: url)
         let project = Project(name: "name", scheme: "windmill", origin: "origin")
-        let distributionOptions = DistributionOptions(project: project, metadata: metadata)
+        let distributionOptions = Export.DistributionSummary(project: project, metadata: metadata)
         
+        XCTAssertEqual(distributionOptions.key, "windmill.ipa")
         XCTAssertEqual(distributionOptions.teamId, "AQ2US2UQQ7")
         XCTAssertEqual(distributionOptions.teamName, "Markos Charatzas")
         XCTAssertEqual(distributionOptions.certificateType, "iOS Distribution")

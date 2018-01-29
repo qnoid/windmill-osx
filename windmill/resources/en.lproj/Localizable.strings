@@ -18,3 +18,4 @@
 "windmill.ui.toolbar.view.hideSidePanel"="Hide Side Panel";
 "windmill.ui.activityTextfield.idle"="idle";
 "windmill.ui.activityTextfield.stopped"="stopped";
+"artefact.toolTip"="This artefact will become available once you complete the steps outlined.";

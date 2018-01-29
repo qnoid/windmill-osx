@@ -61,6 +61,10 @@ public extension FileManager
         return self.archiveURL(forProject: projectName, inArchive: archiveName).appendingPathComponent("Info.plist")
     }
 
+    func exportURL(forProject project: Project) -> URL {
+        return exportDirectoryURL(forProject: project.name).appendingPathComponent("\(project.scheme).ipa")
+    }
+
     func directory(_ URL:Foundation.URL) -> Directory {
     return Directory(URL: URL, fileManager: self)
     }

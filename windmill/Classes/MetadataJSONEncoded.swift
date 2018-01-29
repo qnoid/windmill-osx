@@ -55,13 +55,6 @@ public class MetadataJSONEncoded: Metadata {
 
 public class MetadataPlistEncoded: Metadata {
     
-    public class func exportMetadata(for project:Project) -> Metadata {
-        
-        let url = FileManager.default.exportDirectoryURL(forProject: project.name).appendingPathComponent("DistributionSummary.plist")
-        
-        return MetadataPlistEncoded(url: url)
-    }
-    
     public let url: URL
     
     public lazy var dictionary: [String: Any]? = {

@@ -9,33 +9,57 @@
 import Foundation
 
 struct Archive {
-    
+
     struct Info {
         
-        static func parse(url: URL) throws -> Info {
-            let info = try PropertyListSerialization.propertyList(from: Data(contentsOf: url), options: [], format: nil) as! [String: Any]
+        static func make(for project:Project) -> Info {
+            let url = FileManager.default.archiveInfoURL(forProject: project.name, inArchive: project.scheme)
             
-            let applicationProperties = info["ApplicationProperties"] as! [String: Any]
-            
-            let name = info["Name"] as? String ?? ""
-            let bundleShortVersion = applicationProperties["CFBundleShortVersionString"] as? String ?? ""
-            let bundleVersion = applicationProperties["CFBundleVersion"] as? String ?? ""
-        
-            let creationDate = info["CreationDate"] as? Date
+            return Info(metadata: MetadataPlistEncoded(url: url))
+        }
 
-            return Info(name: name, bundleShortVersion: bundleShortVersion, bundleVersion: bundleVersion, creationDate: creationDate)
+        let metadata: Metadata
+
+        var applicationProperties: [String: String]? {
+            let applicationProperties:[String: String]? = metadata["ApplicationProperties"]
+            
+            return applicationProperties
         }
         
-        let name: String
-        let bundleShortVersion: String
-        let bundleVersion: String
-        let creationDate: Date?
+        var name: String {
+            let name: String? = metadata["Name"]
+            
+            return name ?? ""
+        }
+
+        var creationDate: Date? {
+            let creationDate: Date? = metadata["CreationDate"]
+            
+            return creationDate
+        }
+
+        var bundleShortVersion: String {
+            let bundleShortVersion: String? = applicationProperties?["CFBundleShortVersionString"]
+            
+            return bundleShortVersion ?? ""
+        }
+        
+        var bundleVersion: String {
+            let bundleVersion: String? = applicationProperties?["CFBundleVersion"]
+            
+            return bundleVersion ?? ""
+        }
+        
+        var signingIdentity: String {
+            let signingIdentity: String? = applicationProperties?["SigningIdentity"]
+            
+            return signingIdentity  ?? ""
+        }
     }
     
-    static func make(forProject project: Project, name: String) throws -> Archive {
-        let archiveInfoURL = FileManager.default.archiveInfoURL(forProject: project.name, inArchive: name)
+    static func make(forProject project: Project, name: String) -> Archive {
         
-        let info = try Archive.Info.parse(url: archiveInfoURL)
+        let info = Archive.Info.make(for: project)
         let archiveURL = FileManager.default.archiveURL(forProject: project.name, inArchive: name)
         
         return Archive(url: archiveURL, info: info)
@@ -52,6 +76,12 @@ extension Archive {
     }
     
     func xcodeArchivesURL(url: URL = FileManager.default.xcodeArchivesURL, dateFormatter: DateFormatter) -> URL {
-        return url.appendingPathComponent(dateFormatter.string(from: self.info.creationDate ?? Date()))
+        
+        let xcodeArchivesURL = url.appendingPathComponent(dateFormatter.string(from: self.info.creationDate ?? Date()))
+        
+        let directory = Directory(URL: xcodeArchivesURL, fileManager: FileManager.default)
+        directory.create()
+
+        return xcodeArchivesURL
     }
 }
