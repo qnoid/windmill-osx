@@ -200,6 +200,19 @@ class SidePanelViewController: NSViewController {
         certificateValue.isSelectable = true
         return certificateValue
     }()
+
+    lazy var certificateExpiryDate: NSTextField = {
+        let certificateExpiryDate = NSTextField(labelWithString: "Expires:")
+        certificateExpiryDate.isHidden = true
+        return certificateExpiryDate
+    }()
+    
+    lazy var certificateExpiryDateValue: NSTextField = {
+        let certificateExpiryDateValue = NSTextField(labelWithString:  "Jan 29, 2018")
+        certificateExpiryDateValue.isHidden = true
+        certificateExpiryDateValue.isSelectable = true
+        return certificateExpiryDateValue
+    }()
     
     lazy var provisioning: NSTextField = {
         let provisioning = NSTextField(labelWithString:  "Provisioning Profile:")
@@ -256,6 +269,13 @@ class SidePanelViewController: NSViewController {
     
     var project: Project?
     
+    let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("dd/MM/YYYY")
+        
+        return dateFormatter
+    }()
+
     override func updateViewConstraints() {
         
         if(self.topConstraint == nil) {
@@ -288,6 +308,7 @@ class SidePanelViewController: NSViewController {
             [archiveCertificate, archiveCertificateValue],
             [export, empty],
             [certificate, certificateValue],
+            [certificateExpiryDate, certificateExpiryDateValue],
             [provisioning, provisioningValue],
             [deploy, empty],
             [acccount, accountValue]
@@ -416,7 +437,13 @@ class SidePanelViewController: NSViewController {
             self.certificate.isHidden = false
             self.certificateValue.isHidden = false
             self.certificateValue.stringValue = distributionSummary.certificateType
-            
+
+            if let expiryDate = distributionSummary.certificateExpiryDate {
+                self.certificateExpiryDate.isHidden = false
+                self.certificateExpiryDateValue.isHidden = false
+                self.certificateExpiryDateValue.stringValue = self.dateFormatter.string(from: expiryDate)
+            }
+
             self.provisioning.isHidden = false
             self.provisioningValue.isHidden = false
             self.provisioningValue.stringValue = distributionSummary.profileName

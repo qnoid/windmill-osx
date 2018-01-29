@@ -23,6 +23,13 @@ struct Export {
         let project: Project
         let metadata: Metadata
         
+        let dateFormatter: DateFormatter = {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yy"
+            
+            return dateFormatter
+        }()
+
         var dictionary:[String:Any]? {
             
             guard let key = self.key else {
@@ -60,6 +67,14 @@ struct Export {
         
         var certificateType: String {
             return certificate?["type"] ?? ""
+        }
+        
+        var certificateExpiryDate: Date? {
+            guard let dateExpires = certificate?["dateExpires"] else {
+                return nil
+            }
+            
+            return dateFormatter.date(from: dateExpires)
         }
         
         var profileName: String {
