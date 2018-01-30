@@ -22,8 +22,8 @@ echo "[io.windmill.windmill] [checkout] [debug] branch ${BRANCH}"
 echo "[io.windmill.windmill] [checkout] [debug] remote ${REMOTE}"
 
 function git_pull(){
-echo "[io.windmill.windmill] [checkout] [debug] git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard FETCH_HEAD"
-(cd "${PROJECT_DIRECTORY}"; git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard FETCH_HEAD)
+echo "[io.windmill.windmill] [checkout] [debug] git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master"
+(cd "${PROJECT_DIRECTORY}"; git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master)
 }
 
 function git_clone(){

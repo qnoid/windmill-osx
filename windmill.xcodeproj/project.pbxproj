@@ -31,6 +31,9 @@
 		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
 		BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */; };
+		BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */; };
+		BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */; };
+		BD915E742020715A006551A5 /* getting-started.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BD915E7320207139006551A5 /* getting-started.mp4 */; };
 		BD91A70D1F41E758004CA64B /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A70C1F41E758004CA64B /* ArchiveView.swift */; };
 		BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD91A70F1F41E78D004CA64B /* ActivityView.xib */; };
 		BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD91A7101F41E791004CA64B /* ArchiveView.xib */; };
@@ -127,6 +130,9 @@
 		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
 		BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
+		BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettingStartedWindowController.swift; sourceTree = "<group>"; };
+		BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GettingStartedWindowController.xib; sourceTree = "<group>"; };
+		BD915E7320207139006551A5 /* getting-started.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "getting-started.mp4"; sourceTree = "<group>"; };
 		BD91A70C1F41E758004CA64B /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		BD91A70F1F41E78D004CA64B /* ActivityView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivityView.xib; sourceTree = "<group>"; };
 		BD91A7101F41E791004CA64B /* ArchiveView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchiveView.xib; sourceTree = "<group>"; };
@@ -267,6 +273,8 @@
 				BDD6F0AE20187C2500D63D74 /* Export.swift */,
 				BDD6F0B02018B57500D63D74 /* DeployView.xib */,
 				BDD6F0B22018B5C100D63D74 /* DeployView.swift */,
+				BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */,
+				BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -318,6 +326,7 @@
 		BDB6D53E19440392001340B4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BD915E7320207139006551A5 /* getting-started.mp4 */,
 				BD081A231AB0AD1700B8E948 /* en.lproj */,
 				BDB6D53F19440392001340B4 /* Info.plist */,
 				BD25DB761C9EC5290001FEDF /* windmill.xcconfig */,
@@ -498,6 +507,8 @@
 				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
 				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
+				BD915E742020715A006551A5 /* getting-started.mp4 in Resources */,
+				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
 				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
@@ -525,6 +536,7 @@
 			files = (
 				BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */,
 				BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */,
+				BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */,
 				BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */,
 				BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */,
 				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,

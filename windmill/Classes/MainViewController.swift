@@ -173,6 +173,7 @@ class MainViewController: NSViewController {
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
         self.windmillImageView.stopAnimation()
         
+        self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
         self.activityViews[activityType]?.imageView.alphaValue = 0.1
         self.activityViews[activityType]?.stopLightsAnimation()
 

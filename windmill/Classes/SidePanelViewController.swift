@@ -241,7 +241,7 @@ class SidePanelViewController: NSViewController {
     }()
     
     lazy var accountValue: NSTextField = {
-        let accountValue = NSTextField(labelWithString: try! Keychain.defaultKeychain().findWindmillUser())
+        let accountValue = NSTextField(labelWithString: (try? Keychain.defaultKeychain().findWindmillUser()) ?? "")
         accountValue.isHidden = true
         accountValue.isSelectable = true
         return accountValue
@@ -409,7 +409,10 @@ class SidePanelViewController: NSViewController {
         
         switch activityType {
         case .checkout:
-            let commit = try! Repository.of(project: project)
+            guard let commit = try? Repository.of(project: project) else {
+                os_log("Repository for project not found. Have you cloned it?", log: .default, type: .debug)
+                return
+            }
             
             self.checkout.isHidden = false
             

@@ -19,3 +19,5 @@
 "windmill.ui.activityTextfield.idle"="idle";
 "windmill.ui.activityTextfield.stopped"="stopped";
 "artefact.toolTip"="This artefact will become available once you complete the steps outlined.";
+"notification.gettingstarted"="Use the menu icon to start monitoring a project.";
+"notification.gettingstarted.action"="Show me";

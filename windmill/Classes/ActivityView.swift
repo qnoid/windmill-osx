@@ -16,6 +16,7 @@ class ActivityView: NSView {
         didSet{
             imageView.layer = CALayer()
             imageView.wantsLayer = true
+            imageView.alphaValue = 0.1
         }
     }
     

@@ -9,7 +9,7 @@
         <scene sceneID="21W-NP-aZ8">
             <objects>
                 <windowController id="CPq-1v-PfW" customClass="MainWindowController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
+                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -500,7 +500,7 @@
                                     <items>
                                         <menuItem title="Debug Area" id="fGd-lG-drg">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Debug Area" id="nOh-K4-TO3">
+                                            <menu key="submenu" title="Debug Area" autoenablesItems="NO" id="nOh-K4-TO3">
                                                 <items>
                                                     <menuItem title="Show Debug Area" tag="1" alternate="YES" keyEquivalent="Y" toolTip="Show the full log of each stage." id="86b-Mo-8r7" userLabel="Show Debug Area">
                                                         <connections>
