@@ -13,7 +13,7 @@ import os
 private let userIdentifier = UUID().uuidString;
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate
 {
     @IBOutlet weak var menu: NSMenu! {
         didSet {
@@ -69,10 +69,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
     }
     
+    
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        self.mainWindowViewController?.window?.setIsVisible(false)
+    }
+    
     func applicationDidFinishLaunching(_ notification: Notification)
     {
         self.keychain.createUser(userIdentifier)
-        self.windmill.start()
+        let started = self.windmill.start()
+        
+        self.mainWindowViewController?.window?.setIsVisible(started)
+        
+        if !started {
+            let notification = NSUserNotification()
+            notification.title = "Getting started."
+            notification.informativeText = NSLocalizedString("notification.gettingstarted", comment: "")
+            notification.contentImage = #imageLiteral(resourceName: "statusItem")
+            
+            notification.actionButtonTitle = NSLocalizedString("notification.gettingstarted.action", comment: "")
+            
+            let center = NSUserNotificationCenter.default
+            center.delegate = self
+            center.deliver(notification)
+        }
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -82,6 +102,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
         }
         
         return true
+    }
+    
+    func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+        return true
+    }
+    
+    func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+        let gettingStartedWindowController = GettingStartedWindowController.make()
+        gettingStartedWindowController.showWindow(self)
+        gettingStartedWindowController.window?.orderFront(self)
     }
     
     @objc func mainWindowDidLoad(_ aNotification: Notification) {
@@ -134,6 +164,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate
             alert(error, window: window)
             return false
         }
+    }
+    
+    /**
+     `For this method to be invoked, the previous performDragOperation(_:) must have returned true.`
+     
+    */
+    @objc func concludeDragOperation(_ sender: NSDraggingInfo?)
+    {
+        self.mainWindowViewController?.window?.orderFrontRegardless()
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
