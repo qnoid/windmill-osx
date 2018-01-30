@@ -77,7 +77,7 @@ let WindmillDomain : Domain = "io.windmill"
     private func poll(_ project: Project, deadline:DispatchTime = DispatchTime.now(), ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
         
         let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(directoryPath: project.directoryPathURL.path, project: project), type: .poll) { [weak self] type, success, error in
-            if let error = (error as NSError?), error.code == 255 {
+            if let error = (error as NSError?), error.code == 1 {
                 callback()
                 return
             }
