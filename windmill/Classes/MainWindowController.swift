@@ -10,6 +10,15 @@ import AppKit
 
 class MainWindowController: NSWindowController, NSToolbarDelegate {
     
+    @discardableResult static func make(windmill: Windmill) -> MainWindowController? {
+        let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: Bundle(for: self))
+        
+        let mainWindowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("MainWindowController")) as? MainWindowController
+        mainWindowController?.windmill = windmill
+        
+        return mainWindowController
+    }
+
     @IBOutlet weak var toolbar: NSToolbar! {
         didSet {
             toolbar.delegate = self
@@ -17,9 +26,17 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     }
     @IBOutlet weak var panels: NSSegmentedControl!
 
-    weak var debugAreaMenuItem: NSMenuItem!
-    weak var sidePanelMenuItem: NSMenuItem!    
-
+    lazy var keychain: Keychain = Keychain.defaultKeychain()
+    var windmill: Windmill! {
+        didSet{
+            let consoleViewController = self.bottomPanelSplitViewController?.consoleViewController
+            windmill.delegate = consoleViewController
+            consoleViewController?.windmill = windmill
+            mainViewController?.windmill = windmill
+            sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
+        }
+    }
+    
     fileprivate lazy var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController = { [weak storyboard = self.storyboard] in
         storyboard?.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "ProjectTitlebarAccessoryViewController")) as! ProjectTitlebarAccessoryViewController
         }()
@@ -33,7 +50,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             if let isCollapsed = change.newValue {
                 sidePanelSplitViewController.sidePanelViewController?.toggle(isHidden: isCollapsed)
                 self?.setSidePanel(isOpen: !isCollapsed)
-                self?.sidePanelMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showSidePanel", comment: ""): NSLocalizedString("windmill.ui.toolbar.view.hideSidePanel", comment: "")
             }
         }
 
@@ -50,7 +66,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             if let isCollapsed = change.newValue {
                 bottomPanelSplitViewController.consoleViewController?.toggle(isHidden: isCollapsed)
                 self?.setBottomPanel(isOpen: !isCollapsed)
-                self?.debugAreaMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "")
             }
         }
 
@@ -68,15 +83,17 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         isSidePanelCollapsedObserver?.invalidate()
         isBottomPanelCollapsedObserver?.invalidate()
     }
-
+    
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.window?.collectionBehavior = [self.window!.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
-        self.window?.addTitlebarAccessoryViewController(self.projectTitlebarAccessoryViewController)
-        self.window?.titleVisibility = .hidden
-        self.window?.appearance = NSAppearance(named: .vibrantDark)
-
-        NotificationCenter.default.post(name: Notification.Name("mainWindowDidLoad"), object: self)
+        guard let window = self.window else {
+            return
+        }
+        
+        window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
+        window.addTitlebarAccessoryViewController(self.projectTitlebarAccessoryViewController)
+        window.titleVisibility = .hidden
+        window.appearance = NSAppearance(named: .vibrantDark)
     }
     
     func setBottomPanel(isOpen selected: Bool) {

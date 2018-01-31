@@ -68,7 +68,7 @@ struct ProcessManager {
                 
                 guard terminationStatus == 0 else {
                     queue.async {
-                        completionHandler(type, false, NSError.errorTermination(for: type, status: terminationStatus))
+                        completionHandler(type, false, NSError.errorTermination(process: process, for: type, status: terminationStatus))
                     }
                     return
                 }

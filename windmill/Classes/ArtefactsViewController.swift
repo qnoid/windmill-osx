@@ -48,16 +48,21 @@ class ArtefactsViewController: NSViewController {
     }()
     
     let defaultCenter = NotificationCenter.default
+    
+    weak var windmill: Windmill? {
+        didSet{
+            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didDeploySuccesfully(_:)), name: Windmill.Notifications.didDeployProject, object: windmill)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(ArtefactsViewController.didDeploySuccesfully(_:)), name: Windmill.Notifications.didDeployProject, object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
@@ -79,11 +84,9 @@ class ArtefactsViewController: NSViewController {
     }
 
     @objc func activityError(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
-            return
+        if let activity = aNotification.userInfo?["activity"] as? ActivityType {
+            self.artefactViews[activity]?.stopStageAnimation()
         }
-
-        self.artefactViews[activityType]?.stopStageAnimation()
     }
     
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {

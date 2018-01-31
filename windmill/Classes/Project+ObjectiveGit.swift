@@ -15,6 +15,10 @@ struct Repository: CustomDebugStringConvertible {
     static func of(project: Project) throws -> Repository.Commit {
         return try Repository.parse(fullPathOfLocalGitRepo: project.directoryPathURL.path)
     }
+
+    static func parse(localGitRepoURL: URL) throws -> Repository.Commit {
+        return try parse(fullPathOfLocalGitRepo: localGitRepoURL.path)
+    }
     
     static func parse(fullPathOfLocalGitRepo localGitRepo: String) throws -> Repository.Commit
     {

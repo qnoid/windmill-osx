@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="CPq-1v-PfW">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -8,7 +8,7 @@
         <!--Window Controller-->
         <scene sceneID="21W-NP-aZ8">
             <objects>
-                <windowController id="CPq-1v-PfW" customClass="MainWindowController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="MainWindowController" id="CPq-1v-PfW" customClass="MainWindowController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
@@ -273,6 +273,7 @@
                         <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
                         <outlet property="deployActivityView" destination="QRl-WA-0CJ" id="Fsx-NL-yad"/>
                         <outlet property="exportActivityView" destination="miV-du-5Xh" id="3fX-jA-mId"/>
+                        <outlet property="mainView" destination="6j5-vW-ygG" id="dZY-cO-rs9"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
                         <outlet property="windmillImageView" destination="PE8-MR-CeU" id="Jcd-Qv-2UU"/>
                     </connections>
@@ -376,7 +377,14 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="jgg-2H-TJQ">
                                     <items>
-                                        <menuItem title="New" keyEquivalent="n" id="xjJ-Gh-TYv"/>
+                                        <menuItem title="Open..." keyEquivalent="o" id="xjJ-Gh-TYv">
+                                            <string key="toolTip">Open the folder that contains your Xcode project/workspace as cloned by a remote repo. 
+
+Windmill will perform a full checkout of the remote repo and start monitoring.</string>
+                                            <connections>
+                                                <action selector="openDocument:" target="aS9-1w-R0E" id="9AN-uj-Nnq"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

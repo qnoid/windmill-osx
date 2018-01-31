@@ -6,7 +6,13 @@
   Copyright (c) 2015 qnoid.com. All rights reserved.
 */
 "windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will perform a full checkout of the remote repo and start monitoring.";
-"windmill.toolTip.error"="Keep the windmill spinning!";
+"windmill.toolTip.active.checkout"="Windmill is currently checking out your project from the remote repo.";
+"windmill.toolTip.active.build"="Windmill is currently building your app to make sure you haven't forgotten to check in any files.";
+"windmill.toolTip.active.test"="Windmill is currently running all of your test targets.";
+"windmill.toolTip.active.archive"="Windmill is creating your project's archive. This enables you to submit your app to the App Store!";
+"windmill.toolTip.active.export"="Windmill is exporting your project's IPA. This allows you to do in-house testing with your test devices.";
+"windmill.toolTip.active.deploy"="Windmill is making the project IPA available for OTA distribution. You will be able to demo your app on the spot!";
+"windmill.toolTip.active.poll"="Windmill is monitoring the project repository for changes. As soon as a new commit is picked up, it will pull the changes and verify everything still works.";
 "windmill.toolTip.active"="There is a light breeze.";
 "windmill.repo.error.description"="No git repository under %@";
 "windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\n* `git init` to create a new git.\n* `git remote add origin <url>` to add a remote origin.\n* `git push` to push the folder to the repo.";

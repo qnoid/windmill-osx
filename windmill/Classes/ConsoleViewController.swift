@@ -60,9 +60,15 @@ class ConsoleViewController: NSViewController, WindmillDelegate {
             textView.usesRuler = false
         }
     }
-
+    
     let defaultCenter = NotificationCenter.default
     
+    weak var windmill: Windmill? {
+        didSet{
+            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+        }
+    }
     var outputBuffer = OutputBuffer()
 
     static func make() -> ConsoleViewController {
@@ -73,18 +79,36 @@ class ConsoleViewController: NSViewController, WindmillDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
         self.outputBuffer = OutputBuffer()
-        self.textView.string = ""
-        self.textView.isSelectable = false
+        
+        if let textView = textView {
+            textView.string = ""
+            textView.isSelectable = false
+        }
     }
     
     @objc func activityError(_ aNotification: Notification) {
-        self.outputBuffer.flush(to: self.textView.textStorage)
+        if let error = aNotification.userInfo?["error"] as? NSError {
+            self.outputBuffer.record(count: error.localizedDescription.count)
+        }
+        
+        guard let textView = textView else {
+            
+            if let error = aNotification.userInfo?["error"] as? NSError {
+                self.outputBuffer.write(output: error.localizedDescription)
+            }
+            return
+        }
+        
+        self.outputBuffer.flush(to: textView.textStorage)
+
+        if let error = aNotification.userInfo?["error"] as? NSError {
+            self.outputBuffer.append(to: textView.textStorage, output: error.localizedDescription)
+        }
+        
         let range = NSRange(location:self.outputBuffer.count,length:0)
         self.textView.scrollRangeToVisible(range)
         self.textView.isSelectable = true

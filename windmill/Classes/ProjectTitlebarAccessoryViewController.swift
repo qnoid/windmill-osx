@@ -12,18 +12,24 @@ import AppKit
 class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController {
     @IBOutlet weak var schemeTextField: NSTextField!
     
-    var project: Project! {
+    var project: Project? {
         didSet {
+            guard let project = project else {
+                return
+            }
+            
             self.schemeTextField.stringValue = project.scheme
         }
     }
     
     @IBAction func didTouchUpInsideApplyButton(_ button: NSButton) {
-        
+
+        guard let project = project else {
+            return
+        }
+
         let scheme = self.schemeTextField.stringValue
         
-        let project = Project(name: self.project.name, scheme: scheme, origin: self.project.origin)
-        
-        OutputStream.outputStreamOnProjects().write([project])
+        OutputStream.outputStreamOnProjects().write([Project(name: project.name, scheme: scheme, origin: project.origin)])
     }
 }

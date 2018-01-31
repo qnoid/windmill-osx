@@ -17,7 +17,7 @@ echo "[io.windmill.windmill] [deploy] [debug] project name ${PROJECT_NAME}"
 echo "[io.windmill.windmill] [deploy] [debug] scheme ${SCHEME_NAME}"
 echo "[io.windmill.windmill] [deploy] [debug] ${WINDMILL_BASE_URL}/account/$ACCOUNT/windmill"
 
-curl -i -F "ipa=@${WINDMILL_HOME}/${PROJECT_NAME}/export/$SCHEME_NAME.ipa" -F "plist=@${WINDMILL_HOME}/${PROJECT_NAME}/export/manifest.plist" "${WINDMILL_BASE_URL}/account/${ACCOUNT}/windmill"
+curl --fail --silent --show-error -F "ipa=@${WINDMILL_HOME}/${PROJECT_NAME}/export/$SCHEME_NAME.ipa" -F "plist=@${WINDMILL_HOME}/${PROJECT_NAME}/export/manifest.plist" "${WINDMILL_BASE_URL}/account/${ACCOUNT}/windmill" 2>/dev/null
 
 ## Deploy
 #

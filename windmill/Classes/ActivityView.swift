@@ -14,8 +14,6 @@ class ActivityView: NSView {
     @IBOutlet weak var titleLabel: NSTextField!
     @IBOutlet weak var imageView: NSImageView! {
         didSet{
-            imageView.layer = CALayer()
-            imageView.wantsLayer = true
             imageView.alphaValue = 0.1
         }
     }
@@ -53,6 +51,10 @@ class ActivityView: NSView {
     }
 
     func startLightsAnimation(activityType: ActivityType) {
+        if let _ = self.imageView.layer?.sublayers?[0].animation(forKey: "lights") {
+            self.stopAnimation()
+        }
+        
         let animations = self.animations(activityType: activityType)
         
         self.imageView.layer?.sublayers?[0].add(CAAnimation.Windmill.lightsAnimation(size: self.imageView.bounds.size, animations: animations), forKey: "lights")

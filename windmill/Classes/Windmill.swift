@@ -13,14 +13,12 @@ import os
 
 typealias WindmillProvider = () -> Windmill
 
-/// domain is WindmillDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
+/// domain is WindmillErrorDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
 protocol WindmillError: Error {
     
 }
 
-typealias Domain = String
-
-let WindmillDomain : Domain = "io.windmill"
+let WindmillErrorDomain : String = "io.windmill"
 
 /* final */ class Windmill: ProcessManagerDelegate
 {
@@ -29,18 +27,13 @@ let WindmillDomain : Domain = "io.windmill"
         static let didArchiveProject = Notification.Name("didArchiveProject")
         static let didExportProject = Notification.Name("export")
         static let didDeployProject = Notification.Name("deploy")
+        static let activityDidLaunch = Notification.Name("activityDidLaunch")
+        static let activityDidExitSuccesfully = Notification.Name("activityDidExitSuccesfully")
+        static let activityError = Notification.Name("activityError")
     }
     
-    class func windmill(_ keychain: Keychain) -> Windmill
-    {
-        let projects = InputStream.inputStreamOnProjects().read()
-        
-        os_log("%{public}@", log: .default, type: .debug, projects)
-        
-        let windmill = Windmill(keychain: keychain)
-        windmill.projects = projects
-        
-        return windmill
+    class func windmill(_ keychain: Keychain) -> Windmill {
+        return Windmill(keychain: keychain)
     }
     
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
@@ -50,8 +43,6 @@ let WindmillDomain : Domain = "io.windmill"
     
     let keychain: Keychain
     var processManager: ProcessManager
-    
-    var projects : Array<Project>
     
     convenience init()
     {
@@ -63,15 +54,7 @@ let WindmillDomain : Domain = "io.windmill"
 
         self.keychain = keychain
         self.processManager = processManager
-        self.projects = []
         self.processManager.delegate = self
-    }
-    
-    private func add(_ project: Project)
-    {
-        self.projects.append(project)
-        
-        OutputStream.outputStreamOnProjects().write(self.projects)
     }
     
     private func poll(_ project: Project, deadline:DispatchTime = DispatchTime.now(), ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
@@ -104,7 +87,7 @@ let WindmillDomain : Domain = "io.windmill"
     
     /* fileprivate */ func deploy(project: Project, at directoryPath: String, for user: String, completionHandler: @escaping ProcessCompletionHandler)
     {
-        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: project, userInfo: ["directoryPath":directoryPath, "user":user])
+        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: self, userInfo: ["directoryPath":directoryPath, "user":user, "project":project])
         
         let checkout = self.processManager.makeCompute(process: Process.makeCheckout(repoName: project.name, origin: project.origin),type: .checkout)
         let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, project: project), type: .build)
@@ -178,7 +161,7 @@ let WindmillDomain : Domain = "io.windmill"
     
     func didReceive(process: Process, type: ActivityType, standardError: String, count: Int) {
         let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-        os_log("%{public}@", log: log, type: .error, standardError)
+        os_log("%{public}@", log: log, type: .debug, standardError)
         self.delegate?.windmill(self, standardError: standardError, count: count)
     }
     
@@ -196,23 +179,33 @@ let WindmillDomain : Domain = "io.windmill"
             return
         }
         
-        let notification = Process.Notifications.makeDidLaunchNotification(type)
-        
-        NotificationCenter.default.post(notification)
+        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
+        os_log("did launch `%{public}@`", log: log, type: .debug, type.description)
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.activityDidLaunch, object: self, userInfo: ["activity":type.rawValue])
+        }
     }
     
     func didComplete(type: ActivityType, success: Bool, error: Error?) {
         
         guard success else {
-            if let error = (error as NSError?), let type = error.userInfo["type"] as? ActivityType {
-                let notification = Process.Notifications.makeErrorNotification(type)
-                NotificationCenter.default.post(notification)
-            } else {
-                os_log("Error does not hold an ActivityType for its 'type' key. Double check what instance 'type' is.", log: .default, type: .error)
+            if let error = error as NSError? {
+                let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
+                os_log("%{public}@", log: log, type: .error, error)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": type])
+                }
             }
+
             return
         }
-        NotificationCenter.default.post(Process.Notifications.makeDidExitSuccesfullyNotification(type))
+        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
+        os_log("did complete successfully `%{public}@`", log: log, type: .debug, type.description)
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.activityDidExitSuccesfully, object: self, userInfo: ["activity":type.rawValue])
+        }
     }
     
     func didArchive(project: Project) {
@@ -237,15 +230,14 @@ let WindmillDomain : Domain = "io.windmill"
      
      /**
      
-     Adds the given *project* to the list of projects.
+     Attempt to deploy and monitor the given *project*.
      
      If #delegate is set, you will receive a callback to WindmillDelegate#windmillself, projects:self.projects, addedProject project: project)
      if the project was added.
      
      - precondition: the given *project* must have a valid remote origin
      
-     - parameter project: the project to add to Windmill
-     - returns: true if the 'project' was added, false if already added.
+     - parameter project: the project to deploy to Windmill
      */
      
      project was added
@@ -253,28 +245,10 @@ let WindmillDomain : Domain = "io.windmill"
      project failed to create
      
      */
-    @discardableResult func create(_ project: Project) -> Bool
+    func start(_ project: Project)
     {
-        guard !self.projects.contains(project) else {
-            os_log("%{public}@", log: .default, type: .info, "Project already added: \(project)")
-            return false
-        }
-        
-        self.add(project)
         self.deploy(project: project) {[weak self] _,_,_ in
             self?.monitor(project)
         }
-        
-        return true
-    }
-    
-    @discardableResult func start() -> Bool {
-        for project in self.projects {
-            self.deploy(project: project) {[weak self] _,_,_ in
-                self?.monitor(project)
-            }
-        }
-        
-        return self.projects.count > 0
     }
 }
