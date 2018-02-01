@@ -59,7 +59,7 @@ let WindmillErrorDomain : String = "io.windmill"
     
     private func poll(_ project: Project, deadline:DispatchTime = DispatchTime.now(), ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
         
-        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(directoryPath: project.directoryPathURL.path, project: project), type: .poll) { [weak self] type, success, error in
+        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(directoryPath: project.directoryPathURL.path, project: project), type: .poll) { [weak self] process, type, success, error in
             if let error = (error as NSError?), error.code == 1 {
                 callback()
                 return
@@ -79,7 +79,7 @@ let WindmillErrorDomain : String = "io.windmill"
     
     private func monitor(_ project: Project) {
         self.poll(project, ifCaseOfBranchBehindOrigin: { [weak self] in
-            self?.deploy(project: project) {_,_,_ in
+            self?.deploy(project: project) {_, _,_,_ in
                 self?.monitor(project)
             }
         })
@@ -101,21 +101,21 @@ let WindmillErrorDomain : String = "io.windmill"
         let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, project: project), type: .export)
         let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, project: project, forUser: user), type: .deploy)
 
-        let alwaysChain = ProcessCompletionHandlerChain { [weak self] (type, isSuccess, error) in
+        let alwaysChain = ProcessCompletionHandlerChain { [weak self] (process, type, isSuccess, error) in
             self?.didComplete(type: type, success: isSuccess, error: error)
         }
         
-        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (type, isSuccess, error) in            
-            build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                readTestMetadata.dispatchWorkItem(DispatchQueue.main, { (type, isSuccess, error) in
-                    test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
-                        archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (process, type, isSuccess, error) in
+            build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
+                readTestMetadata.dispatchWorkItem(DispatchQueue.main, { (process, type, isSuccess, error) in
+                    test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
+                        archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
                             self?.didArchive(project: project)
-                            export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (type, isSuccess, error) in
+                            export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
                                 self?.didExport(project: project)
-                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success{ (type, isSuccess, error) in
+                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success{ (process, type, isSuccess, error) in
                                     self?.didDeploy(project: project)
-                                    completionHandler(type, isSuccess, error)
+                                    completionHandler(process, type, isSuccess, error)
                                 }).perform()
                             }).perform()
                         }).perform()
@@ -247,7 +247,7 @@ let WindmillErrorDomain : String = "io.windmill"
      */
     func start(_ project: Project)
     {
-        self.deploy(project: project) {[weak self] _,_,_ in
+        self.deploy(project: project) {[weak self] _, _,_,_ in
             self?.monitor(project)
         }
     }

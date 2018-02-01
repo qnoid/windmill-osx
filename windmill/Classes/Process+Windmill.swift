@@ -32,7 +32,6 @@ extension Process {
             let count = read(fileDescriptor, &buffer, estimated)
             
             guard case let availableData = Data(buffer), count > 0 else {
-                readSource.cancel()
                 return
             }
             
