@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias ProcessCompletionHandler = (_ type: ActivityType, _ success: Bool, _ error: Error?) -> Void
+typealias ProcessCompletionHandler = (_ process: Process, _ type: ActivityType, _ success: Bool, _ error: Error?) -> Void
 
 struct ProcessCompletionHandlerChain {
     let completionHandler: ProcessCompletionHandler
@@ -19,14 +19,14 @@ struct ProcessCompletionHandlerChain {
 
     func chain(success: @escaping ProcessCompletionHandler) -> ProcessCompletionHandlerChain {
         
-        return ProcessCompletionHandlerChain { [completionHandler = self.completionHandler] type, isSuccess, error in
-            completionHandler(type, isSuccess, error)
+        return ProcessCompletionHandlerChain { [completionHandler = self.completionHandler] process, type, isSuccess, error in
+            completionHandler(process, type, isSuccess, error)
             
             guard isSuccess else {
                 return
             }
             
-            success(type, isSuccess, error)
+            success(process, type, isSuccess, error)
         }
     }
 }
@@ -68,13 +68,13 @@ struct ProcessManager {
                 
                 guard terminationStatus == 0 else {
                     queue.async {
-                        completionHandler(type, false, NSError.errorTermination(for: type, status: terminationStatus))
+                        completionHandler(process, type, false, NSError.errorTermination(process: process, for: type, status: terminationStatus))
                     }
                     return
                 }
                 
                 queue.async {
-                    completionHandler(type, true, nil)
+                    completionHandler(process, type, true, nil)
                 }
             }
             

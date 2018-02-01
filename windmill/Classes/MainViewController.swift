@@ -37,11 +37,12 @@ extension NSView {
 }
 
 @IBDesignable
-class MainView: NSView {
+class MainView: NSView, CALayerDelegate {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         
+        self.layer = CALayer()
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
     }
@@ -49,6 +50,7 @@ class MainView: NSView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
+        self.layer = CALayer()
         self.wantsLayer = true
         self.layerContentsRedrawPolicy = .onSetNeedsDisplay
     }
@@ -56,14 +58,23 @@ class MainView: NSView {
     override var intrinsicContentSize: NSSize {
         return NSSize(width: 850, height: 622)
     }
+    
+    func display(_ layer: CALayer) {
+        CALayer.Windmill.positionAnchorPoint(layer)
+        
+    }
 }
 
 class MainViewController: NSViewController {
     
+    @IBOutlet weak var mainView: MainView!
     @IBOutlet var windmillImageView: NSImageView! {
         didSet{
+            windmillImageView.layer = CALayer()
             windmillImageView.wantsLayer = true
+            windmillImageView.layerContentsRedrawPolicy = .onSetNeedsDisplay
             windmillImageView.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
+            windmillImageView.layer?.delegate = self.mainView
         }
     }
     
@@ -85,9 +96,23 @@ class MainViewController: NSViewController {
         return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .deploy: self.deployActivityView]
     }()
     
+    var artefactsViewController: ArtefactsViewController? {
+        return self.childViewControllers[0] as? ArtefactsViewController
+    }
+    
     let defaultCenter = NotificationCenter.default
     
+    weak var windmill: Windmill? {
+        didSet{
+            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.artefactsViewController?.windmill = windmill
+        }
+    }
     var project: Project?
+    
     
     static func make() -> MainViewController {
         let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: MainViewController.self))
@@ -110,8 +135,7 @@ class MainViewController: NSViewController {
     
     override func viewDidLayout() {
         super.viewDidLayout()
-        CALayer.Windmill.positionAnchorPoint(self.windmillImageView.layer!)
-        
+        self.windmillImageView.layer?.setNeedsDisplay()        
     }
     
     override func loadView() {
@@ -122,15 +146,10 @@ class MainViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityError(_:)), name: Process.Notifications.activityError, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(MainViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
-        guard let project = aNotification.object as? Project else {
+        guard let project = aNotification.userInfo?["project"] as? Project else {
             return
         }
         
@@ -138,7 +157,6 @@ class MainViewController: NSViewController {
         
         self.windmillImageView.startAnimation()
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
-        self.view.window?.title = project.name        
         for activityView in self.activityViews.values {
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
@@ -151,11 +169,9 @@ class MainViewController: NSViewController {
         guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
             return
         }
-        
-        let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
-        os_log("%{public}@", log: log, type: .debug, activityType.description)
-        
+                
         self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
+        self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active.\(activityType.rawValue)", comment: "")
         self.activityViews[activityType]?.imageView.alphaValue = 1.0
         self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
         
@@ -163,30 +179,27 @@ class MainViewController: NSViewController {
     }
 
     @objc func activityError(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
-            return
+
+        self.windmillImageView.stopAnimation()
+        self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
+        
+        if let error = aNotification.userInfo?["error"] as? NSError {
+            self.windmillImageView.toolTip = error.localizedDescription
         }
 
-        let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
-        os_log("%{public}@", log: log, type: .error, activityType.description)
-        
-        self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.error", comment: "")
-        self.windmillImageView.stopAnimation()
-        
-        self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
-        self.activityViews[activityType]?.imageView.alphaValue = 0.1
-        self.activityViews[activityType]?.stopLightsAnimation()
-
-        self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
+        if let activity = aNotification.userInfo?["activity"] as? ActivityType {
+            self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activity.imageName))
+            self.activityViews[activity]?.imageView.alphaValue = 0.1
+            self.activityViews[activity]?.stopLightsAnimation()
+        } else {
+            os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
+        }
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
             return
         }
-
-        let log = OSLog(subsystem: "io.windmill.windmill", category: activityType.rawValue)
-        os_log("%{public}@", log: log, type: .debug, activityType.description)
 
         self.activityViews[activityType]?.stopLightsAnimation()
     }

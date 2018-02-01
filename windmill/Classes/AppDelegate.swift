@@ -43,32 +43,79 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
 
+    var isSidePanelCollapsedObserver: NSKeyValueObservation?
+    var isBottomPanelCollapsedObserver: NSKeyValueObservation?
+
     var mainWindowViewController: MainWindowController? {
         didSet {
             guard let mainWindowViewController = mainWindowViewController else {
                 return
             }
-        
-            mainWindowViewController.sidePanelMenuItem = sidePanelMenuItem
-            mainWindowViewController.debugAreaMenuItem = debugAreaMenuItem
             mainViewController = mainWindowViewController.mainViewController
-            windmill.delegate = mainWindowViewController.bottomPanelSplitViewController?.consoleViewController
+            
+            self.isSidePanelCollapsedObserver = mainWindowViewController.sidePanelSplitViewController?.onCollapsed { [weak self = self](splitviewitem, change) in
+                if let isCollapsed = change.newValue {
+                    self?.sidePanelMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showSidePanel", comment: ""): NSLocalizedString("windmill.ui.toolbar.view.hideSidePanel", comment: "")
+                }
+            }
+
+            self.isBottomPanelCollapsedObserver = mainWindowViewController.bottomPanelSplitViewController?.onCollapsed { [weak self = self](splitviewitem, change) in
+                if let isCollapsed = change.newValue {
+                    self?.debugAreaMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "")
+                }
+            }
         }
     }
     
     var mainViewController: MainViewController?
     
     lazy var keychain: Keychain = Keychain.defaultKeychain()
-    lazy var windmill: Windmill = Windmill.windmill(self.keychain)
     
-    override init() {
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.mainWindowDidLoad(_:)), name: NSNotification.Name("mainWindowDidLoad"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.activityError(_:)), name: Process.Notifications.activityError, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
+    var projects : Array<Project> = InputStream.inputStreamOnProjects().read() {
+        didSet {
+            OutputStream.outputStreamOnProjects().write(self.projects)
+        }
+    }
+
+    deinit {
+        isSidePanelCollapsedObserver?.invalidate()
+        isBottomPanelCollapsedObserver?.invalidate()
+    }
+
+    private func add(_ project: Project) -> Bool
+    {
+        guard !self.projects.contains(project) else {
+            return false
+        }
+        
+        self.projects = []
+        self.projects.append(project)
+        return true
     }
     
+    private func start(windmill: Windmill, project: Project) {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+        
+        windmill.start(project)
+    }
+    
+    private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
+        self.mainWindowViewController = mainWindowController
+        self.mainWindowViewController?.window?.makeKeyAndOrderFront(self)
+    }
+    
+    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, project: Project) {
+        guard let mainWindowController = MainWindowController.make(windmill: windmill), let window = mainWindowController.window else {
+            return
+        }
+        
+        window.title = project.name
+        self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
+        self.start(windmill: windmill, project: project)
+    }
     
     func applicationWillFinishLaunching(_ notification: Notification) {
         self.mainWindowViewController?.window?.setIsVisible(false)
@@ -77,11 +124,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     func applicationDidFinishLaunching(_ notification: Notification)
     {
         self.keychain.createUser(userIdentifier)
-        let started = self.windmill.start()
-        
-        self.mainWindowViewController?.window?.setIsVisible(started)
-        
-        if !started {
+
+        let hasProjects = projects.count > 0
+
+        if !hasProjects {
             let notification = NSUserNotification()
             notification.title = "Getting started."
             notification.informativeText = NSLocalizedString("notification.gettingstarted", comment: "")
@@ -93,6 +139,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             center.delegate = self
             center.deliver(notification)
         }
+
+        if let project = projects.last {
+            makeMainWindowKeyAndOrderFront(windmill: Windmill.windmill(self.keychain), project: project)
+        }
+        
+        mainWindowViewController?.window?.setIsVisible(hasProjects)
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -114,23 +166,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         gettingStartedWindowController.window?.orderFront(self)
     }
     
-    @objc func mainWindowDidLoad(_ aNotification: Notification) {
-        guard let mainWindowViewController = aNotification.object as? MainWindowController else {
-            os_log("%{public}@", log:.default, type: .error, "`MainWindowController` did not send the `mainWindowDidLoad` notification. Did you set the `object` property?")
-            return
-        }
-        
-        self.mainWindowViewController = mainWindowViewController
-    }
     
     @objc func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .copy;
+        return .link;
     }
     
     @objc func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .copy;
+        return .link;
         
     }
     
@@ -138,25 +182,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     {
     }
     
-    @objc func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool
-    {
-        return true;
-        
-    }
-    
-    @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
+    @objc func prepareForDragOperation(_ info: NSDraggingInfo) -> Bool {
         
         guard let folder = info.draggingPasteboard().firstFilename() else {
             return false
         }
-        
+
         os_log("%{public}@", log: .default, type: .info, folder)
-        
+
         do {
             let commit = try Repository.parse(fullPathOfLocalGitRepo: folder)
             let project = Project.make(repository: commit.repository)
-            
-            return self.windmill.create(project)
+
+            return self.add(project)
         } catch let error as NSError {
             guard let window = self.mainWindowViewController?.window else {
                 return false
@@ -164,6 +202,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             alert(error, window: window)
             return false
         }
+    }
+    
+    @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
+
+        guard let project = projects.last else {
+            os_log("Did you add the project in the array when `prepareForDragOperation` was called?", log: .default, type: .error)
+            return false
+        }
+        
+        makeMainWindowKeyAndOrderFront(windmill: Windmill.windmill(self.keychain), project: project)
+
+        return true
     }
     
     /**
@@ -175,6 +225,43 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.mainWindowViewController?.window?.orderFrontRegardless()
     }
     
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(openDocument(_:)) {
+            return self.mainWindowViewController?.window != nil
+        }
+        
+        return true
+    }
+    
+    @IBAction func openDocument(_ sender: Any) {
+        guard let window = self.mainWindowViewController?.window else {
+            return
+        }
+        
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseDirectories = true
+        openPanel.canChooseFiles = false
+
+        openPanel.beginSheetModal(for: window)  { response in
+            
+            guard response == NSApplication.ModalResponse.OK else {
+                return
+            }
+
+            do{
+                let url = openPanel.urls[0]
+                let commit = try Repository.parse(localGitRepoURL: url)
+                let project = Project.make(repository: commit.repository)
+            
+                if self.add(project) {
+                    self.makeMainWindowKeyAndOrderFront(windmill: Windmill.windmill(self.keychain), project: project)
+                }
+            } catch let error as NSError {
+                alert(error, window: window)
+            }
+        }
+    }
+    
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.cleanMenu.isEnabled = false
@@ -183,11 +270,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
         let activityType = ActivityType(rawValue: aNotification.userInfo!["activity"] as! String)!
-
+        self.activityMenuItem.toolTip = NSLocalizedString("windmill.toolTip.active.\(activityType.rawValue)", comment: "")
         self.activityMenuItem.title = activityType.description
     }
 
     @objc func activityError(_ aNotification: Notification) {
+        if let error = aNotification.userInfo?["error"] as? NSError {
+            statusItem.button?.toolTip = error.localizedDescription
+        }
+
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         self.cleanMenu.isEnabled = true
@@ -223,11 +314,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
 
     @IBAction func run(_ sender: Any) {
+        guard let project = projects.last else {
+            os_log("Did you add the last project dragged and dropped in `prepareForDragOperation`?", log: .default, type: .error)
+            return
+        }
+        
         let windmill = Windmill.windmill(self.keychain)
-        windmill.delegate = self.windmill.delegate
-        self.windmill = windmill
+        self.mainWindowViewController?.windmill = windmill
         self.toggleDebugArea(sender: sender, isCollapsed: true)
-        self.windmill.start()
+        self.start(windmill: windmill, project: project)
     }
     
     @IBAction func cleanBuildFolder(_ sender: Any) {

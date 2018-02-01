@@ -28,7 +28,7 @@ extension NSError
     {
         let failureDescription = "Error parsing location of local git repo: \(localGitRepo)"
         
-        return NSError(domain: WindmillDomain, code: WindmillErrorCode.noRepoError.rawValue, userInfo:
+        return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.noRepoError.rawValue, userInfo:
             [NSLocalizedDescriptionKey: failureDescription,
              NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.latestCommit.error.failureReason", comment:"")])
     }
@@ -39,29 +39,30 @@ extension NSError
         let failureDescription = String(format:localizedDescription, localGitRepo)
         
         if let underlyingError = underlyingError {
-            return NSError(domain: WindmillDomain, code: WindmillErrorCode.repoError.rawValue, userInfo:
+            return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.repoError.rawValue, userInfo:
                 [NSLocalizedDescriptionKey: failureDescription,
                  NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.repo.error.failureReason", comment:""),
                  NSUnderlyingErrorKey: underlyingError])
         }
         
-        return NSError(domain: WindmillDomain, code: WindmillErrorCode.repoError.rawValue, userInfo:
+        return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.repoError.rawValue, userInfo:
             [NSLocalizedDescriptionKey: failureDescription,
              NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.repo.error.failureReason", comment:"")])
     }
     
     class func errorCommit(_ underlyingError : NSError) -> Error {
-        return NSError(domain: WindmillDomain, code: WindmillErrorCode.commitError.rawValue, userInfo:
+        return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.commitError.rawValue, userInfo:
             [NSLocalizedDescriptionKey: NSLocalizedString("windmill.latestCommit.error.description", comment:""),
              NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.latestCommit.error.failureReason", comment:""),
              NSUnderlyingErrorKey: underlyingError])
     }
     
-    class func errorTermination(for activityType: ActivityType, status code: Int) -> Error
+    class func errorTermination(process: Process, for activityType: ActivityType, status code: Int) -> Error
     {
-        let failureDescription = "Activity '\(String(describing: activityType.rawValue))' exited with error"
+        let domain = process.domain(type: activityType)
+        let failureDescription = process.failureDescription(type: activityType, exitStatus: code)
         
-        return NSError(domain: WindmillDomain, code: code, userInfo:
-            [NSLocalizedDescriptionKey: failureDescription, "type": activityType])
+        return NSError(domain: domain, code: code, userInfo:
+            [NSLocalizedDescriptionKey: failureDescription])
     }
 }

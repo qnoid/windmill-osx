@@ -267,6 +267,13 @@ class SidePanelViewController: NSViewController {
 
     let defaultCenter = NotificationCenter.default
     
+    weak var windmill: Windmill? {
+        didSet {
+            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+        }
+    }
     var project: Project?
     
     let dateFormatter: DateFormatter = {
@@ -336,13 +343,10 @@ class SidePanelViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.layout()
-        self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.activityDidLaunch(_:)), name: Process.Notifications.activityDidLaunch, object: nil)
-        self.defaultCenter.addObserver(self, selector: #selector(SidePanelViewController.activityDidExitSuccesfully(_:)), name: Process.Notifications.activityDidExitSuccesfully, object: nil)
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
-        guard let project = aNotification.object as? Project else {
+        guard let project = aNotification.userInfo?["project"] as? Project else {
             return
         }
         

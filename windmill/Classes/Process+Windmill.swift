@@ -32,7 +32,6 @@ extension Process {
             let count = read(fileDescriptor, &buffer, estimated)
             
             guard case let availableData = Data(buffer), count > 0 else {
-                readSource.cancel()
                 return
             }
             
@@ -82,19 +81,22 @@ extension Windmill {
 
 extension Process
 {
-    struct Notifications {
-        static let activityDidLaunch = Notification.Name("activityDidLaunch")
-        static let activityError = Notification.Name("activityError")
-        static let activityDidExitSuccesfully = Notification.Name("activityDidExitSuccesfully")
+    func domain(type: ActivityType) -> String {
+        switch type {
+        case .checkout, .deploy, .poll, .undefined:
+            return WindmillErrorDomain
+        case .build, .test, .archive, .export:
+            return NSPOSIXErrorDomain
+        }
+    }
+    
+    func failureDescription(type: ActivityType, exitStatus: Int) -> String {
         
-        static func makeDidLaunchNotification(_ type: ActivityType) -> Notification {
-            return Notification(name: activityDidLaunch, object: nil, userInfo: ["activity":type.rawValue])
-        }
-        static func makeErrorNotification(_ type: ActivityType) -> Notification {
-            return Notification(name: activityError, object: nil, userInfo: ["activity":type.rawValue])
-        }
-        static func makeDidExitSuccesfullyNotification(_ type: ActivityType) -> Notification {
-            return Notification(name: activityDidExitSuccesfully, object: nil, userInfo: ["activity":type.rawValue])
+        switch type {
+        case .checkout, .deploy, .poll, .undefined:
+            return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
+        case .build, .test, .archive, .export:
+            return "Command xcodebuild failed with exit code \(exitStatus)"
         }
     }
     
