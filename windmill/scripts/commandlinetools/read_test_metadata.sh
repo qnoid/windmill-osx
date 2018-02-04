@@ -12,10 +12,7 @@ SCHEME_NAME=$2
 
 DEPLOYMENT_TARGET=$(xcodebuild -showBuildSettings -scheme ${SCHEME_NAME} | awk '$1 == "IPHONEOS_DEPLOYMENT_TARGET" { print $3 }')
 
-echo "[io.windmill.windmill] [test] [debug] iOS Deployment Target '${DEPLOYMENT_TARGET}'"
-
 PARSE="import sys, json; print json.load(sys.stdin)[\"devices\"][\"iOS ${DEPLOYMENT_TARGET}\"][0][\"name\"]"
-echo "[windmill] [debug] Parsing list of devices using '$PARSE'"
 
 DESTINATION_NAME=$(xcrun simctl list devices --json | python -c "$PARSE")
 

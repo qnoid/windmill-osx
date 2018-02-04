@@ -10,11 +10,6 @@ PROJECT_NAME=$2
 SCHEME=$3
 CONFIGURATION=$4
 
-echo "[io.windmill.windmill] [build] [debug] windmill home ${WIDMILL_HOME}"
-echo "[io.windmill.windmill] [build] [debug] project name ${PROJECT_NAME}"
-echo "[io.windmill.windmill] [build] [debug] scheme ${SCHEME}"
-echo "[io.windmill.windmill] [build] [debug] configuration ${CONFIGURATION}"
-
 xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build -derivedDataPath ${WIDMILL_HOME}/${PROJECT_NAME}/build
 
 #STATUS=$?
