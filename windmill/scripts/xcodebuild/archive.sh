@@ -6,10 +6,6 @@ PROJECT_NAME=$2
 SCHEME=$3
 CONFIGURATION=$4
 
-echo "[io.windmill.windmill] [archive] [debug] windmill home ${WIDMILL_HOME}"
-echo "[io.windmill.windmill] [archive] [debug] project name ${PROJECT_NAME}"
-echo "[io.windmill.windmill] [archive] [debug] scheme ${SCHEME}"
-
 xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} archive -derivedDataPath ${WIDMILL_HOME}/${PROJECT_NAME}/build -archivePath ${WIDMILL_HOME}/${PROJECT_NAME}/archive/${SCHEME}.xcarchive
 
 ## Archive

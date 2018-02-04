@@ -16,18 +16,12 @@ set -e
 
 . $SCRIPTS_ROOT/common.sh
 
-echo "[io.windmill.windmill] [checkout] [debug] using directory ${PROJECT_DIRECTORY}"
-echo "[io.windmill.windmill] [checkout] [debug] repo name ${REPO_NAME}"
-echo "[io.windmill.windmill] [checkout] [debug] branch ${BRANCH}"
-echo "[io.windmill.windmill] [checkout] [debug] remote ${REMOTE}"
 
 function git_pull(){
-echo "[io.windmill.windmill] [checkout] [debug] git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master"
 (cd "${PROJECT_DIRECTORY}"; git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master)
 }
 
 function git_clone(){
-echo "[io.windmill.windmill] [checkout] [debug] git clone -b ${BRANCH} ${REMOTE} ${REPO_NAME}"
 (cd "${PROJECT_DIRECTORY}"; git clone -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
 }
 

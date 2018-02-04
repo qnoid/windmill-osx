@@ -11,7 +11,6 @@ BRANCH=$3
 
 function store_prev_head()
 {
-echo "[io.windmill.windmill] [poll] [debug] [$FUNCNAME]"
 git rev-parse "$BRANCH" > "$POLL_DIRECTORY/prev_head"
 }
 
@@ -24,7 +23,6 @@ git rev-parse "$BRANCH" > "$POLL_DIRECTORY/latest_head" || exit 0
 diff "$POLL_DIRECTORY/latest_head" "$POLL_DIRECTORY/prev_head" > /dev/null
 exit_code=$?
 if [ $exit_code -eq 1 ]; then
-echo "[io.windmill.windmill] [poll] [debug] [Requires update.]"
 cat "$POLL_DIRECTORY/latest_head" > "$POLL_DIRECTORY/prev_head"
 exit 1
 fi
