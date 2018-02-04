@@ -108,33 +108,46 @@ class SidePanelViewController: NSViewController {
         return test
     }()
     
-    lazy var deploymentTarget: NSTextField = {
-        let deploymentTarget = NSTextField(labelWithString: "iOS Deployment Target:")
-        deploymentTarget.isHidden = true
-        return deploymentTarget
-    }()
-    
-    lazy var deploymentTargetValue: NSTextField = {
-        let deploymentTargetValue = NSTextField(labelWithString:  "10.3")
-        deploymentTargetValue.isHidden = true
-        deploymentTargetValue.isSelectable = true
-        return deploymentTargetValue
-    }()
-    
-    lazy var destination: NSTextField = {
-        let destination = NSTextField(labelWithString: "Destination:")
+    lazy var platform: NSTextField = {
+        let destination = NSTextField(labelWithString: "Platform:")
         destination.isHidden = true
         return destination
     }()
     
-    lazy var destinationValue: NSTextField = {
-        let destinationValue = NSTextField(labelWithString:  "iOS Simulator (iPhone SE)")
+    lazy var platformValue: NSTextField = {
+        let destinationValue = NSTextField(labelWithString:  "iOS Simulator")
         destinationValue.isHidden = true
         destinationValue.isSelectable = true
         
         return destinationValue
     }()
     
+    lazy var platformVersion: NSTextField = {
+        let deploymentTarget = NSTextField(labelWithString: "Version:")
+        deploymentTarget.isHidden = true
+        return deploymentTarget
+    }()
+    
+    lazy var platformVersionValue: NSTextField = {
+        let platformVersionValue = NSTextField(labelWithString:  "10.3")
+        platformVersionValue.isHidden = true
+        platformVersionValue.isSelectable = true
+        return platformVersionValue
+    }()
+    
+    lazy var platformName: NSTextField = {
+        let platformName = NSTextField(labelWithString: "Name:")
+        platformName.isHidden = true
+        return platformName
+    }()
+    
+    lazy var platformNameValue: NSTextField = {
+        let platformNameValue = NSTextField(labelWithString:  "Generic iOS Device")
+        platformNameValue.isHidden = true
+        platformNameValue.isSelectable = true
+        return platformNameValue
+    }()
+
     // MARK: Archive views
     
     lazy var archive: NSTextField = {
@@ -307,8 +320,9 @@ class SidePanelViewController: NSViewController {
             [build, empty],
             [buildConfiguration, buildConfigurationValue],
             [test, empty],
-            [deploymentTarget, deploymentTargetValue],
-            [destination, destinationValue],
+            [platform, platformValue],
+            [platformVersion, platformVersionValue],
+            [platformName, platformNameValue],
             [archive, empty],
             [archiveConfiguration, archiveConfigurationValue],
             [archiveScheme, archiveSchemeValue],
@@ -378,15 +392,17 @@ class SidePanelViewController: NSViewController {
             let metadata = MetadataJSONEncoded.testMetadata(for: project)
             
             self.test.isHidden = false
-            let deployment:[String: String]? = metadata["deployment"]
+            let version:Float? = metadata["version"]
             let destination:[String: String]? = metadata["destination"]
-            
-            self.deploymentTarget.isHidden = false
-            self.deploymentTargetValue.isHidden = false
-            self.deploymentTargetValue.stringValue = deployment?["target"] ?? ""
-            self.destination.isHidden = false
-            self.destinationValue.isHidden = false
-            self.destinationValue.stringValue = destination?["name"] ?? ""
+
+            self.platform.isHidden = false
+            self.platformValue.isHidden = false
+            self.platformVersion.isHidden = false
+            self.platformVersionValue.isHidden = false
+            self.platformVersionValue.stringValue = version?.description ?? ""
+            self.platformName.isHidden = false
+            self.platformNameValue.isHidden = false
+            self.platformNameValue.stringValue = destination?["name"] ?? ""
         case .archive:
             self.archive.isHidden = false
             self.archiveSection.configuration.isHidden = false

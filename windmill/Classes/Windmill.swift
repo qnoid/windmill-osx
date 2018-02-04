@@ -90,11 +90,12 @@ let WindmillErrorDomain : String = "io.windmill"
         self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: self, userInfo: ["directoryPath":directoryPath, "user":user, "project":project])
         
         let checkout = self.processManager.makeCompute(process: Process.makeCheckout(repoName: project.name, origin: project.origin),type: .checkout)
-        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, project: project), type: .build)
+        
+        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
+        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, project: project, metadata: buildMetadata), type: .build)
         
         let metadata = MetadataJSONEncoded.testMetadata(for: project)
-        
-        let readTestMetadata = self.processManager.makeCompute(process: Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata), type: .undefined)
+        let readTestMetadata = self.processManager.makeCompute(process: Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata), type: .undefined)
         let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata), type: .test)
         
         let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, project: project), type: .archive)

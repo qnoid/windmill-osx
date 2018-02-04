@@ -22,9 +22,21 @@ extension Metadata {
     public subscript<T>(key: String) -> T? {
         return dictionary?[key] as? T
     }
+    
 }
 
-public class MetadataJSONEncoded: Metadata {
+public class MetadataJSONEncoded: Metadata, CustomDebugStringConvertible {
+
+    public var debugDescription: String {
+        return dictionary.debugDescription
+    }
+    
+    public class func buildMetadata(for project:Project) -> Metadata {
+        
+        let url = FileManager.default.buildDirectoryURL(forProject: project.name).appendingPathComponent("metadata.json")
+        
+        return MetadataJSONEncoded(url: url)
+    }
 
     public class func testMetadata(for project:Project) -> Metadata {
         
@@ -32,7 +44,7 @@ public class MetadataJSONEncoded: Metadata {
         
         return MetadataJSONEncoded(url: url)
     }
-    
+
     public let url: URL
     
     public lazy var dictionary: [String: Any]? = {

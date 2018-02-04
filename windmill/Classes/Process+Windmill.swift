@@ -104,12 +104,12 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil);
     }
 
-    public static func makeReadTestMetadata(directoryPath: String, forProject project: Project, metadata: Metadata) -> Process {
+    public static func makeReadTestMetadata(directoryPath: String, forProject project: Project, metadata: Metadata, buildMetadata: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_TEST_METADATA, ofType: "sh")!
-        process.arguments = [metadata.url.path, project.scheme]
+        process.arguments = [metadata.url.path, project.scheme, self.pathForDir("scripts"), buildMetadata.url.path]
         process.qualityOfService = .utility
         
         return process
@@ -125,12 +125,12 @@ extension Process
         return process
     }
     
-    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug) -> Process {
+    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, metadata: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name]
+        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name, metadata.url.path]
         process.qualityOfService = .utility
         
         return process

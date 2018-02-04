@@ -9,11 +9,13 @@ set -e
 # {URL}/{project name}/test/metadata.json
 TEST_METADATA_FOR_PROJECT=$1
 SCHEME_NAME=$2
+SCRIPTS_ROOT=$3
+BUILD_METADATA_FOR_PROJECT=$4
 
-DEPLOYMENT_TARGET=$(xcodebuild -showBuildSettings -scheme ${SCHEME_NAME} | awk '$1 == "IPHONEOS_DEPLOYMENT_TARGET" { print $3 }')
+PARSE="import sys, json; print json.load(open(\"${BUILD_METADATA_FOR_PROJECT}\"))[\"deployment\"][\"target\"]"
 
-PARSE="import sys, json; print json.load(sys.stdin)[\"devices\"][\"iOS ${DEPLOYMENT_TARGET}\"][0][\"name\"]"
+DEPLOYMENT_TARGET=$(python -c "$PARSE")
 
-DESTINATION_NAME=$(xcrun simctl list devices --json | python -c "$PARSE")
+DESTINATION=$(xcrun simctl list devices --json | python "${SCRIPTS_ROOT}/python/devices.py" "${DEPLOYMENT_TARGET}" )
 
-echo '{"deployment":{"target":"'${DEPLOYMENT_TARGET}'"},"destination":{"name":"'${DESTINATION_NAME}'"}}' | python -m json.tool > "${TEST_METADATA_FOR_PROJECT}"
+echo ${DESTINATION} > "${TEST_METADATA_FOR_PROJECT}"

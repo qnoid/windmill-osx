@@ -44,7 +44,7 @@ class WindmillTest: XCTestCase {
         
         let windmill = WindmillMock(expectation: expectation)
         
-        windmill.deploy(project: Project(name: repoName, scheme: "any", origin: "invalid"), at: url.path) { (_, _, _) in
+        windmill.deploy(project: Project(name: repoName, scheme: "any", origin: "invalid"), at: url.path) { (_, _, _, _) in
             
         }        
         

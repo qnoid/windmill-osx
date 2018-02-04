@@ -93,22 +93,53 @@ class ProcessTest: XCTestCase {
         
         let project = Project(name: "windmill-ios", scheme: "windmill", origin: "foo")
         
+        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
         let metadata = MetadataJSONEncoded.testMetadata(for: project)
         
         let manager = EphemeralFileManager(url: metadata.url)
         
         let directoryPath = project.directoryPathURL.path
         
-        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata)
+        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
         
         process.launch()
         process.waitUntilExit()
         
         XCTAssertTrue(manager.fileExists(atPath: metadata.url.path))
         
-        let deployment: [String: String] = metadata["deployment"]!
         let destination: [String: String] = metadata["destination"]!
-        XCTAssertEqual(deployment["target"], "10.3")
+        XCTAssertEqual(metadata["version"], 10.3)
+        XCTAssertEqual(metadata["platform"], "iOS")
         XCTAssertEqual(destination["name"], "iPhone 5s")
+        XCTAssertEqual(destination["udid"], "82B8A057-D988-4410-AEBB-05577C9FFD40")
+    }
+    
+    /**
+     - Precondition: a checked out project
+     */
+    func testGivenProjectWithoutAvailableSimulatorAssertMakeTestConfigurationFileExists() {
+        
+        let project = Project(name: "no_simulator_available", scheme: "no_simulator_available", origin: "foo")
+        
+        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
+        let metadata = MetadataJSONEncoded.testMetadata(for: project)
+        
+        let manager = EphemeralFileManager(url: metadata.url)
+        
+        let directoryPath = project.directoryPathURL.path
+        
+        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        
+        process.launch()
+        process.waitUntilExit()
+        
+        XCTAssertTrue(manager.fileExists(atPath: metadata.url.path))
+        
+
+        let destination: [String: String] = metadata["destination"]!
+        XCTAssertEqual(metadata["version"], 10.3)
+        XCTAssertEqual(metadata["platform"], "iOS")
+        XCTAssertEqual(destination["name"], "iPhone 5s")
+        XCTAssertEqual(destination["udid"], "82B8A057-D988-4410-AEBB-05577C9FFD40")
     }
 }
