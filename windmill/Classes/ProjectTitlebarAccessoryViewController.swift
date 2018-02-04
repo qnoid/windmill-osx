@@ -30,6 +30,8 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
 
         let scheme = self.schemeTextField.stringValue
         
-        OutputStream.outputStreamOnProjects().write([Project(name: project.name, scheme: scheme, origin: project.origin)])
+        let delegate = NSApplication.shared.delegate as? AppDelegate
+        
+        delegate?.projects = [Project(name: project.name, scheme: scheme, origin: project.origin)]
     }
 }

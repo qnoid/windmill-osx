@@ -271,7 +271,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     @objc func windmillWillDeployProject(_ aNotification: Notification) {
-        statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
+        self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
+        self.statusItem.button?.toolTip = ""
         self.cleanMenu.isEnabled = false
         self.cleanProjectMenu.isEnabled = false
     }
@@ -287,8 +288,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             statusItem.button?.toolTip = error.localizedDescription
         }
 
+        self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
+        self.activityMenuItem.toolTip = ""
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         self.cleanMenu.isEnabled = true
         self.cleanProjectMenu.isEnabled = true
         self.toggleDebugArea(isCollapsed: false)

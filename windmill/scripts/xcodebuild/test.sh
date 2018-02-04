@@ -5,11 +5,12 @@
 
 TEST_METADATA_FOR_PROJECT=$1
 SCHEME_NAME=$2
+SCRIPTS_ROOT=$3
 
-PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))[\"destination\"][\"name\"]"
+PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 
-DESTINATION_NAME=$(python -c "$PARSE")
-xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,name=${DESTINATION_NAME}"
+DESTINATION_ID=$(python -c "$PARSE")
+xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}"
 
 exit_code=$?
 if [ $exit_code -eq 66 ]; then

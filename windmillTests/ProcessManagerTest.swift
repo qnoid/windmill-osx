@@ -44,7 +44,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (type, success, error) in
+        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
             XCTAssertEqual(type, .checkout)
             XCTAssertTrue(success)
             XCTAssertNil(error)
@@ -69,7 +69,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (type, success, error) in
+        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
             XCTAssertEqual(type, .checkout)
             XCTAssertFalse(success)
             XCTAssertNotNil(error)
@@ -91,7 +91,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = XCTestExpectation()
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (type, success, error) in
+        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
             expectation.fulfill()
         }
         
@@ -115,7 +115,7 @@ class ProcessManagerTest: XCTestCase {
         process.arguments = ["Hello World"]
         
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (type, success, error) in
+        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
         }
         
         DispatchQueue.main.async(execute: workItem)
