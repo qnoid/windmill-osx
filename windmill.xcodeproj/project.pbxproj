@@ -13,6 +13,7 @@
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */; };
+		BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */; };
 		BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */; };
 		BD189BCB1FF9FD5900BBEBA4 /* DistributionSummary.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */; };
 		BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D17FE1F44BC670015C13C /* ProcessManager.swift */; };
@@ -111,6 +112,7 @@
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
 		BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelViewController.swift; sourceTree = "<group>"; };
+		BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Classes/Acknowledgements.rtf; sourceTree = "<group>"; };
 		BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataPlistEncodedTest.swift; sourceTree = "<group>"; };
 		BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DistributionSummary.plist; sourceTree = "<group>"; };
 		BD1D17FE1F44BC670015C13C /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				BD081A231AB0AD1700B8E948 /* en.lproj */,
 				BDB6D53F19440392001340B4 /* Info.plist */,
 				BD25DB761C9EC5290001FEDF /* windmill.xcconfig */,
+				BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
+				BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */,
 				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
 				BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */,
