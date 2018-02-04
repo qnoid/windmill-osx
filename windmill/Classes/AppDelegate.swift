@@ -233,6 +233,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return true
     }
     
+    @IBAction func openAcknowledgements(_ sender: Any) {
+        guard let url = Bundle(for: GettingStartedWindowController.self).url(forResource: "Acknowledgements", withExtension: "rtf") else {
+            return
+        }
+        
+        NSWorkspace.shared.open(url)
+    }
+    
     @IBAction func openDocument(_ sender: Any) {
         guard let window = self.mainWindowViewController?.window else {
             return
