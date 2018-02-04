@@ -3,8 +3,6 @@
 # Requires the following variables to be set
 # SCHEME_NAME
 
-set -e
-
 TEST_METADATA_FOR_PROJECT=$1
 SCHEME_NAME=$2
 
@@ -12,6 +10,12 @@ PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))
 
 DESTINATION_NAME=$(python -c "$PARSE")
 xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,name=${DESTINATION_NAME}"
+
+exit_code=$?
+if [ $exit_code -eq 66 ]; then
+exit 0
+fi
+exit $exit_code
 
 ## Test
 #
