@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
 
-WIDMILL_HOME=$1
-PROJECT_NAME=$2
-SCHEME=$3
-CONFIGURATION=$4
+PROJECT_NAME=$1
+SCHEME=$2
+CONFIGURATION=$3
 
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} archive -derivedDataPath ${WIDMILL_HOME}/${PROJECT_NAME}/build -archivePath ${WIDMILL_HOME}/${PROJECT_NAME}/archive/${SCHEME}.xcarchive
+xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} archive -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT} -archivePath ${ARCHIVE_DIRECTORY_FOR_PROJECT}/${SCHEME}.xcarchive
 
 ## Archive
 #

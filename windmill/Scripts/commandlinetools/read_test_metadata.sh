@@ -9,8 +9,7 @@ set -e
 # {URL}/{project name}/test/metadata.json
 TEST_METADATA_FOR_PROJECT=$1
 SCHEME_NAME=$2
-SCRIPTS_ROOT=$3
-BUILD_METADATA_FOR_PROJECT=$4
+BUILD_METADATA_FOR_PROJECT=$3
 
 PARSE="import sys, json; print json.load(open(\"${BUILD_METADATA_FOR_PROJECT}\"))[\"deployment\"][\"target\"]"
 

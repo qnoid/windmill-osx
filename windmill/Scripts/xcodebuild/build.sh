@@ -5,17 +5,16 @@
 # CONFIGURATION
 set -e
 
-WIDMILL_HOME=$1
-PROJECT_NAME=$2
-SCHEME=$3
-CONFIGURATION=$4
-BUILD_METADATA_FOR_PROJECT=$5
+PROJECT_NAME=$1
+SCHEME=$2
+CONFIGURATION=$3
+BUILD_METADATA_FOR_PROJECT=$4
 
 DEPLOYMENT_TARGET=$(xcodebuild -showBuildSettings -scheme ${SCHEME} | awk '$1 == "IPHONEOS_DEPLOYMENT_TARGET" { print $3 }')
 
 echo '{"deployment":{"target":"'${DEPLOYMENT_TARGET}'"}}' > "${BUILD_METADATA_FOR_PROJECT}"
 
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build-for-testing -derivedDataPath ${WIDMILL_HOME}/${PROJECT_NAME}/build
+xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build-for-testing -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
 
 #STATUS=$?
 

@@ -5,7 +5,6 @@
 
 TEST_METADATA_FOR_PROJECT=$1
 SCHEME_NAME=$2
-SCRIPTS_ROOT=$3
 
 PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 

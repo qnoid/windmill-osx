@@ -40,7 +40,7 @@
 		BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD91A7101F41E791004CA64B /* ArchiveView.xib */; };
 		BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7131F420665004CA64B /* NSView+Windmill.swift */; };
 		BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */; };
-		BD91EB5C19491C40002D8C1C /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* scripts */; };
+		BD91EB5C19491C40002D8C1C /* Scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* Scripts */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */; };
 		BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD520C1CD6053B0023F460 /* ActivityView.swift */; };
@@ -140,7 +140,7 @@
 		BD91A7101F41E791004CA64B /* ArchiveView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArchiveView.xib; sourceTree = "<group>"; };
 		BD91A7131F420665004CA64B /* NSView+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Windmill.swift"; sourceTree = "<group>"; };
 		BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
-		BD91EB5B19491C40002D8C1C /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		BD91EB5B19491C40002D8C1C /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
 		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -318,7 +318,7 @@
 				BDC1E93419BCCCAD009A3E42 /* Common */,
 				BD3015FF19BB0F79001134F8 /* Classes */,
 				BDF6B75B199A428C008B09D9 /* resources */,
-				BD91EB5B19491C40002D8C1C /* scripts */,
+				BD91EB5B19491C40002D8C1C /* Scripts */,
 				BDB6D54419440392001340B4 /* Images.xcassets */,
 				BDB6D53E19440392001340B4 /* Supporting Files */,
 			);
@@ -515,7 +515,7 @@
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
 				BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */,
-				BD91EB5C19491C40002D8C1C /* scripts in Resources */,
+				BD91EB5C19491C40002D8C1C /* Scripts in Resources */,
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
 				BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,

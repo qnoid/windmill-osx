@@ -14,19 +14,19 @@ struct Scripts
 {
     struct Xcodebuild {
         
-        static let BUILD : BashScript = "scripts/xcodebuild/build"
-        static let TEST : BashScript = "scripts/xcodebuild/test"
-        static let ARCHIVE : BashScript = "scripts/xcodebuild/archive"
-        static let EXPORT : BashScript = "scripts/xcodebuild/export"
-        static let DEPLOY : BashScript = "scripts/xcodebuild/deploy"
+        static let BUILD : BashScript = "Scripts/xcodebuild/build"
+        static let TEST : BashScript = "Scripts/xcodebuild/test"
+        static let ARCHIVE : BashScript = "Scripts/xcodebuild/archive"
+        static let EXPORT : BashScript = "Scripts/xcodebuild/export"
+        static let DEPLOY : BashScript = "Scripts/xcodebuild/deploy"
     }
 
     struct Git {
-        static let CHECKOUT : BashScript = "scripts/git/checkout"
-        static let POLL : BashScript = "scripts/git/poll"
+        static let CHECKOUT : BashScript = "Scripts/git/checkout"
+        static let POLL : BashScript = "Scripts/git/poll"
     }
     
     struct CommandLineTools {
-        static let READ_TEST_METADATA : BashScript = "scripts/commandlinetools/read_test_metadata"
+        static let READ_TEST_METADATA : BashScript = "Scripts/commandlinetools/read_test_metadata"
     }
 }

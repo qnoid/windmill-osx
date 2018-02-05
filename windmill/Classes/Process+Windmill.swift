@@ -109,7 +109,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_TEST_METADATA, ofType: "sh")!
-        process.arguments = [metadata.url.path, project.scheme, self.pathForDir("scripts"), buildMetadata.url.path]
+        process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts")]
+        process.arguments = [metadata.url.path, project.scheme, buildMetadata.url.path]
         process.qualityOfService = .utility
         
         return process
@@ -119,7 +120,8 @@ extension Process
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [projectDirectoryURL.path, self.pathForDir("scripts"), repoName, branch, origin]
+        process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts"), "PROJECT_DIRECTORY": projectDirectoryURL.path]
+        process.arguments = [repoName, branch, origin]
         process.qualityOfService = .utility
         
         return process
@@ -130,7 +132,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name, metadata.url.path]
+        process.environment = ["WIDMILL_HOME": FileManager.default.windmillHomeDirectoryURL.path, "BUILD_DIRECTORY_FOR_PROJECT":FileManager.default.buildDirectoryURL(forProject: project.name).path]
+        process.arguments = [project.name, project.scheme, configuration.name, metadata.url.path]
         process.qualityOfService = .utility
         
         return process
@@ -153,7 +156,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, configuration.name]
+        process.environment = ["WIDMILL_HOME": FileManager.default.windmillHomeDirectoryURL.path, "BUILD_DIRECTORY_FOR_PROJECT":FileManager.default.buildDirectoryURL(forProject: project.name).path, "ARCHIVE_DIRECTORY_FOR_PROJECT":FileManager.default.archiveDirectoryURL(forProject: project.name).path]
+        process.arguments = [project.name, project.scheme, configuration.name]
         process.qualityOfService = .utility
         
         return process
@@ -164,7 +168,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, self.pathForDir("resources")]
+        process.environment = ["WIDMILL_HOME": FileManager.default.windmillHomeDirectoryURL.path, "RESOURCES_ROOT": self.pathForDir("resources")]
+        process.arguments = [project.name, project.scheme]
         process.qualityOfService = .utility
         
         return process
@@ -175,7 +180,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
-        process.arguments = [FileManager.default.windmillHomeDirectoryURL.path, project.name, project.scheme, user, WINDMILL_BASE_URL]
+        process.environment = ["WIDMILL_HOME": FileManager.default.windmillHomeDirectoryURL.path, "EXPORT_DIRECTORY_FOR_PROJECT":FileManager.default.exportDirectoryURL(forProject: project.name).path, "WINDMILL_BASE_URL": WINDMILL_BASE_URL]
+        process.arguments = [project.scheme, user]
         process.qualityOfService = .utility
         
         return process
@@ -186,7 +192,8 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-        process.arguments = [FileManager.default.pollDirectoryURL(forProject: project.name).path, self.pathForDir("scripts"), branch]
+        process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts"), "POLL_DIRECTORY_FOR_PROJECT": FileManager.default.pollDirectoryURL(forProject: project.name).path]
+        process.arguments = [branch]
         process.qualityOfService = .utility
         
         return process

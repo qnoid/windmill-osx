@@ -60,7 +60,8 @@ public func ApplicationCachesDirectory() -> DirectoryType
     
     let created = applicationDirectory.create()
     
-    os_log("%{public}@", log: .default, type: .debug, "Was <windmill> application caches directory created?: \(created)")
+    let log = OSLog(subsystem: "io.windmill.windmill", category: "filemanager")
+    os_log("%{public}@", log: log, type: .debug, "Was <windmill> application caches directory created?: \(created)")
     
     return applicationDirectory
 }
@@ -108,7 +109,8 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
             try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:withIntermediateDirectories, attributes: nil)
             created = true
         } catch let error as NSError {
-            os_log("%{public}@", log: .default, type: .debug, error)
+            let log = OSLog(subsystem: "io.windmill.windmill", category: "filemanager")
+            os_log("%{public}@", log: log, type: .debug, error)
             created = false
         }
         
