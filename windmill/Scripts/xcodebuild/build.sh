@@ -3,7 +3,6 @@
 # Requires the following variables to be set
 # SCHEME
 # CONFIGURATION
-set -e
 
 PROJECT_NAME=$1
 SCHEME=$2
@@ -15,6 +14,14 @@ DEPLOYMENT_TARGET=$(xcodebuild -showBuildSettings -scheme ${SCHEME} | awk '$1 ==
 echo '{"deployment":{"target":"'${DEPLOYMENT_TARGET}'"}}' > "${BUILD_METADATA_FOR_PROJECT}"
 
 xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build-for-testing -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
+
+exit_code=$?
+if [ $exit_code -eq 66 ]; then
+xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
+else
+exit $exit_code
+fi
+
 
 #STATUS=$?
 
@@ -28,3 +35,5 @@ xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build-for-tes
 #fi
 
 #xcodebuild -scheme $PROJECT_NAME -configuration Debug clean build -derivedDataPath build
+## 66: using `build-for-testing`
+## > xcodebuild: error: Scheme no_simulator_available is not currently configured for the build-for-testing action.

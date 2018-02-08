@@ -45,10 +45,8 @@ func ApplicationDirectory() -> DirectoryType
     let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
     let applicationDirectory = FileManager.default.userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
     
-    let created = applicationDirectory.create()
+    applicationDirectory.create()
     
-    os_log("%{public}@", log: .default, type: .debug, "Was <windmill> application directory created?: \(created)")
-
     return applicationDirectory
 }
 
@@ -58,10 +56,7 @@ public func ApplicationCachesDirectory() -> DirectoryType
     let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
     let applicationDirectory = FileManager.default.userApplicationCachesDirectoryView().directory.traverse(applicationDirectoryPathComponent)
     
-    let created = applicationDirectory.create()
-    
-    let log = OSLog(subsystem: "io.windmill.windmill", category: "filemanager")
-    os_log("%{public}@", log: log, type: .debug, "Was <windmill> application caches directory created?: \(created)")
+    applicationDirectory.create()
     
     return applicationDirectory
 }
@@ -104,17 +99,22 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
     
     @discardableResult public func create(withIntermediateDirectories: Bool = false) -> Bool
     {
-        let created: Bool
         do {
             try self.fileManager.createDirectory(at: self.URL, withIntermediateDirectories:withIntermediateDirectories, attributes: nil)
-            created = true
+            return true
+        } catch let error as CocoaError {
+            
+            if let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? POSIXError, underlyingError.code == POSIXError.EEXIST {
+                return false
+            }
+
+            let log = OSLog(subsystem: "io.windmill.windmill", category: "filemanager")
+            os_log("%{public}@", log: log, type: .debug, error.localizedDescription)
+            return false
         } catch let error as NSError {
             let log = OSLog(subsystem: "io.windmill.windmill", category: "filemanager")
             os_log("%{public}@", log: log, type: .debug, error)
-            created = false
+            return false
         }
-        
-        
-        return created
     }
 }

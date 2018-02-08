@@ -34,7 +34,7 @@ struct OutputBuffer {
     }
 }
 
-class ConsoleViewController: NSViewController, WindmillDelegate {
+class ConsoleViewController: NSViewController, ProcessManagerDelegate {
 
     @IBOutlet weak var scrollView: NSScrollView! {
         didSet {
@@ -65,7 +65,7 @@ class ConsoleViewController: NSViewController, WindmillDelegate {
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
         }
     }
@@ -81,7 +81,7 @@ class ConsoleViewController: NSViewController, WindmillDelegate {
         super.viewDidLoad()
     }
     
-    @objc func windmillWillDeployProject(_ aNotification: Notification) {
+    @objc func willStartProject(_ aNotification: Notification) {
         self.outputBuffer = OutputBuffer()
         
         if let textView = textView {
@@ -128,12 +128,12 @@ class ConsoleViewController: NSViewController, WindmillDelegate {
         textView.scrollRangeToVisible(range)
     }
     
-    func windmill(_ windmill: Windmill, standardOutput: String, count: Int) {
-        self.append(self.textView, output: standardOutput, count: count)
+    func standardOutput(manager: ProcessManager, process: Process, part: String, count: Int) {
+        self.append(self.textView, output: part, count: count)
     }
     
-    func windmill(_ windmill: Windmill, standardError: String, count: Int) {
-        self.append(self.textView, output: standardError, count: count)
+    func standardError(manager: ProcessManager, process: Process, part: String, count: Int) {
+        self.append(self.textView, output: part, count: count)
     }
     
     func toggle(isHidden: Bool) {

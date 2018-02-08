@@ -10,8 +10,7 @@ import XCTest
 
 @testable import windmill
 
-class ProcessManagerDelegateWillDidLaunch: ProcessManagerDelegate {
-    
+class ProcessManagerMonitorWillDidLaunch: ProcessMonitor {
     let expectationWillLaunch: XCTestExpectation
     let expectationDidLaunch: XCTestExpectation
     
@@ -20,12 +19,40 @@ class ProcessManagerDelegateWillDidLaunch: ProcessManagerDelegate {
         self.expectationDidLaunch = expectationDidLaunch
     }
     
-    func willLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
         expectationWillLaunch.fulfill()
+
     }
     
-    func didLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
         expectationDidLaunch.fulfill()
+    }
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+
+    }
+}
+
+class WillExitWithErrorExpectation: ProcessMonitor {
+    
+    let expectation: XCTestExpectation
+    
+    init(expectation: XCTestExpectation) {
+        self.expectation = expectation
+    }
+
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+        XCTAssertFalse(isSuccess)
+        XCTAssertFalse(process.terminationStatus == 0)
+        expectation.fulfill()
     }
 }
 
@@ -44,14 +71,11 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
-            XCTAssertEqual(type, .checkout)
-            XCTAssertTrue(success)
-            XCTAssertNil(error)
+        let checkout = manager.sequence(process: process, wasSuccesful: DispatchWorkItem {
             expectation.fulfill()
-        }
+        })
         
-        DispatchQueue.main.async(execute: workItem)
+        checkout.launch()
         
         wait(for: [expectation], timeout: 5.0)
     }
@@ -68,17 +92,12 @@ class ProcessManagerTest: XCTestCase {
         }
         
         let expectation = self.expectation(description: #function)
+        let monitor = WillExitWithErrorExpectation(expectation: expectation)
+        manager.monitor = monitor
+        let sequence = manager.sequence(process: process)
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
-            XCTAssertEqual(type, .checkout)
-            XCTAssertFalse(success)
-            XCTAssertNotNil(error)
-            XCTAssertEqual((error as NSError?)?.code, 128)
-            expectation.fulfill()
-        }
-        
-        DispatchQueue.main.async(execute: workItem)
-        
+        sequence.launch()
+
         wait(for: [expectation], timeout: 5.0)
     }
     
@@ -91,11 +110,13 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = XCTestExpectation()
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
+        let sequence = manager.sequence(process: process, wasSuccesful: DispatchWorkItem {
             expectation.fulfill()
-        }
+        })
         
-        DispatchQueue.main.async(execute: workItem)
+        DispatchQueue.main.async {
+            sequence.launch()
+        }
         
         wait(for: [expectation], timeout: 5.0)
     }
@@ -105,20 +126,21 @@ class ProcessManagerTest: XCTestCase {
         let expectationWillLaunch = XCTestExpectation()
         let expectationDidLaunch = XCTestExpectation()
         
-        let delegate = ProcessManagerDelegateWillDidLaunch(expectationWillLaunch: expectationWillLaunch, expectationDidLaunch: expectationDidLaunch)
+        let monitor = ProcessManagerMonitorWillDidLaunch(expectationWillLaunch: expectationWillLaunch, expectationDidLaunch: expectationDidLaunch)
         
-        var manager = ProcessManager()
-        manager.delegate = delegate
+        let manager = ProcessManager()
+        manager.monitor = monitor
         
         let process = Process()
         process.launchPath = "/bin/echo"
         process.arguments = ["Hello World"]
         
         
-        let workItem = manager.makeDispatchWorkItem(process: process, type: .checkout) { (process, type, success, error) in
-        }
+        let sequence = manager.sequence(process: process)
         
-        DispatchQueue.main.async(execute: workItem)
+        DispatchQueue.main.async {
+            sequence.launch()
+        }
         
         wait(for: [expectationWillLaunch, expectationDidLaunch], timeout: 5.0, enforceOrder: true)
     }

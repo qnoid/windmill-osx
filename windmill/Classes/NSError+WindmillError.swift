@@ -57,12 +57,12 @@ extension NSError
              NSUnderlyingErrorKey: underlyingError])
     }
     
-    class func errorTermination(process: Process, for activityType: ActivityType, status code: Int) -> Error
+    class func errorTermination(process: Process, for activityType: ActivityType, status code: Int32) -> NSError
     {
         let domain = process.domain(type: activityType)
         let failureDescription = process.failureDescription(type: activityType, exitStatus: code)
         
-        return NSError(domain: domain, code: code, userInfo:
+        return NSError(domain: domain, code: Int(code), userInfo:
             [NSLocalizedDescriptionKey: failureDescription])
     }
 }

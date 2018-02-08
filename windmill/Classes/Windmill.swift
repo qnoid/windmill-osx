@@ -14,242 +14,201 @@ import os
 typealias WindmillProvider = () -> Windmill
 
 /// domain is WindmillErrorDomain. code: WindmillErrorCode(s), has its userInfo set with NSLocalizedDescriptionKey, NSLocalizedFailureReasonErrorKey and NSUnderlyingErrorKey set
-protocol WindmillError: Error {
-    
-}
 
 let WindmillErrorDomain : String = "io.windmill"
 
-/* final */ class Windmill: ProcessManagerDelegate
+/* final */ class Windmill: ProcessMonitor
 {
+    class func make(project: Project, user: String? = try? Keychain.defaultKeychain().findWindmillUser()) -> (windmill: Windmill, sequence: Sequence) {
+
+        let processManager = ProcessManager()
+        let windmill = Windmill(processManager: processManager, project: project)
+
+        guard let user = user else {
+            let repeatableExport = windmill.repeatableExport()
+            return (windmill: windmill, sequence: repeatableExport)
+        }
+
+        let repeatableDeploy = windmill.repeatableDeploy(user: user)        
+        return (windmill: windmill, sequence: repeatableDeploy)
+    }
+    
     struct Notifications {
-        static let willDeployProject = Notification.Name("WindmillWillDeployProject")
-        static let didArchiveProject = Notification.Name("didArchiveProject")
-        static let didExportProject = Notification.Name("export")
-        static let didDeployProject = Notification.Name("deploy")
-        static let activityDidLaunch = Notification.Name("activityDidLaunch")
-        static let activityDidExitSuccesfully = Notification.Name("activityDidExitSuccesfully")
-        static let activityError = Notification.Name("activityError")
+        static let willStartProject = Notification.Name("will.start")
+        static let didArchiveProject = Notification.Name("did.archive")
+        static let didExportProject = Notification.Name("did.export")
+        static let didDeployProject = Notification.Name("did.deploy")
+        static let willMonitorProject = Notification.Name("will.monitor")
+        
+        static let activityDidLaunch = Notification.Name("activity.did.launch")
+        static let activityDidExitSuccesfully = Notification.Name("activity.did.exit.succesfully")
+        static let activityError = Notification.Name("activity.error")
     }
     
-    class func windmill(_ keychain: Keychain) -> Windmill {
-        return Windmill(keychain: keychain)
-    }
-    
-    let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
-    
+    let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     let notificationCenter = NotificationCenter.default
     var delegate: WindmillDelegate?
     
-    let keychain: Keychain
-    var processManager: ProcessManager
+    let project: Project
+    let processManager: ProcessManager
+
+    // MARK: init
     
-    convenience init()
-    {
-        self.init(keychain: Keychain.defaultKeychain())
+    public convenience init(project: Project) {
+        self.init(processManager: ProcessManager(), project: project)
     }
     
-    init(keychain: Keychain, processManager: ProcessManager = ProcessManager())
+    init(processManager: ProcessManager, project: Project)
     {
-
-        self.keychain = keychain
+        self.project = project
         self.processManager = processManager
-        self.processManager.delegate = self
+        self.processManager.monitor = self
     }
     
-    private func poll(_ project: Project, deadline:DispatchTime = DispatchTime.now(), ifCaseOfBranchBehindOrigin callback: @escaping () -> Void) {
+    // MARK: private
+    
+    /* private */ func exportSequence(for project: Project, exportWasSuccesful: DispatchWorkItem? = nil) -> Sequence {
+        let directoryPath = project.directoryPathURL.path
+        let checkout = Process.makeCheckout(repoName: project.name, origin: project.origin)
         
-        let poll = self.processManager.makeDispatchWorkItem(process: Process.makePoll(directoryPath: project.directoryPathURL.path, project: project), type: .poll) { [weak self] process, type, success, error in
-            if let error = (error as NSError?), error.code == 1 {
-                callback()
-                return
+        return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: DispatchWorkItem { [weak self] in
+            let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
+            let build = Process.makeBuild(directoryPath: directoryPath, project: project, metadata: buildMetadata)
+            self?.processManager.sequence(process: build, userInfo: ["activity" : ActivityType.build], wasSuccesful: DispatchWorkItem {
+                let metadata = MetadataJSONEncoded.testMetadata(for: project)
+                let readTestMetadata = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+                self?.processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
+                    let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
+                    self?.processManager.sequence(process: test, userInfo: ["activity" : ActivityType.test], wasSuccesful: DispatchWorkItem {
+                        let archive = Process.makeArchive(directoryPath: directoryPath, project: project)
+                        self?.processManager.sequence(process: archive, userInfo: ["activity" : ActivityType.archive], wasSuccesful: DispatchWorkItem {
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project])
+                            }
+                            let export = Process.makeExport(directoryPath: directoryPath, project: project)
+                            self?.processManager.sequence(process: export, userInfo: ["activity" : ActivityType.export], wasSuccesful: exportWasSuccesful).launch()
+                        }).launch()
+                    }).launch()
+                }).launch()
+            }).launch()
+        })
+    }
+    
+    /* fileprivate */ func repeatableDeploy(user: String) -> Sequence {
+        let directoryPath = project.directoryPathURL.path
+        
+        let exportWasSuccesful = DispatchWorkItem { [project = self.project, weak self] in
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project])
             }
+            
+            let deploy = Process.makeDeploy(directoryPath: directoryPath, project: project, forUser: user)
+            self?.processManager.sequence(process: deploy, userInfo: ["activity" : ActivityType.deploy], wasSuccesful: DispatchWorkItem {
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project])
+                }
+                
+                #if DEBUG
+                    let delayInSeconds:Int = 5
+                #else
+                    let delayInSeconds:Int = 30
+                #endif
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Windmill.Notifications.willMonitorProject, object: self, userInfo: ["project":project])
+                }
 
+                let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
+                os_log("will start monitoring", log: log, type: .debug)
+
+                self?.processManager.repeat(process: Process.makePoll(directoryPath: directoryPath, project: project), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
+                    self?.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
+                    self?.repeatableDeploy(user: user).launch()
+                })
+            }).launch()
+        }
+        
+        return self.exportSequence(for: project, exportWasSuccesful: exportWasSuccesful)
+    }
+    
+    /* fileprivate */ func repeatableExport() -> Sequence {
+        let directoryPath = project.directoryPathURL.path
+
+        let exportWasSuccesful = DispatchWorkItem { [project = self.project, weak self] in
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project])
+            }
+            
             #if DEBUG
                 let delayInSeconds:Int = 5
             #else
                 let delayInSeconds:Int = 30
-            #endif            
+            #endif
 
-            self?.poll(project, deadline: DispatchTime.now() + .seconds(delayInSeconds),  ifCaseOfBranchBehindOrigin: callback)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Windmill.Notifications.willMonitorProject, object: self, userInfo: ["project":project])
+            }
+
+            let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
+            os_log("will start monitoring", log: log, type: .debug)
+
+            self?.processManager.repeat(process: Process.makePoll(directoryPath: directoryPath, project: project), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
+                self?.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
+                self?.repeatableExport().launch()
+            })
+        }
+        
+        return self.exportSequence(for: project, exportWasSuccesful: exportWasSuccesful)
+    }
+    
+    // MARK: public
+    
+    func run(sequence: Sequence)
+    {
+        self.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":self.project])
+        
+        sequence.launch()
+    }
+    
+    // MARK: ProcessMonitor
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+
+    }
+    
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+        guard let activity = userInfo?["activity"] as? ActivityType else {
+            return
+        }
+        
+        os_log("activity did launch `%{public}@`", log: log, type: .debug, activity.rawValue)
+
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notifications.activityDidLaunch, object: self, userInfo: userInfo)
+        }
+    }
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+        
+        guard let activity = userInfo?["activity"] as? ActivityType else {
+            return
+        }
+        
+        guard isSuccess else {
+            let error: NSError = NSError.errorTermination(process: process, for: activity, status: process.terminationStatus)
             
-        }
-        DispatchQueue.main.asyncAfter(deadline: deadline, execute: poll)
-    }
-    
-    private func monitor(_ project: Project) {
-        self.poll(project, ifCaseOfBranchBehindOrigin: { [weak self] in
-            self?.deploy(project: project) {_, _,_,_ in
-                self?.monitor(project)
+            let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
+            os_log("activity '%{public}@' did error: %{public}@", log: log, type: .error, error)
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity])
             }
-        })
-    }
-    
-    /* fileprivate */ func deploy(project: Project, at directoryPath: String, for user: String, completionHandler: @escaping ProcessCompletionHandler)
-    {
-        self.notificationCenter.post(name: Windmill.Notifications.willDeployProject, object: self, userInfo: ["directoryPath":directoryPath, "user":user, "project":project])
-        
-        let checkout = self.processManager.makeCompute(process: Process.makeCheckout(repoName: project.name, origin: project.origin),type: .checkout)
-        
-        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
-        let build = self.processManager.makeCompute(process: Process.makeBuild(directoryPath: directoryPath, project: project, metadata: buildMetadata), type: .build)
-        
-        let metadata = MetadataJSONEncoded.testMetadata(for: project)
-        let readTestMetadata = self.processManager.makeCompute(process: Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata), type: .undefined)
-        let test = self.processManager.makeCompute(process: Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata), type: .test)
-        
-        let archive = self.processManager.makeCompute(process: Process.makeArchive(directoryPath: project.directoryPathURL.path, project: project), type: .archive)
-        let export = self.processManager.makeCompute(process: Process.makeExport(directoryPath: directoryPath, project: project), type: .export)
-        let deploy = self.processManager.makeCompute(process: Process.makeDeploy(directoryPath: directoryPath, project: project, forUser: user), type: .deploy)
-
-        let alwaysChain = ProcessCompletionHandlerChain { [weak self] (process, type, isSuccess, error) in
-            self?.didComplete(type: type, success: isSuccess, error: error)
-        }
-        
-        checkout.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { [weak self] (process, type, isSuccess, error) in
-            build.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
-                readTestMetadata.dispatchWorkItem(DispatchQueue.main, { (process, type, isSuccess, error) in
-                    test.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
-                        archive.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
-                            self?.didArchive(project: project)
-                            export.dispatchWorkItem(DispatchQueue.main, alwaysChain.success { (process, type, isSuccess, error) in
-                                self?.didExport(project: project)
-                                deploy.dispatchWorkItem(DispatchQueue.main, alwaysChain.success{ (process, type, isSuccess, error) in
-                                    self?.didDeploy(project: project)
-                                    completionHandler(process, type, isSuccess, error)
-                                }).perform()
-                            }).perform()
-                        }).perform()
-                    }).perform()
-                }).perform()
-            }).perform()
-        }).perform()
-    }
-    
-    /* fileprivate */ func deploy(project: Project, at directoryPath: String, completionHandler: @escaping ProcessCompletionHandler) {
-        
-        guard let user = try? self.keychain.findWindmillUser() else {
-            os_log("A windmill user account should have been created.", log: .default, type: .error)
             return
         }
         
-        self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)
-    }
-    
-    /* fileprivate */ func deploy(project: Project, for user: String, completionHandler: @escaping ProcessCompletionHandler) {
-        
-        let directoryPath = project.directoryPathURL.path
-        os_log("%{public}@", log: .default, type: .debug, directoryPath)
-        
-        self.deploy(project: project, at: directoryPath, for: user, completionHandler: completionHandler)
-    }
-    
-    /* fileprivate */ func deploy(project: Project, completionHandler: @escaping ProcessCompletionHandler) {
-        
-        guard let user = try? self.keychain.findWindmillUser() else {
-            os_log("A windmill user account should have been created.", log: .default, type: .error)
-            return
-        }
-        
-        self.deploy(project: project, for: user, completionHandler: completionHandler)
-    }
-    
-    func didReceive(process: Process, type: ActivityType, standardOutput: String, count: Int) {
-        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-        os_log("%{public}@", log: log, type: .debug, standardOutput)
-        self.delegate?.windmill(self, standardOutput: standardOutput, count: count)
-    }
-    
-    func didReceive(process: Process, type: ActivityType, standardError: String, count: Int) {
-        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-        os_log("%{public}@", log: log, type: .debug, standardError)
-        self.delegate?.windmill(self, standardError: standardError, count: count)
-    }
-    
-    func willLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
-        if case .undefined = type {
-            return
-        }
-
-        waitForStandardOutputInBackground(process: process, queue: dispatch_queue_serial, type: type)
-        waitForStandardErrorInBackground(process: process, queue: dispatch_queue_serial, type: type)
-    }
-    
-    func didLaunch(manager: ProcessManager, process: Process, type: ActivityType) {
-        if case .undefined = type {
-            return
-        }
-        
-        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-        os_log("did launch `%{public}@`", log: log, type: .debug, type.description)
-
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notifications.activityDidLaunch, object: self, userInfo: ["activity":type.rawValue])
-        }
-    }
-    
-    func didComplete(type: ActivityType, success: Bool, error: Error?) {
-        
-        guard success else {
-            if let error = error as NSError? {
-                let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-                os_log("%{public}@", log: log, type: .error, error)
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": type])
-                }
-            }
-
-            return
-        }
-        let log = OSLog(subsystem: "io.windmill.windmill", category: type.rawValue)
-        os_log("did complete successfully `%{public}@`", log: log, type: .debug, type.description)
-        
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notifications.activityDidExitSuccesfully, object: self, userInfo: ["activity":type.rawValue])
-        }
-    }
-    
-    func didArchive(project: Project) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notifications.didArchiveProject, object: self, userInfo: ["project":project])
-        }
-    }
-
-    func didExport(project: Project) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notifications.didExportProject, object: self, userInfo: ["project":project])
-        }
-    }
-
-    func didDeploy(project: Project) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Notifications.didDeployProject, object: self, userInfo: ["project":project])
-        }
-    }
-
-    /**
-     
-     /**
-     
-     Attempt to deploy and monitor the given *project*.
-     
-     If #delegate is set, you will receive a callback to WindmillDelegate#windmillself, projects:self.projects, addedProject project: project)
-     if the project was added.
-     
-     - precondition: the given *project* must have a valid remote origin
-     
-     - parameter project: the project to deploy to Windmill
-     */
-     
-     project was added
-     project not be added
-     project failed to create
-     
-     */
-    func start(_ project: Project)
-    {
-        self.deploy(project: project) {[weak self] _, _,_,_ in
-            self?.monitor(project)
+            NotificationCenter.default.post(name: Notifications.activityDidExitSuccesfully, object: self, userInfo: userInfo)
         }
     }
 }

@@ -15,14 +15,14 @@ set -e
 
 
 function git_pull(){
-(cd "${PROJECT_DIRECTORY}"; git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master)
+(git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master)
 }
 
 function git_clone(){
-(cd "${PROJECT_DIRECTORY}"; git clone -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
+(git clone --progress -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
 }
 
-directory_exist_at_path "${PROJECT_DIRECTORY}/${REPO_NAME}" git_pull git_clone
+directory_exist_at_path "${REPO_NAME}" git_pull git_clone
 
 
 # Cases

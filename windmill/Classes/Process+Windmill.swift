@@ -20,13 +20,17 @@ let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
 
 extension Process {
     
-    /* fileprivate */ func windmill_waitForDataInBackground(_ pipe: Pipe, queue: DispatchQueue, callback: @escaping (_ data: String, _ count: Int) -> Void) {
+    /* fileprivate */ func windmill_waitForDataInBackground(_ pipe: Pipe, queue: DispatchQueue, callback: @escaping (_ data: String, _ count: Int) -> Void) -> DispatchSourceRead {
         
         let fileDescriptor = pipe.fileHandleForReading.fileDescriptor
         let readSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: queue)
         
-        readSource.setEventHandler {
-            let estimated = Int(readSource.data)
+        readSource.setEventHandler { [weak readSource = readSource] in
+            guard let data = readSource?.data else {
+                return
+            }
+            
+            let estimated = Int(data)
             
             var buffer = [UInt8](repeating: 0, count: estimated)
             let count = read(fileDescriptor, &buffer, estimated)
@@ -41,41 +45,10 @@ extension Process {
                 callback(availableString, availableString.count)
             }
         }
-        
-        readSource.setCancelHandler {
-            close(fileDescriptor)
-        }
-        
+                
         readSource.activate()
-    }
-}
-
-extension Windmill {
-    
-    func waitForStandardOutputInBackground(process: Process, queue: DispatchQueue, type: ActivityType) {
-        let standardOutputPipe = Pipe()
-        process.standardOutput = standardOutputPipe
         
-        process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
-            guard let process = process else {
-                return
-            }
-            
-            self?.didReceive(process: process, type: type, standardOutput: availableString, count: count)
-        }
-    }
-    
-    func waitForStandardErrorInBackground(process: Process, queue: DispatchQueue, type: ActivityType) {
-        let standardErrorPipe = Pipe()
-        process.standardError = standardErrorPipe
-        
-        process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
-            guard let process = process else {
-                return
-            }
-
-            self?.didReceive(process: process, type: type, standardError: availableString, count: count)
-        }
+        return readSource
     }
 }
 
@@ -83,17 +56,17 @@ extension Process
 {
     func domain(type: ActivityType) -> String {
         switch type {
-        case .checkout, .deploy, .poll, .undefined:
+        case .checkout, .deploy:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain
         }
     }
     
-    func failureDescription(type: ActivityType, exitStatus: Int) -> String {
+    func failureDescription(type: ActivityType, exitStatus: Int32) -> String {
         
         switch type {
-        case .checkout, .deploy, .poll, .undefined:
+        case .checkout, .deploy:
             return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
         case .build, .test, .archive, .export:
             return "Command xcodebuild failed with exit code \(exitStatus)"
@@ -119,8 +92,9 @@ extension Process
     public static func makeCheckout(projectDirectoryURL: URL = ApplicationCachesDirectory().URL, branch: String = "master", repoName: String, origin: String) -> Process {
         
         let process = Process()
+        process.currentDirectoryURL = projectDirectoryURL
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts"), "PROJECT_DIRECTORY": projectDirectoryURL.path]
+        process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts")]
         process.arguments = [repoName, branch, origin]
         process.qualityOfService = .utility
         
