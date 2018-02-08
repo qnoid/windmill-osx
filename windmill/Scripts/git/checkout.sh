@@ -19,7 +19,7 @@ function git_pull(){
 }
 
 function git_clone(){
-(git clone --progress -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
+(git clone -b ${BRANCH} ${REMOTE} "${REPO_NAME}")
 }
 
 directory_exist_at_path "${REPO_NAME}" git_pull git_clone
