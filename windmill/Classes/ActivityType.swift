@@ -10,14 +10,12 @@ import Foundation
 
 public enum ActivityType: String, CustomStringConvertible
 {
-    case undefined
     case checkout
     case build
     case test
     case archive
     case export
     case deploy
-    case poll
     
     var imageName: String {
         switch (self){
@@ -33,10 +31,6 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-export"
         case .deploy:
             return "windmill-activity-indicator-deploy"
-        case .poll:
-            return "windmill-activity-indicator"
-        default:
-            return ""
         }
     }
     
@@ -54,29 +48,10 @@ public enum ActivityType: String, CustomStringConvertible
             return "lights-export"
         case .deploy:
             return "lights-deploy"
-        default:
-            return ""
         }
     }
     
     public var description: String {
-        switch (self){
-        case .checkout:
-            return "checking out"
-        case .build:
-            return "building"
-        case .test:
-            return "testing"
-        case .archive:
-            return "archiving"
-        case .export:
-            return "exporting"
-        case .deploy:
-            return "deploying"
-        case .poll:
-            return "monitoring"
-        default:
-            return ""
-        }
+        return NSLocalizedString("windmill.activity.\(self.rawValue).description", comment: "")
     }    
 }

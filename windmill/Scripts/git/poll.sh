@@ -9,7 +9,7 @@ BRANCH=$1
 
 function store_prev_head()
 {
-git rev-parse "$BRANCH" > "$POLL_DIRECTORY_FOR_PROJECT/prev_head"
+git rev-parse "$BRANCH" > "$POLL_DIRECTORY_FOR_PROJECT/prev_head" || exit 0
 }
 
 file_does_not_exist_at_path "$POLL_DIRECTORY_FOR_PROJECT/prev_head" store_prev_head

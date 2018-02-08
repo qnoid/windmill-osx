@@ -14,24 +14,25 @@ class WindmillMock: Windmill {
     
     let expectation: XCTestExpectation
     
-    init(expectation: XCTestExpectation) {
+    init(expectation: XCTestExpectation, project: Project) {
         self.expectation = expectation
-        super.init(keychain: Keychain.defaultKeychain())
+        super.init(processManager: ProcessManager(), project: project)
     }
     
-    override func didComplete(type: ActivityType, success: Bool, error: Error?) {
-        XCTAssertFalse(success)
-        XCTAssertNotNil(error)
-        XCTAssertEqual((error as NSError?)?.code, 128)
+    override func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+        XCTAssertFalse(isSuccess)
+        XCTAssertEqual(process.terminationStatus, 128)
         expectation.fulfill()
     }
 }
 
 class WindmillTest: XCTestCase {
 
-    func testGivenErrorAssertDidCompleteCalled() {
+    func testGivenErrorAssertDidExitCalled() {
         
         let repoName = "any"
+        let project = Project(name: repoName, scheme: "any", origin: "invalid")
+
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
         let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: "invalid")
@@ -42,12 +43,11 @@ class WindmillTest: XCTestCase {
 
         let expectation = self.expectation(description: #function)
         
-        let windmill = WindmillMock(expectation: expectation)
+        let windmill = WindmillMock(expectation: expectation, project: project)
         
-        windmill.deploy(project: Project(name: repoName, scheme: "any", origin: "invalid"), at: url.path) { (_, _, _, _) in
-            
-        }        
-        
+        let repeatableDeploy = windmill.repeatableDeploy(user: "user")
+        windmill.run(sequence: repeatableDeploy)
+
         wait(for: [expectation], timeout: 5.0)
     }
 }

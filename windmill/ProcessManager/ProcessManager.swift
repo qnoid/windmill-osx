@@ -7,82 +7,162 @@
 //
 
 import Foundation
+import os
 
-typealias ProcessCompletionHandler = (_ process: Process, _ type: ActivityType, _ success: Bool, _ error: Error?) -> Void
-
-struct ProcessCompletionHandlerChain {
-    let completionHandler: ProcessCompletionHandler
-    
-    func success(completionHandler: @escaping ProcessCompletionHandler) -> ProcessCompletionHandler {
-        return chain(success: completionHandler).completionHandler
-    }
-
-    func chain(success: @escaping ProcessCompletionHandler) -> ProcessCompletionHandlerChain {
-        
-        return ProcessCompletionHandlerChain { [completionHandler = self.completionHandler] process, type, isSuccess, error in
-            completionHandler(process, type, isSuccess, error)
-            
-            guard isSuccess else {
-                return
-            }
-            
-            success(process, type, isSuccess, error)
-        }
-    }
-}
+typealias ProcessIdentifer = Int32
 
 protocol ProcessManagerDelegate: class {
     
-    func willLaunch(manager: ProcessManager, process: Process, type: ActivityType)
+    func standardOutput(manager: ProcessManager, process: Process, part: String, count: Int)
     
-    func didLaunch(manager: ProcessManager, process: Process, type: ActivityType)
+    func standardError(manager: ProcessManager, process: Process, part: String, count: Int)
 }
 
-struct ProcessManagerChain {
+protocol ProcessMonitor: class {
     
-    let dispatchWorkItem: (_ completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?)
+    
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?)
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?)
 }
 
-struct DispatchWorkItemCompute {
-    var dispatchWorkItem: (_ queue: DispatchQueue, _ completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem
-}
-
-struct ProcessManager {
+class ProcessManager {
+    
+    let log = OSLog(subsystem: "io.windmill.windmill", category: "process.manager")
+    let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
+    
+    var sources = [ProcessIdentifer: DispatchSourceProcess]()
     
     weak var delegate: ProcessManagerDelegate?
     
-    /* private */ func makeCompute(process: Process, type: ActivityType) -> DispatchWorkItemCompute {
-        return DispatchWorkItemCompute { queue , completionHandler in
-            return self.makeDispatchWorkItem(process: process, type: type, queue: queue, completionHandler: completionHandler)
+    weak var monitor: ProcessMonitor?
+
+    // MARK: Process Pipe output
+    
+    private func didReceive(process: Process, standardOutput: String, count: Int) {
+        os_log("%{public}@", log: log, type: .debug, standardOutput)
+        self.delegate?.standardError(manager: self, process: process, part: standardOutput, count: count)
+    }
+    
+    private func didReceive(process: Process, standardError: String, count: Int) {
+        os_log("%{public}@", log: log, type: .debug, standardError)
+        self.delegate?.standardError(manager: self, process: process, part: standardError, count: count)
+    }
+
+    private func waitForStandardOutputInBackground(process: Process, queue: DispatchQueue) -> DispatchSourceRead {
+        let standardOutputPipe = Pipe()
+        process.standardOutput = standardOutputPipe
+        
+        return process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
+            guard let process = process else {
+                return
+            }
+            
+            self?.didReceive(process: process, standardOutput: availableString, count: count)
+        }
+    }
+    
+    private func waitForStandardErrorInBackground(process: Process, queue: DispatchQueue) -> DispatchSourceRead {
+        let standardErrorPipe = Pipe()
+        process.standardError = standardErrorPipe
+        
+        return process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
+            guard let process = process else {
+                return
+            }
+            
+            self?.didReceive(process: process, standardError: availableString, count: count)
         }
     }
 
-    /* private */ func makeDispatchWorkItem(process processProvider: @escaping @autoclosure () -> Process, type: ActivityType, queue: DispatchQueue = .main, completionHandler: @escaping ProcessCompletionHandler) -> DispatchWorkItem {
+    func waitForStandardOutputInBackground(process: Process) -> DispatchSourceRead {
+        return waitForStandardOutputInBackground(process: process, queue: self.dispatch_queue_serial)
+    }
+    
+    func waitForStandardErrorInBackground(process: Process) -> DispatchSourceRead {
+        return waitForStandardErrorInBackground(process: process, queue: self.dispatch_queue_serial)
+    }
+    
+    // MARK: Process lifecycle
+    
+    func didLaunch(process: Process, userInfo: [AnyHashable : Any]? = nil) {
+        self.monitor?.didLaunch(manager: self, process: process, userInfo: userInfo)
+    }
+    
+    func willLaunch(process: Process, userInfo: [AnyHashable : Any]? = nil) {
+        self.monitor?.willLaunch(manager: self, process: process, userInfo: userInfo)
+    }
+    
+    func didExit(process: Process, processIdentifier: ProcessIdentifer, userInfo: [AnyHashable : Any]? = nil) {        
+        self.monitor?.didExit(manager: self, process: process, isSuccess: process.terminationStatus == 0, userInfo: userInfo)
+    }
+
+    // MARK: public
+
+    /**
+     Launches the given `process`
+ 
+    */
+    public func launch(process: Process, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    
+        self.willLaunch(process: process, userInfo: userInfo)
+
+        let waitForStandardOutputInBackground = self.waitForStandardOutputInBackground(process: process)
+        let waitForStandardErrorInBackground = self.waitForStandardErrorInBackground(process: process)
+
+        process.launch()
         
-        return DispatchWorkItem {
+        let processSource = DispatchSource.makeProcessSource(identifier: process.processIdentifier, eventMask: .exit, queue: DispatchQueue.main)
+        self.sources[process.processIdentifier] = processSource
+
+        processSource.setEventHandler { [processIdentifier = process.processIdentifier, weak process = process, weak self] in
             
-            let process = processProvider()
+            waitForStandardOutputInBackground.cancel()
+            waitForStandardErrorInBackground.cancel()
+            self?.sources.removeValue(forKey: processIdentifier)
             
-            process.terminationHandler = { process in
-                let terminationStatus = Int(process.terminationStatus)
-                
-                guard terminationStatus == 0 else {
-                    queue.async {
-                        completionHandler(process, type, false, NSError.errorTermination(process: process, for: type, status: terminationStatus))
-                    }
-                    return
-                }
-                
-                queue.async {
-                    completionHandler(process, type, true, nil)
-                }
+            guard let process = process else {
+                return
             }
             
-            self.delegate?.willLaunch(manager: self, process: process, type: type)
+            self?.didExit(process: process, processIdentifier: processIdentifier, userInfo: userInfo)
+            guard process.terminationStatus == 0 else {
+                return
+            }
             
-            process.launch()
-            
-            self.delegate?.didLaunch(manager: self, process: process, type: type)
+            eventHandler?.perform()
         }
+
+        processSource.activate()
+        
+        self.didLaunch(process: process, userInfo: userInfo)
+    }
+    
+    public func `repeat`(process provider: @escaping @autoclosure () -> Process, every timeInterval: DispatchTimeInterval, until terminationStatus: Int, then eventHandler: DispatchWorkItem, deadline: DispatchTime = DispatchTime.now()) {
+        
+        let process = provider()
+        
+        process.terminationHandler = { process in
+            
+            if process.terminationStatus == terminationStatus {
+                DispatchQueue.main.async {
+                    eventHandler.perform()
+                }
+                return
+            }
+
+            DispatchQueue.main.async { [weak self] in 
+                self?.repeat(process: provider, every: timeInterval, until: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
+            process.launch()
+        }
+    }
+
+    public func sequence(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: DispatchWorkItem? = nil) -> Sequence {
+        return Sequence(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
     }
 }

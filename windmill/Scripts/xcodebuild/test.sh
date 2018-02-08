@@ -12,10 +12,20 @@ DESTINATION_ID=$(python -c "$PARSE")
 xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}"
 
 exit_code=$?
-if [ $exit_code -eq 66 ]; then
-exit 0
-fi
+if [ $exit_code -eq 70 ]; then
+xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}"
+
+    exit_code=$?
+
+    if [ $exit_code -eq 66 ]; then
+    exit 0
+    else
+    exit $exit_code
+    fi
+
+else
 exit $exit_code
+fi
 
 ## Test
 #

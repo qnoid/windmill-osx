@@ -88,7 +88,11 @@ class MainViewController: NSViewController {
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
     @IBOutlet weak var exportActivityView: ActivityView!
-    @IBOutlet weak var deployActivityView: ActivityView!
+    @IBOutlet weak var deployActivityView: ActivityView! {
+        didSet {
+            deployActivityView.isHidden = (try? Keychain.defaultKeychain().findWindmillUser()) == nil
+        }
+    }
     
     weak var topConstraint: NSLayoutConstraint!
     
@@ -104,7 +108,8 @@ class MainViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
@@ -148,7 +153,7 @@ class MainViewController: NSViewController {
         super.viewDidLoad()
     }
     
-    @objc func windmillWillDeployProject(_ aNotification: Notification) {
+    @objc func willStartProject(_ aNotification: Notification) {
         guard let project = aNotification.userInfo?["project"] as? Project else {
             return
         }
@@ -165,17 +170,25 @@ class MainViewController: NSViewController {
         projectTitlebarAccessoryViewController.project = project        
     }
     
+    @objc func windmillMonitoringProject(_ aNotification: Notification) {
+        
+        self.windmillImageView.image = #imageLiteral(resourceName: "windmill-activity-indicator")
+        self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
+        self.activityTextfield.stringValue = "monitoring"
+    }
+
+    
     @objc func activityDidLaunch(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
                 
-        self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activityType.imageName))
-        self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active.\(activityType.rawValue)", comment: "")
-        self.activityViews[activityType]?.imageView.alphaValue = 1.0
-        self.activityViews[activityType]?.startLightsAnimation(activityType: activityType)
+        self.windmillImageView.image = NSImage(named: NSImage.Name(rawValue: activity.imageName))
+        self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
+        self.activityViews[activity]?.imageView.alphaValue = 1.0
+        self.activityViews[activity]?.startLightsAnimation(activityType: activity)
         
-        self.activityTextfield.stringValue = activityType.description
+        self.activityTextfield.stringValue = activity.description
     }
 
     @objc func activityError(_ aNotification: Notification) {
@@ -197,11 +210,11 @@ class MainViewController: NSViewController {
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
 
-        self.activityViews[activityType]?.stopLightsAnimation()
+        self.activityViews[activity]?.stopLightsAnimation()
     }
     
     @discardableResult func cleanBuildFolder() -> Bool {

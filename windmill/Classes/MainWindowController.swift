@@ -30,7 +30,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     var windmill: Windmill! {
         didSet{
             let consoleViewController = self.bottomPanelSplitViewController?.consoleViewController
-            windmill.delegate = consoleViewController
+            windmill.processManager.delegate = consoleViewController
             consoleViewController?.windmill = windmill
             mainViewController?.windmill = windmill
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill

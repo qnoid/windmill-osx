@@ -18,7 +18,14 @@ class ArtefactsViewController: NSViewController {
 
     @IBOutlet weak var archiveArtefactView: ArtefactView!
     @IBOutlet weak var exportArtefactView: ArtefactView!
-    @IBOutlet weak var deployArtefactView: ArtefactView!
+    @IBOutlet weak var deployArtefactView: ArtefactView! {
+        didSet {
+            
+            if (try? Keychain.defaultKeychain().findWindmillUser()) == nil {
+                deployArtefactView.toolTip =  NSLocalizedString("windmill.paid", comment: "")
+            }
+        }
+    }
     
     lazy var artefactViews: [ActivityType: ArtefactView] = { [unowned self] in
         return [.archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
@@ -51,7 +58,7 @@ class ArtefactsViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
@@ -65,7 +72,7 @@ class ArtefactsViewController: NSViewController {
         super.viewDidLoad()
     }
     
-    @objc func windmillWillDeployProject(_ aNotification: Notification) {
+    @objc func willStartProject(_ aNotification: Notification) {
         for artefactView in self.artefactViews.values {
             artefactView.isHidden = false
             artefactView.stopStageAnimation()
@@ -76,11 +83,11 @@ class ArtefactsViewController: NSViewController {
     }
 
     @objc func activityDidLaunch(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
 
-        self.artefactViews[activityType]?.startStageAnimation()
+        self.artefactViews[activity]?.startStageAnimation()
     }
 
     @objc func activityError(_ aNotification: Notification) {
@@ -91,12 +98,12 @@ class ArtefactsViewController: NSViewController {
     
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
-        
-        self.artefactViews[activityType]?.stopStageAnimation()
-        self.artefactViews[activityType]?.isHidden = true
+
+        self.artefactViews[activity]?.stopStageAnimation()
+        self.artefactViews[activity]?.isHidden = true
     }
 
     @objc func didArchiveSuccesfully(_ aNotification: Notification) {

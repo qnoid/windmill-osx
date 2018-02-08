@@ -282,7 +282,7 @@ class SidePanelViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet {
-            self.defaultCenter.addObserver(self, selector: #selector(windmillWillDeployProject(_:)), name: Windmill.Notifications.willDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
         }
@@ -359,7 +359,7 @@ class SidePanelViewController: NSViewController {
         self.layout()
     }
     
-    @objc func windmillWillDeployProject(_ aNotification: Notification) {
+    @objc func willStartProject(_ aNotification: Notification) {
         guard let project = aNotification.userInfo?["project"] as? Project else {
             return
         }
@@ -373,15 +373,11 @@ class SidePanelViewController: NSViewController {
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, let project = project else {
             return
         }
-        
-        guard let project = project else {
-            return
-        }
-        
-        switch activityType {
+
+        switch activity {
         case .build:
             self.build.isHidden = false
             self.buildConfiguration.isHidden = false
@@ -417,17 +413,12 @@ class SidePanelViewController: NSViewController {
     }
     
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
-        
-        
-        guard let activity = aNotification.userInfo?["activity"] as? String, let activityType = ActivityType(rawValue: activity) else {
+                
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, let project = project else {
             return
         }
-        
-        guard let project = project else {
-            return
-        }
-        
-        switch activityType {
+
+        switch activity {
         case .checkout:
             guard let commit = try? Repository.of(project: project) else {
                 os_log("Repository for project not found. Have you cloned it?", log: .default, type: .debug)
