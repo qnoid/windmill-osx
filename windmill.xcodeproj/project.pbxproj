@@ -138,7 +138,6 @@
 		BD680549202C120200F38D3B /* SequenceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceTest.swift; sourceTree = "<group>"; };
 		BD68057E202C144B00F38D3B /* helloword-no-test-target */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "helloword-no-test-target"; sourceTree = "<group>"; };
 		BD680581202C15C000F38D3B /* metadata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = metadata; sourceTree = "<group>"; };
-		BD680583202C1AA900F38D3B /* helloworld */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helloworld; sourceTree = "<group>"; };
 		BD680585202C1AC700F38D3B /* helloworld */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helloworld; sourceTree = "<group>"; };
 		BD680587202C222200F38D3B /* no_simulator_available */ = {isa = PBXFileReference; lastKnownFileType = folder; path = no_simulator_available; sourceTree = "<group>"; };
 		BD6963F11F4C91910041847B /* Xcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Xcode.swift; sourceTree = "<group>"; };
@@ -333,7 +332,6 @@
 		BDB6D53219440392001340B4 = {
 			isa = PBXGroup;
 			children = (
-				BD680583202C1AA900F38D3B /* helloworld */,
 				BD081A181AB09AB000B8E948 /* Frameworks */,
 				BDB6D53D19440392001340B4 /* windmill */,
 				BDB6D55019440392001340B4 /* windmillTests */,
