@@ -31,7 +31,9 @@ public extension FileManager
     }
 
     func buildDirectoryURL(forProject name: String) -> URL {
-        return windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("build")
+        let directory = self.directory(windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("build"))
+        directory.create(withIntermediateDirectories: true)
+        return directory.URL
     }
 
     func testDirectoryURL(forProject name: String) -> URL {
