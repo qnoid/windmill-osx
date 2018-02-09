@@ -104,7 +104,7 @@ class ProcessManager {
      Launches the given `process`
  
     */
-    public func launch(process: Process, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    public func launch(process: Process, queue: DispatchQueue = DispatchQueue.main, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
     
         self.willLaunch(process: process, userInfo: userInfo)
 
@@ -116,22 +116,24 @@ class ProcessManager {
         let processSource = DispatchSource.makeProcessSource(identifier: process.processIdentifier, eventMask: .exit, queue: DispatchQueue.main)
         self.sources[process.processIdentifier] = processSource
 
-        processSource.setEventHandler { [processIdentifier = process.processIdentifier, weak process = process, weak self] in
-            
+        waitForStandardOutputInBackground.setCancelHandler( handler: DispatchWorkItem {
+            queue.async(execute: DispatchWorkItem { [weak self] in
+                
+                let processIdentifier = process.processIdentifier
+                self?.sources.removeValue(forKey: processIdentifier)
+                
+                self?.didExit(process: process, processIdentifier: processIdentifier, userInfo: userInfo)
+                guard process.terminationStatus == 0 else {
+                    return
+                }
+                
+                eventHandler?.perform()
+            })
+        })
+        
+        processSource.setEventHandler {
             waitForStandardOutputInBackground.cancel()
             waitForStandardErrorInBackground.cancel()
-            self?.sources.removeValue(forKey: processIdentifier)
-            
-            guard let process = process else {
-                return
-            }
-            
-            self?.didExit(process: process, processIdentifier: processIdentifier, userInfo: userInfo)
-            guard process.terminationStatus == 0 else {
-                return
-            }
-            
-            eventHandler?.perform()
         }
 
         processSource.activate()
