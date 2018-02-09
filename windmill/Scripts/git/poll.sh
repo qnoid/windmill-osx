@@ -15,7 +15,7 @@ git rev-parse "$BRANCH" > "$POLL_DIRECTORY_FOR_PROJECT/prev_head" || exit 0
 file_does_not_exist_at_path "$POLL_DIRECTORY_FOR_PROJECT/prev_head" store_prev_head
 
 git fetch 2>/dev/null || exit 0
-git merge FETCH_HEAD > /dev/null || exit 0
+git reset --hard origin/"$BRANCH" > /dev/null || exit 0
 git rev-parse "$BRANCH" > "$POLL_DIRECTORY_FOR_PROJECT/latest_head" || exit 0
 
 diff "$POLL_DIRECTORY_FOR_PROJECT/latest_head" "$POLL_DIRECTORY_FOR_PROJECT/prev_head" > /dev/null

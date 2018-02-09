@@ -15,7 +15,7 @@ set -e
 
 
 function git_pull(){
-(git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/master)
+(git -C ${REPO_NAME} fetch; git -C ${REPO_NAME} reset --hard origin/"$BRANCH")
 }
 
 function git_clone(){
