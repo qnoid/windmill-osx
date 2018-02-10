@@ -10,6 +10,7 @@ set -e
 TEST_DEVICES_FOR_PROJECT=$1
 SCHEME_NAME=$2
 BUILD_SETTINGS_FOR_PROJECT=$3
+SCRIPTS_ROOT=$4
 
 PARSE="import sys, json; print json.load(open(\"${BUILD_SETTINGS_FOR_PROJECT}\"))[\"deployment\"][\"target\"]"
 

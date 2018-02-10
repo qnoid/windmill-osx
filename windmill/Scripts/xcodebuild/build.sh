@@ -8,6 +8,8 @@ TEST_DEVICES_FOR_PROJECT=$1
 PROJECT_NAME=$2
 SCHEME=$3
 CONFIGURATION=$4
+WIDMILL_HOME=$5
+BUILD_DIRECTORY_FOR_PROJECT=$6
 
 PARSE="import sys, json; print json.load(open(\"${TEST_DEVICES_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 

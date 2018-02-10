@@ -4,6 +4,8 @@
 #  ref: http://stackoverflow.com/questions/7166509/how-to-build-a-git-polling-build-bot
 
 BRANCH=$1
+SCRIPTS_ROOT=$2
+POLL_DIRECTORY_FOR_PROJECT=$3
 
 . $SCRIPTS_ROOT/common.sh
 

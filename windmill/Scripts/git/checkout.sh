@@ -8,6 +8,7 @@
 REPO_NAME=$1
 BRANCH=$2
 REMOTE=$3
+SCRIPTS_ROOT=$4
 
 set -e
 
