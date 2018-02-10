@@ -32,8 +32,6 @@ class ProcessManager {
     let log = OSLog(subsystem: "io.windmill.windmill", category: "process.manager")
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
     
-    var sources = [ProcessIdentifer: DispatchSourceProcess]()
-    
     weak var delegate: ProcessManagerDelegate?
     
     weak var monitor: ProcessMonitor?
@@ -111,33 +109,23 @@ class ProcessManager {
         let waitForStandardOutputInBackground = self.waitForStandardOutputInBackground(process: process)
         let waitForStandardErrorInBackground = self.waitForStandardErrorInBackground(process: process)
 
-        process.launch()
-        
-        let processSource = DispatchSource.makeProcessSource(identifier: process.processIdentifier, eventMask: .exit, queue: DispatchQueue.main)
-        self.sources[process.processIdentifier] = processSource
-
-        waitForStandardOutputInBackground.setCancelHandler( handler: DispatchWorkItem {
-            queue.async(execute: DispatchWorkItem { [weak self] in
+        process.terminationHandler = { [weak self] process in
+            queue.async {
+                waitForStandardOutputInBackground.cancel()
+                waitForStandardErrorInBackground.cancel()
                 
                 let processIdentifier = process.processIdentifier
-                self?.sources.removeValue(forKey: processIdentifier)
-                
                 self?.didExit(process: process, processIdentifier: processIdentifier, userInfo: userInfo)
                 guard process.terminationStatus == 0 else {
                     return
                 }
                 
                 eventHandler?.perform()
-            })
-        })
-        
-        processSource.setEventHandler {
-            waitForStandardOutputInBackground.cancel()
-            waitForStandardErrorInBackground.cancel()
+            }
         }
 
-        processSource.activate()
-        
+        process.launch()
+
         self.didLaunch(process: process, userInfo: userInfo)
     }
     
