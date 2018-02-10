@@ -9,7 +9,9 @@
 "windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will perform a full checkout of the remote repo and start monitoring.";
 "windmill.activity.checkout.description"="checking out";
 "windmill.activity.build.description"="building";
+"windmill.activity.buildSettings.description"="reticulating splines";
 "windmill.activity.test.description"="testing";
+"windmill.activity.devices.description"="counting sheep";
 "windmill.activity.archive.description"="archiving";
 "windmill.activity.export.description"="exporting";
 "windmill.activity.deploy.description"="deploying";

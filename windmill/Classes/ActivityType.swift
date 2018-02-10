@@ -17,6 +17,9 @@ public enum ActivityType: String, CustomStringConvertible
     case export
     case deploy
     
+    case buildSettings
+    case devices
+    
     var imageName: String {
         switch (self){
         case .checkout:
@@ -31,23 +34,10 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-export"
         case .deploy:
             return "windmill-activity-indicator-deploy"
-        }
-    }
-    
-    var imageNameLights: String {
-        switch (self){
-        case .checkout:
-            return "lights-checkout"
-        case .build:
-            return "lights-build"
-        case .test:
-            return "lights-test"
-        case .archive:
-            return "lights-archive"
-        case .export:
-            return "lights-export"
-        case .deploy:
-            return "lights-deploy"
+        case .buildSettings:
+            return "windmill-activity-indicator"
+        case .devices:
+            return "windmill-activity-indicator"
         }
     }
     

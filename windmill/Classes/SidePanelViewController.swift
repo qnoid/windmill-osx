@@ -385,7 +385,7 @@ class SidePanelViewController: NSViewController {
             self.buildConfigurationValue.stringValue = Configuration.debug.name
         case .test:
             
-            let metadata = MetadataJSONEncoded.testMetadata(for: project)
+            let metadata = MetadataJSONEncoded.devices(for: project)
             
             self.test.isHidden = false
             let version:Float? = metadata["version"]

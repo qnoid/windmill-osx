@@ -56,7 +56,7 @@ extension Process
 {
     func domain(type: ActivityType) -> String {
         switch type {
-        case .checkout, .deploy:
+        case .buildSettings, .devices, .checkout, .deploy:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain
@@ -70,20 +70,33 @@ extension Process
             return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
         case .build, .test, .archive, .export:
             return "Command xcodebuild failed with exit code \(exitStatus)"
+        case .buildSettings, .devices:
+            return "Windmill '\(String(describing: type.rawValue))' failed with exit code: (\(exitStatus))"
         }
     }
     
     fileprivate class func pathForDir(_ name: String) -> String! {
         return Bundle.main.path(forResource: name, ofType:nil);
     }
-
-    public static func makeReadTestMetadata(directoryPath: String, forProject project: Project, metadata: Metadata, buildMetadata: Metadata) -> Process {
+    
+    public static func makeReadBuildSettings(directoryPath: String, forProject project: Project, buildSettings: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
-        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_TEST_METADATA, ofType: "sh")!
+        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_BUILD_SETTINGS, ofType: "sh")!
+        process.arguments = [buildSettings.url.path, project.scheme]
+        process.qualityOfService = .utility
+        
+        return process
+    }
+
+    public static func makeReadDevices(directoryPath: String, forProject project: Project, devices: Metadata, buildSettings: Metadata) -> Process {
+        
+        let process = Process()
+        process.currentDirectoryPath = directoryPath
+        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_DEVICES, ofType: "sh")!
         process.environment = ["SCRIPTS_ROOT": self.pathForDir("Scripts")]
-        process.arguments = [metadata.url.path, project.scheme, buildMetadata.url.path]
+        process.arguments = [devices.url.path, project.scheme, buildSettings.url.path]
         process.qualityOfService = .utility
         
         return process
@@ -101,25 +114,26 @@ extension Process
         return process
     }
     
-    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, metadata: Metadata) -> Process {
+    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, devices: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
         process.environment = ["WIDMILL_HOME": FileManager.default.windmillHomeDirectoryURL.path, "BUILD_DIRECTORY_FOR_PROJECT":FileManager.default.buildDirectoryURL(forProject: project.name).path]
-        process.arguments = [project.name, project.scheme, configuration.name, metadata.url.path]
+        process.arguments = [devices.url.path, project.name, project.scheme, configuration.name]
         process.qualityOfService = .utility
         
         return process
     }
     
     
-    static func makeTest(directoryPath: String, scheme: String, metadata: Metadata) -> Process {
+    static func makeTest(directoryPath: String, project: Project, devices: Metadata) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
+        process.environment = ["BUILD_DIRECTORY_FOR_PROJECT":FileManager.default.buildDirectoryURL(forProject: project.name).path]
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST, ofType: "sh")!
-        process.arguments = [metadata.url.path, scheme]
+        process.arguments = [devices.url.path, project.scheme]
         process.qualityOfService = .utility
         
         return process

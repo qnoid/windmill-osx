@@ -287,6 +287,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
+        
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }

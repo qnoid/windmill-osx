@@ -132,7 +132,7 @@ class ArtefactsViewController: NSViewController {
         }
         
         self.exportView.export = Export.make(forProject: project)
-        self.exportView.metadata = MetadataJSONEncoded.buildMetadata(for: project)
+        self.exportView.metadata = MetadataJSONEncoded.buildSettings(for: project)
         self.exportView.isHidden = false
     }
     
@@ -143,7 +143,7 @@ class ArtefactsViewController: NSViewController {
         }
         
         self.deployView.export = Export.make(forProject: project)
-        self.deployView.metadata = MetadataJSONEncoded.buildMetadata(for: project)
+        self.deployView.metadata = MetadataJSONEncoded.buildSettings(for: project)
         
         self.deployView.isHidden = false
     }

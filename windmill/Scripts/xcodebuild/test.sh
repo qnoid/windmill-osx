@@ -3,17 +3,17 @@
 # Requires the following variables to be set
 # SCHEME_NAME
 
-TEST_METADATA_FOR_PROJECT=$1
+TEST_DEVICES_FOR_PROJECT=$1
 SCHEME_NAME=$2
 
-PARSE="import sys, json; print json.load(open(\"${TEST_METADATA_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
+PARSE="import sys, json; print json.load(open(\"${TEST_DEVICES_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 
 DESTINATION_ID=$(python -c "$PARSE")
-xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}"
+xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
 
 exit_code=$?
 if [ $exit_code -eq 70 ]; then
-xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}"
+xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
 
     exit_code=$?
 

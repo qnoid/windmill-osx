@@ -27,6 +27,7 @@ struct Scripts
     }
     
     struct CommandLineTools {
-        static let READ_TEST_METADATA : BashScript = "Scripts/commandlinetools/read_test_metadata"
+        static let READ_BUILD_SETTINGS : BashScript = "Scripts/commandlinetools/read_build_settings"
+        static let READ_DEVICES : BashScript = "Scripts/commandlinetools/read_devices"
     }
 }

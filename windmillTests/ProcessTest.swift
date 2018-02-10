@@ -93,14 +93,14 @@ class ProcessTest: XCTestCase {
         
         let project = Project(name: "windmill-ios", scheme: "windmill", origin: "foo")
         
-        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
-        let metadata = MetadataJSONEncoded.testMetadata(for: project)
+        let buildMetadata = MetadataJSONEncoded.buildSettings(for: project)
+        let metadata = MetadataJSONEncoded.devices(for: project)
         
         let manager = EphemeralFileManager(url: metadata.url)
         
         let directoryPath = project.directoryPathURL.path
         
-        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        let process = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: metadata, buildSettings: buildMetadata)
         
         process.launch()
         process.waitUntilExit()
@@ -121,14 +121,14 @@ class ProcessTest: XCTestCase {
         
         let project = Project(name: "no_simulator_available", scheme: "no_simulator_available", origin: "foo")
         
-        let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
-        let metadata = MetadataJSONEncoded.testMetadata(for: project)
+        let buildMetadata = MetadataJSONEncoded.buildSettings(for: project)
+        let metadata = MetadataJSONEncoded.devices(for: project)
         
         let manager = EphemeralFileManager(url: metadata.url)
         
         let directoryPath = project.directoryPathURL.path
         
-        let process = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        let process = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: metadata, buildSettings: buildMetadata)
         
         process.launch()
         process.waitUntilExit()

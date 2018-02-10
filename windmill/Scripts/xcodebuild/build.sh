@@ -4,20 +4,20 @@
 # SCHEME
 # CONFIGURATION
 
-PROJECT_NAME=$1
-SCHEME=$2
-CONFIGURATION=$3
-BUILD_METADATA_FOR_PROJECT=$4
+TEST_DEVICES_FOR_PROJECT=$1
+PROJECT_NAME=$2
+SCHEME=$3
+CONFIGURATION=$4
 
-DEPLOYMENT_TARGET=$(xcodebuild -showBuildSettings -scheme ${SCHEME} | awk '$1 == "IPHONEOS_DEPLOYMENT_TARGET" { print $3 }')
+PARSE="import sys, json; print json.load(open(\"${TEST_DEVICES_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 
-echo '{"deployment":{"target":"'${DEPLOYMENT_TARGET}'"}}' > "${BUILD_METADATA_FOR_PROJECT}"
+DESTINATION_ID=$(python -c "$PARSE")
 
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build-for-testing -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
+xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
 
 exit_code=$?
 if [ $exit_code -eq 66 ]; then
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} clean build -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
+xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath ${BUILD_DIRECTORY_FOR_PROJECT}
 else
 exit $exit_code
 fi

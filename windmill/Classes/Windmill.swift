@@ -72,21 +72,24 @@ let WindmillErrorDomain : String = "io.windmill"
         let checkout = Process.makeCheckout(repoName: project.name, origin: project.origin)
         
         return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: DispatchWorkItem { [weak self] in
-            let buildMetadata = MetadataJSONEncoded.buildMetadata(for: project)
-            let build = Process.makeBuild(directoryPath: directoryPath, project: project, metadata: buildMetadata)
-            self?.processManager.sequence(process: build, userInfo: ["activity" : ActivityType.build], wasSuccesful: DispatchWorkItem {
-                let metadata = MetadataJSONEncoded.testMetadata(for: project)
-                let readTestMetadata = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
-                self?.processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
-                    let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
-                    self?.processManager.sequence(process: test, userInfo: ["activity" : ActivityType.test], wasSuccesful: DispatchWorkItem {
-                        let archive = Process.makeArchive(directoryPath: directoryPath, project: project)
-                        self?.processManager.sequence(process: archive, userInfo: ["activity" : ActivityType.archive], wasSuccesful: DispatchWorkItem {
-                            DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project])
-                            }
-                            let export = Process.makeExport(directoryPath: directoryPath, project: project)
-                            self?.processManager.sequence(process: export, userInfo: ["activity" : ActivityType.export], wasSuccesful: exportWasSuccesful).launch()
+            let buildSettings = MetadataJSONEncoded.buildSettings(for: project)
+            let readBuildSettings = Process.makeReadBuildSettings(directoryPath: directoryPath, forProject: project, buildSettings: buildSettings)
+            self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.buildSettings], wasSuccesful: DispatchWorkItem {
+                let devices = MetadataJSONEncoded.devices(for: project)
+                let readDevices = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
+                self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices], wasSuccesful: DispatchWorkItem {
+                    let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
+                    self?.processManager.sequence(process: build, userInfo: ["activity" : ActivityType.build], wasSuccesful: DispatchWorkItem {
+                        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
+                        self?.processManager.sequence(process: test, userInfo: ["activity" : ActivityType.test], wasSuccesful: DispatchWorkItem {
+                            let archive = Process.makeArchive(directoryPath: directoryPath, project: project)
+                            self?.processManager.sequence(process: archive, userInfo: ["activity" : ActivityType.archive], wasSuccesful: DispatchWorkItem {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project])
+                                }
+                                let export = Process.makeExport(directoryPath: directoryPath, project: project)
+                                self?.processManager.sequence(process: export, userInfo: ["activity" : ActivityType.export], wasSuccesful: exportWasSuccesful).launch()
+                            }).launch()
                         }).launch()
                     }).launch()
                 }).launch()

@@ -26,8 +26,8 @@ class SequenceTest: XCTestCase {
         let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
         let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, metadata: metadata)
-        let readTestMetadata = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
         let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
@@ -54,8 +54,8 @@ class SequenceTest: XCTestCase {
         let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
         let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, metadata: metadata)
-        let readTestMetadata = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
         let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
@@ -81,8 +81,8 @@ class SequenceTest: XCTestCase {
         let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
         let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, metadata: metadata)
-        let readTestMetadata = Process.makeReadTestMetadata(directoryPath: directoryPath, forProject: project, metadata: metadata, buildMetadata: buildMetadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
         let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
