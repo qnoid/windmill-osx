@@ -11,6 +11,10 @@ import Foundation
 extension FileManager {
     
     var xcodeArchivesURL: URL {
-        return self.urls(for: .libraryDirectory, in: .userDomainMask)[0].appendingPathComponent("Developer/Xcode/Archives")
+        let directory = self.directory(self.urls(for: .libraryDirectory, in: .userDomainMask)[0].appendingPathComponent("Developer/Xcode/Archives"))
+        
+        directory.create()
+        
+        return directory.URL
     }
 }
