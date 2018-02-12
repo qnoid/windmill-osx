@@ -717,7 +717,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/current/#/dev23aab79b4"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev23aab79b4"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
                                 </userDefinedRuntimeAttributes>
                             </customView>

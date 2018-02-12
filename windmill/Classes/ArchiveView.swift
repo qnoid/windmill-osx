@@ -15,7 +15,7 @@ class ArchiveView: NSView {
     @IBOutlet weak var headerTextField: LinkLabel! {
         didSet{
             let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .link : "http://help.apple.com/xcode/mac/current/#/dev442d7f2ca",
+                .link : "http://help.apple.com/xcode/mac/9.0/#/dev442d7f2ca",
                 .font : headerTextField.font as Any])
             headerTextField.attributedString = attributedString
         }
