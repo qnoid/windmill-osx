@@ -72,10 +72,10 @@ let WindmillErrorDomain : String = "io.windmill"
         let checkout = Process.makeCheckout(repoName: project.name, origin: project.origin)
         
         return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: DispatchWorkItem { [weak self] in
-            let buildSettings = MetadataJSONEncoded.buildSettings(for: project)
+            let buildSettings = BuildSettings.make(for: project)
             let readBuildSettings = Process.makeReadBuildSettings(directoryPath: directoryPath, forProject: project, buildSettings: buildSettings)
             self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.buildSettings], wasSuccesful: DispatchWorkItem {
-                let devices = MetadataJSONEncoded.devices(for: project)
+                let devices = Devices.make(for: project)
                 let readDevices = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
                 self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices], wasSuccesful: DispatchWorkItem {
                     let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)

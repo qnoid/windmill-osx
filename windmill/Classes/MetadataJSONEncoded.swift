@@ -31,14 +31,14 @@ public class MetadataJSONEncoded: Metadata, CustomDebugStringConvertible {
         return dictionary.debugDescription
     }
     
-    public class func buildSettings(for project:Project) -> Metadata {
+    class func buildSettings(for project:Project) -> Metadata {
         
         let url = FileManager.default.buildDirectoryURL(forProject: project.name).appendingPathComponent("settings.json")
         
         return MetadataJSONEncoded(url: url)
     }
 
-    public class func devices(for project:Project) -> Metadata {
+    class func devices(for project:Project) -> Metadata {
         
         let url = FileManager.default.testDirectoryURL(forProject: project.name).appendingPathComponent("devices.json")
         

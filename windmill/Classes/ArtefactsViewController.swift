@@ -17,10 +17,14 @@ import os
 class ArtefactsViewController: NSViewController {
 
     @IBOutlet weak var archiveArtefactView: ArtefactView!
-    @IBOutlet weak var exportArtefactView: ArtefactView!
+    @IBOutlet weak var exportArtefactView: ArtefactView! {
+        didSet {
+            exportArtefactView.headerLabel.isHidden = true
+        }
+    }
     @IBOutlet weak var deployArtefactView: ArtefactView! {
         didSet {
-            
+            deployArtefactView.headerLabel.stringValue = "You need to:"
             if (try? Keychain.defaultKeychain().findWindmillUser()) == nil {
                 deployArtefactView.toolTip =  NSLocalizedString("windmill.paid", comment: "")
             }
@@ -131,8 +135,12 @@ class ArtefactsViewController: NSViewController {
             return
         }
         
+        let archive = Archive.make(forProject: project, name: project.scheme)
+        let buildSettings = BuildSettings.make(for: project)
+        
         self.exportView.export = Export.make(forProject: project)
-        self.exportView.metadata = MetadataJSONEncoded.buildSettings(for: project)
+        self.exportView.buildSettings = BuildSettings(metadata: MetadataJSONEncoded.buildSettings(for: project))        
+        self.exportView.appBundle = AppBundle.make(archiveURL: archive.url, buildSettings: buildSettings)
         self.exportView.isHidden = false
     }
     
@@ -143,7 +151,7 @@ class ArtefactsViewController: NSViewController {
         }
         
         self.deployView.export = Export.make(forProject: project)
-        self.deployView.metadata = MetadataJSONEncoded.buildSettings(for: project)
+        self.deployView.buildSettings = BuildSettings.make(for: project)
         
         self.deployView.isHidden = false
     }

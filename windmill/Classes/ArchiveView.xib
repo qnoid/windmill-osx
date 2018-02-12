@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ArchiveView" customModule="windmill">
             <connections>
+                <outlet property="archiveImageView" destination="r2S-vK-C5x" id="8iW-l0-FE5"/>
                 <outlet property="dateTextField" destination="cWw-Eh-eC1" id="Jas-c2-Oah"/>
                 <outlet property="headerTextField" destination="WrF-0t-8Dj" id="b8Y-7j-pht"/>
                 <outlet property="stageIndicatorView" destination="xP1-QJ-MZY" id="3EL-H3-eYm"/>
@@ -26,7 +27,7 @@
                         <constraint firstAttribute="width" constant="5" id="fSd-wq-w7f"/>
                     </constraints>
                 </customView>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x">
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="windmill" customModuleProvider="target">
                     <rect key="frame" x="20" y="77" width="64" height="64"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="archive" id="Qs7-Lp-YdD"/>
                 </imageView>

@@ -22,17 +22,14 @@ import AppKit
 @IBDesignable
 class ArtefactView: NSView {
     
+    @IBOutlet weak var headerLabel: NSTextField!
     @IBOutlet weak var stageIndicator: NSView! {
         didSet{
             stageIndicator.wantsLayer = true
             stageIndicator.alphaValue = 0.25
         }
     }
-    @IBOutlet weak var titleLabel: NSTextField! {
-        didSet{
-            titleLabel.alphaValue = 0.25
-        }
-    }
+
     @IBOutlet weak var imageView: NSImageView! {
         didSet{
             imageView.layer = CALayer()
@@ -40,17 +37,7 @@ class ArtefactView: NSView {
             imageView.alphaValue = 0.25
         }
     }
-    @IBOutlet weak var stepsLabel: NSTextField! {
-        didSet{
-            stepsLabel.alphaValue = 0.25
-        }
-    }
-    
-    @IBInspectable var title: String? {
-        didSet{
-            self.titleLabel.stringValue = title ?? ""
-        }
-    }
+    @IBOutlet weak var stepsLabel: LinkLabel!
     
     @IBInspectable var image: NSImage? {
         didSet{
@@ -64,9 +51,22 @@ class ArtefactView: NSView {
         }
     }
 
-    @IBInspectable var steps: String? {
+    @IBInspectable var url: String?
+    
+    @IBInspectable var step: String? {
         didSet{
-            self.stepsLabel.stringValue = steps ?? ""
+            
+            guard let step = step else {
+                return
+            }
+            
+            var attributes: [NSAttributedStringKey : Any] = [.foregroundColor: NSColor.white, .font : stepsLabel.font as Any]
+            if let url = url {
+                attributes[.link] = url
+            }
+            
+            let attributedString = NSAttributedString(string: step, attributes: attributes)            
+            self.stepsLabel.attributedString = attributedString
         }
     }
 

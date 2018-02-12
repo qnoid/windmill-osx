@@ -19,6 +19,7 @@ xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id
     exit_code=$?
 
     if [ $exit_code -eq 66 ]; then
+    mv "${TEST_DEVICES_FOR_PROJECT}" "${TEST_DEVICES_FOR_PROJECT}.66"
     exit 0
     else
     exit $exit_code

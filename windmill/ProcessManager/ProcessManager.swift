@@ -102,7 +102,7 @@ class ProcessManager {
      Launches the given `process`
  
     */
-    public func launch(process: Process, queue: DispatchQueue = DispatchQueue.main, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    public func launch(process: Process, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
     
         self.willLaunch(process: process, userInfo: userInfo)
 
@@ -110,7 +110,7 @@ class ProcessManager {
         let waitForStandardErrorInBackground = self.waitForStandardErrorInBackground(process: process)
 
         process.terminationHandler = { [weak self] process in
-            queue.async {
+            DispatchQueue.main.async {
                 waitForStandardOutputInBackground.cancel()
                 waitForStandardErrorInBackground.cancel()
                 

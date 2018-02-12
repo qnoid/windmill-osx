@@ -28,11 +28,18 @@ class ArchiveView: NSView {
         }
     }
     
+    @IBOutlet weak var archiveImageView: FileImageView!
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var versionTextField: NSTextField!
     @IBOutlet weak var dateTextField: NSTextField!
     
-    var archive: Archive!
+    var archive: Archive! {
+        didSet{
+            self.archiveImageView.url = archive.url
+            self.archiveImageView.dragImage = #imageLiteral(resourceName: "archive")
+        }
+    }
+    
     lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "YYYY-MM-dd"

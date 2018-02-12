@@ -11,13 +11,35 @@ import Foundation
 import AppKit
 import os
 
+class FileImageView: NSImageView, NSDraggingSource {
+    
+    var url: URL!
+    var dragImage: NSImage?
+    
+    func draggingSession(_ session: NSDraggingSession, sourceOperationMaskFor context: NSDraggingContext) -> NSDragOperation {
+            return NSDragOperation.copy
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        
+        let draggingItem = NSDraggingItem(pasteboardWriter: self.url as NSURL)
+        
+        if let dragImage = dragImage {
+            draggingItem.setDraggingFrame(self.bounds, contents: dragImage)
+        }
+        
+        self.beginDraggingSession(with: [draggingItem], event: event, source: self)
+        
+    }
+}
+
 @IBDesignable
 class ExportView: NSView {
     
     @IBOutlet weak var headerTextField: LinkLabel! {
         didSet{
             let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .link : "http://help.apple.com/xcode/mac/current/#/dev7ccaf4d3c",
+                .link : "https://help.apple.com/xcode/mac/current/#/devade83d1d7?sub=dev103e8473e",
                 .font : headerTextField.font as Any])
             headerTextField.attributedString = attributedString
         }
@@ -29,20 +51,31 @@ class ExportView: NSView {
             self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.cyan().cgColor
         }
     }
+    @IBOutlet weak var ipaImageView: FileImageView!
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var versionTextField: NSTextField!
     @IBOutlet weak var deploymentTargetTextField: NSTextField!
     
-    var metadata: Metadata? {
+    var buildSettings: BuildSettings? {
         didSet {
-            let deployment:[String: String]? = metadata?["deployment"]
-            
-            self.deploymentTargetTextField.stringValue = deployment?["target"] ?? ""
+            self.deploymentTargetTextField.stringValue = buildSettings?.deployment.target?.description ?? ""
         }
     }
 
+    var appBundle: AppBundle? {
+        didSet{
+            guard let iconURL = appBundle?.iconURL(), let dragImage = NSImage(contentsOf: iconURL) else {
+                self.ipaImageView.dragImage = #imageLiteral(resourceName: "ipa")
+                
+                return
+            }
+            
+            self.ipaImageView.dragImage = dragImage
+        }
+    }
     var export: Export? {
         didSet {
+            self.ipaImageView.url = export?.url
             self.versionTextField.stringValue = export?.manifest.bundleVersion ?? ""
             self.titleTextField.stringValue = export?.manifest.title ?? ""
         }

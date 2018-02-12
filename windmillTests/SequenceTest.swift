@@ -23,12 +23,12 @@ class SequenceTest: XCTestCase {
         let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
         let directoryPath = bundle.url(forResource: name, withExtension: "")!.path
 
-        let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
-        let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
+        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
-        let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
             processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
@@ -51,12 +51,12 @@ class SequenceTest: XCTestCase {
         let project = Project(name: name, scheme: "helloworld", origin: "any")
         let directoryPath = project.directoryPathURL.path
         
-        let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
-        let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
+        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
-        let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
             processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
@@ -78,12 +78,12 @@ class SequenceTest: XCTestCase {
         let project = Project(name: name, scheme: "no_simulator_available", origin: "any")
         let directoryPath = bundle.url(forResource: name, withExtension: "")!.path
         
-        let metadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/metadata", withExtension: "json")!)
-        let buildMetadata = MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/metadata", withExtension: "json")!)
+        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: metadata)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, metadata: metadata, buildSettings: buildMetadata)
-        let test = Process.makeTest(directoryPath: directoryPath, scheme: project.scheme, metadata: metadata)
+        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
+        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
         
         processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
             processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {

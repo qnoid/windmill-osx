@@ -1,8 +1,0 @@
-{
-    "deployment": {
-        "target": "11.2"
-    },
-    "destination": {
-        "name": "iPhone 5s"
-    }
-}

@@ -713,12 +713,12 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <constraint firstAttribute="width" constant="270" id="f1U-q7-Z3Y"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Upload an app to iTunes Connect"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="archive"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="steps" value="• Complete the archive stage"/>
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/current/#/dev23aab79b4"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yLb-mO-pCG" customClass="ArchiveView" customModule="windmill" customModuleProvider="target">
@@ -727,9 +727,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="ngG-eU-8IG" userLabel="Export Artefact View" customClass="ArtefactView" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="157" width="270" height="137"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Distribute to registered devices"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="ipa"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="steps" value="• Complete the export stage"/>
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
@@ -744,12 +742,11 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <constraint firstAttribute="height" constant="144" id="JlN-T3-kgH"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Over the air distribution"/>
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="iphone-x"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="steps" value="• Complete the deploy stage"/>
                                     <userDefinedRuntimeAttribute type="color" keyPath="color">
                                         <color key="value" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Have an active windmill subscription."/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QyX-Qb-5N2" userLabel="Deploy View" customClass="DeployView" customModule="windmill" customModuleProvider="target">

@@ -79,7 +79,7 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil);
     }
     
-    public static func makeReadBuildSettings(directoryPath: String, forProject project: Project, buildSettings: Metadata) -> Process {
+    public static func makeReadBuildSettings(directoryPath: String, forProject project: Project, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
@@ -90,7 +90,7 @@ extension Process
         return process
     }
 
-    public static func makeReadDevices(directoryPath: String, forProject project: Project, devices: Metadata, buildSettings: Metadata) -> Process {
+    public static func makeReadDevices(directoryPath: String, forProject project: Project, devices: Devices, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
@@ -112,7 +112,7 @@ extension Process
         return process
     }
     
-    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, devices: Metadata) -> Process {
+    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, devices: Devices) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath
@@ -124,7 +124,7 @@ extension Process
     }
     
     
-    static func makeTest(directoryPath: String, project: Project, devices: Metadata) -> Process {
+    static func makeTest(directoryPath: String, project: Project, devices: Devices) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = directoryPath

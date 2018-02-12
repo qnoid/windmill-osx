@@ -383,22 +383,6 @@ class SidePanelViewController: NSViewController {
             self.buildConfiguration.isHidden = false
             self.buildConfigurationValue.isHidden = false
             self.buildConfigurationValue.stringValue = Configuration.debug.name
-        case .test:
-            
-            let metadata = MetadataJSONEncoded.devices(for: project)
-            
-            self.test.isHidden = false
-            let version:Float? = metadata["version"]
-            let destination:[String: String]? = metadata["destination"]
-
-            self.platform.isHidden = false
-            self.platformValue.isHidden = false
-            self.platformVersion.isHidden = false
-            self.platformVersionValue.isHidden = false
-            self.platformVersionValue.stringValue = version?.description ?? ""
-            self.platformName.isHidden = false
-            self.platformNameValue.isHidden = false
-            self.platformNameValue.stringValue = destination?["name"] ?? ""
         case .archive:
             self.archive.isHidden = false
             self.archiveSection.configuration.isHidden = false
@@ -436,6 +420,19 @@ class SidePanelViewController: NSViewController {
             self.checkoutSection.commit.isHidden = false
             self.checkoutValues.commitValue.stringValue = commit.shortSha
             self.checkoutValues.commitValue.isHidden = false
+        case .test:
+            let devices = Devices.make(for: project)
+            
+            self.test.isHidden = false
+            self.platform.isHidden = false
+            self.platformValue.isHidden = false
+            self.platformValue.stringValue = devices.platform != nil ?  "iOS Simulator" : "N/A"
+            self.platformVersion.isHidden = false
+            self.platformVersionValue.isHidden = false
+            self.platformVersionValue.stringValue = devices.version?.description ?? "N/A"
+            self.platformName.isHidden = false
+            self.platformNameValue.isHidden = false
+            self.platformNameValue.stringValue = devices.destination.name ?? "N/A"
         case .archive:            
             let archive = Archive.make(forProject: project, name: project.scheme)
             

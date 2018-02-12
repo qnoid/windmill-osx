@@ -9,6 +9,7 @@
             <connections>
                 <outlet property="deploymentTargetTextField" destination="cWw-Eh-eC1" id="caa-mK-YL8"/>
                 <outlet property="headerTextField" destination="BkY-iF-Rbe" id="IO5-uC-YD2"/>
+                <outlet property="ipaImageView" destination="r2S-vK-C5x" id="FFV-6q-D2k"/>
                 <outlet property="stageIndicatorView" destination="xP1-QJ-MZY" id="3EL-H3-eYm"/>
                 <outlet property="titleTextField" destination="spO-1s-y1M" id="nZh-ua-hHB"/>
                 <outlet property="versionTextField" destination="KV1-eO-OV4" id="XKl-rS-892"/>
@@ -26,19 +27,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
+                            <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="textColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 <size key="minSize" width="240" height="18"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
-                                    <fragment content="Distribute to registered devices">
+                                    <fragment content="Install apps on a device">
                                         <attributes>
-                                            <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <font key="NSFont" metaFont="systemBold" size="14"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            <real key="NSKern" value="0.0"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                <tabStops/>
+                                            </paragraphStyle>
+                                            <color key="NSStrokeColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>
@@ -66,7 +72,7 @@
                         <constraint firstAttribute="width" constant="5" id="fSd-wq-w7f"/>
                     </constraints>
                 </customView>
-                <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x">
+                <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="windmill" customModuleProvider="target">
                     <rect key="frame" x="20" y="37" width="64" height="128"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ipa" id="Qs7-Lp-YdD"/>
                 </imageView>

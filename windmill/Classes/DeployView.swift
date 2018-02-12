@@ -31,11 +31,9 @@ class DeployView: NSView {
         }
     }
     
-    var metadata: Metadata? {
+    var buildSettings: BuildSettings? {
         didSet {
-            let deployment:[String: String]? = metadata?["deployment"]
-            
-            self.deploymentTargetTextField.stringValue = deployment?["target"] ?? ""
+            self.deploymentTargetTextField.stringValue = buildSettings?.deployment.target?.description ?? ""
         }
     }
     
