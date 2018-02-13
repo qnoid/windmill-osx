@@ -74,7 +74,7 @@ let WindmillErrorDomain : String = "io.windmill"
         return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: DispatchWorkItem { [weak self] in
             let buildSettings = BuildSettings.make(for: project)
             let readBuildSettings = Process.makeReadBuildSettings(directoryPath: directoryPath, forProject: project, buildSettings: buildSettings)
-            self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.buildSettings], wasSuccesful: DispatchWorkItem {
+            self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: DispatchWorkItem {
                 let devices = Devices.make(for: project)
                 let readDevices = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
                 self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices], wasSuccesful: DispatchWorkItem {

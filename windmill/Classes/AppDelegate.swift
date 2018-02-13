@@ -45,6 +45,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var isBottomPanelCollapsedObserver: NSKeyValueObservation?
 
     var mainWindowViewController: MainWindowController? {
+        
+        willSet {
+            mainWindowViewController?.dismissController(self)
+        }
         didSet {
             guard let mainWindowViewController = mainWindowViewController else {
                 return
@@ -133,6 +137,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             notification.title = "Getting started."
             notification.informativeText = NSLocalizedString("notification.gettingstarted", comment: "")
             notification.contentImage = #imageLiteral(resourceName: "statusItem")
+            
             
             notification.actionButtonTitle = NSLocalizedString("notification.gettingstarted.action", comment: "")
             

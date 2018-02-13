@@ -17,7 +17,7 @@ public enum ActivityType: String, CustomStringConvertible
     case export
     case deploy
     
-    case buildSettings
+    case showBuildSettings
     case devices
     
     var imageName: String {
@@ -34,7 +34,7 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-export"
         case .deploy:
             return "windmill-activity-indicator-deploy"
-        case .buildSettings:
+        case .showBuildSettings:
             return "windmill-activity-indicator"
         case .devices:
             return "windmill-activity-indicator"

@@ -56,7 +56,7 @@ extension Process
 {
     func domain(type: ActivityType) -> String {
         switch type {
-        case .buildSettings, .devices, .checkout, .deploy:
+        case .showBuildSettings, .devices, .checkout, .deploy:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain
@@ -70,7 +70,7 @@ extension Process
             return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
         case .build, .test, .archive, .export:
             return "Command xcodebuild failed with exit code \(exitStatus)"
-        case .buildSettings, .devices:
+        case .showBuildSettings, .devices:
             return "Windmill '\(String(describing: type.rawValue))' failed with exit code: (\(exitStatus))"
         }
     }
