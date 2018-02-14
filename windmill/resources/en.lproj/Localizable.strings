@@ -18,8 +18,8 @@
 "windmill.toolTip.active.checkout"="Windmill is currently checking out your project from the remote repo.";
 "windmill.toolTip.active.build"="Windmill is currently building your app to make sure you haven't forgotten to check in any files.";
 "windmill.toolTip.active.test"="Windmill is currently running any test targets the project has.";
-"windmill.toolTip.active.archive"="Windmill is creating your project's archive. This enables you to submit your app to the App Store!";
-"windmill.toolTip.active.export"="Windmill is exporting your project's IPA. This allows you to do in-house testing with your test devices.";
+"windmill.toolTip.active.archive"="Windmill is creating your project's archive. Use it to distribute to TestFlight or the App Store via iTunes Connect.";
+"windmill.toolTip.active.export"="Windmill is exporting your project's IPA. This allows you to do in-house testing with registered devices.";
 "windmill.toolTip.active.deploy"="Windmill is making the project IPA available for OTA distribution. This enables you to demo your app on a device at a moment's notice.";
 "windmill.toolTip.active.monitor"="Windmill is monitoring the project repository for changes. As soon as a new commit is picked up, it will pull the changes and verify everything still works.";
 "windmill.toolTip.active"="There is a light breeze.";
