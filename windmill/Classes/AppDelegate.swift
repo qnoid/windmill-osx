@@ -303,6 +303,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
 
     @objc func activityError(_ aNotification: Notification) {
+        
+        NSApplication.shared.requestUserAttention(.criticalRequest)
+        
         if let error = aNotification.userInfo?["error"] as? NSError {
             statusItem.button?.toolTip = error.localizedDescription
         }
