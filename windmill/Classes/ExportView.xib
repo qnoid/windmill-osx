@@ -27,7 +27,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
+                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="textColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

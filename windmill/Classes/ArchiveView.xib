@@ -78,7 +78,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="WrF-0t-8Dj" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
+                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="WrF-0t-8Dj" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
