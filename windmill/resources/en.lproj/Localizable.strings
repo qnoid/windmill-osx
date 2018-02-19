@@ -12,6 +12,7 @@
 "windmill.activity.showBuildSettings.description"="reticulating splines";
 "windmill.activity.test.description"="testing";
 "windmill.activity.devices.description"="counting sheep";
+"windmill.activity.readProjectConfiguration.description"="feeling optimistic";
 "windmill.activity.archive.description"="archiving";
 "windmill.activity.export.description"="exporting";
 "windmill.activity.deploy.description"="deploying";

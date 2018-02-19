@@ -112,11 +112,9 @@ class ArtefactsViewController: NSViewController {
 
     @objc func didArchiveSuccesfully(_ aNotification: Notification) {
         
-        guard let project = aNotification.userInfo?["project"] as? Project else {
+        guard let archive = aNotification.userInfo?["archive"] as? Archive else {
             return
         }
-        
-        let archive = Archive.make(forProject: project, name: project.scheme)
         
         let info = archive.info
         
@@ -131,29 +129,31 @@ class ArtefactsViewController: NSViewController {
     
     @objc func didExportSuccesfully(_ aNotification: Notification) {
 
-        guard let project = aNotification.userInfo?["project"] as? Project else {
-            return
+        if let export = aNotification.userInfo?["export"] as? Export {
+            self.exportView.export = export
         }
         
-        let archive = Archive.make(forProject: project, name: project.scheme)
-        let buildSettings = BuildSettings.make(for: project)
+        if let buildSettings = aNotification.userInfo?["buildSettings"] as? BuildSettings {
+            self.exportView.buildSettings = buildSettings
+        }
+
+        if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
+            self.exportView.appBundle = appBundle
+        }
         
-        self.exportView.export = Export.make(forProject: project)
-        self.exportView.buildSettings = BuildSettings(metadata: MetadataJSONEncoded.buildSettings(for: project))        
-        self.exportView.appBundle = AppBundle.make(archiveURL: archive.url, buildSettings: buildSettings)
         self.exportView.isHidden = false
     }
     
     @objc func didDeploySuccesfully(_ aNotification: Notification) {
         
-        guard let project = aNotification.userInfo?["project"] as? Project else {
-            return
+        if let export = aNotification.userInfo?["export"] as? Export {
+            self.deployView.export = export
         }
-        
-        self.deployView.export = Export.make(forProject: project)
-        self.deployView.buildSettings = BuildSettings.make(for: project)
+
+        if let buildSettings = aNotification.userInfo?["buildSettings"] as? BuildSettings {
+            self.deployView.buildSettings = buildSettings
+        }
         
         self.deployView.isHidden = false
     }
-
 }

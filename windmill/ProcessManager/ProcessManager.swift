@@ -102,7 +102,7 @@ class ProcessManager {
      Launches the given `process`
  
     */
-    public func launch(process: Process, wasSuccesful eventHandler: DispatchWorkItem? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    public func launch(process: Process, wasSuccesful eventHandler: ProcessWasSuccesful? = nil, userInfo: [AnyHashable : Any]? = nil) {
     
         self.willLaunch(process: process, userInfo: userInfo)
 
@@ -120,7 +120,7 @@ class ProcessManager {
                     return
                 }
                 
-                eventHandler?.perform()
+                eventHandler?.perform(userInfo: userInfo)
             }
         }
 
@@ -152,7 +152,7 @@ class ProcessManager {
         }
     }
 
-    public func sequence(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: DispatchWorkItem? = nil) -> Sequence {
+    public func sequence(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) -> Sequence {
         return Sequence(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
     }
 }

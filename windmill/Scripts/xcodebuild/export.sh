@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
 
-PROJECT_NAME=$1
-SCHEME=$2
-WIDMILL_HOME=$3
-RESOURCES_ROOT=$4
+XCARCHIVE_FOR_PROJECT=$1
+EXPORT_HOME=$2
+RESOURCES_ROOT=$3
 
-xcodebuild -exportArchive -archivePath ${WIDMILL_HOME}/${PROJECT_NAME}/archive/${SCHEME}.xcarchive -exportOptionsPlist ${RESOURCES_ROOT}/exportOptions.plist -exportPath ${WIDMILL_HOME}/${PROJECT_NAME}/export -allowProvisioningUpdates
+xcodebuild -exportArchive -archivePath ${XCARCHIVE_FOR_PROJECT} -exportOptionsPlist ${RESOURCES_ROOT}/exportOptions.plist -exportPath ${EXPORT_HOME} -allowProvisioningUpdates
 ## Export 
 #
 #adHocProvisioningNotFound = 70 //"No matching provisioning profiles found"

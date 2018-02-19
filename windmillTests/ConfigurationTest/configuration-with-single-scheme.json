@@ -1,0 +1,1 @@
+{ "project" : { "targets" : [ "HelloWindmillTarget", "HelloWindmillTargetTests" ], "schemes" : [ "HelloWindmill" ], "configurations" : [ "Debug", "Release" ], "name" : "name" } }

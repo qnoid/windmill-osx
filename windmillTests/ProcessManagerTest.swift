@@ -62,7 +62,11 @@ class ProcessManagerTest: XCTestCase {
         let manager = ProcessManager()
         let repoName = "with white space"
         let validOrigin = "git@github.com:windmill-io/blank.git"
-        let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: validOrigin)
+        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        
+        checkoutDirectory.create()
+        
+        let process = Process.makeCheckout(checkoutURL: checkoutDirectory.URL, project: Project(name: repoName, scheme: "foo", origin: validOrigin))
         
         defer {
             var trashDirectory = FileManager.default.trashDirectoryURL
@@ -71,7 +75,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let checkout = manager.sequence(process: process, wasSuccesful: DispatchWorkItem {
+        let checkout = manager.sequence(process: process, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
         })
         
@@ -85,7 +89,7 @@ class ProcessManagerTest: XCTestCase {
         let repoName = "any"
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: "invalid")
+        let process = Process.makeCheckout(checkoutURL: FileManager.default.trashDirectoryURL, project: Project(name: repoName, scheme: "foo", origin: "invalid"))
         
         defer {
             try? FileManager.default.removeItem(at: url)
@@ -110,7 +114,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = XCTestExpectation()
         
-        let sequence = manager.sequence(process: process, wasSuccesful: DispatchWorkItem {
+        let sequence = manager.sequence(process: process, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
         })
         

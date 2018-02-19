@@ -26,6 +26,8 @@ class EphemeralFileManager: FileManager {
 
 class ProcessTest: XCTestCase {
 
+    let bundle: Bundle = Bundle(for: ProcessTest.self)
+    
     func testGivenProcessOutputAssertCallback() {
      
         let queue = DispatchQueue(label: "any")
@@ -94,15 +96,14 @@ class ProcessTest: XCTestCase {
      - Precondition: a checked out project
      */
     func testGivenProjectAssertMakeTestConfigurationFileExists() {
+
+        let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: buildSettingsMetadataURL))
+        let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
+        let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let project = Project(name: "helloworld", scheme: "helloworld", origin: "foo")
-        
-        let buildSettings = BuildSettings.make(for: project)
-        let devices = Devices.make(for: project)
-        
-        let directoryPath = project.directoryPathURL.path
-        
-        let process = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
+        let repositoryLocalURL = bundle.url(forResource: "helloworld", withExtension: "")!
+        let process = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
         
         process.launch()
         process.waitUntilExit()
@@ -120,15 +121,15 @@ class ProcessTest: XCTestCase {
      */
     func testGivenProjectWithoutAvailableSimulatorAssertMakeTestConfigurationFileExists() {
         
-        let project = Project(name: "no_simulator_available", scheme: "no_simulator_available", origin: "foo")
+        let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: buildSettingsMetadataURL))
+        let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
+        let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let buildSettings = BuildSettings.make(for: project)
-        let devices = Devices.make(for: project)
-        
-        let directoryPath = project.directoryPathURL.path
-        
-        let process = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
-        
+        let repositoryLocalURL = bundle.url(forResource: "no_simulator_available", withExtension: "")!
+
+        let process = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, buildSettings: buildSettings)
+
         process.launch()
         process.waitUntilExit()
         
@@ -146,21 +147,20 @@ class ProcessTest: XCTestCase {
      */
     func testGivenProjectAssertBuildSettings() {
         
-        let project = Project(name: "windmill-ios", scheme: "windmill", origin: "foo")
-        
-        let buildSettings = BuildSettings.make(for: project)
-        
-        let directoryPath = project.directoryPathURL.path
-        
-        let process = Process.makeReadBuildSettings(directoryPath: directoryPath, forProject: project, buildSettings: buildSettings)
+        let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
+        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: buildSettingsMetadataURL))
+
+        let repositoryLocalURL = bundle.url(forResource: "helloworld", withExtension: "")!
+
+        let process = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", buildSettings: buildSettings)
         
         process.launch()
         process.waitUntilExit()
         
         XCTAssertTrue(FileManager.default.fileExists(atPath: buildSettings.url.path))
         
-        XCTAssertEqual(buildSettings.deployment.target, 10.3)
-        XCTAssertEqual(buildSettings.product.name, "windmill")
+        XCTAssertEqual(buildSettings.deployment.target, 10.2)
+        XCTAssertEqual(buildSettings.product.name, "helloworld")
     }
 
 }

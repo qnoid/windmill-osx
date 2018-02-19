@@ -8,17 +8,21 @@
 
 import Foundation
 
-struct Archive {
+public struct Archive {
 
     struct Info {
         
-        static func make(for project:Project) -> Info {
-            let url = FileManager.default.archiveInfoURL(forProject: project.name, inArchive: project.scheme)
-            
+        static func make(at url: URL) -> Info {
             return Info(metadata: MetadataPlistEncoded(url: url))
         }
 
-        let metadata: Metadata
+        private let metadata: Metadata
+        let url: URL
+        
+        init(metadata: Metadata) {
+            self.metadata = metadata
+            self.url = metadata.url
+        }
 
         var applicationProperties: [String: String]? {
             let applicationProperties:[String: String]? = metadata["ApplicationProperties"]
@@ -36,6 +40,12 @@ struct Archive {
             let creationDate: Date? = metadata["CreationDate"]
             
             return creationDate
+        }
+
+        var schemeName: String? {
+            let schemeName: String? = metadata["SchemeName"]
+            
+            return schemeName
         }
 
         var bundleShortVersion: String {
@@ -57,12 +67,8 @@ struct Archive {
         }
     }
     
-    static func make(forProject project: Project, name: String) -> Archive {
-        
-        let info = Archive.Info.make(for: project)
-        let archiveURL = FileManager.default.archiveURL(forProject: project.name, inArchive: name)
-        
-        return Archive(url: archiveURL, info: info)
+    static func make(at url: URL, info: Archive.Info) -> Archive {
+        return Archive(url: url, info: info)
     }
     
     let url: URL

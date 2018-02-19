@@ -29,7 +29,7 @@ let WindmillErrorDomain : String = "io.windmill"
             return (windmill: windmill, sequence: repeatableExport)
         }
 
-        let repeatableDeploy = windmill.repeatableDeploy(user: user)        
+        let repeatableDeploy = windmill.repeatableDeploy(user: user)
         return (windmill: windmill, sequence: repeatableDeploy)
     }
     
@@ -47,10 +47,18 @@ let WindmillErrorDomain : String = "io.windmill"
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     let notificationCenter = NotificationCenter.default
+    
+    let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
+
+    lazy var projectHomeDirectory: ProjectHomeDirectory = FileManager.default.windmillHomeDirectory.projectHomeDirectory(at: project.name)
+    lazy var projectSourceDirectory: ProjectSourceDirectory = applicationCachesDirectory.projectSourceDirectory(at: project.name, create: false)
+    
+    //
+    var project: Project
+    let processManager: ProcessManager
+    
     var delegate: WindmillDelegate?
     
-    let project: Project
-    let processManager: ProcessManager
 
     // MARK: init
     
@@ -58,8 +66,8 @@ let WindmillErrorDomain : String = "io.windmill"
         self.init(processManager: ProcessManager(), project: project)
     }
     
-    init(processManager: ProcessManager, project: Project)
-    {
+    init(processManager: ProcessManager, project: Project) {
+
         self.project = project
         self.processManager = processManager
         self.processManager.monitor = self
@@ -67,28 +75,38 @@ let WindmillErrorDomain : String = "io.windmill"
     
     // MARK: private
     
-    /* private */ func exportSequence(for project: Project, exportWasSuccesful: DispatchWorkItem? = nil) -> Sequence {
-        let directoryPath = project.directoryPathURL.path
-        let checkout = Process.makeCheckout(repoName: project.name, origin: project.origin)
+    /* private */ func exportSequence(exportWasSuccesful: ProcessWasSuccesful? = nil) -> Sequence {
         
-        return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: DispatchWorkItem { [weak self] in
-            let buildSettings = BuildSettings.make(for: project)
-            let readBuildSettings = Process.makeReadBuildSettings(directoryPath: directoryPath, forProject: project, buildSettings: buildSettings)
-            self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: DispatchWorkItem {
-                let devices = Devices.make(for: project)
-                let readDevices = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
-                self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices], wasSuccesful: DispatchWorkItem {
-                    let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
-                    self?.processManager.sequence(process: build, userInfo: ["activity" : ActivityType.build], wasSuccesful: DispatchWorkItem {
-                        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
-                        self?.processManager.sequence(process: test, userInfo: ["activity" : ActivityType.test], wasSuccesful: DispatchWorkItem {
-                            let archive = Process.makeArchive(directoryPath: directoryPath, project: project)
-                            self?.processManager.sequence(process: archive, userInfo: ["activity" : ActivityType.archive], wasSuccesful: DispatchWorkItem {
-                                DispatchQueue.main.async {
-                                    NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project])
-                                }
-                                let export = Process.makeExport(directoryPath: directoryPath, project: project)
-                                self?.processManager.sequence(process: export, userInfo: ["activity" : ActivityType.export], wasSuccesful: exportWasSuccesful).launch()
+        let directory = self.projectHomeDirectory
+        let checkout = Process.makeCheckout(checkoutURL: applicationCachesDirectory.URL, project: self.project)
+        let repositoryLocalURL = projectSourceDirectory.URL
+        
+        return self.processManager.sequence(process:checkout, userInfo: ["activity" : ActivityType.checkout, "repositoryLocalURL": repositoryLocalURL], wasSuccesful: ProcessWasSuccesful { [project = self.project, configuration = directory.configuration(), weak self] userInfo in
+            let readProjectConfiguration = Process.makeReadProjectConfiguration(repositoryLocalURL: repositoryLocalURL, projectConfiguration: configuration)
+            self?.processManager.sequence(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [buildSettings = directory.buildSettings()] userInfo in
+                let scheme = configuration.detectScheme(name: project.scheme)
+                let readBuildSettings = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: scheme, buildSettings: buildSettings)
+                self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
+                    let readDevices = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: scheme, devices: devices, buildSettings: buildSettings)
+                    self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices], wasSuccesful: ProcessWasSuccesful { userInfo in
+                        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: scheme, devices: devices, derivedDataURL: directory.derivedDataURL())
+                        self?.processManager.sequence(process: build, userInfo: ["activity" : ActivityType.build], wasSuccesful: ProcessWasSuccesful { userInfo in
+                            let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: scheme, devices: devices, derivedDataURL: directory.derivedDataURL())
+                            self?.processManager.sequence(process: test, userInfo: ["activity" : ActivityType.test, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
+                                let archive: Archive = directory.archive(name: scheme)
+
+                                let makeArchive = Process.makeArchive(repositoryLocalURL: repositoryLocalURL, scheme: scheme, derivedDataURL: directory.derivedDataURL(), archive: archive)
+                                self?.processManager.sequence(process: makeArchive, userInfo: ["activity" : ActivityType.archive, "archive": archive], wasSuccesful: ProcessWasSuccesful { userInfo in
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project, "archive": archive])
+                                    }
+                                    let makeExport = Process.makeExport(repositoryLocalURL: repositoryLocalURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL())
+                                    
+                                    let export = directory.export(name: scheme)
+                                    let appBundle = directory.appBundle(archive: archive, name: buildSettings.product.name ?? export.name)
+                                    
+                                    self?.processManager.sequence(process: makeExport, userInfo: ["activity" : ActivityType.export, "export": export, "appBundle": appBundle], wasSuccesful: exportWasSuccesful).launch()
+                                }).launch()
                             }).launch()
                         }).launch()
                     }).launch()
@@ -98,18 +116,25 @@ let WindmillErrorDomain : String = "io.windmill"
     }
     
     /* fileprivate */ func repeatableDeploy(user: String) -> Sequence {
-        let directoryPath = project.directoryPathURL.path
+
+        let repositoryLocalURL = self.projectSourceDirectory.URL
+        let buildSettings = self.projectHomeDirectory.buildSettings()
         
-        let exportWasSuccesful = DispatchWorkItem { [project = self.project, weak self] in
-            
+        let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
+
+            guard let export = userInfo?["export"] as? Export, let appBundle = userInfo?["appBundle"] as? AppBundle else {
+                return
+            }
+
+
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project])
+                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project, "buildSettings":buildSettings, "export": export, "appBundle": appBundle])
             }
             
-            let deploy = Process.makeDeploy(directoryPath: directoryPath, project: project, forUser: user)
-            self?.processManager.sequence(process: deploy, userInfo: ["activity" : ActivityType.deploy], wasSuccesful: DispatchWorkItem {
+            let deploy = Process.makeDeploy(repositoryLocalURL: repositoryLocalURL, export: export, forUser: user)
+            self?.processManager.sequence(process: deploy, userInfo: ["activity" : ActivityType.deploy], wasSuccesful: ProcessWasSuccesful { userInfo in
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project])
+                    NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project, "buildSettings":buildSettings, "export": export])
                 }
                 
                 #if DEBUG
@@ -125,22 +150,29 @@ let WindmillErrorDomain : String = "io.windmill"
                 let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
                 os_log("will start monitoring", log: log, type: .debug)
 
-                self?.processManager.repeat(process: Process.makePoll(directoryPath: directoryPath, project: project), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
+                self?.processManager.repeat(process: Process.makePoll(repositoryLocalURL: repositoryLocalURL, pollDirectoryURL: pollDirectoryURL), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
                     self?.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
                     self?.repeatableDeploy(user: user).launch()
                 })
             }).launch()
         }
         
-        return self.exportSequence(for: project, exportWasSuccesful: exportWasSuccesful)
+        return self.exportSequence(exportWasSuccesful: exportWasSuccesful)
     }
     
     /* fileprivate */ func repeatableExport() -> Sequence {
-        let directoryPath = project.directoryPathURL.path
 
-        let exportWasSuccesful = DispatchWorkItem { [project = self.project, weak self] in
+        let repositoryLocalURL = self.projectSourceDirectory.URL
+        let buildSettings = self.projectHomeDirectory.buildSettings()
+        
+        let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
+            
+            guard let export = userInfo?["export"] as? Export, let appBundle = userInfo?["appBundle"] as? AppBundle else {
+                return
+            }
+
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project])
+                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project, "buildSettings":buildSettings, "export": export, "appBundle": appBundle])
             }
             
             #if DEBUG
@@ -156,20 +188,20 @@ let WindmillErrorDomain : String = "io.windmill"
             let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
             os_log("will start monitoring", log: log, type: .debug)
 
-            self?.processManager.repeat(process: Process.makePoll(directoryPath: directoryPath, project: project), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
+            self?.processManager.repeat(process: Process.makePoll(repositoryLocalURL: repositoryLocalURL, pollDirectoryURL: pollDirectoryURL), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
                 self?.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
                 self?.repeatableExport().launch()
             })
         }
         
-        return self.exportSequence(for: project, exportWasSuccesful: exportWasSuccesful)
+        return self.exportSequence(exportWasSuccesful: exportWasSuccesful)
     }
     
     // MARK: public
     
     func run(sequence: Sequence)
     {
-        self.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":self.project])
+        self.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
         
         sequence.launch()
     }

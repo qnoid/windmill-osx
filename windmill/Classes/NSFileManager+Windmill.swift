@@ -18,54 +18,19 @@ public extension FileManager
         return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
     }
 
-    var windmillHomeDirectoryURL: URL  {
-        return URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")
+    var windmillHomeDirectory: WindmillHomeDirectory  {
+        
+        let url = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")
+        
+        return Directory(URL: url, fileManager: self)
     }
-    
+
     /**
      - returns: ~/Library/Caches/io.windmill.windmill/{name}
     */
     func cachesDirectoryURL(forProject name: String) -> URL {
-        let applicationCachesDirectory = ApplicationCachesDirectory().traverse(PathComponent(rawValue: name)!)
+        let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory().traverse(PathComponent(rawValue: name)!)
         return applicationCachesDirectory.URL
-    }
-
-    func buildDirectoryURL(forProject name: String) -> URL {
-        let directory = self.directory(windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("build"))
-        directory.create(withIntermediateDirectories: true)
-        return directory.URL
-    }
-
-    func testDirectoryURL(forProject name: String) -> URL {
-        let directory = self.directory(windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("test"))
-        directory.create(withIntermediateDirectories: true)
-        return directory.URL
-    }
-    
-    func exportDirectoryURL(forProject name: String) -> URL {
-        return windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("export")
-    }
-
-    func archiveDirectoryURL(forProject name: String) -> URL {
-        return windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("archive")
-    }
-
-    func pollDirectoryURL(forProject name: String) -> URL {
-        let directory = self.directory(windmillHomeDirectoryURL.appendingPathComponent(name).appendingPathComponent("poll"))
-        directory.create()
-        return directory.URL
-    }
-
-    func archiveURL(forProject projectName: String, inArchive archiveName: String) -> URL {
-        return archiveDirectoryURL(forProject: projectName).appendingPathComponent("\(archiveName).xcarchive")
-    }
-
-    func archiveInfoURL(forProject projectName: String, inArchive archiveName: String) -> URL {
-        return self.archiveURL(forProject: projectName, inArchive: archiveName).appendingPathComponent("Info.plist")
-    }
-
-    func exportURL(forProject project: Project) -> URL {
-        return exportDirectoryURL(forProject: project.name).appendingPathComponent("\(project.scheme).ipa")
     }
 
     func directory(_ URL:Foundation.URL) -> Directory {

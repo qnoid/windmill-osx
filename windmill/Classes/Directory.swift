@@ -11,13 +11,14 @@ import os
 
 public protocol DirectoryType
 {
+    var fileManager : FileManager { get }
     var URL : Foundation.URL { get }
     
-    func file(_ filename: String) -> DirectoryType
+    func file(_ filename: String) -> Self
     
     func fileExists(_ filename: String) -> Bool
     
-    func traverse(_ pathComponent: PathComponent) -> DirectoryType
+    func traverse(_ pathComponent: PathComponent) -> Self
     
     /**
     Creates the directory that returned as part of calling #traverse:
@@ -29,44 +30,12 @@ public protocol DirectoryType
     @discardableResult func create(withIntermediateDirectories: Bool) -> Bool
 }
 
-public protocol UserLibraryDirectory : DirectoryType
-{
-    func mobileDeviceProvisioningProfiles() -> DirectoryType
-}
-
-public protocol ApplicationSupportDirectory : DirectoryType
-{
-    
-}
-
-func ApplicationDirectory() -> DirectoryType
-{
-    let applicationName = Bundle.main.bundleIdentifier!
-    let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
-    let applicationDirectory = FileManager.default.userApplicationSupportDirectoryView().directory.traverse(applicationDirectoryPathComponent)
-    
-    applicationDirectory.create()
-    
-    return applicationDirectory
-}
-
-public func ApplicationCachesDirectory() -> DirectoryType
-{
-    let applicationName = Bundle.main.bundleIdentifier!
-    let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!
-    let applicationDirectory = FileManager.default.userApplicationCachesDirectoryView().directory.traverse(applicationDirectoryPathComponent)
-    
-    applicationDirectory.create()
-    
-    return applicationDirectory
-}
-
-public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory
+public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillHomeDirectory, ProjectHomeDirectory, ProjectSourceDirectory
 {
     public let URL : Foundation.URL
-    let fileManager : FileManager
+    public let fileManager : FileManager
     
-    public func file(_ filename: String) -> DirectoryType
+    public func file(_ filename: String) -> Directory
     {
         let URLForFilename = Foundation.URL(fileURLWithPath: (self.URL.path as NSString).appendingPathComponent(filename), isDirectory: false)
         
@@ -77,7 +46,7 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
         return self.fileManager.fileExists(atPath: (self.URL.path as NSString).appendingPathComponent(filename))
     }
     
-    public func traverse(_ pathComponent: PathComponent) -> DirectoryType
+    public func traverse(_ pathComponent: PathComponent) -> Directory
     {
         let path = (self.URL.path as NSString).expandingTildeInPath
         

@@ -31,20 +31,6 @@ public class MetadataJSONEncoded: Metadata, CustomDebugStringConvertible {
         return dictionary.debugDescription
     }
     
-    class func buildSettings(for project:Project) -> Metadata {
-        
-        let url = FileManager.default.buildDirectoryURL(forProject: project.name).appendingPathComponent("settings.json")
-        
-        return MetadataJSONEncoded(url: url)
-    }
-
-    class func devices(for project:Project) -> Metadata {
-        
-        let url = FileManager.default.testDirectoryURL(forProject: project.name).appendingPathComponent("devices.json")
-        
-        return MetadataJSONEncoded(url: url)
-    }
-
     public let url: URL
     
     public lazy var dictionary: [String: Any]? = {
