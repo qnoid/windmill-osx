@@ -10,8 +10,8 @@ import Foundation
 
 public struct Devices {
     
-    static func make(for project: Project) -> Devices {
-        return Devices(metadata: MetadataJSONEncoded.devices(for: project))
+    static func make(at url: URL) -> Devices {
+        return Devices(metadata: MetadataJSONEncoded(url: url))
     }
     
     struct Destination {

@@ -56,7 +56,7 @@ extension Process
 {
     func domain(type: ActivityType) -> String {
         switch type {
-        case .showBuildSettings, .devices, .checkout, .deploy:
+        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .deploy:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain
@@ -70,7 +70,7 @@ extension Process
             return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
         case .build, .test, .archive, .export:
             return "Command xcodebuild failed with exit code \(exitStatus)"
-        case .showBuildSettings, .devices:
+        case .showBuildSettings, .devices, .readProjectConfiguration:
             return "Windmill '\(String(describing: type.rawValue))' failed with exit code: (\(exitStatus))"
         }
     }
@@ -79,101 +79,113 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil);
     }
     
-    public static func makeReadBuildSettings(directoryPath: String, forProject project: Project, buildSettings: BuildSettings) -> Process {
+    public static func makeReadBuildSettings(repositoryLocalURL: Repository.LocalURL, scheme: String, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_BUILD_SETTINGS, ofType: "sh")!
-        process.arguments = [buildSettings.url.path, project.scheme]
+        process.arguments = [buildSettings.url.path, scheme]
+        process.qualityOfService = .utility
+        
+        return process
+    }
+    
+    public static func makeReadProjectConfiguration(repositoryLocalURL: Repository.LocalURL, projectConfiguration: Project.Configuration) -> Process {
+        
+        let process = Process()
+        process.currentDirectoryPath = repositoryLocalURL.path
+        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_PROJECT_CONFIGURATION, ofType: "sh")!
+        process.arguments = [projectConfiguration.url.path]
         process.qualityOfService = .utility
         
         return process
     }
 
-    public static func makeReadDevices(directoryPath: String, forProject project: Project, devices: Devices, buildSettings: BuildSettings) -> Process {
+
+    public static func makeReadDevices(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_DEVICES, ofType: "sh")!
-        process.arguments = [devices.url.path, project.scheme, buildSettings.url.path, self.pathForDir("Scripts")]
+        process.arguments = [devices.url.path, scheme, buildSettings.url.path, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process
     }
 
-    public static func makeCheckout(projectDirectoryURL: URL = ApplicationCachesDirectory().URL, branch: String = "master", repoName: String, origin: String) -> Process {
+    public static func makeCheckout(checkoutURL locationURL: Repository.LocalURL, project: Project, branch: String = "master") -> Process {
         
         let process = Process()
-        process.currentDirectoryURL = projectDirectoryURL
+        process.currentDirectoryURL = locationURL
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [repoName, branch, origin, self.pathForDir("Scripts")]
+        process.arguments = [project.name, branch, project.origin, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeBuild(directoryPath: String, project: Project, configuration: Configuration = .debug, devices: Devices) -> Process {
+    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [devices.url.path, project.name, project.scheme, configuration.name, FileManager.default.windmillHomeDirectoryURL.path, FileManager.default.buildDirectoryURL(forProject: project.name).path]
+        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path]
         process.qualityOfService = .utility
         
         return process
     }
     
     
-    static func makeTest(directoryPath: String, project: Project, devices: Devices) -> Process {
+    static func makeTest(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST, ofType: "sh")!
-        process.arguments = [devices.url.path, project.scheme, FileManager.default.buildDirectoryURL(forProject: project.name).path]
+        process.arguments = [devices.url.path, scheme, derivedDataURL.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeArchive(directoryPath: String, project: Project, configuration: Configuration = .release) -> Process {
+    public static func makeArchive(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .release, derivedDataURL: URL, archive: Archive) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        process.arguments = [project.name, project.scheme, configuration.name, FileManager.default.windmillHomeDirectoryURL.path, FileManager.default.buildDirectoryURL(forProject: project.name).path, FileManager.default.archiveDirectoryURL(forProject: project.name).path]
+        process.arguments = [scheme, configuration.name, derivedDataURL.path, archive.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeExport(directoryPath: String, project: Project) -> Process {
+    public static func makeExport(repositoryLocalURL: Repository.LocalURL, archive: Archive, exportDirectoryURL: URL) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
-        process.arguments = [project.name, project.scheme, FileManager.default.windmillHomeDirectoryURL.path, self.pathForDir("resources")]
+        process.arguments = [archive.url.path, exportDirectoryURL.path, self.pathForDir("resources")]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeDeploy(directoryPath: String, project: Project, forUser user:String) -> Process {
+    public static func makeDeploy(repositoryLocalURL: Repository.LocalURL, export: Export, forUser user:String) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.DEPLOY, ofType: "sh")!
-        process.arguments = [project.scheme, user, FileManager.default.windmillHomeDirectoryURL.path, FileManager.default.exportDirectoryURL(forProject: project.name).path, WINDMILL_BASE_URL]
+        process.arguments = [user, export.url.path, export.manifest.url.path, WINDMILL_BASE_URL]
         process.qualityOfService = .utility
         
         return process
     }
     
-    static func makePoll(directoryPath: String, projectDirectoryURL: URL = ApplicationCachesDirectory().URL, project: Project, branch: String = "master") -> Process
+    static func makePoll(repositoryLocalURL: Repository.LocalURL, pollDirectoryURL: URL, branch: String = "master") -> Process
     {
         let process = Process()
-        process.currentDirectoryPath = directoryPath
+        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-        process.arguments = [branch, self.pathForDir("Scripts"), FileManager.default.pollDirectoryURL(forProject: project.name).path]
+        process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
         process.qualityOfService = .utility
         
         return process

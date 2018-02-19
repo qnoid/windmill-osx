@@ -20,19 +20,18 @@ class SequenceTest: XCTestCase {
         let processManager = ProcessManager()
         
         let name = "helloword-no-test-target"
-        let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
-        let directoryPath = bundle.url(forResource: name, withExtension: "")!.path
+        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
 
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "helloword-no-test-target", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "helloword-no-test-target", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
         
-        processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
-            processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
-                processManager.sequence(process: test, wasSuccesful: DispatchWorkItem {
+        processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
+            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
+                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
                 }).launch()
             }).launch()
@@ -48,19 +47,18 @@ class SequenceTest: XCTestCase {
         
         let name = "helloworld"
         
-        let project = Project(name: name, scheme: "helloworld", origin: "any")
-        let directoryPath = project.directoryPathURL.path
+        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
-        
-        processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
-            processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
-                processManager.sequence(process: test, wasSuccesful: DispatchWorkItem {
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+
+        processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
+            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
+                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
                 }).launch()
             }).launch()
@@ -75,19 +73,18 @@ class SequenceTest: XCTestCase {
         let processManager = ProcessManager()
         
         let name = "no_simulator_available"
-        let project = Project(name: name, scheme: "no_simulator_available", origin: "any")
-        let directoryPath = bundle.url(forResource: name, withExtension: "")!.path
-        
+        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
+
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let build = Process.makeBuild(directoryPath: directoryPath, project: project, devices: devices)
-        let readTestMetadata = Process.makeReadDevices(directoryPath: directoryPath, forProject: project, devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(directoryPath: directoryPath, project: project, devices: devices)
-        
-        processManager.sequence(process: build, wasSuccesful: DispatchWorkItem {
-            processManager.sequence(process: readTestMetadata, wasSuccesful: DispatchWorkItem {
-                processManager.sequence(process: test, wasSuccesful: DispatchWorkItem {
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, buildSettings: buildSettings)
+        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+
+        processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
+            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
+                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
                 }).launch()
             }).launch()

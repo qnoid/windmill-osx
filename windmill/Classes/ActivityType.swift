@@ -19,6 +19,7 @@ public enum ActivityType: String, CustomStringConvertible
     
     case showBuildSettings
     case devices
+    case readProjectConfiguration
     
     var imageName: String {
         switch (self){
@@ -34,9 +35,7 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-export"
         case .deploy:
             return "windmill-activity-indicator-deploy"
-        case .showBuildSettings:
-            return "windmill-activity-indicator"
-        case .devices:
+        case .showBuildSettings, .devices, .readProjectConfiguration:
             return "windmill-activity-indicator"
         }
     }

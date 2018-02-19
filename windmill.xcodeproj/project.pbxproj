@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0F9ECDE91D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */; };
 		BD021862203184470039BCCD /* AppBundleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD021861203184470039BCCD /* AppBundleTest.swift */; };
 		BD021864203187A50039BCCD /* AppBundleTest in Resources */ = {isa = PBXBuildFile; fileRef = BD021863203187A50039BCCD /* AppBundleTest */; };
 		BD081A121AB05EFA00B8E948 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A111AB05EFA00B8E948 /* Project.swift */; };
 		BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = BD081A271AB0ADEF00B8E948 /* Localizable.strings */; };
 		BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */; };
 		BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD105019203A32680051F0D5 /* Directory+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD105018203A32680051F0D5 /* Directory+Windmill.swift */; };
+		BD105047203A84530051F0D5 /* ConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD105046203A84530051F0D5 /* ConfigurationTest.swift */; };
+		BD10504A203A84AE0051F0D5 /* ConfigurationTest in Resources */ = {isa = PBXBuildFile; fileRef = BD105049203A84AE0051F0D5 /* ConfigurationTest */; };
+		BD10504C203A88650051F0D5 /* ProcessTest in Resources */ = {isa = PBXBuildFile; fileRef = BD10504B203A88650051F0D5 /* ProcessTest */; };
 		BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */; };
 		BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */; };
 		BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */; };
@@ -43,6 +46,8 @@
 		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
 		BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */; };
+		BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */; };
+		BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8364082039314200D1D381 /* CharacterSetTest.swift */; };
 		BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */; };
 		BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */; };
 		BD915E742020715A006551A5 /* getting-started.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BD915E7320207139006551A5 /* getting-started.mp4 */; };
@@ -117,13 +122,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
 		BD021861203184470039BCCD /* AppBundleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBundleTest.swift; sourceTree = "<group>"; };
 		BD021863203187A50039BCCD /* AppBundleTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppBundleTest; sourceTree = "<group>"; };
 		BD081A111AB05EFA00B8E948 /* Project.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		BD081A281AB0ADEF00B8E948 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectTest.swift; sourceTree = "<group>"; };
 		BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
+		BD105018203A32680051F0D5 /* Directory+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Directory+Windmill.swift"; sourceTree = "<group>"; };
+		BD105046203A84530051F0D5 /* ConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTest.swift; sourceTree = "<group>"; };
+		BD105049203A84AE0051F0D5 /* ConfigurationTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ConfigurationTest; sourceTree = "<group>"; };
+		BD10504B203A88650051F0D5 /* ProcessTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ProcessTest; sourceTree = "<group>"; };
 		BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelViewController.swift; sourceTree = "<group>"; };
 		BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Classes/Acknowledgements.rtf; sourceTree = "<group>"; };
 		BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataPlistEncodedTest.swift; sourceTree = "<group>"; };
@@ -154,6 +162,8 @@
 		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
 		BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
+		BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Windmill.swift"; sourceTree = "<group>"; };
+		BD8364082039314200D1D381 /* CharacterSetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSetTest.swift; sourceTree = "<group>"; };
 		BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettingStartedWindowController.swift; sourceTree = "<group>"; };
 		BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GettingStartedWindowController.xib; sourceTree = "<group>"; };
 		BD915E7320207139006551A5 /* getting-started.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "getting-started.mp4"; sourceTree = "<group>"; };
@@ -281,7 +291,6 @@
 				BDC9D4951C43164C00FA018E /* MainWindowController.swift */,
 				BD25DB781C9ED2700001FEDF /* MainViewController.swift */,
 				BDCEFE481CD6B58D004D2890 /* Windmill.swift */,
-				0F9ECDE81D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift */,
 				BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */,
 				BD91A7101F41E791004CA64B /* ArchiveView.xib */,
 				BD91A70C1F41E758004CA64B /* ArchiveView.swift */,
@@ -391,6 +400,8 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
+				BD10504B203A88650051F0D5 /* ProcessTest */,
+				BD105049203A84AE0051F0D5 /* ConfigurationTest */,
 				BD021863203187A50039BCCD /* AppBundleTest */,
 				BD68054B202C127300F38D3B /* Resources */,
 				BD189BC91FF9FD4900BBEBA4 /* MetadataPlistEncodedTest */,
@@ -407,6 +418,8 @@
 				BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */,
 				BD680549202C120200F38D3B /* SequenceTest.swift */,
 				BD021861203184470039BCCD /* AppBundleTest.swift */,
+				BD8364082039314200D1D381 /* CharacterSetTest.swift */,
+				BD105046203A84530051F0D5 /* ConfigurationTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -442,6 +455,8 @@
 				BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */,
 				BD2CEE5420316DB10048969D /* BuildSettings.swift */,
 				BD2CEE56203175900048969D /* Devices.swift */,
+				BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */,
+				BD105018203A32680051F0D5 /* Directory+Windmill.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -584,6 +599,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDF00B691F475B5100572D03 /* Info.plist in Resources */,
+				BD10504C203A88650051F0D5 /* ProcessTest in Resources */,
+				BD10504A203A84AE0051F0D5 /* ConfigurationTest in Resources */,
 				BD021864203187A50039BCCD /* AppBundleTest in Resources */,
 				BD680582202C15C000F38D3B /* metadata in Resources */,
 				BD680586202C1AC700F38D3B /* helloworld in Resources */,
@@ -607,6 +624,7 @@
 				BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */,
 				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,
 				BDD6F0A720182B0F00D63D74 /* ArtefactView.swift in Sources */,
+				BD105019203A32680051F0D5 /* Directory+Windmill.swift in Sources */,
 				BD2CEE57203175900048969D /* Devices.swift in Sources */,
 				BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */,
 				BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */,
@@ -617,7 +635,6 @@
 				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
 				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
 				BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */,
-				0F9ECDE91D2E734900D8BB27 /* ProjectTitlebarAccessoryViewController.swift in Sources */,
 				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
 				BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */,
 				BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */,
@@ -634,6 +651,7 @@
 				BDF00B641F47582300572D03 /* Archive.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
 				BDD002161AB87B7900F8E34A /* WindmillDelegate.swift in Sources */,
+				BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */,
 				BD91A70D1F41E758004CA64B /* ArchiveView.swift in Sources */,
 				BDD6F0AB20185D2A00D63D74 /* ExportView.swift in Sources */,
 				BDEBAD70200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift in Sources */,
@@ -663,11 +681,13 @@
 				BD68054A202C120200F38D3B /* SequenceTest.swift in Sources */,
 				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
 				BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */,
+				BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */,
 				BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */,
 				BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */,
 				BDCB382B1F06B9FB000825C1 /* ConsoleViewControllerTest.swift in Sources */,
 				BDF00B661F475A5C00572D03 /* ArchiveTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
+				BD105047203A84530051F0D5 /* ConfigurationTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

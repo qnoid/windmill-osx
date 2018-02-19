@@ -373,7 +373,7 @@ class SidePanelViewController: NSViewController {
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, let project = project else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
 
@@ -388,9 +388,6 @@ class SidePanelViewController: NSViewController {
             self.archiveSection.configuration.isHidden = false
             self.archiveValues.configurationValue.isHidden = false
             self.archiveValues.configurationValue.stringValue = Configuration.release.name
-            self.archiveSection.scheme.isHidden = false
-            self.archiveValues.schemeValue.isHidden = false
-            self.archiveValues.schemeValue.stringValue = project.scheme
         default:
             break
         }
@@ -398,13 +395,13 @@ class SidePanelViewController: NSViewController {
     
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
                 
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, let project = project else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
 
         switch activity {
         case .checkout:
-            guard let commit = try? Repository.of(project: project) else {
+            guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
                 os_log("Repository for project not found. Have you cloned it?", log: .default, type: .debug)
                 return
             }
@@ -421,7 +418,9 @@ class SidePanelViewController: NSViewController {
             self.checkoutValues.commitValue.stringValue = commit.shortSha
             self.checkoutValues.commitValue.isHidden = false
         case .test:
-            let devices = Devices.make(for: project)
+            guard let devices = aNotification.userInfo?["devices"] as? Devices else {
+                return
+            }
             
             self.test.isHidden = false
             self.platform.isHidden = false
@@ -434,15 +433,24 @@ class SidePanelViewController: NSViewController {
             self.platformNameValue.isHidden = false
             self.platformNameValue.stringValue = devices.destination.name ?? "N/A"
         case .archive:            
-            let archive = Archive.make(forProject: project, name: project.scheme)
-            
+            guard let archive = aNotification.userInfo?["archive"] as? Archive else {
+                return
+            }
+
             let info = archive.info
             
             self.archiveSection.certificate.isHidden = false
             self.archiveCertificateValue.isHidden = false
             self.archiveCertificateValue.stringValue = info.signingIdentity
+            self.archiveSection.scheme.isHidden = false
+            self.archiveValues.schemeValue.stringValue = info.schemeName ?? ""
+            self.archiveValues.schemeValue.isHidden = false
         case .export:
-            let distributionSummary = Export.DistributionSummary.make(for: project)
+            guard let export = aNotification.userInfo?["export"] as? Export else {
+                return
+            }
+
+            let distributionSummary = export.distributionSummary
             
             self.export.isHidden = false
             self.certificate.isHidden = false

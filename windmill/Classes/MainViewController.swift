@@ -116,8 +116,6 @@ class MainViewController: NSViewController {
             self.artefactsViewController?.windmill = windmill
         }
     }
-    var project: Project?
-    
     
     static func make() -> MainViewController {
         let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: MainViewController.self))
@@ -143,31 +141,17 @@ class MainViewController: NSViewController {
         self.windmillImageView.layer?.setNeedsDisplay()        
     }
     
-    override func loadView() {
-        super.loadView()
-        
-        self.view.window?.addTitlebarAccessoryViewController(ProjectTitlebarAccessoryViewController())
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
     @objc func willStartProject(_ aNotification: Notification) {
-        guard let project = aNotification.userInfo?["project"] as? Project else {
-            return
-        }
-        
-        self.project = project
-        
         self.windmillImageView.startAnimation()
         self.windmillImageView.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         for activityView in self.activityViews.values {
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
         }
-        let projectTitlebarAccessoryViewController = self.view.window?.titlebarAccessoryViewControllers[0] as! ProjectTitlebarAccessoryViewController
-        projectTitlebarAccessoryViewController.project = project        
     }
     
     @objc func windmillMonitoringProject(_ aNotification: Notification) {
@@ -217,41 +201,11 @@ class MainViewController: NSViewController {
         self.activityViews[activity]?.stopLightsAnimation()
     }
     
-    @discardableResult func cleanBuildFolder() -> Bool {
-        
-        guard let project = self.project else {
-            return false
-        }
-        
-        do {
-            let url = FileManager.default.buildDirectoryURL(forProject: project.name).appendingPathComponent("/Build")
-            try FileManager.default.removeItem(at: url)
-            return true
-        } catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-            return false
-        }
+    @discardableResult func cleanDerivedData() -> Bool {
+        return windmill?.projectHomeDirectory.removeDerivedData() ?? false
     }
     
     @discardableResult func cleanProjectFolder() -> Bool {
-
-        guard let project = self.project else {
-            return false
-        }
-
-        do {
-            try FileManager.default.removeItem(at: project.directoryPathURL)
-            return true
-        } catch let error as CocoaError {
-            guard let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? POSIXError, underlyingError.code == POSIXError.ENOTEMPTY else {
-                return false
-            }
-            
-            try? FileManager.default.removeItem(at: project.directoryPathURL)
-            return true
-        } catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-            return false
-        }
-    }    
+        return windmill?.projectSourceDirectory.remove() ?? false
+    }
 }

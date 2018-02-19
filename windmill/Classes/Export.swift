@@ -8,21 +8,22 @@
 
 import Foundation
 
-struct Export {
+public struct Export {
     
-    struct DistributionSummary {
+    public struct DistributionSummary {
         
-        public static func make(for project:Project) -> DistributionSummary {
-            
-            let url = FileManager.default.exportDirectoryURL(forProject: project.name).appendingPathComponent("DistributionSummary.plist")
-            
-            return DistributionSummary(project: project, metadata: MetadataPlistEncoded(url: url))
+        public static func make(at url: URL) -> DistributionSummary {
+            return DistributionSummary(metadata: MetadataPlistEncoded(url: url))
         }
         
+        private let metadata: Metadata
+        let url: URL
         
-        let project: Project
-        let metadata: Metadata
-        
+        init(metadata: Metadata) {
+            self.metadata = metadata
+            self.url = metadata.url
+        }
+
         let dateFormatter: DateFormatter = {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yy"
@@ -82,18 +83,19 @@ struct Export {
         }
     }
 
-    struct Manifest {
+    public struct Manifest {
 
-        public static func make(for project:Project) -> Manifest {
-            
-            let url = FileManager.default.exportDirectoryURL(forProject: project.name).appendingPathComponent("manifest.plist")
-            
-            return Manifest(project: project, metadata: MetadataPlistEncoded(url: url))
+        public static func make(at url: URL) -> Manifest {
+            return Manifest(metadata: MetadataPlistEncoded(url: url))
         }
         
+        private let metadata: Metadata
+        let url: URL
 
-        let project: Project
-        let metadata: Metadata
+        init(metadata: Metadata) {
+            self.metadata = metadata
+            self.url = metadata.url
+        }
 
         var items:[String:Any]? {
             let items:[[String:Any]]? = metadata["items"]
@@ -120,12 +122,8 @@ struct Export {
         }
     }
     
-    static func make(forProject project: Project) -> Export {
-        let distributionSummary = Export.DistributionSummary.make(for: project)
-        let manifest = Export.Manifest.make(for: project)
-        let exportURL = FileManager.default.exportURL(forProject: project)
-
-        return Export(url: exportURL, manifest: manifest, distributionSummary: distributionSummary)
+    static func make(at url: URL, manifest: Manifest, distributionSummary: DistributionSummary) -> Export {
+        return Export(url: url, manifest: manifest, distributionSummary: distributionSummary)
     }
     
     let url: URL

@@ -11,8 +11,8 @@ import Foundation
 
 public struct BuildSettings {
     
-    static func make(for project: Project) -> BuildSettings {
-        return BuildSettings(metadata: MetadataJSONEncoded.buildSettings(for: project))
+    static func make(at url: URL) -> BuildSettings {
+        return BuildSettings(metadata: MetadataJSONEncoded(url: url))
     }
     
     struct Product {

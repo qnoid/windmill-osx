@@ -3,15 +3,14 @@
 # Requires the following variables to be set
 # ACCOUNT
 
-SCHEME_NAME=$1
-ACCOUNT=$2
-WIDMILL_HOME=$3
-EXPORT_DIRECTORY_FOR_PROJECT=$4
-WINDMILL_BASE_URL=$5
+ACCOUNT=$1
+EXPORT_IPA_FOR_PROJECT=$2
+EXPORT_MANIFEST_FOR_PROJECT=$3
+WINDMILL_BASE_URL=$4
 
 set -e
 
-curl --fail --silent --show-error -F "ipa=@${EXPORT_DIRECTORY_FOR_PROJECT}/$SCHEME_NAME.ipa" -F "plist=@${EXPORT_DIRECTORY_FOR_PROJECT}/manifest.plist" "${WINDMILL_BASE_URL}/account/${ACCOUNT}/windmill" 2>/dev/null
+curl --fail --silent --show-error -F "ipa=@${EXPORT_IPA_FOR_PROJECT}" -F "plist=@${EXPORT_MANIFEST_FOR_PROJECT}" "${WINDMILL_BASE_URL}/account/${ACCOUNT}/windmill" 2>/dev/null
 
 ## Deploy
 #

@@ -35,7 +35,7 @@ class WindmillTest: XCTestCase {
 
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(projectDirectoryURL: FileManager.default.trashDirectoryURL, repoName: repoName, origin: "invalid")
+        let process = Process.makeCheckout(checkoutURL: FileManager.default.trashDirectoryURL, project: project)
         
         defer {
             try? FileManager.default.removeItem(at: url)

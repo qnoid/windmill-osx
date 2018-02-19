@@ -11,7 +11,7 @@ import Foundation
 import os
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate, MainWindowControllerDelegate
 {
     @IBOutlet weak var menu: NSMenu! {
         didSet {
@@ -47,7 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var mainWindowViewController: MainWindowController? {
         
         willSet {
-            mainWindowViewController?.dismissController(self)
+            mainWindowViewController?.close()
         }
         didSet {
             guard let mainWindowViewController = mainWindowViewController else {
@@ -84,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         isBottomPanelCollapsedObserver?.invalidate()
     }
 
-    private func add(_ project: Project) -> Bool
+    @discardableResult private func add(_ project: Project) -> Bool
     {
         guard !self.projects.contains(project) else {
             return false
@@ -107,6 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
         self.mainWindowViewController = mainWindowController
+        self.mainWindowViewController?.delegate = self
         self.mainWindowViewController?.window?.makeKeyAndOrderFront(self)
     }
     
@@ -354,8 +355,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.start(windmill: pipeline.windmill, sequence: pipeline.sequence)
     }
     
+    func didSelectScheme(mainWindowController: MainWindowController, project: Project, scheme: String) {
+        self.projects = [project]
+    }
+    
     @IBAction func cleanBuildFolder(_ sender: Any) {
-        self.mainViewController?.cleanBuildFolder()
+        self.mainViewController?.cleanDerivedData()
     }
     
     @IBAction func cleanProjectFolder(_ sender: Any) {

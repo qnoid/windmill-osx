@@ -10,11 +10,9 @@ import Foundation
 import ObjectiveGit
 import os
 
-struct Repository: CustomDebugStringConvertible {
+public struct Repository: CustomDebugStringConvertible {
 
-    static func of(project: Project) throws -> Repository.Commit {
-        return try Repository.parse(fullPathOfLocalGitRepo: project.directoryPathURL.path)
-    }
+    public typealias LocalURL = URL    
 
     static func parse(localGitRepoURL: URL) throws -> Repository.Commit {
         return try parse(fullPathOfLocalGitRepo: localGitRepoURL.path)
@@ -85,7 +83,7 @@ struct Repository: CustomDebugStringConvertible {
     let name: String
     let origin: String
     
-    var debugDescription: String {
+    public var debugDescription: String {
         return "\(name):\(origin)"
     }
 }

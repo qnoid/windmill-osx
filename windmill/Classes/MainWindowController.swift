@@ -8,6 +8,11 @@
 
 import AppKit
 
+
+protocol MainWindowControllerDelegate {
+    func didSelectScheme(mainWindowController:MainWindowController, project: Project, scheme: String)
+}
+
 class MainWindowController: NSWindowController, NSToolbarDelegate {
     
     @discardableResult static func make(windmill: Windmill) -> MainWindowController? {
@@ -24,7 +29,20 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             toolbar.delegate = self
         }
     }
+    @IBOutlet weak var schemeButton: NSPopUpButton!
     @IBOutlet weak var panels: NSSegmentedControl!
+
+    let defaultCenter = NotificationCenter.default
+    var delegate: MainWindowControllerDelegate?
+    
+    var image: NSImage = #imageLiteral(resourceName: "Application") {
+        didSet {
+            self.schemeButton.itemArray.forEach({ (item) in
+                image.size = NSSize(width: 20, height: 20)
+                item.image = image
+            })
+        }
+    }
 
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     var windmill: Windmill! {
@@ -34,12 +52,12 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             consoleViewController?.windmill = windmill
             mainViewController?.windmill = windmill
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
+            
+            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
         }
     }
-    
-    fileprivate lazy var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController = { [weak storyboard = self.storyboard] in
-        storyboard?.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: "ProjectTitlebarAccessoryViewController")) as! ProjectTitlebarAccessoryViewController
-        }()
     
     lazy var sidePanelSplitViewController: SidePanelSplitViewController? = {
         guard let sidePanelSplitViewController = self.contentViewController as? SidePanelSplitViewController else {
@@ -91,11 +109,75 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
         
         window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
-        window.addTitlebarAccessoryViewController(self.projectTitlebarAccessoryViewController)
+
         window.titleVisibility = .hidden
         window.appearance = NSAppearance(named: .vibrantDark)
     }
     
+    fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {
+        titles.forEach { (title) in
+            self.schemeButton.addItem(withTitle: title)
+            self.schemeButton.lastItem?.image = self.image
+        }
+
+        didAddItems(self.schemeButton)
+        self.didSelectScheme(self.schemeButton)
+    }
+    
+    
+    @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+            return
+        }
+        
+        switch activity {
+        case .readProjectConfiguration:
+            
+            guard let configuration = aNotification.userInfo?["configuration"] as? Project.Configuration else {
+                return
+            }
+            
+            if let schemes = configuration.schemes, !schemes.isEmpty {
+                addItems(with: schemes) { button in
+                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                }
+            }
+            else if let targets = configuration.targets, let name = configuration.name, let target = targets.first(where: { return $0.elementsEqual(name) }) {
+                addItems(with: [target]) { button in
+                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                }
+            } else if let name = configuration.name {
+                addItems(with: [name]) { button in
+                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                }
+            }
+                        
+        default:
+            break
+        }
+    }
+    
+    @objc func willStartProject(_ aNotification: Notification) {
+        self.schemeButton.removeAllItems()
+    }
+    
+    @objc func didExportSuccesfully(_ aNotification: Notification) {
+        
+        if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let image = NSImage(contentsOf: appBundle.iconURL()) {
+            self.image = image
+        }
+    }
+    
+    @IBAction func didSelectScheme(_ sender: NSPopUpButton) {
+        guard let scheme = sender.titleOfSelectedItem else {
+            return
+        }
+        
+        let project = windmill.project
+        self.windmill.project = Project(name: project.name, scheme: scheme, origin: project.origin)
+        self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
+    }
+
     func setBottomPanel(isOpen selected: Bool) {
         self.panels.setSelected(selected, forSegment: 0)
     }

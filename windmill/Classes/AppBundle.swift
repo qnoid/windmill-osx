@@ -8,15 +8,10 @@
 
 import Foundation
 
-struct AppBundle {
+public struct AppBundle {
 
-    static func make(archiveURL: URL, buildSettings: BuildSettings) -> AppBundle {
-        let name = buildSettings.product.name ?? ""
-        
-        let appBundleURL = archiveURL.appendingPathComponent("Products/Applications/\(name).app")
-        
-        let info = AppBundle.Info.make(appBundleURL: appBundleURL)
-        return AppBundle(url: appBundleURL, info: info)
+    static func make(url: URL, info: AppBundle.Info) -> AppBundle {
+        return AppBundle(url: url, info: info)
     }
     
     struct Info {
