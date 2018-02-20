@@ -10,11 +10,11 @@ DERIVED_DATA_PATH_FOR_PROJECT=$3
 PARSE="import sys, json; print json.load(open(\"${TEST_DEVICES_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
 
 DESTINATION_ID=$(python -c "$PARSE")
-xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath ${DERIVED_DATA_PATH_FOR_PROJECT}
+xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}"
 
 exit_code=$?
 if [ $exit_code -eq 70 ] || [ $exit_code -eq 66 ]; then
-xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath ${DERIVED_DATA_PATH_FOR_PROJECT}
+xcodebuild test -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}"
 
     exit_code=$?
 

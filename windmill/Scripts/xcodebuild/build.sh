@@ -13,11 +13,11 @@ PARSE="import sys, json; print json.load(open(\"${TEST_DEVICES_FOR_PROJECT}\"))[
 
 DESTINATION_ID=$(python -c "$PARSE")
 
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath ${DERIVED_DATA_PATH_FOR_PROJECT}
+xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}"
 
 exit_code=$?
 if [ $exit_code -eq 66 ]; then
-xcodebuild -scheme ${SCHEME} -configuration ${CONFIGURATION} -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath ${DERIVED_DATA_PATH_FOR_PROJECT}
+xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}"
 else
 exit $exit_code
 fi
