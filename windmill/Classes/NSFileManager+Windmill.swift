@@ -22,7 +22,11 @@ public extension FileManager
         
         let url = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")
         
-        return Directory(URL: url, fileManager: self)
+        let directory = Directory(URL: url, fileManager: self)
+        
+        directory.create()
+        
+        return directory
     }
 
     /**
