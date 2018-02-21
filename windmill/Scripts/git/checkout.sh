@@ -16,11 +16,11 @@ set -e
 
 
 function git_pull(){
-(git -C "${REPO_NAME}" fetch; git -C "${REPO_NAME}" reset --hard origin/"$BRANCH")
+(git -C "${REPO_NAME}" fetch --recurse-submodules; git -C "${REPO_NAME}" reset --hard origin/"$BRANCH"; git -C "${REPO_NAME}" submodule update)
 }
 
 function git_clone(){
-(git clone -b "${BRANCH}" "${REMOTE}" "${REPO_NAME}")
+(git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPO_NAME}")
 }
 
 directory_exist_at_path "${REPO_NAME}" git_pull git_clone
