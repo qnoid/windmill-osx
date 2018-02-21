@@ -20,3 +20,5 @@
 
 * if the application icon is currently unknowned, show a default one
 * show the same icon for every scheme listed
+
+## Windmill must be able to also pull code from any git submodules as part of monitoring a project repo
