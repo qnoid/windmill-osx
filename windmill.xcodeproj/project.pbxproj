@@ -173,7 +173,7 @@
 		BD91A7131F420665004CA64B /* NSView+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Windmill.swift"; sourceTree = "<group>"; };
 		BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
-		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = windmill.app; path = Windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -825,8 +825,8 @@
 				);
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../frameworks $(CONFIGURATION_BUILD_DIR)";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.windmill.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.windmill.windmill;
+				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -850,8 +850,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = windmill/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../frameworks $(CONFIGURATION_BUILD_DIR)";
-				PRODUCT_BUNDLE_IDENTIFIER = "io.windmill.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.windmill.windmill;
+				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 			};
@@ -860,7 +860,7 @@
 		BDB6D55B19440392001340B4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/windmill.app/Contents/MacOS/windmill";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Windmill.app/Contents/MacOS/Windmill";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -887,7 +887,7 @@
 		BDB6D55C19440392001340B4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/windmill.app/Contents/MacOS/windmill";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Windmill.app/Contents/MacOS/Windmill";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;

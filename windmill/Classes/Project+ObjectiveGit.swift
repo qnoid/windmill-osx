@@ -38,21 +38,19 @@ public struct Repository: CustomDebugStringConvertible {
                 throw NSError.errorRepo(localGitRepo, underlyingError:nil)
             }
             
-            guard let head = try repo.headReference().oid, let latestCommit:GTCommit = try repo.lookUpObject(by: head) as? GTCommit, let shortSha = head.sha?.git_shortUniqueSha() else {
+            guard let head = try repo.headReference().oid, let shortSha = head.sha?.git_shortUniqueSha() else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch head")
                 throw NSError.errorRepo(localGitRepo, underlyingError:nil)
             }
-            
-            os_log("%{public}@", log: log, type: .info, "Latest Commit: \(latestCommit.message ?? "") by \(latestCommit.author?.name ?? "")")
             
             let name = _localGitRepoURL.lastPathComponent
             let remote = try repo.configuration().remotes?.filter { remote in
                 return remote.name == "origin"
             }
             
-            guard let origin = remote?[0].urlString else {
+            guard let origin = remote?.first?.urlString else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch origin")
-                throw NSError.errorRepo(localGitRepo, underlyingError:nil)
+                throw NSError.noOriginError(localGitRepo)
             }
             
             os_log("%{public}@", log: log, type: .debug, "Project name: \(name)")
@@ -66,7 +64,7 @@ public struct Repository: CustomDebugStringConvertible {
         }
         catch let error as NSError {
             os_log("%{public}@", log: log, type: .error, "Could not open repository: \(error)")
-            throw NSError.errorRepo(localGitRepo, underlyingError:error)
+            throw error
         }
     }
 

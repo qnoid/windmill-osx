@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import windmill
+@testable import Windmill
 
 class ConsoleViewControllerTest: XCTestCase {
     

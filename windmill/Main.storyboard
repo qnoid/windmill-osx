@@ -8,7 +8,7 @@
         <!--Window Controller-->
         <scene sceneID="21W-NP-aZ8">
             <objects>
-                <windowController storyboardIdentifier="MainWindowController" id="CPq-1v-PfW" customClass="MainWindowController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="MainWindowController" id="CPq-1v-PfW" customClass="MainWindowController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
@@ -97,7 +97,7 @@
         <!--Bottom Panel Split View Controller-->
         <scene sceneID="1ax-Dm-cj8">
             <objects>
-                <splitViewController id="e0O-BT-03d" customClass="BottomPanelSplitViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController id="e0O-BT-03d" customClass="BottomPanelSplitViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem id="5xq-V7-8cj"/>
                         <splitViewItem canCollapse="YES" collapsed="YES" id="Xxb-TL-29N"/>
@@ -124,7 +124,7 @@
         <!--Side Panel Split View Controller-->
         <scene sceneID="qXm-6g-QeR">
             <objects>
-                <splitViewController id="CyE-mz-XSv" customClass="SidePanelSplitViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController id="CyE-mz-XSv" customClass="SidePanelSplitViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem id="QHl-7F-Y0I"/>
                         <splitViewItem canCollapse="YES" id="YdW-0h-7ou"/>
@@ -151,8 +151,8 @@
         <!--Side Panel View Controller-->
         <scene sceneID="xlE-4N-cYx">
             <objects>
-                <viewController id="pJq-lF-WOV" customClass="SidePanelViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="3FI-S7-Oze" customClass="SidePanelView" customModule="windmill" customModuleProvider="target">
+                <viewController id="pJq-lF-WOV" customClass="SidePanelViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="3FI-S7-Oze" customClass="SidePanelView" customModule="Windmill" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="225" height="652"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
@@ -164,12 +164,12 @@
         <!--Main View Controller-->
         <scene sceneID="Amb-BC-0eG">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="6j5-vW-ygG" customClass="MainView" customModule="windmill" customModuleProvider="target">
+                <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="6j5-vW-ygG" customClass="MainView" customModule="Windmill" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="850" height="772"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="112" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
@@ -180,7 +180,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-checkout"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="232" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
@@ -191,7 +191,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-build"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="352" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
@@ -202,7 +202,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-test"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="472" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
@@ -213,7 +213,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-archive"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="592" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="elv-Xf-MpB"/>
@@ -224,7 +224,7 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-export"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="712" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="XEZ-IE-CsL"/>
@@ -303,7 +303,7 @@
         <!--Console View Controller-->
         <scene sceneID="eWE-0B-wHp">
             <objects>
-                <viewController storyboardIdentifier="ConsoleViewController" id="Pj9-T2-aOt" customClass="ConsoleViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConsoleViewController" id="Pj9-T2-aOt" customClass="ConsoleViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <scrollView key="view" canDrawConcurrently="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="1kk-Jl-vm9">
                         <rect key="frame" x="0.0" y="0.0" width="850" height="150"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -647,7 +647,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                         </menuItem>
                     </items>
                 </menu>
-                <customObject id="jgg-ZM-qio" customClass="AppDelegate" customModule="windmill" customModuleProvider="target">
+                <customObject id="jgg-ZM-qio" customClass="AppDelegate" customModule="Windmill" customModuleProvider="target">
                     <connections>
                         <outlet property="activityMenuItem" destination="fyt-9a-x0h" id="q48-pz-ygM"/>
                         <outlet property="cleanMenu" destination="bkO-ZH-pFj" id="o4d-ES-cYe"/>
@@ -664,12 +664,12 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <!--Artefacts View Controller-->
         <scene sceneID="eP2-LE-yiG">
             <objects>
-                <viewController id="fyw-AD-tpd" customClass="ArtefactsViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <customView key="view" id="D3o-nq-crO" customClass="ArtefactsViewControllerView" customModule="windmill" customModuleProvider="target">
+                <viewController id="fyw-AD-tpd" customClass="ArtefactsViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <customView key="view" id="D3o-nq-crO" customClass="ArtefactsViewControllerView" customModule="Windmill" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="822" height="431"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="cv1-tp-oYd" userLabel="Archive Artefact View" customClass="ArtefactView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="cv1-tp-oYd" userLabel="Archive Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="294" width="270" height="137"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="137" id="8k4-GB-HIL"/>
@@ -684,10 +684,10 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yLb-mO-pCG" customClass="ArchiveView" customModule="windmill" customModuleProvider="target">
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yLb-mO-pCG" customClass="ArchiveView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="294" width="270" height="137"/>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="ngG-eU-8IG" userLabel="Export Artefact View" customClass="ArtefactView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="ngG-eU-8IG" userLabel="Export Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="157" width="270" height="137"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="ipa"/>
@@ -696,10 +696,10 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XHJ-ra-xrw" userLabel="Export View" customClass="ExportView" customModule="windmill" customModuleProvider="target">
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XHJ-ra-xrw" userLabel="Export View" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="157" width="270" height="137"/>
                             </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="9aB-Oy-LgS" userLabel="OTA Artefact View" customClass="ArtefactView" customModule="windmill" customModuleProvider="target">
+                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="9aB-Oy-LgS" userLabel="OTA Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="13" width="270" height="144"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="144" id="JlN-T3-kgH"/>
@@ -712,7 +712,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Have an active windmill subscription."/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QyX-Qb-5N2" userLabel="Deploy View" customClass="DeployView" customModule="windmill" customModuleProvider="target">
+                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QyX-Qb-5N2" userLabel="Deploy View" customClass="DeployView" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="13" width="270" height="144"/>
                             </customView>
                         </subviews>

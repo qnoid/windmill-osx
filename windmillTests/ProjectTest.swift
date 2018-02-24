@@ -8,7 +8,7 @@
 
 import Cocoa
 import XCTest
-import windmill
+@testable import Windmill
 
 class ProjectTest: XCTestCase {
     

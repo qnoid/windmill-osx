@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import windmill
+@testable import Windmill
 
 class ProcessManagerMonitorWillDidLaunch: ProcessMonitor {
     let expectationWillLaunch: XCTestExpectation

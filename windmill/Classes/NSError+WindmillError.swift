@@ -20,6 +20,9 @@ extension NSError
         /// Error loading repo
         case repoError
         
+        /// No origin
+        case noOriginError
+        
         /// Error loading commit
         case commitError
     }
@@ -30,7 +33,7 @@ extension NSError
         
         return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.noRepoError.rawValue, userInfo:
             [NSLocalizedDescriptionKey: failureDescription,
-             NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.latestCommit.error.failureReason", comment:"")])
+             NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.repo.error.failureReason", comment:"")])
     }
     
     class func errorRepo(_ localGitRepo: String, underlyingError : NSError? = nil) -> Error
@@ -49,7 +52,17 @@ extension NSError
             [NSLocalizedDescriptionKey: failureDescription,
              NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.repo.error.failureReason", comment:"")])
     }
-    
+
+    class func noOriginError(_ localGitRepo: String) -> Error
+    {
+        let localizedDescription = NSLocalizedString("windmill.noOriginError.error.description", comment:"")
+        let failureDescription = String(format:localizedDescription, localGitRepo)
+        
+        return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.noOriginError.rawValue, userInfo:
+            [NSLocalizedDescriptionKey: failureDescription,
+             NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.noOriginError.error.failureReason", comment:"")])
+    }
+
     class func errorCommit(_ underlyingError : NSError) -> Error {
         return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.commitError.rawValue, userInfo:
             [NSLocalizedDescriptionKey: NSLocalizedString("windmill.latestCommit.error.description", comment:""),

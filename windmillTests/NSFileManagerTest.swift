@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable import windmill
+@testable import Windmill
 
 class NSFileManagerTest : XCTestCase
 {
