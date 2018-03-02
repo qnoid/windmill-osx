@@ -16,29 +16,106 @@ public protocol UserLibraryDirectory : DirectoryType
 
 public protocol ApplicationSupportDirectory : DirectoryType
 {
+    func derivedDataURL(at pathComponent: String) -> URL
+    func buildResultBundle(at pathComponent: String) -> ResultBundle
+}
+
+extension ApplicationSupportDirectory {
     
+    public func resultBundleDirectory() -> Directory {
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent("ResultBundle"))
+        
+        directory.create()
+        
+        return directory
+    }
+    
+    fileprivate func resultBundleURL(name: String, at pathComponent: String) -> URL {
+        let directory = self.fileManager.directory(self.resultBundleDirectory().URL.appendingPathComponent(name).appendingPathComponent(pathComponent))
+        
+        directory.create(withIntermediateDirectories: true)
+        
+        do {
+            try self.fileManager.removeItem(at: directory.URL.appendingPathComponent("\(name).bundle"))
+        } catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .debug, error)
+        }
+        
+        return directory.URL.appendingPathComponent("\(name).bundle")
+    }
+    
+    public func buildResultBundle(at name: String) -> ResultBundle {
+        
+        let buildResultBundleURL = self.resultBundleURL(name: name, at: "build")
+        let bundleResultInfoURL = buildResultBundleURL.appendingPathComponent("Info.plist")
+        
+        return ResultBundle(url: buildResultBundleURL, info: ResultBundle.Info.make(at: bundleResultInfoURL))
+    }
+
+    public func testResultBundle(at name: String) -> ResultBundle {
+        
+        let testResultBundleURL = self.resultBundleURL(name: name, at: "test")
+        let testResultInfoURL = testResultBundleURL.appendingPathComponent("Info.plist")
+        
+        return ResultBundle(url: testResultBundleURL, info: ResultBundle.Info.make(at: testResultInfoURL))
+    }
+
+    public func archiveResultBundle(at name: String) -> ResultBundle {
+        
+        let archiveResultBundleURL = self.resultBundleURL(name: name, at: "archive")
+        let archiveResultInfoURL = archiveResultBundleURL.appendingPathComponent("Info.plist")
+        
+        return ResultBundle(url: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
+    }
+    
+    public func exportResultBundle(at name: String) -> ResultBundle {
+        
+        let archiveResultBundleURL = self.resultBundleURL(name: name, at: "export")
+        let archiveResultInfoURL = archiveResultBundleURL.appendingPathComponent("Info.plist")
+        
+        return ResultBundle(url: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
+    }
 }
 
 public protocol ApplicationCachesDirectory : DirectoryType
 {
     func projectSourceDirectory(at pathComponent: String) -> ProjectSourceDirectory
+    func removeDerivedData(at pathComponent: String) -> Bool
 }
 
 extension ApplicationCachesDirectory {
     
-    public func projectSourceDirectory(at pathComponent: String) -> ProjectSourceDirectory {
-        return projectSourceDirectory(at: pathComponent, create: true)
+    func sourcesURL() -> URL {
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent("Sources"))
+        
+        directory.create()
+        
+        return directory.URL
     }
     
-    public func projectSourceDirectory(at pathComponent: String, create: Bool = true) -> ProjectSourceDirectory {
+    public func projectSourceDirectory(at pathComponent: String) -> ProjectSourceDirectory {
         
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent(pathComponent))
-        
-        if create {
-            directory.create()
-        }
+        let directory = self.fileManager.directory(self.sourcesURL().appendingPathComponent(pathComponent))
         
         return directory
+    }
+
+    public func derivedDataURL(at pathComponent: String) -> URL {
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent("DerivedData").appendingPathComponent(pathComponent))
+        
+        directory.create(withIntermediateDirectories: true)
+        
+        return directory.URL
+    }
+    
+    public func removeDerivedData(at pathComponent: String) -> Bool {
+        do {
+            try FileManager.default.removeItem(at: derivedDataURL(at: pathComponent))
+            return true
+        } catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+            return false
+        }
     }
 }
 
@@ -98,19 +175,9 @@ public protocol ProjectHomeDirectory : DirectoryType
     func distributionSummary() -> Export.DistributionSummary
     func manifest() -> Export.Manifest
     func export(name: String) -> Export
-    
-    func removeDerivedData() -> Bool
 }
 
 extension ProjectHomeDirectory {
-    
-    public func derivedDataURL() -> URL {
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent("DerivedData"))
-        
-        directory.create()
-        
-        return directory.URL
-    }
     
     public func buildDirectoryURL() -> URL {
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("build"))
@@ -166,7 +233,7 @@ extension ProjectHomeDirectory {
     }
     
     public func devices() -> Devices {
-        let url = self.testDirectoryURL().appendingPathComponent("settings.json")
+        let url = self.URL.appendingPathComponent("devices.json")
         
         return Devices.make(at: url)
     }
@@ -203,23 +270,13 @@ extension ProjectHomeDirectory {
         
         return Export.make(at: url, manifest: manifest(), distributionSummary: distributionSummary())
     }
-    
-    public func removeDerivedData() -> Bool {
-        do {
-            try FileManager.default.removeItem(at: derivedDataURL())
-            return true
-        } catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-            return false
-        }
-    }
 }
 
 extension Directory {
     
     struct Windmill {
         
-        static func ApplicationDirectory() -> DirectoryType
+        static func ApplicationSupportDirectory() -> ApplicationSupportDirectory
         {
             let applicationName = Bundle.main.bundleIdentifier!
             let applicationDirectoryPathComponent = PathComponent(rawValue: "\(applicationName)")!

@@ -19,5 +19,10 @@ extension NSStoryboard
         static func mainWindowController() -> MainWindowController {
             return self.mainStoryboard().instantiateInitialController() as! MainWindowController
         }
+        
+        static func reportsStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: NSStoryboard.Name(rawValue: "Reports"), bundle: Bundle.main)
+        }
+
     }
 }

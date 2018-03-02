@@ -1,0 +1,1 @@
+{ "project" : { "targets" : [ "project-with-unit-tests", "project-with-unit-testsTests" ], "schemes" : [ ], "configurations" : [ "Debug", "Release" ], "name" : "project-with-unit-tests" } }

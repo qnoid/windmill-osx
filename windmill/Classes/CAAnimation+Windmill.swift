@@ -17,6 +17,7 @@ extension CAAnimation {
             basicAnimation.toValue = 0.0
             basicAnimation.duration = 1.0
             basicAnimation.repeatCount = Float.infinity
+            basicAnimation.isRemovedOnCompletion = false
             
             return basicAnimation
         }()

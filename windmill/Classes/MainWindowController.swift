@@ -30,6 +30,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     @IBOutlet weak var schemeButton: NSPopUpButton!
+    @IBOutlet weak var userMessageView: UserMessageView!
     @IBOutlet weak var panels: NSSegmentedControl!
 
     let defaultCenter = NotificationCenter.default
@@ -54,8 +55,11 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
             
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
+            
+            self.userMessageView.didSet(windmill: windmill)
         }
     }
     
@@ -124,7 +128,24 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         self.didSelectScheme(self.schemeButton)
     }
     
+    @objc func willStartProject(_ aNotification: Notification) {
+        self.schemeButton.removeAllItems()
+    }
     
+    @objc func activityError(_ aNotification: Notification) {
+        
+        guard let error = aNotification.userInfo?["error"] as? NSError else {
+            return
+        }
+        
+        switch error.domain {
+        case WindmillErrorDomain, NSPOSIXErrorDomain:
+            self.toggleDebugArea(isCollapsed: false)
+        default:
+            return
+        }
+    }
+
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
@@ -151,16 +172,12 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
                     button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
                 }
             }
-                        
+            
         default:
             break
         }
     }
-    
-    @objc func willStartProject(_ aNotification: Notification) {
-        self.schemeButton.removeAllItems()
-    }
-    
+
     @objc func didExportSuccesfully(_ aNotification: Notification) {
         
         if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let image = NSImage(contentsOf: appBundle.iconURL()) {
@@ -177,7 +194,23 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         self.windmill.project = Project(name: project.name, scheme: scheme, origin: project.origin)
         self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
     }
-
+    
+    func reportsWindowController() -> ReportsWindowController? {
+        
+        let reportsStoryboard = NSStoryboard.Windmill.reportsStoryboard()
+        
+        let reportsWindowController = reportsStoryboard.instantiateInitialController() as? ReportsWindowController
+        let errorSummariesViewController = reportsWindowController?.errorSummariesViewController
+        errorSummariesViewController?.delegate = reportsWindowController        
+        
+        return reportsWindowController
+    }
+    
+    func show(reportsWindowController: ReportsWindowController?) {
+        reportsWindowController?.errorSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
+        reportsWindowController?.showWindow(self)
+    }
+    
     func setBottomPanel(isOpen selected: Bool) {
         self.panels.setSelected(selected, forSegment: 0)
     }

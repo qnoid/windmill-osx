@@ -14,82 +14,94 @@ class SequenceTest: XCTestCase {
 
     let bundle = Bundle(for: SequenceTest.self)
     
-    func testGivenProjectWithoutTestTargetAssertTestWasSuccesful() {
+    override func setUp() {
+        continueAfterFailure = false
+    }
+    
+    func testGivenProjectWithoutTestTargetAssertBuildForTestingFailedWithStatusCode() {
         
         let expectation = self.expectation(description: #function)
         let processManager = ProcessManager()
         
-        let name = "helloword-no-test-target"
-        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
-
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
+        let project = Project(name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
+        let repositoryLocalURL = bundle.url(forResource: project.name, withExtension: "")!
         
-        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "helloword-no-test-target", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "helloword-no-test-target", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
+        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
         
-        processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
-        }).launch()
+        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(project.name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.alphanumerics, length: 32)).appendingPathComponent("\(name).bundle")
+        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        
+        defer {
+            try? FileManager.default.removeItem(at: resultBundleURL)
+        }
 
+        let build = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        
+        processManager.sequence(process: build).launch(recover: RecoverableProcess.recover(terminationStatus: 66) { process in
+            XCTAssertEqual(66, process.terminationStatus, "Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
+            expectation.fulfill()
+        })
+        
         wait(for: [expectation], timeout: 30.0)
     }
     
-    func testGivenProjectWithTestTargetAssertTestWasSuccesful() {
+    func testGivenProjectWithoutTestTargetAssertBuildWasSuccesful() {
         
         let expectation = self.expectation(description: #function)
         let processManager = ProcessManager()
         
-        let name = "helloworld"
+        let project = Project(name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
+        let repositoryLocalURL = bundle.url(forResource: project.name, withExtension: "")!
         
-        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
+        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
         
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
+        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(project.name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.alphanumerics, length: 32)).appendingPathComponent("\(name).bundle")
+        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
         
-        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
-
+        defer {
+            try? FileManager.default.removeItem(at: resultBundleURL)
+        }        
+        
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        
         processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
-        }).launch()
-        
-        wait(for: [expectation], timeout: 60.0)
-    }
-
-    func testGivenProjectWithoutAvailableSimulatorAssertTestWasSuccesful() {
-        
-        let expectation = self.expectation(description: #function)
-        let processManager = ProcessManager()
-        
-        let name = "no_simulator_available"
-        let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
-
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/test/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
-        
-        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTest(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL)
-
-        processManager.sequence(process: build, wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
+            expectation.fulfill()
         }).launch()
         
         wait(for: [expectation], timeout: 30.0)
     }
+
+
+    func testGivenProjectArchiveAssertExport() {
+        let expectation = self.expectation(description: #function)
+        let processManager = ProcessManager()
+        var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
+        processManager.monitor = monitor
+
+        let any = FileManager.default.trashDirectoryURL
+        
+        let exportDirectoryURL = FileManager.default.trashDirectoryURL.appendingPathComponent("export")
+        
+        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent(name)
+        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        
+        defer {
+            try? FileManager.default.removeItem(at: resultBundleURL)
+            try? FileManager.default.removeItem(at: exportDirectoryURL)
+            monitor = nil
+        }
+
+        let url = bundle.url(forResource: "HelloWindmill", withExtension: "xcarchive")!
+        let info = Archive.Info.make(at: URL(string: "any")!)
+        let archive = Archive(url: url, info: info)
+        
+        let export = Process.makeExport(repositoryLocalURL: any, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle)
+        
+        processManager.sequence(process: export, wasSuccesful: ProcessWasSuccesful { _ in
+            expectation.fulfill()
+        }).launch()
+        
+        wait(for: [expectation], timeout: 30.0)
+    }
+
 }

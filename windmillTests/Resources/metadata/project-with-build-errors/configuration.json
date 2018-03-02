@@ -1,0 +1,1 @@
+{ "project" : { "targets" : [ "project-with-build-errors", "project-with-build-errorsTests" ], "schemes" : [ "project-with-build-errors" ], "configurations" : [ "Debug", "Release" ], "name" : "project-with-build-errors" } }

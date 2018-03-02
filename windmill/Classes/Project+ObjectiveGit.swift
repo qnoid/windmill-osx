@@ -64,7 +64,7 @@ public struct Repository: CustomDebugStringConvertible {
         }
         catch let error as NSError {
             os_log("%{public}@", log: log, type: .error, "Could not open repository: \(error)")
-            throw error
+            throw NSError.errorNoRepo(localGitRepo)
         }
     }
 

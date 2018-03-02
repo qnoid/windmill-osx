@@ -18,11 +18,18 @@
 		BD10504A203A84AE0051F0D5 /* ConfigurationTest in Resources */ = {isa = PBXBuildFile; fileRef = BD105049203A84AE0051F0D5 /* ConfigurationTest */; };
 		BD10504C203A88650051F0D5 /* ProcessTest in Resources */ = {isa = PBXBuildFile; fileRef = BD10504B203A88650051F0D5 /* ProcessTest */; };
 		BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */; };
+		BD14BC1D2051E0C70052AAA2 /* RecoverableProcessTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD14BC1C2051E0C70052AAA2 /* RecoverableProcessTest.swift */; };
+		BD14BC202051E5CF0052AAA2 /* exit.sh in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC1F2051E5CF0052AAA2 /* exit.sh */; };
+		BD14BC232051EEB00052AAA2 /* project-with-build-errors in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC212051EEB00052AAA2 /* project-with-build-errors */; };
+		BD14BC242051EEB00052AAA2 /* project-with-unit-tests in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC222051EEB00052AAA2 /* project-with-unit-tests */; };
 		BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */; };
 		BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */; };
 		BD189BCB1FF9FD5900BBEBA4 /* DistributionSummary.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */; };
+		BD1B0D182044EC1000E513B5 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
 		BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D17FE1F44BC670015C13C /* ProcessManager.swift */; };
 		BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */; };
+		BD1F0CDB2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD1F0CDA2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist */; };
+		BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = BD20C298204D14CF00805F37 /* Localizable.stringsdict */; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
 		BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25DB781C9ED2700001FEDF /* MainViewController.swift */; };
@@ -34,6 +41,10 @@
 		BD30160A19BCBCFD001134F8 /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160919BCBCFD001134F8 /* Process+Windmill.swift */; };
 		BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD30160B19BCBE30001134F8 /* NSPasteboard.swift */; };
 		BD4762061F16496F00F5188C /* Project+ObjectiveGit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */; };
+		BD49F78E204B64C700F64687 /* Reports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD49F78D204B64C700F64687 /* Reports.storyboard */; };
+		BD49F790204B730600F64687 /* ErrorSummariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F78F204B730600F64687 /* ErrorSummariesViewController.swift */; };
+		BD49F792204B766B00F64687 /* ReportsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F791204B766B00F64687 /* ReportsWindowController.swift */; };
+		BD49F794204B9DCA00F64687 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F793204B9DCA00F64687 /* InfoViewController.swift */; };
 		BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49FAAB20290C4500E12CB4 /* Sequence.swift */; };
 		BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */; };
 		BD6635881FF9DC1500951779 /* MetadataJSONEncoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */; };
@@ -43,11 +54,16 @@
 		BD680586202C1AC700F38D3B /* helloworld in Resources */ = {isa = PBXBuildFile; fileRef = BD680585202C1AC700F38D3B /* helloworld */; };
 		BD680588202C222300F38D3B /* no_simulator_available in Resources */ = {isa = PBXBuildFile; fileRef = BD680587202C222200F38D3B /* no_simulator_available */; };
 		BD6963F21F4C91910041847B /* Xcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6963F11F4C91910041847B /* Xcode.swift */; };
+		BD74665C2044DE3E009262DD /* InfoWithOneErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */; };
+		BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */; };
 		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
 		BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */; };
+		BD7DDBFC204A5A57003541E8 /* InfoWithManyErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */; };
 		BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */; };
 		BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8364082039314200D1D381 /* CharacterSetTest.swift */; };
+		BD8FBE11204C96F20004C064 /* HelloWindmill.xcarchive in Resources */ = {isa = PBXBuildFile; fileRef = BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */; };
+		BD8FBE13204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */; };
 		BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */; };
 		BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */; };
 		BD915E742020715A006551A5 /* getting-started.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BD915E7320207139006551A5 /* getting-started.mp4 */; };
@@ -58,6 +74,11 @@
 		BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */; };
 		BD91EB5C19491C40002D8C1C /* Scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* Scripts */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
+		BDB961082049F00500E49258 /* UserMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB961072049F00500E49258 /* UserMessageView.xib */; };
+		BDB9610A2049F06800E49258 /* UserMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB961092049F06800E49258 /* UserMessageView.swift */; };
+		BDB96138204A500100E49258 /* ResultBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB96137204A500100E49258 /* ResultBundle.swift */; };
+		BDB9613A204A56DC00E49258 /* ResultBundleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB96139204A56DC00E49258 /* ResultBundleTest.swift */; };
+		BDB9613D204A581D00E49258 /* InfoWithZeroErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDB9613C204A581D00E49258 /* InfoWithZeroErrorCount.plist */; };
 		BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */; };
 		BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBD520C1CD6053B0023F460 /* ActivityView.swift */; };
 		BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE325E1F31301200BCE4D9 /* ActivityType.swift */; };
@@ -133,11 +154,17 @@
 		BD105049203A84AE0051F0D5 /* ConfigurationTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ConfigurationTest; sourceTree = "<group>"; };
 		BD10504B203A88650051F0D5 /* ProcessTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ProcessTest; sourceTree = "<group>"; };
 		BD12E11E1F521A19001B4A80 /* SidePanelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelViewController.swift; sourceTree = "<group>"; };
+		BD14BC1C2051E0C70052AAA2 /* RecoverableProcessTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverableProcessTest.swift; sourceTree = "<group>"; };
+		BD14BC1F2051E5CF0052AAA2 /* exit.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = exit.sh; sourceTree = "<group>"; };
+		BD14BC212051EEB00052AAA2 /* project-with-build-errors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-with-build-errors"; sourceTree = "<group>"; };
+		BD14BC222051EEB00052AAA2 /* project-with-unit-tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-with-unit-tests"; sourceTree = "<group>"; };
 		BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Classes/Acknowledgements.rtf; sourceTree = "<group>"; };
 		BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataPlistEncodedTest.swift; sourceTree = "<group>"; };
 		BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DistributionSummary.plist; sourceTree = "<group>"; };
 		BD1D17FE1F44BC670015C13C /* ProcessManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManager.swift; sourceTree = "<group>"; };
 		BD1D18001F44BE520015C13C /* ProcessManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessManagerTest.swift; sourceTree = "<group>"; };
+		BD1F0CDA2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithUnsupportedDocumentLocationData.plist; sourceTree = "<group>"; };
+		BD20C299204D14CF00805F37 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
 		BD25DB761C9EC5290001FEDF /* windmill.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = windmill.xcconfig; sourceTree = "<group>"; };
@@ -150,6 +177,10 @@
 		BD30160919BCBCFD001134F8 /* Process+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
 		BD30160B19BCBE30001134F8 /* NSPasteboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPasteboard.swift; sourceTree = "<group>"; };
 		BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+ObjectiveGit.swift"; sourceTree = "<group>"; };
+		BD49F78D204B64C700F64687 /* Reports.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Reports.storyboard; sourceTree = "<group>"; };
+		BD49F78F204B730600F64687 /* ErrorSummariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSummariesViewController.swift; sourceTree = "<group>"; };
+		BD49F791204B766B00F64687 /* ReportsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsWindowController.swift; sourceTree = "<group>"; };
+		BD49F793204B9DCA00F64687 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		BD49FAAB20290C4500E12CB4 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
 		BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataJSONEncoded.swift; sourceTree = "<group>"; };
@@ -159,11 +190,16 @@
 		BD680585202C1AC700F38D3B /* helloworld */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helloworld; sourceTree = "<group>"; };
 		BD680587202C222200F38D3B /* no_simulator_available */ = {isa = PBXFileReference; lastKnownFileType = folder; path = no_simulator_available; sourceTree = "<group>"; };
 		BD6963F11F4C91910041847B /* Xcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Xcode.swift; sourceTree = "<group>"; };
+		BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithOneErrorCount.plist; sourceTree = "<group>"; };
+		BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDocumentLocation.swift; sourceTree = "<group>"; };
 		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
 		BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
+		BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithManyErrorCount.plist; sourceTree = "<group>"; };
 		BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Windmill.swift"; sourceTree = "<group>"; };
 		BD8364082039314200D1D381 /* CharacterSetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSetTest.swift; sourceTree = "<group>"; };
+		BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HelloWindmill.xcarchive; sourceTree = "<group>"; };
+		BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessMonitorFailOnUnsuccessfulExit.swift; sourceTree = "<group>"; };
 		BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettingStartedWindowController.swift; sourceTree = "<group>"; };
 		BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GettingStartedWindowController.xib; sourceTree = "<group>"; };
 		BD915E7320207139006551A5 /* getting-started.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "getting-started.mp4"; sourceTree = "<group>"; };
@@ -178,6 +214,11 @@
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BDB961072049F00500E49258 /* UserMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserMessageView.xib; sourceTree = "<group>"; };
+		BDB961092049F06800E49258 /* UserMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageView.swift; sourceTree = "<group>"; };
+		BDB96137204A500100E49258 /* ResultBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBundle.swift; sourceTree = "<group>"; };
+		BDB96139204A56DC00E49258 /* ResultBundleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBundleTest.swift; sourceTree = "<group>"; };
+		BDB9613C204A581D00E49258 /* InfoWithZeroErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithZeroErrorCount.plist; sourceTree = "<group>"; };
 		BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CAAnimation+Windmill.swift"; sourceTree = "<group>"; };
 		BDBD520C1CD6053B0023F460 /* ActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		BDBE325E1F31301200BCE4D9 /* ActivityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityType.swift; sourceTree = "<group>"; };
@@ -230,6 +271,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD1B0D182044EC1000E513B5 /* ObjectiveGit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +290,7 @@
 			isa = PBXGroup;
 			children = (
 				BD081A271AB0ADEF00B8E948 /* Localizable.strings */,
+				BD20C298204D14CF00805F37 /* Localizable.stringsdict */,
 			);
 			name = en.lproj;
 			path = resources/en.lproj;
@@ -258,6 +301,14 @@
 			children = (
 			);
 			name = ProjectsOutlineView;
+			sourceTree = "<group>";
+		};
+		BD14BC1E2051E5950052AAA2 /* ProcessManagerTest */ = {
+			isa = PBXGroup;
+			children = (
+				BD14BC1F2051E5CF0052AAA2 /* exit.sh */,
+			);
+			path = ProcessManagerTest;
 			sourceTree = "<group>";
 		};
 		BD189BC91FF9FD4900BBEBA4 /* MetadataPlistEncodedTest */ = {
@@ -310,8 +361,22 @@
 				BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */,
 				BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */,
 				BD2CEE52203117EC0048969D /* AppBundle.swift */,
+				BDB96137204A500100E49258 /* ResultBundle.swift */,
+				BDB961072049F00500E49258 /* UserMessageView.xib */,
+				BDB961092049F06800E49258 /* UserMessageView.swift */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		BD49F78C204B64A300F64687 /* Reports */ = {
+			isa = PBXGroup;
+			children = (
+				BD49F793204B9DCA00F64687 /* InfoViewController.swift */,
+				BD49F78D204B64C700F64687 /* Reports.storyboard */,
+				BD49F78F204B730600F64687 /* ErrorSummariesViewController.swift */,
+				BD49F791204B766B00F64687 /* ReportsWindowController.swift */,
+			);
+			path = Reports;
 			sourceTree = "<group>";
 		};
 		BD68054B202C127300F38D3B /* Resources */ = {
@@ -327,6 +392,8 @@
 		BD68054C202C127300F38D3B /* projects */ = {
 			isa = PBXGroup;
 			children = (
+				BD14BC212051EEB00052AAA2 /* project-with-build-errors */,
+				BD14BC222051EEB00052AAA2 /* project-with-unit-tests */,
 				BD680587202C222200F38D3B /* no_simulator_available */,
 				BD680585202C1AC700F38D3B /* helloworld */,
 				BD68057E202C144B00F38D3B /* helloword-no-test-target */,
@@ -341,10 +408,19 @@
 			path = repositories;
 			sourceTree = "<group>";
 		};
+		BD8FBE0F204C96E30004C064 /* SequenceTest */ = {
+			isa = PBXGroup;
+			children = (
+				BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */,
+			);
+			path = SequenceTest;
+			sourceTree = "<group>";
+		};
 		BD91A7151F42E9AE004CA64B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */,
+				BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -371,6 +447,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BD49F78C204B64A300F64687 /* Reports */,
 				BD1D17FD1F44BC560015C13C /* ProcessManager */,
 				BDD0021F1ABA3EBB00F8E34A /* scripts */,
 				BDD0020C1AB6F36A00F8E34A /* Windmill */,
@@ -400,6 +477,9 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
+				BD14BC1E2051E5950052AAA2 /* ProcessManagerTest */,
+				BD8FBE0F204C96E30004C064 /* SequenceTest */,
+				BDB9613B204A56E200E49258 /* ResultBundleTest */,
 				BD10504B203A88650051F0D5 /* ProcessTest */,
 				BD105049203A84AE0051F0D5 /* ConfigurationTest */,
 				BD021863203187A50039BCCD /* AppBundleTest */,
@@ -409,6 +489,7 @@
 				BD91A7151F42E9AE004CA64B /* Classes */,
 				BDB6D55119440392001340B4 /* Supporting Files */,
 				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
+				BD14BC1C2051E0C70052AAA2 /* RecoverableProcessTest.swift */,
 				BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */,
 				BDCB38281F06B9BA000825C1 /* WindmillTest.swift */,
 				BDCB382A1F06B9FB000825C1 /* ConsoleViewControllerTest.swift */,
@@ -420,6 +501,7 @@
 				BD021861203184470039BCCD /* AppBundleTest.swift */,
 				BD8364082039314200D1D381 /* CharacterSetTest.swift */,
 				BD105046203A84530051F0D5 /* ConfigurationTest.swift */,
+				BDB96139204A56DC00E49258 /* ResultBundleTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -430,6 +512,17 @@
 				BDB6D55219440392001340B4 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BDB9613B204A56E200E49258 /* ResultBundleTest */ = {
+			isa = PBXGroup;
+			children = (
+				BD1F0CDA2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist */,
+				BDB9613C204A581D00E49258 /* InfoWithZeroErrorCount.plist */,
+				BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */,
+				BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */,
+			);
+			path = ResultBundleTest;
 			sourceTree = "<group>";
 		};
 		BDC1E93419BCCCAD009A3E42 /* Common */ = {
@@ -457,6 +550,7 @@
 				BD2CEE56203175900048969D /* Devices.swift */,
 				BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */,
 				BD105018203A32680051F0D5 /* Directory+Windmill.swift */,
+				BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -537,7 +631,7 @@
 			attributes = {
 				LastSwiftMigration = 0730;
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = qnoid.com;
 				TargetAttributes = {
 					BDB6D53A19440392001340B4 = {
@@ -581,7 +675,9 @@
 				BD243A861C42AB570015A13A /* Main.storyboard in Resources */,
 				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
+				BDB961082049F00500E49258 /* UserMessageView.xib in Resources */,
 				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
+				BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */,
 				BD915E742020715A006551A5 /* getting-started.mp4 in Resources */,
 				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
@@ -591,6 +687,7 @@
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
 				BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
+				BD49F78E204B64C700F64687 /* Reports.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -598,14 +695,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD14BC232051EEB00052AAA2 /* project-with-build-errors in Resources */,
 				BDF00B691F475B5100572D03 /* Info.plist in Resources */,
+				BD14BC242051EEB00052AAA2 /* project-with-unit-tests in Resources */,
 				BD10504C203A88650051F0D5 /* ProcessTest in Resources */,
 				BD10504A203A84AE0051F0D5 /* ConfigurationTest in Resources */,
 				BD021864203187A50039BCCD /* AppBundleTest in Resources */,
 				BD680582202C15C000F38D3B /* metadata in Resources */,
 				BD680586202C1AC700F38D3B /* helloworld in Resources */,
+				BD8FBE11204C96F20004C064 /* HelloWindmill.xcarchive in Resources */,
 				BD189BCB1FF9FD5900BBEBA4 /* DistributionSummary.plist in Resources */,
 				BD680588202C222300F38D3B /* no_simulator_available in Resources */,
+				BD7DDBFC204A5A57003541E8 /* InfoWithManyErrorCount.plist in Resources */,
+				BD14BC202051E5CF0052AAA2 /* exit.sh in Resources */,
+				BDB9613D204A581D00E49258 /* InfoWithZeroErrorCount.plist in Resources */,
+				BD74665C2044DE3E009262DD /* InfoWithOneErrorCount.plist in Resources */,
+				BD1F0CDB2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist in Resources */,
 				BD680580202C147D00F38D3B /* helloword-no-test-target in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -619,13 +724,16 @@
 			files = (
 				BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */,
 				BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */,
+				BDB9610A2049F06800E49258 /* UserMessageView.swift in Sources */,
 				BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */,
 				BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */,
 				BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */,
 				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,
+				BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */,
 				BDD6F0A720182B0F00D63D74 /* ArtefactView.swift in Sources */,
 				BD105019203A32680051F0D5 /* Directory+Windmill.swift in Sources */,
 				BD2CEE57203175900048969D /* Devices.swift in Sources */,
+				BD49F790204B730600F64687 /* ErrorSummariesViewController.swift in Sources */,
 				BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */,
 				BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */,
 				BD6635881FF9DC1500951779 /* MetadataJSONEncoded.swift in Sources */,
@@ -649,10 +757,13 @@
 				BDD6F0AF20187C2500D63D74 /* Export.swift in Sources */,
 				BD6963F21F4C91910041847B /* Xcode.swift in Sources */,
 				BDF00B641F47582300572D03 /* Archive.swift in Sources */,
+				BD49F792204B766B00F64687 /* ReportsWindowController.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
+				BD49F794204B9DCA00F64687 /* InfoViewController.swift in Sources */,
 				BDD002161AB87B7900F8E34A /* WindmillDelegate.swift in Sources */,
 				BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */,
 				BD91A70D1F41E758004CA64B /* ArchiveView.swift in Sources */,
+				BDB96138204A500100E49258 /* ResultBundle.swift in Sources */,
 				BDD6F0AB20185D2A00D63D74 /* ExportView.swift in Sources */,
 				BDEBAD70200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
@@ -675,6 +786,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD14BC1D2051E0C70052AAA2 /* RecoverableProcessTest.swift in Sources */,
 				BD021862203184470039BCCD /* AppBundleTest.swift in Sources */,
 				BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */,
 				BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */,
@@ -682,7 +794,9 @@
 				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
 				BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */,
 				BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */,
+				BD8FBE13204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift in Sources */,
 				BDFF4EA71F3B3DA2004C1B1E /* ProcessTest.swift in Sources */,
+				BDB9613A204A56DC00E49258 /* ResultBundleTest.swift in Sources */,
 				BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */,
 				BDCB382B1F06B9FB000825C1 /* ConsoleViewControllerTest.swift in Sources */,
 				BDF00B661F475A5C00572D03 /* ArchiveTest.swift in Sources */,
@@ -708,6 +822,14 @@
 				BD081A281AB0ADEF00B8E948 /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		BD20C298204D14CF00805F37 /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BD20C299204D14CF00805F37 /* en */,
+			);
+			name = Localizable.stringsdict;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -818,6 +940,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = AQ2US2UQQ7;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -842,6 +965,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = AQ2US2UQQ7;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -868,6 +992,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -895,6 +1020,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = windmillTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";

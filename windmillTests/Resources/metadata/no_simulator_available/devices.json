@@ -1,0 +1,10 @@
+{
+    "platform": "iOS",
+    "destination": {
+        "udid": "82B8A057-D988-4410-AEBB-05577C9FFD40",
+        "state": "Shutdown",
+        "availability": "(available)",
+        "name": "iPhone 5s"
+    },
+    "version": 10.0
+}

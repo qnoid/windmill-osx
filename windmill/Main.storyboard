@@ -9,8 +9,8 @@
         <scene sceneID="21W-NP-aZ8">
             <objects>
                 <windowController storyboardIdentifier="MainWindowController" id="CPq-1v-PfW" customClass="MainWindowController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
-                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
+                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="0.0" y="100" width="850" height="772"/>
@@ -35,6 +35,26 @@
                                         </connections>
                                     </button>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="753848E6-C7B0-4042-9F18-E44641D1B031" label="scheme" paletteLabel="" toolTip="Set the active scheme" id="hOv-4p-5zj" userLabel="Scheme Item">
+                                    <size key="minSize" width="150" height="28"/>
+                                    <size key="maxSize" width="300" height="31"/>
+                                    <popUpButton key="view" verticalHuggingPriority="750" id="bYB-yA-hcg" userLabel="Scheme Button">
+                                        <rect key="frame" x="0.0" y="14" width="200" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingMiddle" borderStyle="border" imageScaling="proportionallyDown" inset="2" arrowPosition="noArrow" id="LCl-hZ-3cb">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" id="X33-OO-MQJ"/>
+                                            <connections>
+                                                <action selector="didSelectScheme:" target="CPq-1v-PfW" id="BNR-69-iV5"/>
+                                            </connections>
+                                        </popUpButtonCell>
+                                    </popUpButton>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="F4822D55-0245-4D96-8675-044986B53AEC" label="User Message View " paletteLabel="" id="whK-6v-q5N" userLabel="User messages" customClass="UserMessageView" customModule="Windmill" customModuleProvider="target">
+                                    <size key="minSize" width="150" height="22"/>
+                                    <size key="maxSize" width="500" height="22"/>
+                                </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HvT-GS-ycv"/>
                                 <toolbarItem implicitItemIdentifier="1E150C1D-1269-4C11-8C29-4D8E32EE1965" label="Debug Area" paletteLabel="" id="THt-8f-Wrj">
                                     <nil key="toolTip"/>
@@ -55,26 +75,12 @@
                                         <action selector="performSegmentedControlAction:" target="DBm-IY-qca" id="EwY-yz-gEF"/>
                                     </connections>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="26210F42-9F4C-4C7C-9A82-01F876423E62" label="scheme" paletteLabel="" toolTip="Set the active scheme" id="hOv-4p-5zj" userLabel="Scheme Item">
-                                    <size key="minSize" width="100" height="28"/>
-                                    <size key="maxSize" width="300" height="28"/>
-                                    <popUpButton key="view" verticalHuggingPriority="750" id="bYB-yA-hcg" userLabel="Scheme Button">
-                                        <rect key="frame" x="0.0" y="14" width="100" height="28"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <popUpButtonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" alignment="left" lineBreakMode="truncatingMiddle" borderStyle="border" imageScaling="proportionallyDown" inset="2" arrowPosition="noArrow" id="LCl-hZ-3cb">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="menu"/>
-                                            <menu key="menu" id="X33-OO-MQJ"/>
-                                            <connections>
-                                                <action selector="didSelectScheme:" target="CPq-1v-PfW" id="BNR-69-iV5"/>
-                                            </connections>
-                                        </popUpButtonCell>
-                                    </popUpButton>
-                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="EBh-fb-7rc"/>
                                 <toolbarItem reference="hOv-4p-5zj"/>
+                                <toolbarItem reference="HvT-GS-ycv"/>
+                                <toolbarItem reference="whK-6v-q5N"/>
                                 <toolbarItem reference="HvT-GS-ycv"/>
                                 <toolbarItem reference="THt-8f-Wrj"/>
                             </defaultToolbarItems>
@@ -87,6 +93,7 @@
                         <outlet property="panels" destination="ESA-yL-4Qj" id="AqR-iV-xqB"/>
                         <outlet property="schemeButton" destination="bYB-yA-hcg" id="Mvt-Aa-Dlo"/>
                         <outlet property="toolbar" destination="g38-IE-MjZ" id="Tvf-JY-OCS"/>
+                        <outlet property="userMessageView" destination="whK-6v-q5N" id="C49-Z7-kKv"/>
                         <segue destination="CyE-mz-XSv" kind="relationship" relationship="window.shadowedContentViewController" id="TSF-xG-Hgo"/>
                     </connections>
                 </windowController>
@@ -170,7 +177,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="112" y="692" width="120" height="80"/>
+                                <rect key="frame" x="8" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="KlB-Jp-66o"/>
                                     <constraint firstAttribute="height" constant="80" id="oiO-mA-I9r"/>
@@ -181,7 +188,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="CN9-ls-yLA" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="232" y="692" width="120" height="80"/>
+                                <rect key="frame" x="128" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="9ST-gF-LrM"/>
                                     <constraint firstAttribute="height" constant="80" id="GiW-gK-orz"/>
@@ -192,7 +199,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="dmf-os-213" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="352" y="692" width="120" height="80"/>
+                                <rect key="frame" x="248" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="MgJ-pP-u1E"/>
                                     <constraint firstAttribute="height" constant="80" id="VnY-Lz-ERM"/>
@@ -203,7 +210,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="RWe-v3-81B" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="472" y="692" width="120" height="80"/>
+                                <rect key="frame" x="368" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="Ita-7Q-Dj4"/>
                                     <constraint firstAttribute="width" constant="120" id="fgF-3l-vdS"/>
@@ -214,7 +221,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="miV-du-5Xh" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="592" y="692" width="120" height="80"/>
+                                <rect key="frame" x="488" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="elv-Xf-MpB"/>
                                     <constraint firstAttribute="width" constant="120" id="wW7-ef-2Ce"/>
@@ -225,7 +232,7 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="712" y="692" width="120" height="80"/>
+                                <rect key="frame" x="608" y="692" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="XEZ-IE-CsL"/>
                                     <constraint firstAttribute="height" constant="80" id="fff-eQ-PUw"/>
@@ -235,24 +242,8 @@
                                     <userDefinedRuntimeAttribute type="image" keyPath="image" value="lights-deploy"/>
                                 </userDefinedRuntimeAttributes>
                             </customView>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PE8-MR-CeU">
-                                <rect key="frame" x="8" y="676" width="96" height="96"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="96" id="ApN-rg-OiG"/>
-                                    <constraint firstAttribute="height" constant="96" id="ycV-pj-WBC"/>
-                                </constraints>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="windmill-activity-indicator" id="hqH-2H-sWQ"/>
-                            </imageView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UBj-vk-iA5" userLabel="activity">
-                                <rect key="frame" x="41" y="659" width="30" height="17"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="idle" placeholderString="" id="Cu7-M4-32H">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <containerView translatesAutoresizingMaskIntoConstraints="NO" id="gzb-Ou-pnU">
-                                <rect key="frame" x="8" y="220" width="822" height="431"/>
+                                <rect key="frame" x="8" y="221" width="822" height="431"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="431" id="5Uw-cS-Rcb"/>
                                 </constraints>
@@ -262,30 +253,24 @@
                             </containerView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="UBj-vk-iA5" firstAttribute="centerX" secondItem="PE8-MR-CeU" secondAttribute="centerX" id="1Vq-WC-kfz"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="1y8-gi-M0v"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="leading" secondItem="RWe-v3-81B" secondAttribute="trailing" id="35L-V8-MHN"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
-                            <constraint firstItem="PE8-MR-CeU" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="50L-ZD-ubj"/>
-                            <constraint firstItem="PE8-MR-CeU" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="8Bs-3t-qtp"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="top" secondItem="RWe-v3-81B" secondAttribute="top" id="8mw-SB-RUo"/>
-                            <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="PE8-MR-CeU" secondAttribute="trailing" constant="8" id="IVm-1J-iym"/>
                             <constraint firstAttribute="trailing" secondItem="gzb-Ou-pnU" secondAttribute="trailing" constant="20" symbolic="YES" id="KZq-5I-rdC"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="Nec-aa-6DJ"/>
+                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="leading" secondItem="6j5-vW-ygG" secondAttribute="leading" constant="8" id="Oj0-oB-cFC"/>
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="top" secondItem="miV-du-5Xh" secondAttribute="top" id="S21-NR-RYC"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
-                            <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="RWe-v3-81B" secondAttribute="bottom" constant="16" id="TCd-e9-mOn"/>
-                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="top" secondItem="UBj-vk-iA5" secondAttribute="bottom" constant="8" id="XWD-hG-0EB"/>
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="leading" secondItem="miV-du-5Xh" secondAttribute="trailing" id="Zsh-7k-CpK"/>
-                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="leading" secondItem="PE8-MR-CeU" secondAttribute="leading" id="lMI-ri-Fkg"/>
+                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="bottom" constant="40" id="dxk-ch-G7r"/>
+                            <constraint firstItem="bvb-g2-0Id" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" placeholder="YES" id="lle-cj-2KR"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="top" secondItem="dmf-os-213" secondAttribute="top" id="ta7-EF-JCs"/>
-                            <constraint firstItem="PE8-MR-CeU" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" placeholder="YES" id="uCZ-sc-I7w"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="leading" secondItem="dmf-os-213" secondAttribute="trailing" id="uQc-ac-f5w"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="leading" secondItem="bvb-g2-0Id" secondAttribute="trailing" id="ufr-5Q-9C2"/>
-                            <constraint firstItem="UBj-vk-iA5" firstAttribute="top" secondItem="PE8-MR-CeU" secondAttribute="bottom" id="zIb-b7-VaY"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="activityTextfield" destination="UBj-vk-iA5" id="EGd-rS-MDj"/>
                         <outlet property="archiveActivityView" destination="RWe-v3-81B" id="1xC-cH-ScX"/>
                         <outlet property="buildActivityView" destination="CN9-ls-yLA" id="qpB-kt-nGs"/>
                         <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
@@ -293,7 +278,6 @@
                         <outlet property="exportActivityView" destination="miV-du-5Xh" id="3fX-jA-mId"/>
                         <outlet property="mainView" destination="6j5-vW-ygG" id="dZY-cO-rs9"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
-                        <outlet property="windmillImageView" destination="PE8-MR-CeU" id="Jcd-Qv-2UU"/>
                     </connections>
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -407,6 +391,12 @@
 Windmill will perform a full checkout of the remote repo and start monitoring.</string>
                                             <connections>
                                                 <action selector="openDocument:" target="aS9-1w-R0E" id="9AN-uj-Nnq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="TJk-8K-ves"/>
+                                        <menuItem title="Close Window" keyEquivalent="W" id="sOx-vr-r3T">
+                                            <connections>
+                                                <action selector="performClose:" target="aS9-1w-R0E" id="sLn-N0-qy1"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -567,6 +557,23 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="toggleFullScreen:" target="aS9-1w-R0E" id="mIh-db-YON"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Navigate" id="tpV-sK-Rtq">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Navigate" id="xY4-Lv-e5p">
+                                    <items>
+                                        <menuItem title="Jump to Next Issue" keyEquivalent="'" id="cfx-7V-lRI" userLabel="Jump to Next Issue">
+                                            <connections>
+                                                <action selector="jumpToNextIssue:" target="jgg-ZM-qio" id="UN0-Ps-lUM"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Jump to Previous Issue" keyEquivalent="&quot;" id="5W7-6M-ziA" userLabel="Jump to Previous Issue">
+                                            <connections>
+                                                <action selector="jumpToPreviousIssue:" target="jgg-ZM-qio" id="P2S-UB-ytI"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -766,6 +773,5 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <image name="lights-export" width="110" height="44"/>
         <image name="lights-test" width="110" height="44"/>
         <image name="right panel" width="18" height="14"/>
-        <image name="windmill-activity-indicator" width="48" height="48"/>
     </resources>
 </document>

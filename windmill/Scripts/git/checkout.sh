@@ -5,7 +5,7 @@
 # REPO_NAME
 # REMOTE
 
-REPO_NAME=$1
+REPOSITORY_PATH_FOR_PROJECT=$1
 BRANCH=$2
 REMOTE=$3
 SCRIPTS_ROOT=$4
@@ -16,14 +16,14 @@ set -e
 
 
 function git_pull(){
-(git -C "${REPO_NAME}" fetch --recurse-submodules; git -C "${REPO_NAME}" reset --hard origin/"$BRANCH"; git -C "${REPO_NAME}" submodule update)
+(git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules; git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH"; git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update)
 }
 
 function git_clone(){
-(git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPO_NAME}")
+(git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}")
 }
 
-directory_exist_at_path "${REPO_NAME}" git_pull git_clone
+directory_exist_at_path "${REPOSITORY_PATH_FOR_PROJECT}" git_pull git_clone
 
 
 # Cases

@@ -28,8 +28,22 @@ class ProcessManagerMonitorWillDidLaunch: ProcessMonitor {
         expectationDidLaunch.fulfill()
     }
     
-    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
 
+    }
+}
+
+class ProcessManagerMonitorCanRecover: ProcessMonitor {
+    
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+    }
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
+        XCTAssertTrue(canRecover)
     }
 }
 
@@ -49,7 +63,7 @@ class WillExitWithErrorExpectation: ProcessMonitor {
         
     }
     
-    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, userInfo: [AnyHashable : Any]?) {
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
         XCTAssertFalse(isSuccess)
         XCTAssertFalse(process.terminationStatus == 0)
         expectation.fulfill()
@@ -62,11 +76,9 @@ class ProcessManagerTest: XCTestCase {
         let manager = ProcessManager()
         let repoName = "with white space"
         let validOrigin = "git@github.com:windmill-io/blank.git"
-        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))        
         
-        checkoutDirectory.create()
-        
-        let process = Process.makeCheckout(checkoutURL: checkoutDirectory.URL, project: Project(name: repoName, scheme: "foo", origin: validOrigin))
+        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(name: repoName, scheme: "foo", origin: validOrigin))
         
         defer {
             var trashDirectory = FileManager.default.trashDirectoryURL
@@ -89,7 +101,7 @@ class ProcessManagerTest: XCTestCase {
         let repoName = "any"
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(checkoutURL: FileManager.default.trashDirectoryURL, project: Project(name: repoName, scheme: "foo", origin: "invalid"))
+        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: Project(name: repoName, scheme: "foo", origin: "invalid"))
         
         defer {
             try? FileManager.default.removeItem(at: url)
@@ -147,5 +159,30 @@ class ProcessManagerTest: XCTestCase {
         }
         
         wait(for: [expectationWillLaunch, expectationDidLaunch], timeout: 5.0, enforceOrder: true)
+    }
+    
+    func testGivenRecoverOnRoute66AssertCanRecover() {
+        
+        let canRecover = self.expectation(description: #function)
+        let monitor = ProcessManagerMonitorCanRecover()
+
+        let manager = ProcessManager()
+        manager.monitor = monitor
+        
+        let process = Process()
+        process.launchPath = Bundle(for: ProcessManagerTest.self).url(forResource: "exit", withExtension: "sh")?.path
+        process.arguments = ["66"]
+
+        let sequence = manager.sequence(process: process)
+        
+        let route66 = RecoverableProcess.recover(terminationStatus: 66) { (_) in
+            canRecover.fulfill()
+        }
+        
+        DispatchQueue.main.async {
+            sequence.launch(recover: route66)
+        }
+        
+        wait(for: [canRecover], timeout: 5.0)
     }
 }

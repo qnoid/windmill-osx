@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="UserMessageView" customModule="Windmill" customModuleProvider="target">
+            <connections>
+                <outlet property="activityTextfield" destination="8QU-Rq-i6f" id="5O1-8R-ARI"/>
+                <outlet property="errorButton" destination="Nob-aV-c9J" id="Bp1-6H-alw"/>
+                <outlet property="prettyLogTextField" destination="rZT-y6-pZx" id="uhY-jB-10M"/>
+                <outlet property="targetNameTextField" destination="bob-uZ-wsW" id="bAy-SL-vfa"/>
+                <outlet property="windmillImageView" destination="GJn-1M-J7D" id="3Rl-NM-3aR"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <view id="eTn-vW-50w" customClass="UserMessageContentView" customModule="Windmill" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="498" height="20"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GJn-1M-J7D">
+                    <rect key="frame" x="10" y="0.0" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="Pi3-GF-RcH"/>
+                        <constraint firstAttribute="width" constant="20" id="qcy-lo-2an"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="FAm-BQ-ett"/>
+                </imageView>
+                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8QU-Rq-i6f">
+                    <rect key="frame" x="38" y="2" width="26" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Idle" drawsBackground="YES" id="Dre-Bh-Gg2">
+                        <font key="font" metaFont="menu"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bob-uZ-wsW" userLabel="Target Name Textfield">
+                    <rect key="frame" x="68" y="2" width="4" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" drawsBackground="YES" id="6ie-5A-kEI">
+                        <font key="font" metaFont="menu"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rZT-y6-pZx" userLabel="Pretty log Textfield">
+                    <rect key="frame" x="80" y="2" width="377" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" drawsBackground="YES" id="Rv3-Hg-ylj">
+                        <font key="font" metaFont="menu"/>
+                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button horizontalHuggingPriority="252" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Nob-aV-c9J" userLabel="Error Button">
+                    <rect key="frame" x="465" y="0.0" width="27" height="20"/>
+                    <buttonCell key="cell" type="square" title="0" bezelStyle="shadowlessSquare" image="error" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="Ima-v3-52K" userLabel="Button">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="showReportsWindowController:" target="-1" id="H5F-Ac-8rD"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Nob-aV-c9J" firstAttribute="top" secondItem="eTn-vW-50w" secondAttribute="top" id="093-l5-Cat"/>
+                <constraint firstItem="Nob-aV-c9J" firstAttribute="centerY" secondItem="rZT-y6-pZx" secondAttribute="centerY" id="6PI-2Z-6KI"/>
+                <constraint firstItem="bob-uZ-wsW" firstAttribute="centerY" secondItem="8QU-Rq-i6f" secondAttribute="centerY" id="6jH-de-0B9"/>
+                <constraint firstAttribute="trailing" secondItem="Nob-aV-c9J" secondAttribute="trailing" constant="6" id="AHL-gT-Y2V"/>
+                <constraint firstItem="rZT-y6-pZx" firstAttribute="leading" secondItem="bob-uZ-wsW" secondAttribute="trailing" constant="8" id="D95-eh-SfH"/>
+                <constraint firstItem="GJn-1M-J7D" firstAttribute="centerY" secondItem="eTn-vW-50w" secondAttribute="centerY" id="E15-Gn-MPn"/>
+                <constraint firstItem="8QU-Rq-i6f" firstAttribute="centerY" secondItem="GJn-1M-J7D" secondAttribute="centerY" id="Sbj-9n-yAA"/>
+                <constraint firstItem="GJn-1M-J7D" firstAttribute="leading" secondItem="eTn-vW-50w" secondAttribute="leading" constant="10" id="TmM-1h-Tf7"/>
+                <constraint firstItem="8QU-Rq-i6f" firstAttribute="leading" secondItem="GJn-1M-J7D" secondAttribute="trailing" constant="8" id="b0t-ig-4Ss"/>
+                <constraint firstItem="rZT-y6-pZx" firstAttribute="centerY" secondItem="bob-uZ-wsW" secondAttribute="centerY" id="bXb-F5-c8w"/>
+                <constraint firstItem="Nob-aV-c9J" firstAttribute="leading" secondItem="rZT-y6-pZx" secondAttribute="trailing" constant="8" id="ifI-tS-0mB"/>
+                <constraint firstAttribute="bottom" secondItem="Nob-aV-c9J" secondAttribute="bottom" id="lXz-7V-boX"/>
+                <constraint firstItem="bob-uZ-wsW" firstAttribute="leading" secondItem="8QU-Rq-i6f" secondAttribute="trailing" constant="4" id="uG4-dG-iFC"/>
+            </constraints>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
+                    <color key="value" red="0.28235294119999998" green="0.28235294119999998" blue="0.28235294119999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+        </view>
+    </objects>
+    <resources>
+        <image name="error" width="14" height="14"/>
+    </resources>
+</document>
