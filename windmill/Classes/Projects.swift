@@ -15,7 +15,7 @@ typealias ProjectsOutputStream = OutputStream
 extension InputStream
 {
     class func inputStreamOnProjects() -> ProjectsInputStream {
-        return InputStream(url: Directory.Windmill.ApplicationDirectory().file("projects.json").URL)!
+        return InputStream(url: Directory.Windmill.ApplicationSupportDirectory().file("projects.json").URL)!
     }
     
     func read() -> Array<Project>
@@ -43,7 +43,7 @@ extension InputStream
 extension OutputStream
 {
     class func outputStreamOnProjects() -> ProjectsOutputStream {
-        return OutputStream(url: Directory.Windmill.ApplicationDirectory().file("projects.json").URL, append: false)!
+        return OutputStream(url: Directory.Windmill.ApplicationSupportDirectory().file("projects.json").URL, append: false)!
     }
     
     func write(_ projects: Array<Project>)

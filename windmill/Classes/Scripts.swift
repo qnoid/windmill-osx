@@ -15,7 +15,9 @@ struct Scripts
     struct Xcodebuild {
         
         static let BUILD : BashScript = "Scripts/xcodebuild/build"
-        static let TEST : BashScript = "Scripts/xcodebuild/test"
+        static let BUILD_FOR_TESTING : BashScript = "Scripts/xcodebuild/build-for-testing"
+        static let TEST_SKIP : BashScript = "Scripts/xcodebuild/test-skip"
+        static let TEST_WITHOUT_BUILDING : BashScript = "Scripts/xcodebuild/test-without-building"
         static let ARCHIVE : BashScript = "Scripts/xcodebuild/archive"
         static let EXPORT : BashScript = "Scripts/xcodebuild/export"
         static let DEPLOY : BashScript = "Scripts/xcodebuild/deploy"

@@ -26,24 +26,31 @@ enum Layout {
     }
 }
 
-extension NSView {
+extension NSObject {
     
-    func wml_load<T: NSView>(view: T.Type) -> NSView? {
+    func wml_load<T>(name: NSNib.Name) -> T? {
         
         var topLevelObjects: NSArray?
-        Bundle(for: type(of: self)).loadNibNamed(NSNib.Name(rawValue: String(describing: view)), owner: self, topLevelObjects: &topLevelObjects)
+        Bundle(for: type(of: self)).loadNibNamed(name, owner: self, topLevelObjects: &topLevelObjects)
         
         guard let views = topLevelObjects else {
             return nil
         }
         
         for object in views {
-            if let containerView = object as? NSView {
+            if let containerView = object as? T {
                 return containerView
             }
         }
         
         return nil
+    }
+}
+
+extension NSView {
+    
+    func wml_load<T: NSView>(view: T.Type) -> NSView? {
+    return wml_load(name: NSNib.Name(rawValue: String(describing: view)))
     }
     
     func wml_addSubview(view: NSView, layout: Layout = .centered) {

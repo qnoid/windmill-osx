@@ -5,17 +5,38 @@
   Created by Markos Charatzas on 11/03/2015.
   Copyright (c) 2015 qnoid.com. All rights reserved.
 */
-"windmill.paid"="You can unlock this feature with a windmill subscription.";
+"windmill.paid"="You can unlock this feature with a Windmill subscription.";
 "windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will clone the remote repo and start monitoring.";
-"windmill.activity.checkout.description"="checking out";
-"windmill.activity.build.description"="building";
+"windmill.activity.checkout.description"="Checking out";
+"windmill.activity.checkout.error.description"="Checkout Failed";
+"windmill.activity.checkout.error.failure.reason"="Activity checkout failed with exit code ";
+"windmill.activity.build.description"="Building";
+"windmill.activity.build.error.description"="Build Failed";
+"windmill.activity.build.error.failure.reason"="Command xcodebuild failed with exit code ";
 "windmill.activity.showBuildSettings.description"="reticulating splines";
-"windmill.activity.test.description"="testing";
-"windmill.activity.devices.description"="counting sheep";
+"windmill.activity.showBuildSettings.error.description"="Failed";
+"windmill.activity.showBuildSettings.error.failure.reason"="Windmill failed with exit code ";
+"windmill.activity.test.description"="Testing";
+"windmill.activity.test.error.description"="Test Failed";
+"windmill.activity.test.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.devices.description"="counting digital sheep";
+"windmill.activity.devices.error.description"="Failed";
+"windmill.activity.devices.error.failure.reason"="Windmill failed with exit code ";
 "windmill.activity.readProjectConfiguration.description"="feeling optimistic";
-"windmill.activity.archive.description"="archiving";
-"windmill.activity.export.description"="exporting";
-"windmill.activity.deploy.description"="deploying";
+"windmill.activity.readProjectConfiguration.error.description"="Failed";
+"windmill.activity.readProjectConfiguration.error.failure.reason"="Windmill failed with exit code ";
+"windmill.activity.archive.description"="Archiving";
+"windmill.activity.archive.error.description"="Archive Failed";
+"windmill.activity.archive.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.export.description"="Exporting";
+"windmill.activity.export.error.description"="Export Failed";
+"windmill.activity.export.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.deploy.description"="Deploying";
+"windmill.activity.deploy.error.description"="Deploy Failed";
+"windmill.activity.deploy.error.failure.reason"="Activity deploy failed with exit code ";
+"windmill.activity.monitor.description"="Monitoring";
+"windmill.activity.monitor.error.description"="Monitoring Failed";
+"windmill.activity.monitor.error.failure.reason"="Windmill failed with exit code ";
 "windmill.toolTip.active.checkout"="Windmill is currently checking out your project from the remote repo.";
 "windmill.toolTip.active.build"="Windmill is currently building your app to make sure you haven't forgotten to check in any files.";
 "windmill.toolTip.active.test"="Windmill is currently running any test targets the project has.";
@@ -23,6 +44,9 @@
 "windmill.toolTip.active.export"="Windmill is exporting your project's IPA. This allows you to do in-house testing with registered devices.";
 "windmill.toolTip.active.deploy"="Windmill is making the project IPA available for OTA distribution. This enables you to demo your app on a device at a moment's notice.";
 "windmill.toolTip.active.monitor"="Windmill is monitoring the project repository for changes. As soon as a new commit is picked up, it will pull the changes and verify everything still works.";
+"windmill.toolTip.active.showBuildSettings"="reticulating splines";
+"windmill.toolTip.active.devices"="counting digital sheep";
+"windmill.toolTip.active.readProjectConfiguration"="feeling optimistic";
 "windmill.toolTip.active"="There is a light breeze.";
 "windmill.repo.error.description"="No git repository under %@";
 "windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\n* `git init` to create a new git.\n* `git remote add origin <url>` to add a remote origin.\n* `git push -u origin master` to push the folder to the repo.";
@@ -35,7 +59,7 @@
 "windmill.ui.toolbar.view.showSidePanel"="Show Side Panel";
 "windmill.ui.toolbar.view.hideSidePanel"="Hide Side Panel";
 "windmill.ui.activityTextfield.idle"="idle";
-"windmill.ui.activityTextfield.stopped"="stopped";
+"windmill.ui.activityTextfield.stopped"="Stopped";
 "artefact.toolTip"="This artefact will become available once you complete the steps outlined.";
 "notification.gettingstarted"="Use the menu icon to start monitoring a project.";
 "notification.gettingstarted.action"="Show me";

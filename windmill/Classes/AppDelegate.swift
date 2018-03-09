@@ -69,6 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
     
+    var reportsWindowController: ReportsWindowController?
     var mainViewController: MainViewController?
     
     lazy var keychain: Keychain = Keychain.defaultKeychain()
@@ -237,6 +238,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(openDocument(_:)) {
             return self.mainWindowViewController?.window != nil
+        } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
+            
+            guard let reportsWindowController = self.reportsWindowController else {
+                return false
+            }
+            
+            return reportsWindowController.errorSummariesViewController?.errorSummaries.count != 0
         }
         
         return true
@@ -283,13 +291,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     @objc func willStartProject(_ aNotification: Notification) {
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.statusItem.button?.toolTip = ""
+        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.cleanMenu.isEnabled = false
         self.cleanProjectMenu.isEnabled = false
+        self.reportsWindowController?.errorSummariesViewController?.errorSummaries = []
     }
     
     @objc func windmillMonitoringProject(_ aNotification: Notification) {
-        self.activityMenuItem.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
-        self.activityMenuItem.title = "monitoring"
+        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
+        self.activityMenuItem.title = NSLocalizedString("windmill.activity.monitor.description", comment: "")
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
@@ -298,7 +308,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return
         }
 
-        self.activityMenuItem.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
         self.activityMenuItem.title = activity.description
     }
 
@@ -307,15 +316,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         NSApplication.shared.requestUserAttention(.criticalRequest)
         
         if let error = aNotification.userInfo?["error"] as? NSError {
-            statusItem.button?.toolTip = error.localizedDescription
+            self.statusItem.button?.toolTip = error.localizedDescription
+            self.activityMenuItem.toolTip = error.localizedFailureReason
+        } else {
+            self.statusItem.button?.toolTip = ""
+            self.activityMenuItem.toolTip = ""
         }
 
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
-        self.activityMenuItem.toolTip = ""
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
         self.cleanMenu.isEnabled = true
         self.cleanProjectMenu.isEnabled = true
-        self.toggleDebugArea(isCollapsed: false)
+        
+        guard let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] else {
+            return
+        }
+     
+        self.reportsWindowController = self.mainWindowViewController?.reportsWindowController()
+        self.reportsWindowController?.errorSummariesViewController?.errorSummaries = errorSummaries
     }
 
     func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
@@ -354,6 +372,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         let pipeline = Windmill.make(project: project)
         self.mainWindowViewController?.windmill = pipeline.windmill
         self.toggleDebugArea(sender: sender, isCollapsed: true)
+        self.reportsWindowController?.close()
         
         self.start(windmill: pipeline.windmill, sequence: pipeline.sequence)
     }
@@ -390,5 +409,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 self.run(self.runMenuItem)
             }
         }
+    }
+    
+    @IBAction func showReportsWindowController(_ sender: Any?) {
+        mainWindowViewController?.show(reportsWindowController: self.reportsWindowController)
+    }
+    
+    @IBAction func jumpToNextIssue(_ sender: Any) {
+        showReportsWindowController(sender)
+        reportsWindowController?.errorSummariesViewController?.jumpToNextIssue()
+    }
+    
+    @IBAction func jumpToPreviousIssue(_ sender: Any) {
+        showReportsWindowController(sender)
+        reportsWindowController?.errorSummariesViewController?.jumpToPreviousIssue()
     }
 }

@@ -23,6 +23,18 @@ extension NSColor
         static func purple() -> NSColor {
             return NSColor(red: 255/255, green: 47/255, blue: 146/255, alpha: 1.0)
         }
+        
+        static func currentLine() -> NSColor {
+            return NSColor(red: 232/255, green: 242/255, blue: 255/255, alpha: 1.0)
+        }
+        
+        static func errorLine() -> NSColor {
+            return NSColor(red: 254/255, green: 239/255, blue: 234/255, alpha: 1.0)
+        }
+        
+        static func gray() -> NSColor {
+            return NSColor(red: 72/255, green: 72/255, blue: 72/255, alpha: 1.0)
+        }
     }
     
     class func greenBranchColor() -> NSColor {

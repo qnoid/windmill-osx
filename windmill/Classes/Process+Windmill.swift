@@ -63,16 +63,8 @@ extension Process
         }
     }
     
-    func failureDescription(type: ActivityType, exitStatus: Int32) -> String {
-        
-        switch type {
-        case .checkout, .deploy:
-            return "Activity '\(String(describing: type.rawValue))' exited with exit code: (\(exitStatus))"
-        case .build, .test, .archive, .export:
-            return "Command xcodebuild failed with exit code \(exitStatus)"
-        case .showBuildSettings, .devices, .readProjectConfiguration:
-            return "Windmill '\(String(describing: type.rawValue))' failed with exit code: (\(exitStatus))"
-        }
+    func localizedFailureReason(type: ActivityType, exitStatus: Int32) -> String {
+        return NSLocalizedString("windmill.activity.\(type.rawValue).error.failure.reason", comment: "") + "\(exitStatus)"
     }
     
     fileprivate class func pathForDir(_ name: String) -> String! {
@@ -113,57 +105,77 @@ extension Process
         return process
     }
 
-    public static func makeCheckout(checkoutURL locationURL: Repository.LocalURL, project: Project, branch: String = "master") -> Process {
+    public static func makeCheckout(sourceDirectory: ProjectSourceDirectory, project: Project, branch: String = "master") -> Process {
         
         let process = Process()
-        process.currentDirectoryURL = locationURL
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [project.name, branch, project.origin, self.pathForDir("Scripts")]
+        process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL) -> Process {
+    public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+        
+        let process = Process()
+        process.currentDirectoryPath = repositoryLocalURL.path
+        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_FOR_TESTING, ofType: "sh")!
+        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
+        process.qualityOfService = .utility
+        
+        return process
+    }
+
+    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path]
+        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    
-    static func makeTest(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL) -> Process {
+    static func makeTestWithoutBuilding(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, derivedDataURL.path]
+        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_WITHOUT_BUILDING, ofType: "sh")!
+        process.arguments = [devices.url.path, scheme, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeArchive(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .release, derivedDataURL: URL, archive: Archive) -> Process {
+    static func makeTestSkip(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+        
+        let process = Process()
+        process.currentDirectoryPath = repositoryLocalURL.path
+        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_SKIP, ofType: "sh")!
+        process.arguments = [devices.url.path, scheme, derivedDataURL.path, resultBundle.url.path]
+        process.qualityOfService = .utility
+        
+        return process
+    }
+    
+    public static func makeArchive(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .release, derivedDataURL: URL, archive: Archive, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        process.arguments = [scheme, configuration.name, derivedDataURL.path, archive.url.path]
+        process.arguments = [scheme, configuration.name, derivedDataURL.path, archive.url.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeExport(repositoryLocalURL: Repository.LocalURL, archive: Archive, exportDirectoryURL: URL) -> Process {
+    public static func makeExport(repositoryLocalURL: Repository.LocalURL, archive: Archive, exportDirectoryURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
-        process.arguments = [archive.url.path, exportDirectoryURL.path, self.pathForDir("resources")]
+        process.arguments = [archive.url.path, exportDirectoryURL.path, self.pathForDir("resources"), resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process

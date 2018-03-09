@@ -5,8 +5,9 @@ SCHEME=$1
 CONFIGURATION=$2
 DERIVED_DATA_PATH_FOR_PROJECT=$3
 ARCHIVE_PATH_FOR_PROJECT=$4
+RESULT_BUNDLE_PATH_FOR_PROJECT=$5
 
-xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}"
+xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}"
 
 ## Archive
 #

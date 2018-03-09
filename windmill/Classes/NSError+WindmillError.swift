@@ -73,9 +73,17 @@ extension NSError
     class func errorTermination(process: Process, for activityType: ActivityType, status code: Int32) -> NSError
     {
         let domain = process.domain(type: activityType)
-        let failureDescription = process.failureDescription(type: activityType, exitStatus: code)
+        let localizedFailureReason = process.localizedFailureReason(type: activityType, exitStatus: code)
         
         return NSError(domain: domain, code: Int(code), userInfo:
-            [NSLocalizedDescriptionKey: failureDescription])
+            [NSLocalizedDescriptionKey: NSLocalizedString("windmill.activity.\(activityType.rawValue).error.description", comment: "Failed"), NSLocalizedFailureReasonErrorKey: localizedFailureReason])
     }
+    
+    class func activityError(underlyingError error: NSError, for activityType: ActivityType, status code: Int32, info: ResultBundle.Info) -> NSError
+    {
+        return NSError(domain: XcodeBuildErrorDomain, code: Int(code), userInfo:
+            [NSUnderlyingErrorKey: error, NSLocalizedDescriptionKey: NSLocalizedString("windmill.activity.\(activityType.rawValue).error.description", comment: "Failed"), NSLocalizedFailureReasonErrorKey: String.localizedStringWithFormat(NSLocalizedString("%d \(activityType.rawValue) error(s).", comment: ""), info.errorCount)])
+        
+    }
+
 }

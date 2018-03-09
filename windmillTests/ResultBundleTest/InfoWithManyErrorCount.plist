@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Actions</key>
+	<array>
+		<dict>
+			<key>ActionResult</key>
+			<dict>
+				<key>AnalyzerWarningCount</key>
+				<integer>0</integer>
+				<key>ErrorCount</key>
+				<integer>0</integer>
+				<key>Status</key>
+				<string>IDEActionResultStatus_NotRequested</string>
+				<key>TestsCount</key>
+				<integer>0</integer>
+				<key>TestsFailedCount</key>
+				<integer>0</integer>
+				<key>WarningCount</key>
+				<integer>0</integer>
+			</dict>
+			<key>BuildResult</key>
+			<dict>
+				<key>AnalyzerWarningCount</key>
+				<integer>0</integer>
+				<key>AnalyzerWarningSummaries</key>
+				<array/>
+				<key>ErrorCount</key>
+				<integer>0</integer>
+				<key>ErrorSummaries</key>
+				<array/>
+				<key>LogPath</key>
+				<string>1_Run/build.xcactivitylog</string>
+				<key>Status</key>
+				<string>IDEActionResultStatus_Succeeded</string>
+				<key>TestFailureSummaries</key>
+				<array/>
+				<key>TestsCount</key>
+				<integer>0</integer>
+				<key>TestsFailedCount</key>
+				<integer>0</integer>
+				<key>WarningCount</key>
+				<integer>0</integer>
+				<key>WarningSummaries</key>
+				<array/>
+			</dict>
+			<key>EndedTime</key>
+			<date>2018-03-03T04:20:48Z</date>
+			<key>RunDestination</key>
+			<dict>
+				<key>LocalComputer</key>
+				<dict>
+					<key>BusSpeedInMHz</key>
+					<integer>100</integer>
+					<key>CPUCount</key>
+					<integer>1</integer>
+					<key>CPUKind</key>
+					<string>Intel Core i7</string>
+					<key>CPUSpeedInMHz</key>
+					<integer>2300</integer>
+					<key>Identifier</key>
+					<string>0457FD86-F672-59BB-95B8-2627B95F29DC</string>
+					<key>IsConcreteDevice</key>
+					<true/>
+					<key>LogicalCPUCoresPerPackage</key>
+					<integer>8</integer>
+					<key>ModelCode</key>
+					<string>MacBookPro11,3</string>
+					<key>ModelName</key>
+					<string>MacBook Pro</string>
+					<key>ModelUTI</key>
+					<string>com.apple.macbookpro-15-retina-display</string>
+					<key>Name</key>
+					<string>My Mac</string>
+					<key>NativeArchitecture</key>
+					<string>x86_64h</string>
+					<key>OperatingSystemVersion</key>
+					<string>10.13.3</string>
+					<key>OperatingSystemVersionWithBuildNumber</key>
+					<string>10.13.3 (17D102)</string>
+					<key>PhysicalCPUCoresPerPackage</key>
+					<integer>4</integer>
+					<key>Platform</key>
+					<dict>
+						<key>Identifier</key>
+						<string>com.apple.platform.macosx</string>
+						<key>Name</key>
+						<string>macOS</string>
+					</dict>
+					<key>RAMSizeInMegabytes</key>
+					<integer>16384</integer>
+				</dict>
+				<key>Name</key>
+				<string>iPhone 5s</string>
+				<key>TargetArchitecture</key>
+				<string>x86_64</string>
+				<key>TargetDevice</key>
+				<dict>
+					<key>Identifier</key>
+					<string>B7901B24-A855-4767-860B-A34F11168F4D</string>
+					<key>IsConcreteDevice</key>
+					<true/>
+					<key>ModelCode</key>
+					<string>iPhone6,1</string>
+					<key>ModelName</key>
+					<string>iPhone 5s</string>
+					<key>ModelUTI</key>
+					<string>com.apple.iphone-5s-a1453-d4c5b3</string>
+					<key>Name</key>
+					<string>iPhone 5s</string>
+					<key>NativeArchitecture</key>
+					<string>x86_64</string>
+					<key>OperatingSystemVersion</key>
+					<string>11.2</string>
+					<key>OperatingSystemVersionWithBuildNumber</key>
+					<string>11.2 (15C107)</string>
+					<key>Platform</key>
+					<dict>
+						<key>Identifier</key>
+						<string>com.apple.platform.iphonesimulator</string>
+						<key>Name</key>
+						<string>iOS Simulator</string>
+					</dict>
+				</dict>
+				<key>TargetSDK</key>
+				<dict>
+					<key>Identifier</key>
+					<string>iphonesimulator11.2</string>
+					<key>IsInternal</key>
+					<false/>
+					<key>Name</key>
+					<string>Simulator - iOS 11.2</string>
+					<key>OperatingSystemVersion</key>
+					<string>11.2</string>
+				</dict>
+			</dict>
+			<key>SchemeCommand</key>
+			<string>Run</string>
+			<key>SchemeTask</key>
+			<string>Build</string>
+			<key>StartedTime</key>
+			<date>2018-03-03T04:20:45Z</date>
+			<key>Title</key>
+			<string>Clean &quot;project-with-submodules&quot;</string>
+		</dict>
+		<dict>
+			<key>ActionResult</key>
+			<dict>
+				<key>AnalyzerWarningCount</key>
+				<integer>0</integer>
+				<key>ErrorCount</key>
+				<integer>0</integer>
+				<key>Status</key>
+				<string>IDEActionResultStatus_NotRequested</string>
+				<key>TestsCount</key>
+				<integer>0</integer>
+				<key>TestsFailedCount</key>
+				<integer>0</integer>
+				<key>WarningCount</key>
+				<integer>0</integer>
+			</dict>
+			<key>BuildResult</key>
+			<dict>
+				<key>AnalyzerWarningCount</key>
+				<integer>0</integer>
+				<key>AnalyzerWarningSummaries</key>
+				<array/>
+				<key>ErrorCount</key>
+				<integer>2</integer>
+				<key>ErrorSummaries</key>
+				<array>
+					<dict>
+						<key>DocumentLocationData</key>
+						<data>YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoKQHCBscVSRudWxs2gkKCwwNDg8QERITFBQVFhcYGRgaW2RvY3VtZW50VVJMXxAUc3RhcnRpbmdDb2x1bW5OdW1iZXJfEBJlbmRpbmdDb2x1bW5OdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxlbl8QEGxvY2F0aW9uRW5jb2RpbmdWJGNsYXNzXxAQZW5kaW5nTGluZU51bWJlcll0aW1lc3RhbXBfEBJzdGFydGluZ0xpbmVOdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxvY4ACEBIQABABgAMQEYAAEQFBXxB0ZmlsZTovLy9Vc2Vycy9xbm9pZC9EZXZlbG9wZXIvd2luZG1pbGwtZXhhbXBsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvVmlld0NvbnRyb2xsZXIuc3dpZnTSHR4fIFokY2xhc3NuYW1lWCRjbGFzc2VzXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb26jISIjXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb25fEBNEVlREb2N1bWVudExvY2F0aW9uWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hpdmVy0SYnVHJvb3SAAQAIABEAGgAjAC0AMgA3ADwAQgBXAGMAegCPAKMAtgC9ANAA2gDvAQMBBQEHAQkBCwENAQ8BEQEUAYsBkAGbAaQBvgHCAdwB8gH7Ag0CEAIVAAAAAAAAAgEAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAhc=</data>
+						<key>IssueType</key>
+						<string>Swift Compiler Error</string>
+						<key>Message</key>
+						<string>Module &apos;Dependency&apos; has no member named &apos;Fooo&apos;</string>
+						<key>Target</key>
+						<string>project-with-submodules</string>
+					</dict>
+					<dict>
+						<key>DocumentLocationData</key>
+						<data>YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoKQHCBscVSRudWxs2gkKCwwNDg8QERITFBQVFhcYGRgaW2RvY3VtZW50VVJMXxAUc3RhcnRpbmdDb2x1bW5OdW1iZXJfEBJlbmRpbmdDb2x1bW5OdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxlbl8QEGxvY2F0aW9uRW5jb2RpbmdWJGNsYXNzXxAQZW5kaW5nTGluZU51bWJlcll0aW1lc3RhbXBfEBJzdGFydGluZ0xpbmVOdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxvY4ACEBIQABABgAMQFIAAEQGfXxB0ZmlsZTovLy9Vc2Vycy9xbm9pZC9EZXZlbG9wZXIvd2luZG1pbGwtZXhhbXBsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvVmlld0NvbnRyb2xsZXIuc3dpZnTSHR4fIFokY2xhc3NuYW1lWCRjbGFzc2VzXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb26jISIjXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb25fEBNEVlREb2N1bWVudExvY2F0aW9uWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hpdmVy0SYnVHJvb3SAAQAIABEAGgAjAC0AMgA3ADwAQgBXAGMAegCPAKMAtgC9ANAA2gDvAQMBBQEHAQkBCwENAQ8BEQEUAYsBkAGbAaQBvgHCAdwB8gH7Ag0CEAIVAAAAAAAAAgEAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAhc=</data>
+						<key>IssueType</key>
+						<string>Swift Compiler Error</string>
+						<key>Message</key>
+						<string>Use of unresolved identifier &apos;Barr&apos;</string>
+						<key>Target</key>
+						<string>project-with-submodules</string>
+					</dict>
+				</array>
+				<key>LogPath</key>
+				<string>2_Run/build.xcactivitylog</string>
+				<key>Status</key>
+				<string>IDEActionResultStatus_Failed</string>
+				<key>TestFailureSummaries</key>
+				<array/>
+				<key>TestsCount</key>
+				<integer>0</integer>
+				<key>TestsFailedCount</key>
+				<integer>0</integer>
+				<key>WarningCount</key>
+				<integer>0</integer>
+				<key>WarningSummaries</key>
+				<array/>
+			</dict>
+			<key>EndedTime</key>
+			<date>2018-03-03T04:20:48Z</date>
+			<key>RunDestination</key>
+			<dict>
+				<key>LocalComputer</key>
+				<dict>
+					<key>BusSpeedInMHz</key>
+					<integer>100</integer>
+					<key>CPUCount</key>
+					<integer>1</integer>
+					<key>CPUKind</key>
+					<string>Intel Core i7</string>
+					<key>CPUSpeedInMHz</key>
+					<integer>2300</integer>
+					<key>Identifier</key>
+					<string>0457FD86-F672-59BB-95B8-2627B95F29DC</string>
+					<key>IsConcreteDevice</key>
+					<true/>
+					<key>LogicalCPUCoresPerPackage</key>
+					<integer>8</integer>
+					<key>ModelCode</key>
+					<string>MacBookPro11,3</string>
+					<key>ModelName</key>
+					<string>MacBook Pro</string>
+					<key>ModelUTI</key>
+					<string>com.apple.macbookpro-15-retina-display</string>
+					<key>Name</key>
+					<string>My Mac</string>
+					<key>NativeArchitecture</key>
+					<string>x86_64h</string>
+					<key>OperatingSystemVersion</key>
+					<string>10.13.3</string>
+					<key>OperatingSystemVersionWithBuildNumber</key>
+					<string>10.13.3 (17D102)</string>
+					<key>PhysicalCPUCoresPerPackage</key>
+					<integer>4</integer>
+					<key>Platform</key>
+					<dict>
+						<key>Identifier</key>
+						<string>com.apple.platform.macosx</string>
+						<key>Name</key>
+						<string>macOS</string>
+					</dict>
+					<key>RAMSizeInMegabytes</key>
+					<integer>16384</integer>
+				</dict>
+				<key>Name</key>
+				<string>iPhone 5s</string>
+				<key>TargetArchitecture</key>
+				<string>x86_64</string>
+				<key>TargetDevice</key>
+				<dict>
+					<key>Identifier</key>
+					<string>B7901B24-A855-4767-860B-A34F11168F4D</string>
+					<key>IsConcreteDevice</key>
+					<true/>
+					<key>ModelCode</key>
+					<string>iPhone6,1</string>
+					<key>ModelName</key>
+					<string>iPhone 5s</string>
+					<key>ModelUTI</key>
+					<string>com.apple.iphone-5s-a1453-d4c5b3</string>
+					<key>Name</key>
+					<string>iPhone 5s</string>
+					<key>NativeArchitecture</key>
+					<string>x86_64</string>
+					<key>OperatingSystemVersion</key>
+					<string>11.2</string>
+					<key>OperatingSystemVersionWithBuildNumber</key>
+					<string>11.2 (15C107)</string>
+					<key>Platform</key>
+					<dict>
+						<key>Identifier</key>
+						<string>com.apple.platform.iphonesimulator</string>
+						<key>Name</key>
+						<string>iOS Simulator</string>
+					</dict>
+				</dict>
+				<key>TargetSDK</key>
+				<dict>
+					<key>Identifier</key>
+					<string>iphonesimulator11.2</string>
+					<key>IsInternal</key>
+					<false/>
+					<key>Name</key>
+					<string>Simulator - iOS 11.2</string>
+					<key>OperatingSystemVersion</key>
+					<string>11.2</string>
+				</dict>
+			</dict>
+			<key>SchemeCommand</key>
+			<string>Run</string>
+			<key>SchemeTask</key>
+			<string>Build</string>
+			<key>StartedTime</key>
+			<date>2018-03-03T04:20:45Z</date>
+			<key>Title</key>
+			<string>Build &quot;project-with-submodules&quot;</string>
+		</dict>
+	</array>
+	<key>AnalyzerWarningCount</key>
+	<integer>0</integer>
+	<key>CreatingWorkspaceFilePath</key>
+	<string>/Users/qnoid/Developer/windmill-examples/project-with-submodules/project-with-submodules.xcodeproj</string>
+	<key>ErrorCount</key>
+	<integer>2</integer>
+	<key>ErrorSummaries</key>
+	<array>
+		<dict>
+			<key>DocumentLocationData</key>
+			<data>YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoKQHCBscVSRudWxs2gkKCwwNDg8QERITFBQVFhcYGRgaW2RvY3VtZW50VVJMXxAUc3RhcnRpbmdDb2x1bW5OdW1iZXJfEBJlbmRpbmdDb2x1bW5OdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxlbl8QEGxvY2F0aW9uRW5jb2RpbmdWJGNsYXNzXxAQZW5kaW5nTGluZU51bWJlcll0aW1lc3RhbXBfEBJzdGFydGluZ0xpbmVOdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxvY4ACEBIQABABgAMQEYAAEQFBXxB0ZmlsZTovLy9Vc2Vycy9xbm9pZC9EZXZlbG9wZXIvd2luZG1pbGwtZXhhbXBsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvVmlld0NvbnRyb2xsZXIuc3dpZnTSHR4fIFokY2xhc3NuYW1lWCRjbGFzc2VzXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb26jISIjXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb25fEBNEVlREb2N1bWVudExvY2F0aW9uWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hpdmVy0SYnVHJvb3SAAQAIABEAGgAjAC0AMgA3ADwAQgBXAGMAegCPAKMAtgC9ANAA2gDvAQMBBQEHAQkBCwENAQ8BEQEUAYsBkAGbAaQBvgHCAdwB8gH7Ag0CEAIVAAAAAAAAAgEAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAhc=</data>
+			<key>IssueType</key>
+			<string>Swift Compiler Error</string>
+			<key>Message</key>
+			<string>Module &apos;Dependency&apos; has no member named &apos;Fooo&apos;</string>
+			<key>Target</key>
+			<string>project-with-submodules</string>
+		</dict>
+		<dict>
+			<key>DocumentLocationData</key>
+			<data>YnBsaXN0MDDUAQIDBAUGJCVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoKQHCBscVSRudWxs2gkKCwwNDg8QERITFBQVFhcYGRgaW2RvY3VtZW50VVJMXxAUc3RhcnRpbmdDb2x1bW5OdW1iZXJfEBJlbmRpbmdDb2x1bW5OdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxlbl8QEGxvY2F0aW9uRW5jb2RpbmdWJGNsYXNzXxAQZW5kaW5nTGluZU51bWJlcll0aW1lc3RhbXBfEBJzdGFydGluZ0xpbmVOdW1iZXJfEBFjaGFyYWN0ZXJSYW5nZUxvY4ACEBIQABABgAMQFIAAEQGfXxB0ZmlsZTovLy9Vc2Vycy9xbm9pZC9EZXZlbG9wZXIvd2luZG1pbGwtZXhhbXBsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvcHJvamVjdC13aXRoLXN1Ym1vZHVsZXMvVmlld0NvbnRyb2xsZXIuc3dpZnTSHR4fIFokY2xhc3NuYW1lWCRjbGFzc2VzXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb26jISIjXxAXRFZUVGV4dERvY3VtZW50TG9jYXRpb25fEBNEVlREb2N1bWVudExvY2F0aW9uWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hpdmVy0SYnVHJvb3SAAQAIABEAGgAjAC0AMgA3ADwAQgBXAGMAegCPAKMAtgC9ANAA2gDvAQMBBQEHAQkBCwENAQ8BEQEUAYsBkAGbAaQBvgHCAdwB8gH7Ag0CEAIVAAAAAAAAAgEAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAhc=</data>
+			<key>IssueType</key>
+			<string>Swift Compiler Error</string>
+			<key>Message</key>
+			<string>Use of unresolved identifier &apos;Barr&apos;</string>
+			<key>Target</key>
+			<string>project-with-submodules</string>
+		</dict>
+	</array>
+	<key>FormatVersion</key>
+	<string>1.2</string>
+	<key>Running</key>
+	<false/>
+	<key>TestsCount</key>
+	<integer>0</integer>
+	<key>TestsFailedCount</key>
+	<integer>0</integer>
+	<key>WarningCount</key>
+	<integer>0</integer>
+</dict>
+</plist>

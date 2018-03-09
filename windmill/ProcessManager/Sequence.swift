@@ -9,17 +9,6 @@
 import Foundation
 import os
 
-struct ProcessWasSuccesful {
-    
-    typealias WasSuccesful = (_ :[AnyHashable : Any]?) -> Swift.Void
-    
-    let block: WasSuccesful
-    
-    func perform(userInfo: [AnyHashable : Any]?) {
-        block(userInfo)
-    }
-}
-
 struct Sequence {
     
     unowned var processManager: ProcessManager
@@ -35,7 +24,7 @@ struct Sequence {
         self.wasSuccesful = wasSuccesful
     }
     
-    func launch() {
-        self.processManager.launch(process: self.process, wasSuccesful: self.wasSuccesful, userInfo: self.userInfo)
+    func launch(recover: RecoverableProcess? = nil) {
+        self.processManager.launch(process: self.process, recover: recover, wasSuccesful: self.wasSuccesful, userInfo: self.userInfo)
     }
 }

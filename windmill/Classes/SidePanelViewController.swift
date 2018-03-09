@@ -418,20 +418,18 @@ class SidePanelViewController: NSViewController {
             self.checkoutValues.commitValue.stringValue = commit.shortSha
             self.checkoutValues.commitValue.isHidden = false
         case .test:
-            guard let devices = aNotification.userInfo?["devices"] as? Devices else {
-                return
-            }
+            let devices = aNotification.userInfo?["devices"] as? Devices
             
             self.test.isHidden = false
             self.platform.isHidden = false
             self.platformValue.isHidden = false
-            self.platformValue.stringValue = devices.platform != nil ?  "iOS Simulator" : "N/A"
+            self.platformValue.stringValue = devices?.platform == nil ? "N/A" : "iOS Simulator"
             self.platformVersion.isHidden = false
             self.platformVersionValue.isHidden = false
-            self.platformVersionValue.stringValue = devices.version?.description ?? "N/A"
+            self.platformVersionValue.stringValue = devices?.version?.description ?? "N/A"
             self.platformName.isHidden = false
             self.platformNameValue.isHidden = false
-            self.platformNameValue.stringValue = devices.destination.name ?? "N/A"
+            self.platformNameValue.stringValue = devices?.destination.name ?? "N/A"
         case .archive:            
             guard let archive = aNotification.userInfo?["archive"] as? Archive else {
                 return
