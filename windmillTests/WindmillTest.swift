@@ -42,7 +42,7 @@ class WindmillTest: XCTestCase {
     
     func testGivenProjectWithNoTestTargetAssertExitAfterRecover() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         
         let name = "helloword-no-test-target"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
@@ -63,7 +63,7 @@ class WindmillTest: XCTestCase {
     
     func testGivenProjectWithTestTargetAssertExitSuccesfully() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         
         let name = "project-with-unit-tests"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
@@ -84,7 +84,7 @@ class WindmillTest: XCTestCase {
 
     func testGivenProjectWithBuildErrorsAssertErrorSummary() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         
         let name = "project-with-build-errors"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
@@ -111,7 +111,7 @@ class WindmillTest: XCTestCase {
 
     func testGivenProjectWithoutTestTargetAssertTestWasSuccesful() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
         processManager.monitor = monitor
@@ -151,7 +151,7 @@ class WindmillTest: XCTestCase {
     
     func testGivenProjectWithTestTargetAssertTestWasSuccesful() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
         processManager.monitor = monitor
@@ -192,7 +192,7 @@ class WindmillTest: XCTestCase {
     
     func testGivenProjectWithoutAvailableSimulatorAssertTestWasSuccesful() {
         
-        let expectation = self.expectation(description: #function)
+        let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
         processManager.monitor = monitor

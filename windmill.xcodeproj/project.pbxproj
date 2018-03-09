@@ -32,6 +32,7 @@
 		BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = BD20C298204D14CF00805F37 /* Localizable.stringsdict */; };
 		BD243A861C42AB570015A13A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD243A851C42AB570015A13A /* Main.storyboard */; };
 		BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */; };
+		BD24DBF6205248E20080A09F /* Xcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD24DBF5205248E20080A09F /* Xcode.swift */; };
 		BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25DB781C9ED2700001FEDF /* MainViewController.swift */; };
 		BD2CEE53203117EC0048969D /* AppBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2CEE52203117EC0048969D /* AppBundle.swift */; };
 		BD2CEE5520316DB10048969D /* BuildSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2CEE5420316DB10048969D /* BuildSettings.swift */; };
@@ -53,10 +54,8 @@
 		BD680582202C15C000F38D3B /* metadata in Resources */ = {isa = PBXBuildFile; fileRef = BD680581202C15C000F38D3B /* metadata */; };
 		BD680586202C1AC700F38D3B /* helloworld in Resources */ = {isa = PBXBuildFile; fileRef = BD680585202C1AC700F38D3B /* helloworld */; };
 		BD680588202C222300F38D3B /* no_simulator_available in Resources */ = {isa = PBXBuildFile; fileRef = BD680587202C222200F38D3B /* no_simulator_available */; };
-		BD6963F21F4C91910041847B /* Xcode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6963F11F4C91910041847B /* Xcode.swift */; };
 		BD74665C2044DE3E009262DD /* InfoWithOneErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */; };
 		BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */; };
-		BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
 		BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */; };
 		BD7DDBFC204A5A57003541E8 /* InfoWithManyErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */; };
@@ -91,7 +90,6 @@
 		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
 		BDD002071AB3244600F8E34A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002061AB3244600F8E34A /* Operators.swift */; };
 		BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */; };
-		BDD002101AB7610000F8E34A /* NSBundle+WindmillBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD0020F1AB7610000F8E34A /* NSBundle+WindmillBundle.swift */; };
 		BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */; };
 		BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */; };
 		BDD002161AB87B7900F8E34A /* WindmillDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002151AB87B7900F8E34A /* WindmillDelegate.swift */; };
@@ -167,6 +165,7 @@
 		BD20C299204D14CF00805F37 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		BD243A851C42AB570015A13A /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSStoryboard+WindmillStoryboard.swift"; sourceTree = "<group>"; };
+		BD24DBF5205248E20080A09F /* Xcode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Xcode.swift; sourceTree = "<group>"; };
 		BD25DB761C9EC5290001FEDF /* windmill.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = windmill.xcconfig; sourceTree = "<group>"; };
 		BD25DB781C9ED2700001FEDF /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		BD2CEE52203117EC0048969D /* AppBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBundle.swift; sourceTree = "<group>"; };
@@ -189,10 +188,8 @@
 		BD680581202C15C000F38D3B /* metadata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = metadata; sourceTree = "<group>"; };
 		BD680585202C1AC700F38D3B /* helloworld */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helloworld; sourceTree = "<group>"; };
 		BD680587202C222200F38D3B /* no_simulator_available */ = {isa = PBXFileReference; lastKnownFileType = folder; path = no_simulator_available; sourceTree = "<group>"; };
-		BD6963F11F4C91910041847B /* Xcode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Xcode.swift; sourceTree = "<group>"; };
 		BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithOneErrorCount.plist; sourceTree = "<group>"; };
 		BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDocumentLocation.swift; sourceTree = "<group>"; };
-		BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOutlineView+WindmillOutlineView.swift"; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
 		BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
 		BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithManyErrorCount.plist; sourceTree = "<group>"; };
@@ -232,7 +229,6 @@
 		BDD002041AB3060B00F8E34A /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
 		BDD002061AB3244600F8E34A /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFileManagerTest.swift; sourceTree = "<group>"; };
-		BDD0020F1AB7610000F8E34A /* NSBundle+WindmillBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSBundle+WindmillBundle.swift"; sourceTree = "<group>"; };
 		BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+WindmillArray.swift"; sourceTree = "<group>"; };
 		BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+WindmillError.swift"; sourceTree = "<group>"; };
 		BDD002151AB87B7900F8E34A /* WindmillDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillDelegate.swift; sourceTree = "<group>"; };
@@ -528,13 +524,12 @@
 		BDC1E93419BCCCAD009A3E42 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				BD24DBF5205248E20080A09F /* Xcode.swift */,
 				BD30160219BB0F79001134F8 /* Keychain.swift */,
 				BD30160B19BCBE30001134F8 /* NSPasteboard.swift */,
-				BD79D70A1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift */,
 				BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */,
 				BDD002001AB2F24F00F8E34A /* Directory.swift */,
 				BDD002021AB2F26400F8E34A /* PathComponent.swift */,
-				BDD0020F1AB7610000F8E34A /* NSBundle+WindmillBundle.swift */,
 				BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */,
 				BDD002191AB8B5AD00F8E34A /* Alerts.swift */,
 				BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */,
@@ -542,7 +537,6 @@
 				BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */,
 				BDBE325E1F31301200BCE4D9 /* ActivityType.swift */,
 				BD91A7131F420665004CA64B /* NSView+Windmill.swift */,
-				BD6963F11F4C91910041847B /* Xcode.swift */,
 				BDD5209A1FEA364300104FC3 /* Configuration.swift */,
 				BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */,
 				BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */,
@@ -741,13 +735,12 @@
 				BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */,
 				BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */,
 				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
-				BD79D70B1AB1FB4700596928 /* NSOutlineView+WindmillOutlineView.swift in Sources */,
 				BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */,
 				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
 				BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */,
 				BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */,
+				BD24DBF6205248E20080A09F /* Xcode.swift in Sources */,
 				BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */,
-				BDD002101AB7610000F8E34A /* NSBundle+WindmillBundle.swift in Sources */,
 				BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */,
 				BDD6F0AD20186EBB00D63D74 /* ArtefactsViewController.swift in Sources */,
 				BDD6F0B32018B5C100D63D74 /* DeployView.swift in Sources */,
@@ -755,7 +748,6 @@
 				BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */,
 				BDD5209B1FEA364300104FC3 /* Configuration.swift in Sources */,
 				BDD6F0AF20187C2500D63D74 /* Export.swift in Sources */,
-				BD6963F21F4C91910041847B /* Xcode.swift in Sources */,
 				BDF00B641F47582300572D03 /* Archive.swift in Sources */,
 				BD49F792204B766B00F64687 /* ReportsWindowController.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
