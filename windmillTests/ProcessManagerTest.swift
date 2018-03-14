@@ -184,5 +184,5 @@ class ProcessManagerTest: XCTestCase {
         }
         
         wait(for: [canRecover], timeout: 5.0)
-    }
+    }    
 }

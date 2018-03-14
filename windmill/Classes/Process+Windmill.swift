@@ -30,22 +30,20 @@ extension Process {
                 return
             }
             
-            let estimated = Int(data)
+            let estimatedBytesAvailableToRead = Int(data)
             
-            var buffer = [UInt8](repeating: 0, count: estimated)
-            let count = read(fileDescriptor, &buffer, estimated)
+            var buffer = [UInt8](repeating: 0, count: estimatedBytesAvailableToRead)
+            let bytesRead = read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
             
-            guard case let availableData = Data(buffer), count > 0 else {
+            guard bytesRead > 0, let availableString = String(bytes: buffer, encoding: .utf8) else {
                 return
             }
             
-            let availableString = String(data: availableData, encoding: .utf8) ?? ""
-
             DispatchQueue.main.async {
-                callback(availableString, availableString.count)
+                callback(availableString, availableString.utf8.count)
             }
         }
-                
+        
         readSource.activate()
         
         return readSource
@@ -92,8 +90,8 @@ extension Process
         
         return process
     }
-
-
+    
+    
     public static func makeReadDevices(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
@@ -104,7 +102,7 @@ extension Process
         
         return process
     }
-
+    
     public static func makeCheckout(sourceDirectory: ProjectSourceDirectory, project: Project, branch: String = "master") -> Process {
         
         let process = Process()
@@ -125,7 +123,7 @@ extension Process
         
         return process
     }
-
+    
     public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
@@ -202,7 +200,7 @@ extension Process
         
         return process
     }
-
+    
     public static func makeBoot(destination: Devices.Destination) -> Process {
         
         let process = Process()
@@ -212,7 +210,7 @@ extension Process
         
         return process
     }
-
+    
     public static func makeInstall(destination: Devices.Destination, appBundle: AppBundle) -> Process {
         
         let process = Process()

@@ -89,7 +89,7 @@ class ProcessTest: XCTestCase {
         
         self.waitForExpectations(timeout: 5.0, handler: nil)
         XCTAssertEqual(actualAvailableString, "🥑\n")
-        XCTAssertEqual(actualCount, "🥑\n".count)
+        XCTAssertEqual(actualCount, "🥑\n".utf8.count)
     }
     
     /**

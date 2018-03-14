@@ -142,9 +142,10 @@ class ConsoleViewController: NSViewController, ProcessManagerDelegate {
         }
         
         self.textView.isHidden = isHidden
-        self.textView.isSelectable = true
+        
         self.outputBuffer.flush(to: self.textView.textStorage)
         let range = NSRange(location:self.outputBuffer.count,length:0)
-        textView.scrollRangeToVisible(range)
+        self.textView.scrollRangeToVisible(range)
+        self.textView.isSelectable = true
     }
 }

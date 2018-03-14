@@ -26,6 +26,35 @@ class WindmillMock: Windmill {
     }
 }
 
+class WindmillTimer {
+    
+    let expectation: XCTestExpectation
+    var startDate: Date?
+    var executionTime = 0.0
+    
+    init(expectation: XCTestExpectation) {
+        self.expectation = expectation
+    }
+    
+    func observe(windmill: Windmill) {
+        NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
+    }
+    
+    @objc func willStartProject(_ aNotification: Notification) {
+        self.startDate = Date()
+    }
+
+    @objc func willMonitorProject(_ aNotification: Notification) {
+        
+        let methodFinish = Date()
+        self.executionTime = methodFinish.timeIntervalSince(self.startDate!)
+        
+        expectation.fulfill()
+    }
+}
+
+
 struct MetadataMock: Metadata {
     var url: URL
     
@@ -249,5 +278,21 @@ class WindmillTest: XCTestCase {
         windmill.run(sequence: repeatableDeploy)
 
         wait(for: [expectation], timeout: 5.0)
+    }
+    
+    func testGivenWindmillRunAssertTimeTaken() {
+
+        let expectation = self.expectation(description: #function)
+
+        let name = "helloword-no-test-target"
+        let project = Project(name: name, scheme: "helloworld", origin: "any")
+        let timer = WindmillTimer(expectation: expectation)
+        let windmill = Windmill(project: project)
+        
+        timer.observe(windmill: windmill)
+        windmill.run(sequence: windmill.repeatableExport())
+        
+        wait(for: [expectation], timeout: 90.0)
+        XCTAssertLessThanOrEqual(timer.executionTime, 30.0)
     }
 }
