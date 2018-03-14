@@ -15,10 +15,11 @@ protocol MainWindowControllerDelegate {
 
 class MainWindowController: NSWindowController, NSToolbarDelegate {
     
-    @discardableResult static func make(windmill: Windmill) -> MainWindowController? {
+    @discardableResult static func make(windmill: Windmill, projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController) -> MainWindowController? {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: Bundle(for: self))
         
         let mainWindowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("MainWindowController")) as? MainWindowController
+        mainWindowController?.projectTitlebarAccessoryViewController = projectTitlebarAccessoryViewController
         mainWindowController?.windmill = windmill
         
         return mainWindowController
@@ -58,6 +59,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
+            self.projectTitlebarAccessoryViewController?.didSet(windmill: windmill)
             self.userMessageView.didSet(windmill: windmill)
         }
     }
@@ -93,10 +95,16 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         return bottomPanelSplitViewController
     }()
     
-    lazy var projectTitlebarAccessoryViewController = ProjectTitlebarAccessoryViewController()
-    
     var mainViewController: MainViewController? {
         return self.sidePanelSplitViewController?.mainViewController
+    }
+    
+    weak var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController? {
+        didSet {
+            if let projectTitlebarAccessoryViewController = projectTitlebarAccessoryViewController {
+                window?.addTitlebarAccessoryViewController(projectTitlebarAccessoryViewController)
+            }
+        }
     }
     
     var isSidePanelCollapsedObserver: NSKeyValueObservation?
@@ -117,7 +125,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
 
         window.titleVisibility = .hidden
         window.appearance = NSAppearance(named: .vibrantDark)
-        window.addTitlebarAccessoryViewController(projectTitlebarAccessoryViewController)
     }
     
     fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {
@@ -132,7 +139,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     
     @objc func willStartProject(_ aNotification: Notification) {
         self.schemeButton.removeAllItems()
-        self.projectTitlebarAccessoryViewController.launchButton.isEnabled = false
     }
     
     @objc func activityError(_ aNotification: Notification) {
@@ -175,8 +181,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
                     button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
                 }
             }
-        case .test:
-            self.projectTitlebarAccessoryViewController.launchButton.isEnabled = true
         default:
             break
         }
@@ -184,17 +188,13 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     
     @objc func didBuildProject(_ aNotification: NSNotification) {
         
-        guard let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let destination = aNotification.userInfo?["destination"] as? Devices.Destination else {
+        guard let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle else {
             return
         }
         
         if let image = NSImage(contentsOf: appBundle.iconURL()) {
             self.image = image
         }
-        
-        self.projectTitlebarAccessoryViewController.appBundle = appBundle
-        self.projectTitlebarAccessoryViewController.destination = destination
-        Process.makeInstall(destination: destination, appBundle: appBundle).launch()
     }
 
     @IBAction func didSelectScheme(_ sender: NSPopUpButton) {

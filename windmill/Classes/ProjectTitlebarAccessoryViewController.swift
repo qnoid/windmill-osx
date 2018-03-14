@@ -11,17 +11,21 @@ import os
 
 class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController {
     
+    @IBOutlet weak var launchMenuItem: NSMenuItem!
     @IBOutlet weak var launchButton: NSButton! {
         didSet{
-            self.isLaunchButtonEnabledObserver = launchButton.observe(\.isEnabled, options: [.new]) { (button, change) in
+            self.isLaunchButtonEnabledObserver = launchButton.observe(\.isEnabled, options: [.initial, .new]) { [weak self] (button, change) in
                 if let isEnabled = change.newValue {
                     if isEnabled {
-                        button.toolTip = "Launch the app on the simulator."
+                        button.toolTip = NSLocalizedString("windmill.launchsimulator.button.enabled.toolTip", comment: "")
+                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.enabled.toolTip", comment: "")
                     } else {
-                        button.toolTip = "As soon as the test stage is complete, you will be able to run the app on the simulator."
+                        button.toolTip = NSLocalizedString("windmill.launchsimulator.button.disabled.toolTip", comment: "")
+                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.disabled.toolTip", comment: "")
                     }
                 }
             }
+            self.launchButton.isEnabled = false
         }
     }
     
@@ -45,6 +49,56 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         super.init(coder: coder)
     }
     
+    func didSet(windmill: Windmill, notificationCenter: NotificationCenter = NotificationCenter.default) {
+        notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+        notificationCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+        notificationCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
+    }
+    
+    override func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
+        if item.action == #selector(launchOnSimulator(_:)) {
+            return self.launchButton.isEnabled
+        }
+        
+        return true
+    }
+    
+    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(launchOnSimulator(_:)) {
+            return self.launchButton.isEnabled
+        }
+        
+        return true
+    }
+    
+    @objc func willStartProject(_ aNotification: Notification) {
+        self.launchButton.isEnabled = false
+    }
+
+    @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+            return
+        }
+        
+        switch activity {
+        case .test:
+            self.launchButton.isEnabled = true
+        default:
+            return
+        }
+    }
+    
+    @objc func didBuildProject(_ aNotification: NSNotification) {
+        
+        guard let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let destination = aNotification.userInfo?["destination"] as? Devices.Destination else {
+            return
+        }
+                
+        self.appBundle = appBundle
+        self.destination = destination
+        Process.makeInstall(destination: destination, appBundle: appBundle).launch()
+    }
+
     @IBAction func launchOnSimulator(_ sender: Any) {
         
         guard let appBundle = appBundle, let destination = destination else {

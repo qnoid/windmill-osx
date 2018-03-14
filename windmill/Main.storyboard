@@ -407,6 +407,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="jgg-2H-TJQ">
                                     <items>
+                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
+                                            <connections>
+                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Open..." keyEquivalent="o" id="xjJ-Gh-TYv">
                                             <string key="toolTip">Open the folder that contains your Xcode project/workspace as cloned by a remote repo. 
 
@@ -603,17 +608,17 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                             </menuItem>
                             <menuItem title="Product" id="oEy-tP-65O">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Product" autoenablesItems="NO" id="ecY-b3-fSp">
+                                <menu key="submenu" title="Product" id="ecY-b3-fSp">
                                     <items>
-                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
+                                        <menuItem title="Launch" keyEquivalent="l" id="s0S-Zb-aAH">
                                             <connections>
-                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
+                                                <action selector="launchOnSimulator:" target="lHE-BB-cpm" id="C1l-IV-3Tb"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="T7h-Ho-NMg"/>
                                         <menuItem title="Clean Derived Data" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
                                             <connections>
-                                                <action selector="cleanBuildFolder:" target="jgg-ZM-qio" id="tjj-rz-UuP"/>
+                                                <action selector="cleanDerivedData:" target="jgg-ZM-qio" id="5Mf-eo-406"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Remove Checkout Folder and Run..." enabled="NO" alternate="YES" keyEquivalent="K" toolTip="Perform a full checkout on the next run; enabled in case of an error." id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
@@ -663,6 +668,11 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 </application>
                 <customObject id="aS9-1w-R0E" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="Msx-JS-ZRA" customClass="NSFontManager"/>
+                <customObject id="lHE-BB-cpm" customClass="ProjectTitlebarAccessoryViewController" customModule="Windmill" customModuleProvider="target">
+                    <connections>
+                        <outlet property="launchMenuItem" destination="s0S-Zb-aAH" id="VtP-e6-4Zb"/>
+                    </connections>
+                </customObject>
                 <menu id="HyG-96-1Q3">
                     <items>
                         <menuItem title="idle" enabled="NO" id="fyt-9a-x0h">
@@ -679,11 +689,9 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 <customObject id="jgg-ZM-qio" customClass="AppDelegate" customModule="Windmill" customModuleProvider="target">
                     <connections>
                         <outlet property="activityMenuItem" destination="fyt-9a-x0h" id="q48-pz-ygM"/>
-                        <outlet property="cleanMenu" destination="bkO-ZH-pFj" id="o4d-ES-cYe"/>
-                        <outlet property="cleanProjectMenu" destination="Xk5-Xr-W0f" id="hY9-gb-Vp0"/>
                         <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="VKK-Wx-1FL"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
-                        <outlet property="runMenuItem" destination="RUs-Xt-SEm" id="5qh-xc-PfA"/>
+                        <outlet property="projectTitlebarAccessoryViewController" destination="lHE-BB-cpm" id="jJu-0J-Uej"/>
                         <outlet property="sidePanelMenuItem" destination="6k2-Q8-62V" id="shh-N8-j4K"/>
                     </connections>
                 </customObject>

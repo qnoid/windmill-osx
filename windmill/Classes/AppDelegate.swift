@@ -20,10 +20,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     @IBOutlet weak var debugAreaMenuItem: NSMenuItem!
     @IBOutlet weak var sidePanelMenuItem: NSMenuItem!
-    @IBOutlet weak var runMenuItem: NSMenuItem!
-    @IBOutlet weak var cleanMenu: NSMenuItem!
-    @IBOutlet weak var cleanProjectMenu: NSMenuItem!
+
+    @IBOutlet var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController!
     
+    var canCleanDerivedData = false
+    var canRemoveCheckoutFolder = false
+
     lazy var statusItem: NSStatusItem = { [unowned self] in
         
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -113,7 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     private func makeMainWindowKeyAndOrderFront(windmill: Windmill, sequence: Sequence, project: Project) {
-        guard let mainWindowController = MainWindowController.make(windmill: windmill), let window = mainWindowController.window else {
+        guard let mainWindowController = MainWindowController.make(windmill: windmill, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController), let window = mainWindowController.window else {
             return
         }
         
@@ -236,7 +238,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == #selector(openDocument(_:)) {
+        if menuItem.action == #selector(run(_:)) {
+            return projects.last != nil
+        } else if menuItem.action == #selector(openDocument(_:)) {
             return self.mainWindowViewController?.window != nil
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
             
@@ -245,6 +249,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             }
             
             return reportsWindowController.errorSummariesViewController?.errorSummaries.count != 0
+        } else if menuItem.action == #selector(cleanDerivedData(_:)) {
+            return self.canCleanDerivedData
+        } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
+            return self.canRemoveCheckoutFolder
         }
         
         return true
@@ -292,8 +300,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.statusItem.button?.toolTip = ""
         self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
-        self.cleanMenu.isEnabled = false
-        self.cleanProjectMenu.isEnabled = false
+        self.canCleanDerivedData = false
+        self.canRemoveCheckoutFolder = false
         self.reportsWindowController?.errorSummariesViewController?.errorSummaries = []
     }
     
@@ -325,8 +333,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        self.cleanMenu.isEnabled = true
-        self.cleanProjectMenu.isEnabled = true
+        self.canCleanDerivedData = true
+        self.canRemoveCheckoutFolder = true
         
         guard let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] else {
             return
@@ -381,7 +389,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.projects = [project]
     }
     
-    @IBAction func cleanBuildFolder(_ sender: Any) {
+    @IBAction func cleanDerivedData(_ sender: Any) {
         self.mainViewController?.cleanDerivedData()
     }
     
@@ -406,7 +414,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             }
             
             if self.mainViewController?.cleanProjectFolder() == true {
-                self.run(self.runMenuItem)
+                self.run(self)
             }
         }
     }
