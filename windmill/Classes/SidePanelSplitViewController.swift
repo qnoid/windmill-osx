@@ -41,14 +41,8 @@ class SidePanelSplitViewController: NSSplitViewController {
     
     func toggleSidePanel(isCollapsed: Bool? = nil, completionHandler: @escaping (_ isHidden: Bool) -> Void = {_ in }) {
         NSAnimationContext.runAnimationGroup({ _ in
-            self.sideViewSplitViewItem.animator().isCollapsed = isCollapsed ?? !self.sideViewSplitViewItem.isCollapsed
-            if !self.isSidePanelHidden {
-                self.sidePanelViewController?.toggle(isHidden: self.isSidePanelHidden)
-            }
+            self.toggleSidebar(self)
         }, completionHandler: {
-            if self.isSidePanelHidden {
-                self.sidePanelViewController?.toggle(isHidden: self.isSidePanelHidden)
-            }
             completionHandler(self.isSidePanelHidden)
         })
     }

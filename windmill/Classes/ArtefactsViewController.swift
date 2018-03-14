@@ -16,10 +16,11 @@ import os
 
 class ArtefactsViewController: NSViewController {
 
+    @IBOutlet weak var buildArtefactView: ArtefactView!
     @IBOutlet weak var archiveArtefactView: ArtefactView!
     @IBOutlet weak var exportArtefactView: ArtefactView! {
         didSet {
-            exportArtefactView.headerLabel.isHidden = true
+            exportArtefactView.headerLabel.stringValue = ""
         }
     }
     @IBOutlet weak var deployArtefactView: ArtefactView! {
@@ -32,9 +33,14 @@ class ArtefactsViewController: NSViewController {
     }
     
     lazy var artefactViews: [ActivityType: ArtefactView] = { [unowned self] in
-        return [.archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
+        return [.build: self.buildArtefactView, .archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
         }()
     
+    @IBOutlet weak var appView: AppView!{
+        didSet{
+            appView.isHidden = true
+        }
+    }
     @IBOutlet weak var archiveView: ArchiveView! {
         didSet{
             archiveView.isHidden = true
@@ -66,6 +72,7 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didDeploySuccesfully(_:)), name: Windmill.Notifications.didDeployProject, object: windmill)
@@ -81,6 +88,7 @@ class ArtefactsViewController: NSViewController {
             artefactView.isHidden = false
             artefactView.stopStageAnimation()
         }
+        self.appView.isHidden = true
         self.archiveView.isHidden = true
         self.exportView.isHidden = true
         self.deployView.isHidden = true
@@ -108,8 +116,28 @@ class ArtefactsViewController: NSViewController {
 
         self.artefactViews[activity]?.stopStageAnimation()
         self.artefactViews[activity]?.isHidden = true
+        
+        guard case .checkout = activity else {
+            return
+        }
+        
+        guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
+            os_log("Repository for project not found. Have you cloned it? Did you pass the `repositoryLocalURL`?", log: .default, type: .error)
+            return
+        }
+        
+        self.appView.commit = commit
     }
 
+    @objc func didBuildProject(_ aNotification: NSNotification) {
+        
+        guard let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle else {
+            return
+        }
+        
+        self.appView.appBundle = appBundle
+        self.appView.isHidden = false
+    }
     @objc func didArchiveSuccesfully(_ aNotification: Notification) {
         
         guard let archive = aNotification.userInfo?["archive"] as? Archive else {
@@ -133,10 +161,6 @@ class ArtefactsViewController: NSViewController {
             self.exportView.export = export
         }
         
-        if let buildSettings = aNotification.userInfo?["buildSettings"] as? BuildSettings {
-            self.exportView.buildSettings = buildSettings
-        }
-
         if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
             self.exportView.appBundle = appBundle
         }

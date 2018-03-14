@@ -47,6 +47,8 @@
 		BD49F792204B766B00F64687 /* ReportsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F791204B766B00F64687 /* ReportsWindowController.swift */; };
 		BD49F794204B9DCA00F64687 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F793204B9DCA00F64687 /* InfoViewController.swift */; };
 		BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49FAAB20290C4500E12CB4 /* Sequence.swift */; };
+		BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */; };
+		BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */; };
 		BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */; };
 		BD6635881FF9DC1500951779 /* MetadataJSONEncoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */; };
 		BD68054A202C120200F38D3B /* SequenceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD680549202C120200F38D3B /* SequenceTest.swift */; };
@@ -72,6 +74,8 @@
 		BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7131F420665004CA64B /* NSView+Windmill.swift */; };
 		BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */; };
 		BD91EB5C19491C40002D8C1C /* Scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* Scripts */; };
+		BD947845205395DA00878731 /* AppView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD947844205395DA00878731 /* AppView.xib */; };
+		BD947847205395FD00878731 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD947846205395FD00878731 /* AppView.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDB961082049F00500E49258 /* UserMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB961072049F00500E49258 /* UserMessageView.xib */; };
 		BDB9610A2049F06800E49258 /* UserMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB961092049F06800E49258 /* UserMessageView.swift */; };
@@ -181,6 +185,8 @@
 		BD49F791204B766B00F64687 /* ReportsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsWindowController.swift; sourceTree = "<group>"; };
 		BD49F793204B9DCA00F64687 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		BD49FAAB20290C4500E12CB4 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
+		BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
+		BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTitlebarAccessoryViewController.xib; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
 		BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataJSONEncoded.swift; sourceTree = "<group>"; };
 		BD680549202C120200F38D3B /* SequenceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceTest.swift; sourceTree = "<group>"; };
@@ -206,6 +212,8 @@
 		BD91A7131F420665004CA64B /* NSView+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Windmill.swift"; sourceTree = "<group>"; };
 		BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
+		BD947844205395DA00878731 /* AppView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppView.xib; sourceTree = "<group>"; };
+		BD947846205395FD00878731 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = windmill.app; path = Windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -327,6 +335,10 @@
 		BD3015FF19BB0F79001134F8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */,
+				BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */,
+				BD947844205395DA00878731 /* AppView.xib */,
+				BD947846205395FD00878731 /* AppView.swift */,
 				BDBD520C1CD6053B0023F460 /* ActivityView.swift */,
 				BD91A70F1F41E78D004CA64B /* ActivityView.xib */,
 				BD30160019BB0F79001134F8 /* AppDelegate.swift */,
@@ -672,6 +684,7 @@
 				BDB961082049F00500E49258 /* UserMessageView.xib in Resources */,
 				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
 				BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */,
+				BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */,
 				BD915E742020715A006551A5 /* getting-started.mp4 in Resources */,
 				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
@@ -679,6 +692,7 @@
 				BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */,
 				BD91EB5C19491C40002D8C1C /* Scripts in Resources */,
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
+				BD947845205395DA00878731 /* AppView.xib in Resources */,
 				BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
 				BD49F78E204B64C700F64687 /* Reports.storyboard in Resources */,
@@ -740,6 +754,7 @@
 				BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */,
 				BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */,
 				BD24DBF6205248E20080A09F /* Xcode.swift in Sources */,
+				BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */,
 				BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */,
 				BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */,
 				BDD6F0AD20186EBB00D63D74 /* ArtefactsViewController.swift in Sources */,
@@ -768,6 +783,7 @@
 				BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */,
 				BD2CEE5520316DB10048969D /* BuildSettings.swift in Sources */,
 				BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */,
+				BD947847205395FD00878731 /* AppView.swift in Sources */,
 				BD30160A19BCBCFD001134F8 /* Process+Windmill.swift in Sources */,
 				BD4762061F16496F00F5188C /* Project+ObjectiveGit.swift in Sources */,
 				BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */,

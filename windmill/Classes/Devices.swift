@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import os
 
 public struct Devices {
     
@@ -14,18 +15,19 @@ public struct Devices {
         return Devices(metadata: MetadataJSONEncoded(url: url))
     }
     
-    struct Destination {
-        let value: [String: String]?
+    public struct Destination {
+        let value: [String: String]
 
         var udid: String? {
-            return value?["udid"]
+            return value["udid"]
         }
 
         var name: String? {
-            return value?["name"]
+            return value["name"]
         }
     }
 
+    let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     
     private let metadata: Metadata
     let url: URL
@@ -43,8 +45,13 @@ public struct Devices {
         return metadata["version"]
     }
     
-    var destination: Destination {
-        return Destination(value: metadata["destination"] as [String: String]?)
+    var destination: Destination? {
+        guard let destination: [String: String] = metadata["destination"] else {
+            os_log("'destination' must be present with a 'udid' and 'name' keys; e.g. 'destination': {'udid': 'B7901B24-A855-4767-860B-A34F11168F4D', 'name': 'iPhone 5s'}`", log: log, type: .debug)
+            return nil
+        }
+        
+        return Destination(value: destination)
     }
 }
 

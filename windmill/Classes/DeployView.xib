@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="DeployView" customModule="windmill" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="DeployView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="deploymentTargetTextField" destination="vDq-pI-d6Z" id="XHy-H0-Yx0"/>
                 <outlet property="infoImageView" destination="eJo-8E-UQV" id="ypX-QY-ENk"/>
@@ -28,7 +28,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="uWb-UZ-C5A" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="windmill" customModuleProvider="target">
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="uWb-UZ-C5A" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
                     <rect key="frame" x="20" y="46" width="5" height="64"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="5" id="WQq-3q-teI"/>
@@ -78,7 +78,7 @@
                     <rect key="frame" x="44" y="6" width="228" height="34"/>
                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" id="cfE-PY-oh0">
                         <font key="font" metaFont="system"/>
-                        <string key="title">You have to use windmill for iOS to 
+                        <string key="title">You have to use Windmill for iOS to 
 install this over the air distribution.</string>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ExportView" customModule="windmill" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="deploymentTargetTextField" destination="cWw-Eh-eC1" id="caa-mK-YL8"/>
                 <outlet property="headerTextField" destination="BkY-iF-Rbe" id="IO5-uC-YD2"/>
@@ -18,21 +18,21 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="270" height="198"/>
+            <rect key="frame" x="0.0" y="0.0" width="270" height="152"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <scrollView horizontalHuggingPriority="251" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HeX-7c-HKV">
-                    <rect key="frame" x="16" y="172" width="240" height="18"/>
+                    <rect key="frame" x="16" y="108" width="240" height="36"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="xgY-KE-roq">
-                        <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="18"/>
+                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="Windmill" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="textColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                <size key="minSize" width="240" height="18"/>
+                                <size key="minSize" width="240" height="36"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
                                     <fragment content="Install apps on a device">
@@ -55,29 +55,33 @@
                     </clipView>
                     <constraints>
                         <constraint firstAttribute="width" constant="240" id="14h-he-hG1"/>
-                        <constraint firstAttribute="height" constant="18" id="nVL-lO-Gnp"/>
+                        <constraint firstAttribute="height" constant="36" id="nVL-lO-Gnp"/>
                     </constraints>
                     <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="a8a-7H-Gny">
                         <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="OfD-cl-Vv7">
-                        <rect key="frame" x="224" y="0.0" width="16" height="18"/>
+                        <rect key="frame" x="224" y="0.0" width="16" height="36"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="xP1-QJ-MZY" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="windmill" customModuleProvider="target">
-                    <rect key="frame" x="20" y="37" width="5" height="128"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="xP1-QJ-MZY" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="20" y="37" width="5" height="64"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="5" id="fSd-wq-w7f"/>
                     </constraints>
                 </customView>
-                <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="windmill" customModuleProvider="target">
-                    <rect key="frame" x="20" y="37" width="64" height="128"/>
+                <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="20" y="37" width="64" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="Hz8-gj-tXn"/>
+                        <constraint firstAttribute="width" constant="64" id="z0i-lk-rI5"/>
+                    </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ipa" id="Qs7-Lp-YdD"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="spO-1s-y1M">
-                    <rect key="frame" x="82" y="148" width="190" height="17"/>
+                    <rect key="frame" x="82" y="84" width="190" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="windmill" id="30g-ww-UI7">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -85,7 +89,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KV1-eO-OV4">
-                    <rect key="frame" x="82" y="123" width="22" height="17"/>
+                    <rect key="frame" x="82" y="59" width="22" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="1.0" id="YP7-XC-ouc">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -93,7 +97,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cWw-Eh-eC1" userLabel="Deployment Target Field">
-                    <rect key="frame" x="178" y="98" width="30" height="17"/>
+                    <rect key="frame" x="180" y="34" width="30" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="10.3" id="yah-VM-ulq">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +105,7 @@
                     </textFieldCell>
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="geD-SR-I4d">
-                    <rect key="frame" x="12" y="1" width="81" height="32"/>
+                    <rect key="frame" x="14" y="1" width="76" height="32"/>
                     <buttonCell key="cell" type="push" title="Save..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="enO-DY-1fZ">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -111,8 +115,8 @@
                     </connections>
                 </button>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oJM-T4-3xc">
-                    <rect key="frame" x="82" y="98" width="92" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Requires iOS:" id="Zo0-Kr-xoI">
+                    <rect key="frame" x="82" y="34" width="94" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minimum iOS:" id="Zo0-Kr-xoI">
                         <font key="font" metaFont="systemBold"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -124,6 +128,8 @@
                 <constraint firstItem="HeX-7c-HKV" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="21h-Y2-uJU"/>
                 <constraint firstItem="geD-SR-I4d" firstAttribute="top" secondItem="r2S-vK-C5x" secondAttribute="bottom" constant="8" id="2Db-uz-7m7"/>
                 <constraint firstAttribute="trailing" secondItem="spO-1s-y1M" secondAttribute="trailing" id="3wW-zZ-Ihg"/>
+                <constraint firstItem="spO-1s-y1M" firstAttribute="leading" secondItem="geD-SR-I4d" secondAttribute="trailing" id="89i-mM-fr8"/>
+                <constraint firstItem="geD-SR-I4d" firstAttribute="leading" secondItem="r2S-vK-C5x" secondAttribute="leading" id="9qG-gE-vH3"/>
                 <constraint firstAttribute="bottom" secondItem="geD-SR-I4d" secondAttribute="bottom" constant="8" id="Blh-pL-tT0"/>
                 <constraint firstItem="oJM-T4-3xc" firstAttribute="top" secondItem="KV1-eO-OV4" secondAttribute="bottom" constant="8" id="H87-32-86f"/>
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="bottom" secondItem="r2S-vK-C5x" secondAttribute="bottom" id="JWp-vb-nKN"/>
@@ -131,7 +137,6 @@
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" symbolic="YES" id="UDl-z9-fR8"/>
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="top" secondItem="r2S-vK-C5x" secondAttribute="top" id="Xg9-IE-oTt"/>
                 <constraint firstItem="spO-1s-y1M" firstAttribute="top" secondItem="r2S-vK-C5x" secondAttribute="top" id="bVq-Mk-aTU"/>
-                <constraint firstItem="geD-SR-I4d" firstAttribute="centerX" secondItem="r2S-vK-C5x" secondAttribute="centerX" id="buN-a1-lkA"/>
                 <constraint firstItem="oJM-T4-3xc" firstAttribute="leading" secondItem="KV1-eO-OV4" secondAttribute="leading" id="cLj-E3-p6r"/>
                 <constraint firstItem="cWw-Eh-eC1" firstAttribute="baseline" secondItem="oJM-T4-3xc" secondAttribute="baseline" id="eeB-Jl-94X"/>
                 <constraint firstItem="cWw-Eh-eC1" firstAttribute="leading" secondItem="oJM-T4-3xc" secondAttribute="trailing" constant="8" id="pEn-6X-Yk3"/>
