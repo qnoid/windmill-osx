@@ -56,7 +56,7 @@ class WindmillTest: XCTestCase {
             expectation.fulfill()
         }
         
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -77,7 +77,7 @@ class WindmillTest: XCTestCase {
             expectation.fulfill()
         }
         
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -103,7 +103,7 @@ class WindmillTest: XCTestCase {
             expectation.fulfill()
         }
         
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -136,9 +136,9 @@ class WindmillTest: XCTestCase {
         let windmill = Windmill(processManager: processManager, project: project)
         
         let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
-        let testSkip = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
+        let testSkip = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.sequence(process: testSkip, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -177,9 +177,9 @@ class WindmillTest: XCTestCase {
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
         let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
-        let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
+        let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
 
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.sequence(process: testWithoutBuilding, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -215,9 +215,9 @@ class WindmillTest: XCTestCase {
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
         let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
-        let test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
+        let test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
-        windmill.build(scheme: project.scheme, devices: devices, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.sequence(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.sequence(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()

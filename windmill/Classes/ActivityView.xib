@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ActivityView" customModule="windmill" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="imageView" destination="ifO-tz-rrP" id="LuP-ob-6hH"/>
                 <outlet property="titleLabel" destination="rtv-le-g4r" id="3tR-jP-gpE"/>
@@ -18,23 +18,24 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rtv-le-g4r">
-                    <rect key="frame" x="3" y="55" width="114" height="22"/>
+                    <rect key="frame" x="27" y="58" width="67" height="22"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" placeholderString="activity" id="g2Y-Ml-FaE">
                         <font key="font" metaFont="system" size="18"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ifO-tz-rrP">
-                    <rect key="frame" x="5" y="2" width="110" height="44"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ifO-tz-rrP">
+                    <rect key="frame" x="0.0" y="0.0" width="120" height="44"/>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="lights-build" id="E6h-1a-kvg"/>
                 </imageView>
             </subviews>
             <constraints>
-                <constraint firstItem="rtv-le-g4r" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="5" id="G69-WS-lep"/>
-                <constraint firstAttribute="trailing" secondItem="rtv-le-g4r" secondAttribute="trailing" constant="5" id="TaY-6Y-nX7"/>
-                <constraint firstItem="rtv-le-g4r" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="3" id="qej-Ks-5Xu"/>
+                <constraint firstItem="ifO-tz-rrP" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="GUe-2o-Rwo"/>
+                <constraint firstItem="rtv-le-g4r" firstAttribute="centerX" secondItem="ifO-tz-rrP" secondAttribute="centerX" id="L0A-7q-sdg"/>
+                <constraint firstAttribute="bottom" secondItem="ifO-tz-rrP" secondAttribute="bottom" id="bgo-ic-VST"/>
+                <constraint firstAttribute="trailing" secondItem="ifO-tz-rrP" secondAttribute="trailing" id="ctb-2e-huS"/>
+                <constraint firstItem="rtv-le-g4r" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="qej-Ks-5Xu"/>
             </constraints>
             <point key="canvasLocation" x="160" y="77"/>
         </customView>

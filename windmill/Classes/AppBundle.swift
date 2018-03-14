@@ -14,11 +14,9 @@ public struct AppBundle {
         return AppBundle(url: url, info: info)
     }
     
-    struct Info {
+    public struct Info {
         
-        static func make(appBundleURL url: URL) -> Info {
-            let url = url.appendingPathComponent("Info.plist")
-            
+        static func make(at url: URL) -> Info {
             return Info(metadata: MetadataPlistEncoded(url: url))
         }
 
@@ -40,6 +38,24 @@ public struct AppBundle {
             let name = primaryIcon?["CFBundleIconName"] as? String
             
             return name ?? ""
+        }
+        
+        var bundleName: String {
+            let name: String? = metadata["CFBundleName"]
+            
+            return name ?? ""
+        }
+        
+        var bundleIdentifier: String {
+            let identifier: String? = metadata["CFBundleIdentifier"]
+            
+            return identifier ?? ""
+        }
+        
+        var minimumOSVersion: String {
+            let minimumOSVersion: String? = metadata["MinimumOSVersion"]
+            
+            return minimumOSVersion ?? ""
         }
     }
     

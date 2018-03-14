@@ -56,14 +56,10 @@ class ExportView: NSView {
     @IBOutlet weak var versionTextField: NSTextField!
     @IBOutlet weak var deploymentTargetTextField: NSTextField!
     
-    var buildSettings: BuildSettings? {
-        didSet {
-            self.deploymentTargetTextField.stringValue = buildSettings?.deployment.target?.description ?? ""
-        }
-    }
-
     var appBundle: AppBundle? {
         didSet{
+            self.deploymentTargetTextField.stringValue = appBundle?.info.minimumOSVersion ?? ""
+            
             guard let iconURL = appBundle?.iconURL(), let dragImage = NSImage(contentsOf: iconURL) else {
                 self.ipaImageView.dragImage = #imageLiteral(resourceName: "ipa")
                 

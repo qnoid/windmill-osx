@@ -55,10 +55,9 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
             
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-            NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
-            
+            self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
             self.userMessageView.didSet(windmill: windmill)
         }
     }
@@ -94,6 +93,8 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         return bottomPanelSplitViewController
     }()
     
+    lazy var projectTitlebarAccessoryViewController = ProjectTitlebarAccessoryViewController()
+    
     var mainViewController: MainViewController? {
         return self.sidePanelSplitViewController?.mainViewController
     }
@@ -116,6 +117,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
 
         window.titleVisibility = .hidden
         window.appearance = NSAppearance(named: .vibrantDark)
+        window.addTitlebarAccessoryViewController(projectTitlebarAccessoryViewController)
     }
     
     fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {
@@ -130,6 +132,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     
     @objc func willStartProject(_ aNotification: Notification) {
         self.schemeButton.removeAllItems()
+        self.projectTitlebarAccessoryViewController.launchButton.isEnabled = false
     }
     
     @objc func activityError(_ aNotification: Notification) {
@@ -172,19 +175,28 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
                     button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
                 }
             }
-            
+        case .test:
+            self.projectTitlebarAccessoryViewController.launchButton.isEnabled = true
         default:
             break
         }
     }
-
-    @objc func didExportSuccesfully(_ aNotification: Notification) {
+    
+    @objc func didBuildProject(_ aNotification: NSNotification) {
         
-        if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let image = NSImage(contentsOf: appBundle.iconURL()) {
+        guard let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle, let destination = aNotification.userInfo?["destination"] as? Devices.Destination else {
+            return
+        }
+        
+        if let image = NSImage(contentsOf: appBundle.iconURL()) {
             self.image = image
         }
+        
+        self.projectTitlebarAccessoryViewController.appBundle = appBundle
+        self.projectTitlebarAccessoryViewController.destination = destination
+        Process.makeInstall(destination: destination, appBundle: appBundle).launch()
     }
-    
+
     @IBAction func didSelectScheme(_ sender: NSPopUpButton) {
         guard let scheme = sender.titleOfSelectedItem else {
             return

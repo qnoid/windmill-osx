@@ -10,7 +10,7 @@ def pair(device):
 def find(devices):
     for name, version in map(pair, filter(lambda key:key.startswith(platform), devices.keys())):
         if (version >= target):
-            devices_for_name = data["devices"][name]
+            devices_for_name = devices[name]
             if devices_for_name:
                 return json.dumps({"platform":platform,"version":version,"destination":devices_for_name[0]})
 

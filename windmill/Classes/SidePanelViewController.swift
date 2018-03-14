@@ -9,26 +9,6 @@
 import AppKit
 import os
 
-@IBDesignable
-class SidePanelView: NSView {
-    
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        
-        self.wantsLayer = true
-        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layer?.backgroundColor = CGColor.black
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
-        self.wantsLayer = true
-        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
-        self.layer?.backgroundColor = CGColor.black
-    }
-}
-
 class SidePanelViewController: NSViewController {
     
     weak var gridView: NSGridView!
@@ -45,38 +25,12 @@ class SidePanelViewController: NSViewController {
         origin.isHidden = true
         return origin
     }()
-    
-    lazy var branch: NSTextField = {
-        let branch = NSTextField(labelWithString: "Branch:")
-        branch.isHidden = true
-        return branch
-    }()
-    
-    lazy var commit: NSTextField = {
-        let commit = NSTextField(labelWithString: "Commit:")
-        commit.isHidden = true
-        return commit
-    }()
-    
+        
     lazy var originValue: NSTextField = {
         let originValue = NSTextField(labelWithString: "")
         originValue.isHidden = true
         originValue.isSelectable = true
         return originValue
-    }()
-    
-    lazy var branchValue: NSTextField = {
-        let branchValue = NSTextField(labelWithString: "")
-        branchValue.isHidden = true
-        branchValue.isSelectable = true
-        return branchValue
-    }()
-    
-    lazy var commitValue: NSTextField = {
-        let commitValue = NSTextField(labelWithString: "")
-        commitValue.isHidden = true
-        commitValue.isSelectable = true
-        return commitValue
     }()
     
     // MARK: Build views
@@ -262,14 +216,6 @@ class SidePanelViewController: NSViewController {
     
     weak var topConstraint: NSLayoutConstraint!
     
-    lazy var checkoutSection: (origin: NSTextField, branch: NSTextField, commit: NSTextField) = { [unowned self] in
-        return (origin: self.origin, branch: self.branch, commit: self.commit)
-        }()
-    
-    lazy var checkoutValues: (originValue: NSTextField, branchValue: NSTextField, commitValue: NSTextField) = { [unowned self] in
-        return (originValue: self.originValue, branchValue: self.branchValue, commitValue: self.commitValue)
-        }()
-
     lazy var archiveSection: (configuration: NSTextField, scheme: NSTextField, certificate: NSTextField) = { [unowned self] in
         return (configuration: archiveConfiguration, scheme: self.archiveScheme, certificate: self.archiveCertificate)
         }()
@@ -287,7 +233,6 @@ class SidePanelViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
         }
     }
-    var project: Project?
     
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -315,8 +260,6 @@ class SidePanelViewController: NSViewController {
         let gridView = NSGridView(views: [
             [checkout, empty],
             [origin, originValue],
-            [branch, branchValue],
-            [commit, commitValue],
             [build, empty],
             [buildConfiguration, buildConfigurationValue],
             [test, empty],
@@ -360,12 +303,6 @@ class SidePanelViewController: NSViewController {
     }
     
     @objc func willStartProject(_ aNotification: Notification) {
-        guard let project = aNotification.userInfo?["project"] as? Project else {
-            return
-        }
-        
-        self.project = project
-
         for activityView in self.gridView.subviews {
             activityView.isHidden = true
         }
@@ -408,17 +345,12 @@ class SidePanelViewController: NSViewController {
             
             self.checkout.isHidden = false
             
-            self.checkoutSection.origin.isHidden = false
-            self.checkoutValues.originValue.stringValue = commit.repository.origin
-            self.checkoutValues.originValue.isHidden = false
-            self.checkoutSection.branch.isHidden = false
-            self.checkoutValues.branchValue.stringValue = commit.branch
-            self.checkoutValues.branchValue.isHidden = false
-            self.checkoutSection.commit.isHidden = false
-            self.checkoutValues.commitValue.stringValue = commit.shortSha
-            self.checkoutValues.commitValue.isHidden = false
+            self.origin.isHidden = false
+            self.originValue.stringValue = commit.repository.origin
+            self.originValue.isHidden = false
         case .test:
             let devices = aNotification.userInfo?["devices"] as? Devices
+            let destination = aNotification.userInfo?["destination"] as? Devices.Destination
             
             self.test.isHidden = false
             self.platform.isHidden = false
@@ -429,7 +361,7 @@ class SidePanelViewController: NSViewController {
             self.platformVersionValue.stringValue = devices?.version?.description ?? "N/A"
             self.platformName.isHidden = false
             self.platformNameValue.isHidden = false
-            self.platformNameValue.stringValue = devices?.destination.name ?? "N/A"
+            self.platformNameValue.stringValue = destination?.name ?? "N/A"
         case .archive:            
             guard let archive = aNotification.userInfo?["archive"] as? Archive else {
                 return

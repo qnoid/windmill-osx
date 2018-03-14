@@ -19,14 +19,14 @@
             <rect key="frame" x="0.0" y="0.0" width="270" height="137"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="oVm-pp-GE6" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="windmill" customModuleProvider="target">
-                    <rect key="frame" x="20" y="39" width="5" height="64"/>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="oVm-pp-GE6" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="20" y="21" width="5" height="64"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="5" id="TGn-xE-uqa"/>
                     </constraints>
                 </customView>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R4k-sC-Tp6">
-                    <rect key="frame" x="20" y="39" width="64" height="64"/>
+                    <rect key="frame" x="20" y="21" width="64" height="64"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="64" id="Jfb-2V-SjI"/>
                         <constraint firstAttribute="height" constant="64" id="S3g-FI-N7h"/>
@@ -34,16 +34,16 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="archive" id="nkB-Hq-SpH"/>
                 </imageView>
                 <scrollView borderType="none" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="0.0" verticalPageScroll="0.0" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z7g-tT-wSI">
-                    <rect key="frame" x="92" y="10" width="168" height="93"/>
+                    <rect key="frame" x="92" y="10" width="168" height="75"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="fjs-jM-ihA">
-                        <rect key="frame" x="0.0" y="0.0" width="168" height="93"/>
+                        <rect key="frame" x="0.0" y="0.0" width="168" height="75"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="yYu-Xp-97t" customClass="LinkLabel" customModule="windmill" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="168" height="93"/>
+                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="yYu-Xp-97t" customClass="LinkLabel" customModule="Windmill" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="168" height="75"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <size key="minSize" width="168" height="93"/>
+                                <size key="minSize" width="168" height="75"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </textView>
@@ -54,14 +54,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                     <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="VsC-Zg-3dR">
-                        <rect key="frame" x="152" y="0.0" width="16" height="93"/>
+                        <rect key="frame" x="152" y="0.0" width="16" height="75"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gZ5-DC-Cpf">
-                    <rect key="frame" x="90" y="111" width="172" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Make sure you:" id="bs4-EI-rgx">
-                        <font key="font" metaFont="system"/>
+                    <rect key="frame" x="90" y="93" width="172" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Remember to:" id="bs4-EI-rgx">
+                        <font key="font" metaFont="systemBold"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
@@ -71,7 +71,7 @@
                 <constraint firstItem="oVm-pp-GE6" firstAttribute="leading" secondItem="5HZ-PD-G2e" secondAttribute="leading" constant="20" symbolic="YES" id="Bce-kH-e0I"/>
                 <constraint firstItem="z7g-tT-wSI" firstAttribute="top" secondItem="R4k-sC-Tp6" secondAttribute="top" id="DTO-Fi-hGJ"/>
                 <constraint firstItem="z7g-tT-wSI" firstAttribute="leading" secondItem="R4k-sC-Tp6" secondAttribute="trailing" constant="8" id="Hhg-A8-Ppz"/>
-                <constraint firstItem="R4k-sC-Tp6" firstAttribute="top" secondItem="5HZ-PD-G2e" secondAttribute="top" constant="34" id="cGE-iy-Rmt"/>
+                <constraint firstItem="R4k-sC-Tp6" firstAttribute="top" secondItem="5HZ-PD-G2e" secondAttribute="top" constant="52" id="cGE-iy-Rmt"/>
                 <constraint firstItem="gZ5-DC-Cpf" firstAttribute="width" secondItem="yYu-Xp-97t" secondAttribute="width" id="ctu-sE-Ndj"/>
                 <constraint firstItem="oVm-pp-GE6" firstAttribute="top" secondItem="R4k-sC-Tp6" secondAttribute="top" id="hyn-1h-yG8"/>
                 <constraint firstItem="gZ5-DC-Cpf" firstAttribute="leading" secondItem="yYu-Xp-97t" secondAttribute="leading" id="iap-vm-Egh"/>

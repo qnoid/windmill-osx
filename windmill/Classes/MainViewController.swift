@@ -54,16 +54,18 @@ class MainView: NSView, CALayerDelegate {
     }
     
     override var intrinsicContentSize: NSSize {
-        return NSSize(width: 850, height: 622)
-    }
-    
-    func display(_ layer: CALayer) {
+        return NSSize(width: 786, height: 622)
     }
 }
 
 class MainViewController: NSViewController {
     
     @IBOutlet weak var mainView: MainView!
+    @IBOutlet weak var branchTextField: NSTextField! {
+        didSet{
+            branchTextField.toolTip = String(format: NSLocalizedString("windmill.branch.toolTip", comment: ""), branchTextField.stringValue)
+        }
+    }
     @IBOutlet weak var checkoutActivityView: ActivityView!
     @IBOutlet weak var buildActivityView: ActivityView!
     @IBOutlet weak var testActivityView: ActivityView!
@@ -124,7 +126,7 @@ class MainViewController: NSViewController {
         for activityView in self.activityViews.values {
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
-        }
+        }        
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
@@ -150,7 +152,7 @@ class MainViewController: NSViewController {
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             return
         }
-
+        
         self.activityViews[activity]?.stopLightsAnimation()
     }
     

@@ -7,6 +7,7 @@
 */
 "windmill.paid"="You can unlock this feature with a Windmill subscription.";
 "windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will clone the remote repo and start monitoring.";
+"windmill.branch.toolTip"="Windmill ensures your %@ branch is always ready to release.";
 "windmill.activity.checkout.description"="Checking out";
 "windmill.activity.checkout.error.description"="Checkout Failed";
 "windmill.activity.checkout.error.failure.reason"="Activity checkout failed with exit code ";

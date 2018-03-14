@@ -9,45 +9,46 @@
 import AppKit
 import os
 
-@IBDesignable
-class UserMessageContentView: NSView {
-
-    @IBInspectable
-    var backgroundColor: NSColor = NSColor.Windmill.gray() {
-        didSet{
-            self.needsDisplay = true
-        }
+class UserMessageViewTextField: NSTextField {
+    
+    override var alignmentRectInsets: NSEdgeInsets {
+        return NSEdgeInsetsMake(-2, 0, 0, 0)
     }
     
-    override var wantsUpdateLayer: Bool {
-        return true
-    }
+}
+
+class UserMessageViewBox: NSBox {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.wantsLayer = true
-        self.canDrawSubviewsIntoLayer = false
-        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
+        self.updateFillColor()
     }
     
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
-        self.wantsLayer = true
-        self.canDrawSubviewsIntoLayer = false
-        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
+        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
+        self.updateFillColor()
     }
     
-    override func updateLayer() {
-        super.updateLayer()
-        self.layer?.cornerRadius = 4.0
-        self.layer?.contentsScale = 2.0
-        self.layer?.contentsGravity = "aspectFit"
-        self.layer?.backgroundColor = backgroundColor.cgColor
+    func updateFillColor(workspace: NSWorkspace = NSWorkspace.shared) {
+        self.fillColor = workspace.accessibilityDisplayShouldIncreaseContrast ? NSColor.windowFrameColor : NSColor.windowBackgroundColor
+
     }
-} 
+    
+    @objc func accessibilityDisplayShouldIncreaseContrast(_ aNotification: NSNotification) {
+        guard let workspace = aNotification.object as? NSWorkspace else {
+            return
+        }
+
+        self.updateFillColor(workspace: workspace)
+    }
+}
 
 class UserMessageView: NSToolbarItem, CALayerDelegate {
 
+    
+    @IBOutlet weak var box: UserMessageViewBox!
     
     @IBOutlet weak var windmillImageView: NSImageView! {
         didSet{
@@ -73,7 +74,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
     @IBOutlet weak var prettyLogTextField: NSTextField!
     @IBOutlet weak var errorButton: NSButton! {
         didSet{
-            errorButton.attributedTitle = NSAttributedString(string: errorButton.stringValue, attributes: [ NSAttributedStringKey.backgroundColor: NSColor.clear, NSAttributedStringKey.foregroundColor : NSColor.white])
+            errorButton.attributedTitle = NSAttributedString(string: errorButton.stringValue, attributes: [ NSAttributedStringKey.backgroundColor: NSColor.windowBackgroundColor, NSAttributedStringKey.foregroundColor : NSColor.white])
             errorButton.isHidden = true
         }
     }

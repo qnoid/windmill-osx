@@ -33,4 +33,10 @@ struct Scripts
         static let READ_BUILD_SETTINGS : BashScript = "Scripts/commandlinetools/read_build_settings"
         static let READ_DEVICES : BashScript = "Scripts/commandlinetools/read_devices"
     }
+    
+    struct Simctl {
+        static let BOOT : BashScript = "Scripts/simctl/boot"
+        static let INSTALL : BashScript = "Scripts/simctl/install"
+        static let LAUNCH : BashScript = "Scripts/simctl/launch"
+    }
 }

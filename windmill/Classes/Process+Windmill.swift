@@ -115,45 +115,45 @@ extension Process
         return process
     }
     
-    public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_FOR_TESTING, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
+        process.arguments = [destination.udid ?? "", scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
 
-    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
+        process.arguments = [destination.udid ?? "", scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    static func makeTestWithoutBuilding(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    static func makeTestWithoutBuilding(repositoryLocalURL: Repository.LocalURL, scheme: String, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_WITHOUT_BUILDING, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, derivedDataURL.path, resultBundle.url.path]
+        process.arguments = [destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    static func makeTestSkip(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    static func makeTestSkip(repositoryLocalURL: Repository.LocalURL, scheme: String, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_SKIP, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, derivedDataURL.path, resultBundle.url.path]
+        process.arguments = [destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
         process.qualityOfService = .utility
         
         return process
@@ -199,6 +199,36 @@ extension Process
         process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
         process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
         process.qualityOfService = .utility
+        
+        return process
+    }
+
+    public static func makeBoot(destination: Devices.Destination) -> Process {
+        
+        let process = Process()
+        process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.BOOT, ofType: "sh")!
+        process.arguments = [destination.udid ?? ""]
+        process.qualityOfService = .background
+        
+        return process
+    }
+
+    public static func makeInstall(destination: Devices.Destination, appBundle: AppBundle) -> Process {
+        
+        let process = Process()
+        process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.INSTALL, ofType: "sh")!
+        process.arguments = [destination.udid ?? "", appBundle.url.path]
+        process.qualityOfService = .background
+        
+        return process
+    }
+    
+    public static func makeLaunch(destination: Devices.Destination, info: AppBundle.Info) -> Process {
+        
+        let process = Process()
+        process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.LAUNCH, ofType: "sh")!
+        process.arguments = [destination.udid ?? "", info.bundleIdentifier]
+        process.qualityOfService = .userInitiated
         
         return process
     }

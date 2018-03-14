@@ -170,6 +170,8 @@ public protocol ProjectHomeDirectory : DirectoryType
     func configuration() -> Project.Configuration
     func buildSettings() -> BuildSettings
     func devices() -> Devices
+    func appBundle(name: String) -> AppBundle
+    func appBundle(derivedDataURL: URL, name: String) -> AppBundle
     func archive(name: String) -> Archive
     func appBundle(archive: Archive, name: String) -> AppBundle
     func distributionSummary() -> Export.DistributionSummary
@@ -245,12 +247,27 @@ extension ProjectHomeDirectory {
         return Archive(url: archiveURL, info: Archive.Info.make(at: archiveInfoURL))
     }
     
+    public func appBundle(name: String) -> AppBundle {
+        let appBundleURL = buildDirectoryURL().appendingPathComponent("\(name).app")
+        let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
+        
+        return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
+    }
+
+    public func appBundle(derivedDataURL: URL, name: String) -> AppBundle {
+        
+        let appBundleURL = derivedDataURL.appendingPathComponent("Build/Products/Debug-iphonesimulator/\(name).app")
+        let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
+        
+        return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
+    }
+
     public func appBundle(archive: Archive, name: String) -> AppBundle {
         
         let appBundleURL = archive.url.appendingPathComponent("Products/Applications/\(name).app")
-        let info = AppBundle.Info.make(appBundleURL: appBundleURL)
-        
-        return AppBundle(url: appBundleURL, info: info)
+        let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
+
+        return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
     }
 
     public func distributionSummary() -> Export.DistributionSummary {

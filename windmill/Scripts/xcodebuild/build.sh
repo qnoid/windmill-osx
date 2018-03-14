@@ -4,15 +4,11 @@
 # SCHEME
 # CONFIGURATION
 
-DEVICES_FOR_PROJECT=$1
+DESTINATION_ID=$1
 SCHEME=$2
 CONFIGURATION=$3
 DERIVED_DATA_PATH_FOR_PROJECT=$4
 RESULT_BUNDLE_PATH_FOR_PROJECT=$5
-
-PARSE="import sys, json; print json.load(open(\"${DEVICES_FOR_PROJECT}\"))[\"destination\"][\"udid\"]"
-
-DESTINATION_ID=$(python -c "$PARSE")
 
 xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}"
 

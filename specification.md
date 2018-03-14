@@ -22,3 +22,11 @@
 * show the same icon for every scheme listed
 
 ## Windmill must be able to also pull code from any git submodules as part of monitoring a project repo
+
+# Simulator Support
+
+## The user must be able to run the build on a Simulator
+
+* By default, the device should be the same as the one the app was built and tested for.
+* If the device is removed since Windmill performed the last run, simply open the Simulator.
+* The user should be given the option to install the build on any device.
