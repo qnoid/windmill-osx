@@ -131,6 +131,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
             self.errorButton.isHidden = false
         }
 
+
         if let error = aNotification.userInfo?["error"] as? NSError {
             self.toolTip = error.localizedFailureReason
             self.prettyLogTextField.stringValue = error.localizedDescription

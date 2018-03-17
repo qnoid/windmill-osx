@@ -207,22 +207,16 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
     }
     
-    func reportsWindowController() -> ReportsWindowController? {
-        
-        let reportsStoryboard = NSStoryboard.Windmill.reportsStoryboard()
-        
-        let reportsWindowController = reportsStoryboard.instantiateInitialController() as? ReportsWindowController
-        let errorSummariesViewController = reportsWindowController?.errorSummariesViewController
-        errorSummariesViewController?.delegate = reportsWindowController        
-        
-        return reportsWindowController
+    func show(errorSummariesWindowController: ErrorSummariesWindowController?) {
+        errorSummariesWindowController?.errorSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
+        errorSummariesWindowController?.showWindow(self)
     }
-    
-    func show(reportsWindowController: ReportsWindowController?) {
-        reportsWindowController?.errorSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
-        reportsWindowController?.showWindow(self)
+
+    func show(testFailureSummariesWindowController: TestFailureSummariesWindowController?) {
+        testFailureSummariesWindowController?.testFailureSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
+        testFailureSummariesWindowController?.showWindow(self)
     }
-    
+
     func setBottomPanel(isOpen selected: Bool) {
         self.panels.setSelected(selected, forSegment: 0)
     }

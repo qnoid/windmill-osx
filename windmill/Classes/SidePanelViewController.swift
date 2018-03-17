@@ -320,6 +320,20 @@ class SidePanelViewController: NSViewController {
             self.buildConfiguration.isHidden = false
             self.buildConfigurationValue.isHidden = false
             self.buildConfigurationValue.stringValue = Configuration.debug.name
+        case .test:
+            let devices = aNotification.userInfo?["devices"] as? Devices
+            let destination = aNotification.userInfo?["destination"] as? Devices.Destination
+            
+            self.test.isHidden = false
+            self.platform.isHidden = false
+            self.platformValue.isHidden = false
+            self.platformValue.stringValue = devices?.platform == nil ? "N/A" : "iOS Simulator"
+            self.platformVersion.isHidden = false
+            self.platformVersionValue.isHidden = false
+            self.platformVersionValue.stringValue = devices?.version?.description ?? "N/A"
+            self.platformName.isHidden = false
+            self.platformNameValue.isHidden = false
+            self.platformNameValue.stringValue = destination?.name ?? "N/A"
         case .archive:
             self.archive.isHidden = false
             self.archiveSection.configuration.isHidden = false
@@ -348,21 +362,7 @@ class SidePanelViewController: NSViewController {
             self.origin.isHidden = false
             self.originValue.stringValue = commit.repository.origin
             self.originValue.isHidden = false
-        case .test:
-            let devices = aNotification.userInfo?["devices"] as? Devices
-            let destination = aNotification.userInfo?["destination"] as? Devices.Destination
-            
-            self.test.isHidden = false
-            self.platform.isHidden = false
-            self.platformValue.isHidden = false
-            self.platformValue.stringValue = devices?.platform == nil ? "N/A" : "iOS Simulator"
-            self.platformVersion.isHidden = false
-            self.platformVersionValue.isHidden = false
-            self.platformVersionValue.stringValue = devices?.version?.description ?? "N/A"
-            self.platformName.isHidden = false
-            self.platformNameValue.isHidden = false
-            self.platformNameValue.stringValue = destination?.name ?? "N/A"
-        case .archive:            
+        case .archive:
             guard let archive = aNotification.userInfo?["archive"] as? Archive else {
                 return
             }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TestReportView" customModule="Windmill" customModuleProvider="target">
+            <connections>
+                <outlet property="headerTextField" destination="yqC-Pk-JBz" id="dZk-mG-36T"/>
+                <outlet property="stageIndicatorView" destination="akk-Pr-ed7" id="mqL-NL-5Fk"/>
+                <outlet property="testButton" destination="z0C-9v-6XE" id="Zpo-DB-bQz"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="nRl-0A-b5k">
+            <rect key="frame" x="0.0" y="0.0" width="270" height="152"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <scrollView horizontalHuggingPriority="251" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyM-el-YF0">
+                    <rect key="frame" x="16" y="108" width="240" height="36"/>
+                    <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="MzB-U7-8Ah">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="yqC-Pk-JBz" customClass="LinkLabel" customModule="Windmill" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <size key="minSize" width="240" height="36"/>
+                                <size key="maxSize" width="463" height="10000000"/>
+                                <attributedString key="textStorage">
+                                    <fragment content="Test Report">
+                                        <attributes>
+                                            <font key="NSFont" metaFont="systemBold" size="14"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </clipView>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="kAZ-Hq-1Ff"/>
+                        <constraint firstAttribute="width" constant="240" id="tBp-Df-aPV"/>
+                    </constraints>
+                    <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="3kO-Dk-mhJ">
+                        <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                    <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="ZNS-Vd-7dA">
+                        <rect key="frame" x="224" y="0.0" width="16" height="36"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </scroller>
+                </scrollView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="akk-Pr-ed7" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="20" y="37" width="5" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="5" id="QXr-aY-fVa"/>
+                    </constraints>
+                </customView>
+                <button translatesAutoresizingMaskIntoConstraints="NO" id="z0C-9v-6XE" userLabel="Test Report Button" customClass="TestReportButton" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="34" y="37" width="236" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="jcv-ua-tID"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="0" bezelStyle="shadowlessSquare" image="TestSuccess" imagePosition="left" alignment="left" inset="2" id="Iuj-xj-160">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="systemBold" size="32"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="showTestFailureSummariesWindowController:" target="-1" id="WEo-RD-zco"/>
+                    </connections>
+                </button>
+                <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OWv-6J-VaY">
+                    <rect key="frame" x="28" y="1" width="73" height="32"/>
+                    <buttonCell key="cell" type="push" title="Open" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="TQJ-JP-fKh">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="z0C-9v-6XE" firstAttribute="leading" secondItem="OWv-6J-VaY" secondAttribute="leading" id="5Q5-k4-o30"/>
+                <constraint firstAttribute="trailing" secondItem="z0C-9v-6XE" secondAttribute="trailing" id="6H4-ZZ-h0k"/>
+                <constraint firstAttribute="bottom" secondItem="OWv-6J-VaY" secondAttribute="bottom" constant="8" id="7Vj-wz-eLB"/>
+                <constraint firstItem="z0C-9v-6XE" firstAttribute="leading" secondItem="akk-Pr-ed7" secondAttribute="leading" constant="14" id="D1A-zu-6lR"/>
+                <constraint firstItem="akk-Pr-ed7" firstAttribute="leading" secondItem="nRl-0A-b5k" secondAttribute="leading" constant="20" symbolic="YES" id="E0q-oH-2I8"/>
+                <constraint firstItem="z0C-9v-6XE" firstAttribute="top" secondItem="dyM-el-YF0" secondAttribute="bottom" constant="7" id="EtC-Ec-QEk"/>
+                <constraint firstItem="dyM-el-YF0" firstAttribute="top" secondItem="nRl-0A-b5k" secondAttribute="top" constant="8" id="W1A-Ti-6hM"/>
+                <constraint firstItem="z0C-9v-6XE" firstAttribute="centerY" secondItem="akk-Pr-ed7" secondAttribute="centerY" id="mgf-L0-4nZ"/>
+                <constraint firstItem="dyM-el-YF0" firstAttribute="leading" secondItem="akk-Pr-ed7" secondAttribute="leading" constant="-4" id="o9S-47-ADG"/>
+                <constraint firstItem="OWv-6J-VaY" firstAttribute="top" secondItem="z0C-9v-6XE" secondAttribute="bottom" constant="8" id="wuW-QO-bt5"/>
+                <constraint firstItem="z0C-9v-6XE" firstAttribute="bottom" secondItem="akk-Pr-ed7" secondAttribute="bottom" id="yWY-jz-UI3"/>
+            </constraints>
+            <point key="canvasLocation" x="59" y="-64"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="TestSuccess" width="42" height="42"/>
+    </resources>
+</document>

@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "error.png",
+      "filename" : "TestFailure.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "error@2x.png",
+      "filename" : "TestFailure@2x.png",
       "scale" : "2x"
     },
     {

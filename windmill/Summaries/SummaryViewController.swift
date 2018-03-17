@@ -1,5 +1,5 @@
 //
-//  InfoViewController.swift
+//  SummaryViewController.swift
 //  windmill
 //
 //  Created by Markos Charatzas on 4/3/18.
@@ -8,7 +8,45 @@
 
 import AppKit
 
-class InfoViewController: NSViewController {
+extension NSTextView {
+    
+    func lineRange(for textDocumentLocation: TextDocumentLocation) -> NSRange? {
+        
+        guard textDocumentLocation.characterRangeLoc >= 0 else {
+            return nil
+        }
+        
+        let string = (self.string as NSString)
+        
+        return string.lineRange(for: NSRange(location: textDocumentLocation.characterRangeLoc, length: 0))
+    }
+
+    /**
+ 
+     - parameter line: 0 based.
+    */
+    func lineRange(startingLineNumber: Int) -> NSRange {
+        
+        guard let layoutManager = self.layoutManager else {
+            return NSRange()
+        }
+        
+        var effectiveRange = NSRange()
+        
+        var numberOfLines = 0
+        var indexOfGlyph = 0
+        
+        while (indexOfGlyph < layoutManager.numberOfGlyphs && numberOfLines < startingLineNumber + 1) {
+            layoutManager.lineFragmentRect(forGlyphAt: indexOfGlyph, effectiveRange: &effectiveRange)
+            indexOfGlyph = NSMaxRange(effectiveRange);
+            numberOfLines += 1
+        }
+        
+        return effectiveRange
+    }
+}
+
+class SummaryViewController: NSViewController {
 
     @IBOutlet weak var scrollView: NSScrollView! {
         didSet{
@@ -39,9 +77,9 @@ class InfoViewController: NSViewController {
     
     let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
     
-    var errorSummary: ResultBundle.ErrorSummary? {
+    var summary: Summary? {
         didSet{
-            guard let textDocumentLocation = errorSummary?.textDocumentLocation, let documentURL = textDocumentLocation.documentURL else {
+            guard let textDocumentLocation = summary?.textDocumentLocation, let documentURL = textDocumentLocation.documentURL else {
                 return
             }
                         
@@ -62,9 +100,18 @@ class InfoViewController: NSViewController {
             if let file = textDocumentLocation.documentURL?.lastPathComponent {
                 textView.toolTip = "In Xcode, \"Jump Line In “\(file)“... ⌘L\" \(textDocumentLocation.startingLineNumber)"
             }
-            textStorage.addAttributes([NSAttributedStringKey.underlineColor : NSColor.red, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid.rawValue | NSUnderlineStyle.styleSingle.rawValue], range: NSRange(location: textDocumentLocation.characterRangeLoc - 1, length: textDocumentLocation.characterRangeLen + 1))
             
-            let lineRange = (textStorage.string as NSString).lineRange(for: NSRange(location: textDocumentLocation.characterRangeLoc, length: 0))
+            if let characterRange = textDocumentLocation.characterRange {
+                textStorage.addAttributes([NSAttributedStringKey.underlineColor : NSColor.red, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid.rawValue | NSUnderlineStyle.styleSingle.rawValue], range: characterRange)
+            }
+            
+            let lineRange: NSRange
+            
+            if let range = textView.lineRange(for: textDocumentLocation) {
+                lineRange = range
+            } else {
+                lineRange = textView.lineRange(startingLineNumber: textDocumentLocation.startingLineNumber)
+            }
             
             textStorage.addAttributes([NSAttributedStringKey.backgroundColor : NSColor.Windmill.errorLine()], range: lineRange)
             

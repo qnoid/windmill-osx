@@ -30,3 +30,10 @@
 * By default, the device should be the same as the one the app was built and tested for.
 * If the device is removed since Windmill performed the last run, simply open the Simulator.
 * The user should be given the option to install the build on any device.
+
+# Test Reports
+
+## Windmill must report test failures
+
+* The user can click the test failure icon, including failed count to see the list of test failures
+* The user can also navigate using the 'Jump to Next/Previous Issue' menu item

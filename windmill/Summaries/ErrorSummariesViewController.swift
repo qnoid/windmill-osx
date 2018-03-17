@@ -20,7 +20,7 @@ protocol ErrorSummariesViewControllerDelegate: class {
     func doubleAction(_ errorSummariesViewController: ErrorSummariesViewController, errorSummary: ResultBundle.ErrorSummary)
 }
 
-class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate {
+class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, SummariesViewController {
 
     enum ErrorSummaryIdentifier: String {
         
@@ -148,7 +148,6 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
     }
     
     override func keyDown(with event: NSEvent) {
-        print(event.keyCode)
         
         switch event.keyCode {
         case 49: //space
@@ -178,19 +177,5 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         
         let column = tableView.tableColumn(withIdentifier: identifier)
         column?.isHidden = menuItem.state == .off ? true : false
-    }
-    
-    func jumpToNextIssue() {
-        let next = min(self.tableView.numberOfRows, self.tableView.selectedRow + 1)
-        let nextSelectRowIndex = IndexSet(integer: next)
-        
-        self.tableView.selectRowIndexes(nextSelectRowIndex, byExtendingSelection: false)
-    }
-    
-    func jumpToPreviousIssue() {
-        let previous = max(0, self.tableView.selectedRow - 1)
-        let previousSelectRowIndex = IndexSet(integer: previous)
-
-        self.tableView.selectRowIndexes(previousSelectRowIndex, byExtendingSelection: false)
     }
 }

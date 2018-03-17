@@ -16,46 +16,74 @@ import os
 
 class ArtefactsViewController: NSViewController {
 
-    @IBOutlet weak var buildArtefactView: ArtefactView!
-    @IBOutlet weak var archiveArtefactView: ArtefactView!
+    @IBOutlet weak var buildArtefactView: ArtefactView! {
+        didSet {
+            buildArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.build.header", comment: "")
+            buildArtefactView.toolTip = NSLocalizedString("windmill.artefacts.build.tooltip", comment: "")
+        }
+    }
+    @IBOutlet weak var testArtefactView: ArtefactView! {
+        didSet {
+            testArtefactView.headerTextField.string = NSLocalizedString("windmill.reports.test.header", comment: "")
+            testArtefactView.toolTip = NSLocalizedString("windmill.reports.test.tooltip", comment: "")
+            testArtefactView.leadingLabel.stringValue = "You need to:"
+        }
+    }
+    @IBOutlet weak var archiveArtefactView: ArtefactView! {
+        didSet {
+            archiveArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.archive.header", comment: "")
+            archiveArtefactView.toolTip = NSLocalizedString("windmill.artefacts.archive.tooltip", comment: "")
+        }
+    }
     @IBOutlet weak var exportArtefactView: ArtefactView! {
         didSet {
-            exportArtefactView.headerLabel.stringValue = ""
+            exportArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.ipa.header", comment: "")
+            exportArtefactView.toolTip = NSLocalizedString("windmill.artefacts.ipa.tooltip", comment: "")
+            exportArtefactView.leadingLabel.stringValue = ""
         }
     }
     @IBOutlet weak var deployArtefactView: ArtefactView! {
         didSet {
-            deployArtefactView.headerLabel.stringValue = "You need to:"
-            if (try? Keychain.defaultKeychain().findWindmillUser()) == nil {
-                deployArtefactView.toolTip =  NSLocalizedString("windmill.paid", comment: "")
-            }
+            deployArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
+            deployArtefactView.leadingLabel.stringValue = "You need to:"
+            deployArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
     
     lazy var artefactViews: [ActivityType: ArtefactView] = { [unowned self] in
-        return [.build: self.buildArtefactView, .archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
+        return [.build: self.buildArtefactView, .test: self.testArtefactView, .archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
         }()
     
-    @IBOutlet weak var appView: AppView!{
-        didSet{
-            appView.isHidden = true
+    @IBOutlet weak var appView: AppView! {
+        didSet {
+            appView.toolTip = NSLocalizedString("windmill.artefacts.build.tooltip", comment: "")
+        }
+    }
+    @IBOutlet weak var testReportView: TestReportView! {
+        didSet {
+            testReportView.toolTip = NSLocalizedString("windmill.reports.test.tooltip", comment: "")
         }
     }
     @IBOutlet weak var archiveView: ArchiveView! {
-        didSet{
-            archiveView.isHidden = true
+        didSet {
+            archiveView.toolTip = NSLocalizedString("windmill.artefacts.archive.tooltip", comment: "")
         }
     }
     @IBOutlet weak var exportView: ExportView! {
-        didSet{
-            exportView.isHidden = true
+        didSet {
+            exportView.toolTip = NSLocalizedString("windmill.artefacts.ipa.tooltip", comment: "")
         }
     }
     @IBOutlet weak var deployView: DeployView! {
-        didSet{
-            deployView.isHidden = true
+        didSet {
+            deployView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
+    
+    lazy var views: [ActivityType: NSView] = { [unowned self] in
+        return [.build: self.appView, .test: self.testReportView, .archive: self.archiveView, .export: self.exportView, .deploy: self.deployView]
+        }()
+
 
     let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -73,6 +101,7 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didDeploySuccesfully(_:)), name: Windmill.Notifications.didDeployProject, object: windmill)
@@ -88,10 +117,9 @@ class ArtefactsViewController: NSViewController {
             artefactView.isHidden = false
             artefactView.stopStageAnimation()
         }
-        self.appView.isHidden = true
-        self.archiveView.isHidden = true
-        self.exportView.isHidden = true
-        self.deployView.isHidden = true
+        for view in self.views.values {
+            view.isHidden = true
+        }
     }
 
     @objc func activityDidLaunch(_ aNotification: Notification) {
@@ -99,12 +127,31 @@ class ArtefactsViewController: NSViewController {
             return
         }
 
+        if let skip = aNotification.userInfo?["skip"] as? Bool, skip == true {
+            return
+        }
+        
         self.artefactViews[activity]?.startStageAnimation()
     }
 
     @objc func activityError(_ aNotification: Notification) {
-        if let activity = aNotification.userInfo?["activity"] as? ActivityType {
-            self.artefactViews[activity]?.stopStageAnimation()
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+            return
+        }
+        
+        self.artefactViews[activity]?.stopStageAnimation()
+        
+        switch activity {
+        case .test:
+            self.artefactViews[activity]?.isHidden = true
+            
+            if let testsFailedCount = aNotification.userInfo?["testsFailedCount"] as? Int {
+                self.testReportView.testReport = .failure(testsFailedCount: testsFailedCount)
+                self.testReportView.isHidden = false
+            }
+
+        default:
+            return
         }
     }
     
@@ -115,18 +162,25 @@ class ArtefactsViewController: NSViewController {
         }
 
         self.artefactViews[activity]?.stopStageAnimation()
+        
+        if let skip = aNotification.userInfo?["skip"] as? Bool, skip == true {
+            return
+        }
+
         self.artefactViews[activity]?.isHidden = true
         
-        guard case .checkout = activity else {
-            return
-        }
-        
-        guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
+        switch activity {
+        case .checkout:
+            
+            guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
             os_log("Repository for project not found. Have you cloned it? Did you pass the `repositoryLocalURL`?", log: .default, type: .error)
             return
-        }
+            }
         
-        self.appView.commit = commit
+            self.appView.commit = commit
+        default:
+            return
+        }
     }
 
     @objc func didBuildProject(_ aNotification: NSNotification) {
@@ -138,6 +192,16 @@ class ArtefactsViewController: NSViewController {
         self.appView.appBundle = appBundle
         self.appView.isHidden = false
     }
+    
+    @objc func didTestProject(_ aNotification: NSNotification) {
+        
+        if let testsCount = aNotification.userInfo?["testsCount"] as? Int {
+            self.testReportView.testReport = .success(testsCount: testsCount)
+            self.testReportView.isHidden = false
+        }
+
+    }
+    
     @objc func didArchiveSuccesfully(_ aNotification: Notification) {
         
         guard let archive = aNotification.userInfo?["archive"] as? Archive else {
