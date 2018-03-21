@@ -66,7 +66,7 @@ extension Process
     }
     
     fileprivate class func pathForDir(_ name: String) -> String! {
-        return Bundle.main.path(forResource: name, ofType:nil);
+        return Bundle.main.path(forResource: name, ofType:nil)
     }
     
     public static func makeReadBuildSettings(repositoryLocalURL: Repository.LocalURL, scheme: String, buildSettings: BuildSettings) -> Process {

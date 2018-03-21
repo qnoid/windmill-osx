@@ -23,7 +23,7 @@ extension Keychain
     {
         func findUser() throws -> String
         {
-            let account = self.findGenericPassword(KeychainWindmillAccount);
+            let account = self.findGenericPassword(KeychainWindmillAccount)
             
             guard let user = account.password else {
                 throw KeychainError.instance(account.status)
@@ -32,7 +32,7 @@ extension Keychain
         return user
         }
 
-    return findUser;
+    return findUser
     }
     
     /**

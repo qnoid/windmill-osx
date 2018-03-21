@@ -32,7 +32,7 @@ final public class Keychain
             kSecValueData: password.data(using: String.Encoding.utf8)!
         ]
                 
-        return SecItemAdd(attributes as CFDictionary, nil);
+        return SecItemAdd(attributes as CFDictionary, nil)
     }
     
     func findGenericPassword(_ account:KeychainAccount) -> (status:OSStatus, password:String?) {

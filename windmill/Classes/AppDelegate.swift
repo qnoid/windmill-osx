@@ -181,12 +181,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @objc func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .link;
+        return .link
     }
     
     @objc func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .link;
+        return .link
         
     }
     

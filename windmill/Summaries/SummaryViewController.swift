@@ -38,7 +38,7 @@ extension NSTextView {
         
         while (indexOfGlyph < layoutManager.numberOfGlyphs && numberOfLines < startingLineNumber + 1) {
             layoutManager.lineFragmentRect(forGlyphAt: indexOfGlyph, effectiveRange: &effectiveRange)
-            indexOfGlyph = NSMaxRange(effectiveRange);
+            indexOfGlyph = NSMaxRange(effectiveRange)
             numberOfLines += 1
         }
         
@@ -54,7 +54,17 @@ class SummaryViewController: NSViewController {
     }
     @IBOutlet var textView: NSTextView! {
         didSet{
-            textView.textColor = NSColor.gray
+            let rulerView = TextViewRuler<NSTextView>(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
+            rulerView.clientView = textView
+            rulerView.ruleThickness = 36
+            rulerView.accessoryView = nil
+            
+            textView.usesRuler = true
+            textView.isRulerVisible = true
+            textView.enclosingScrollView?.horizontalRulerView = nil
+            textView.enclosingScrollView?.verticalRulerView = rulerView
+
+            textView.textColor = NSColor.black
             textView.layerContentsPlacement = .left
             textView.layerContentsRedrawPolicy = .onSetNeedsDisplay
             textView.layoutManager?.allowsNonContiguousLayout = true
@@ -69,7 +79,6 @@ class SummaryViewController: NSViewController {
             textView.smartInsertDeleteEnabled = false
             textView.usesFontPanel = false
             textView.usesFindPanel = false
-            textView.usesRuler = false
         }
     }
     
@@ -98,7 +107,7 @@ class SummaryViewController: NSViewController {
             }
 
             if let file = textDocumentLocation.documentURL?.lastPathComponent {
-                textView.toolTip = "In Xcode, \"Jump Line In “\(file)“... ⌘L\" \(textDocumentLocation.startingLineNumber)"
+                textView.toolTip = "In Xcode, \"Jump Line In “\(file)“... ⌘L\" \(textDocumentLocation.startingLineNumber + 1)"
             }
             
             if let characterRange = textDocumentLocation.characterRange {
@@ -118,7 +127,7 @@ class SummaryViewController: NSViewController {
             textView.scrollRangeToVisible(lineRange)
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

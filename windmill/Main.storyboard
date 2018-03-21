@@ -728,7 +728,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
                                                 <color key="value" red="0.25098039220000001" green="0.53725490200000003" blue="0.7725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Fix any build errors."/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* There are no build errors."/>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
                                     <customView hidden="YES" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vn2-oD-Jk4" customClass="AppView" customModule="Windmill" customModuleProvider="target">

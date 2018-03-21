@@ -20,6 +20,7 @@ class ArtefactsViewController: NSViewController {
         didSet {
             buildArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.build.header", comment: "")
             buildArtefactView.toolTip = NSLocalizedString("windmill.artefacts.build.tooltip", comment: "")
+            buildArtefactView.leadingLabel.stringValue = "Make sure:"
         }
     }
     @IBOutlet weak var testArtefactView: ArtefactView! {

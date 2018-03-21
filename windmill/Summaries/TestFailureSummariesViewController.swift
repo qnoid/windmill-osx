@@ -10,7 +10,7 @@ import Cocoa
 
 class TestFailureSummariesView: NSView {
     override var intrinsicContentSize: NSSize {
-        return NSSize(width: 329, height: 240);
+        return NSSize(width: 329, height: 240)
     }
 }
 
