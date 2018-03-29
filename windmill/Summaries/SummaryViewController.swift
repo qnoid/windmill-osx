@@ -10,15 +10,15 @@ import AppKit
 
 extension NSTextView {
     
-    func lineRange(for textDocumentLocation: TextDocumentLocation) -> NSRange? {
+    func lineRange(for summary: Summary) -> NSRange? {
         
-        guard textDocumentLocation.characterRangeLoc >= 0 else {
+        guard summary.characterRangeLoc >= 0 else {
             return nil
         }
         
         let string = (self.string as NSString)
         
-        return string.lineRange(for: NSRange(location: textDocumentLocation.characterRangeLoc, length: 0))
+        return string.lineRange(for: NSRange(location: summary.characterRangeLoc, length: 0))
     }
 
     /**
@@ -27,31 +27,34 @@ extension NSTextView {
     */
     func lineRange(startingLineNumber: Int) -> NSRange {
         
-        guard let layoutManager = self.layoutManager else {
-            return NSRange()
-        }
+        let string = (self.string as NSString)
         
-        var effectiveRange = NSRange()
-        
+        let length = string.length
         var numberOfLines = 0
-        var indexOfGlyph = 0
-        
-        while (indexOfGlyph < layoutManager.numberOfGlyphs && numberOfLines < startingLineNumber + 1) {
-            layoutManager.lineFragmentRect(forGlyphAt: indexOfGlyph, effectiveRange: &effectiveRange)
-            indexOfGlyph = NSMaxRange(effectiveRange)
+        var index = 0
+        var lineRange = NSRange()
+        while (index < length && numberOfLines < startingLineNumber) {
+            
+            lineRange = string.lineRange(for: NSMakeRange(index, 0))
+            index = NSMaxRange(lineRange)
             numberOfLines += 1
         }
         
-        return effectiveRange
+        return lineRange
     }
 }
 
 class SummaryViewController: NSViewController {
 
-    @IBOutlet weak var scrollView: NSScrollView! {
+    @IBOutlet weak var pathControl: NSPathControl! {
         didSet{
+            pathControl.isHidden = true
+            pathControl.isEditable = false
+            pathControl.controlSize = .regular
         }
     }
+
+    @IBOutlet weak var scrollView: NSScrollView!
     @IBOutlet var textView: NSTextView! {
         didSet{
             let rulerView = TextViewRuler<NSTextView>(scrollView: textView.enclosingScrollView, orientation: .verticalRuler)
@@ -88,7 +91,7 @@ class SummaryViewController: NSViewController {
     
     var summary: Summary? {
         didSet{
-            guard let textDocumentLocation = summary?.textDocumentLocation, let documentURL = textDocumentLocation.documentURL else {
+            guard let summary = summary, let documentURL = summary.documentURL else {
                 return
             }
                         
@@ -96,6 +99,17 @@ class SummaryViewController: NSViewController {
                 return
             }
             
+            if let pathControl = self.pathControl {
+                pathControl.isHidden = false
+                let string = documentURL.path.replacingOccurrences(of: applicationCachesDirectory.sourcesURL().path, with: "")
+                pathControl.url = URL(string: string)
+                pathControl.pathItems.forEach { path in
+                    path.image = #imageLiteral(resourceName: "NavGroup")
+                }
+                pathControl.pathItems.first?.image = #imageLiteral(resourceName: "xcode-project_icon")
+                pathControl.pathItems.last?.image = #imageLiteral(resourceName: "swift-source_Icon")
+            }
+
             guard let textView = self.textView else {
                 return
             }
@@ -106,20 +120,18 @@ class SummaryViewController: NSViewController {
                 return
             }
 
-            if let file = textDocumentLocation.documentURL?.lastPathComponent {
-                textView.toolTip = "In Xcode, \"Jump Line In “\(file)“... ⌘L\" \(textDocumentLocation.startingLineNumber + 1)"
-            }
+            textView.toolTip = "In Xcode, \"Jump Line In “\(documentURL.lastPathComponent)“... ⌘L\" \(summary.lineNumber)"
             
-            if let characterRange = textDocumentLocation.characterRange {
+            if let characterRange = summary.characterRange {
                 textStorage.addAttributes([NSAttributedStringKey.underlineColor : NSColor.red, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid.rawValue | NSUnderlineStyle.styleSingle.rawValue], range: characterRange)
             }
             
             let lineRange: NSRange
             
-            if let range = textView.lineRange(for: textDocumentLocation) {
+            if let range = textView.lineRange(for: summary) {
                 lineRange = range
             } else {
-                lineRange = textView.lineRange(startingLineNumber: textDocumentLocation.startingLineNumber)
+                lineRange = textView.lineRange(startingLineNumber: summary.lineNumber)
             }
             
             textStorage.addAttributes([NSAttributedStringKey.backgroundColor : NSColor.Windmill.errorLine()], range: lineRange)

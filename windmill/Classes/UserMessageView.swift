@@ -21,13 +21,13 @@ class UserMessageViewBox: NSBox {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
         self.updateFillColor()
     }
     
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
-        NotificationCenter.default.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(accessibilityDisplayShouldIncreaseContrast(_:)), name: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification, object: NSWorkspace.shared)
         self.updateFillColor()
     }
     

@@ -27,5 +27,9 @@ extension NSStoryboard
         static func testFailureSummariesStoryboard() -> NSStoryboard {
             return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestFailureSummaries"), bundle: Bundle.main)
         }
+        
+        static func testSummariesStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestSummaries"), bundle: Bundle.main)
+        }
     }
 }

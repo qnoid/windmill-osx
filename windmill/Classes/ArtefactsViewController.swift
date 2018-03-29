@@ -121,6 +121,8 @@ class ArtefactsViewController: NSViewController {
         for view in self.views.values {
             view.isHidden = true
         }
+        
+        self.testReportView.openButton.isHidden = true
     }
 
     @objc func activityDidLaunch(_ aNotification: Notification) {
@@ -150,6 +152,12 @@ class ArtefactsViewController: NSViewController {
                 self.testReportView.testReport = .failure(testsFailedCount: testsFailedCount)
                 self.testReportView.isHidden = false
             }
+
+            guard let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] else {
+                return
+            }
+            
+            self.testReportView.openButton.isHidden = testableSummaries.count == 0
 
         default:
             return
@@ -201,6 +209,11 @@ class ArtefactsViewController: NSViewController {
             self.testReportView.isHidden = false
         }
 
+        guard let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] else {
+            return
+        }
+
+        self.testReportView.openButton.isHidden = testableSummaries.count == 0
     }
     
     @objc func didArchiveSuccesfully(_ aNotification: Notification) {

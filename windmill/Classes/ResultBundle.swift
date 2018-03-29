@@ -9,12 +9,45 @@
 import Foundation
 
 protocol Summary {
-    var textDocumentLocation: TextDocumentLocation? { get }
+    var documentURL: URL? { get }
+    var lineNumber: Int { get }
+    
+    var characterRange: NSRange? { get }
+    var characterRangeLoc: Int { get }
+}
+
+struct TextDocumentLocationSummary: Summary {
+    
+    var documentURL: URL? {
+        return textDocumentLocation.documentURL
+    }
+    
+    var lineNumber: Int {
+        return textDocumentLocation.startingLineNumber + 1
+    }
+    
+    var characterRange: NSRange? {
+        return textDocumentLocation.characterRange
+    }
+    
+    var characterRangeLoc: Int {
+        return textDocumentLocation.characterRangeLoc
+    }
+    
+    let textDocumentLocation: TextDocumentLocation
+    
+    init?(textDocumentLocation: TextDocumentLocation?) {
+        guard let textDocumentLocation = textDocumentLocation else {
+            return nil
+        }
+        
+        self.textDocumentLocation = textDocumentLocation
+    }
 }
 
 public struct ResultBundle {
     
-    public struct TestFailureSummary: Summary {
+    public struct TestFailureSummary {
         
         let values: [String: Any]
         
@@ -56,7 +89,7 @@ public struct ResultBundle {
         }
     }
     
-    public struct ErrorSummary: Summary {
+    public struct ErrorSummary {
         
         let values: [String: Any]
         
@@ -150,9 +183,16 @@ public struct ResultBundle {
     }
     
     static func make(at url: URL, info: ResultBundle.Info) -> ResultBundle {
-        return ResultBundle(url: url, info: info)
+        return ResultBundle(url: url, info: info, testSummaries: nil)
     }
-    
+
+    static func make(at url: URL, info: ResultBundle.Info, testSummaries: TestSummaries) -> ResultBundle {
+        return ResultBundle(url: url, info: info, testSummaries: testSummaries)
+    }
+
     let url: URL
     let info: Info
+    
+    //available on the test action
+    let testSummaries: TestSummaries?
 }

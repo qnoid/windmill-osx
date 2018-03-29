@@ -32,7 +32,20 @@ class SidePanelViewController: NSViewController {
         originValue.isSelectable = true
         return originValue
     }()
+
+    lazy var commit: NSTextField = {
+        let commit = NSTextField(labelWithString: "Commit:")
+        commit.isHidden = true
+        return commit
+    }()
     
+    lazy var commitValue: NSTextField = {
+        let commitValue = NSTextField(labelWithString: "")
+        commitValue.isHidden = true
+        commitValue.isSelectable = true
+        return commitValue
+    }()
+
     // MARK: Build views
     
     lazy var build: NSTextField = {
@@ -260,6 +273,7 @@ class SidePanelViewController: NSViewController {
         let gridView = NSGridView(views: [
             [checkout, empty],
             [origin, originValue],
+            [commit, commitValue],
             [build, empty],
             [buildConfiguration, buildConfigurationValue],
             [test, empty],
@@ -362,6 +376,9 @@ class SidePanelViewController: NSViewController {
             self.origin.isHidden = false
             self.originValue.stringValue = commit.repository.origin
             self.originValue.isHidden = false
+            self.commit.isHidden = false
+            self.commitValue.stringValue = commit.shortSha
+            self.commitValue.isHidden = false
         case .archive:
             guard let archive = aNotification.userInfo?["archive"] as? Archive else {
                 return

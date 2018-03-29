@@ -8,6 +8,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="TestReportView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="headerTextField" destination="yqC-Pk-JBz" id="dZk-mG-36T"/>
+                <outlet property="openButton" destination="OWv-6J-VaY" id="hXP-p0-IpR"/>
                 <outlet property="stageIndicatorView" destination="akk-Pr-ed7" id="mqL-NL-5Fk"/>
                 <outlet property="testButton" destination="z0C-9v-6XE" id="Zpo-DB-bQz"/>
             </connections>
@@ -81,6 +82,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="showTestSummariesWindowController:" target="-1" id="c0o-nP-0Ib"/>
+                    </connections>
                 </button>
             </subviews>
             <constraints>

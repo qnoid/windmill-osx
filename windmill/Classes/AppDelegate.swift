@@ -75,6 +75,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var testFailureSummariesWindowController: TestFailureSummariesWindowController?
     var mainViewController: MainViewController?
     
+    var testSummariesWindowController: TestSummariesWindowController?
+    
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     
     var projects : Array<Project> = InputStream.inputStreamOnProjects().read() {
@@ -102,6 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     private func start(windmill: Windmill, sequence: Sequence) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
@@ -327,6 +330,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         self.activityMenuItem.title = activity.description
     }
+    
+    
+    @objc func didTestProject(_ aNotification: Notification) {
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+            
+            self.testSummariesWindowController = testSummariesWindowController
+        }        
+    }
+
 
     @objc func activityError(_ aNotification: Notification) {
         
@@ -353,6 +368,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         if let testFailureSummaries = aNotification.userInfo?["testFailureSummaries"] as? [ResultBundle.TestFailureSummary] {
             self.testFailureSummariesWindowController = TestFailureSummariesWindowController.make()
             self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = testFailureSummaries
+        }
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+        
+            self.testSummariesWindowController = testSummariesWindowController
         }
     }
 
@@ -394,6 +415,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.toggleDebugArea(sender: sender, isCollapsed: true)
         self.errorSummariesWindowController?.close()
         self.testFailureSummariesWindowController?.close()
+        self.testSummariesWindowController?.close()
         
         self.start(windmill: pipeline.windmill, sequence: pipeline.sequence)
     }
@@ -483,5 +505,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         default:
             return
         }
+    }
+    
+    @IBAction func showTestSummariesWindowController(_ sender: Any?) {
+        testSummariesWindowController?.showWindow(self)
     }
 }

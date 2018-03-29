@@ -121,9 +121,9 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         
     }
     
-    private func didTest(project: Project, testsCount: Int, devices: Devices, destination: Devices.Destination) {
+    private func didTest(project: Project, testsCount: Int, devices: Devices, destination: Devices.Destination, testableSummaries: [TestableSummary]) {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(name: Windmill.Notifications.didTestProject, object: self, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount])
+            NotificationCenter.default.post(name: Windmill.Notifications.didTestProject, object: self, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": testableSummaries])
         }
         
     }
@@ -189,7 +189,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                             self?.processManager.sequence(process: test, userInfo: userInfo, wasSuccesful: ProcessWasSuccesful { userInfo in
 
                                 if let testResultBundle = userInfo?["resultBundle"] as? ResultBundle, let testsCount = testResultBundle.info.testsCount, testsCount >= 0 {
-                                    self?.didTest(project: project, testsCount: testsCount, devices: devices, destination: destination)
+                                    self?.didTest(project: project, testsCount: testsCount, devices: devices, destination: destination, testableSummaries: testResultBundle.testSummaries?.testableSummaries ?? [])
                                 }
 
                                 let archive: Archive = directory.archive(name: scheme)
@@ -385,7 +385,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                 DispatchQueue.main.async { [info = resultBundle.info] in
                     let error = NSError.testError(underlyingError: error, status: process.terminationStatus, info: info)
 
-                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "testsFailedCount":testsFailedCount, "testFailureSummaries": info.testFailureSummaries], uniquingKeysWith: { (userInfo, _) -> Any in
+                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "testsFailedCount":testsFailedCount, "testFailureSummaries": info.testFailureSummaries, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []], uniquingKeysWith: { (userInfo, _) -> Any in
                         return userInfo
                     }))
                 }

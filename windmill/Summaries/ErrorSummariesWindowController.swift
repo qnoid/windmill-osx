@@ -53,19 +53,20 @@ class ErrorSummariesWindowController: NSWindowController, ErrorSummariesViewCont
         window.titleVisibility = .hidden
     }
     
-    func toggleSummaryPane(isCollapsed: Bool? = nil) {
-        
+    func toggleSummaryPane(isCollapsed: Bool? = nil, completionHandler: (() -> Swift.Void)? = nil) {
+
         NSAnimationContext.runAnimationGroup({ [summarySplitViewItem  = self.splitViewController?.splitViewItem(for: self.summaryViewController!)]_ in
             summarySplitViewItem?.animator().isCollapsed = isCollapsed ?? !summarySplitViewItem!.isCollapsed
-        }, completionHandler: nil)
+        }, completionHandler: completionHandler)
     }
 
     func didSelect(_ errorSummariesViewController: ErrorSummariesViewController, errorSummary: ResultBundle.ErrorSummary) {
-        self.summaryViewController?.summary = errorSummary
-    }
-    
-    func doubleAction(_ errorSummariesViewController: ErrorSummariesViewController, errorSummary: ResultBundle.ErrorSummary) {
-        self.toggleSummaryPane()
-        self.summaryViewController?.summary = errorSummary
-    }
+        guard let textDocumentLocation = errorSummary.textDocumentLocation else {
+            return
+        }
+        
+        self.toggleSummaryPane(isCollapsed: false) {
+            self.summaryViewController?.summary = TextDocumentLocationSummary(textDocumentLocation: textDocumentLocation)
+        }
+    }    
 }

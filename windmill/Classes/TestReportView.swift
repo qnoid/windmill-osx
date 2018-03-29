@@ -27,7 +27,7 @@ class TestReportButton: NSButton {
     var testReport: TestReport = .success(testsCount: 0) {
         didSet {
             self._title = testReport.description
-            self.image = testReport.image
+            self.image = testReport.status.image
         }
     }
     
@@ -64,12 +64,14 @@ class TestReportView: NSView {
             self.testButton._title = testButton.title
         }
     }
+    @IBOutlet weak var openButton: NSButton!
     
     var testReport: TestReport = .success(testsCount: 0) {
         didSet {
             self.testButton.testReport = testReport
         }
     }
+
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

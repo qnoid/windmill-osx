@@ -152,8 +152,8 @@ class WindmillTest: XCTestCase {
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)).appendingPathComponent("\(name).bundle")
-        let buildResultBundle = ResultBundle(url: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        let testResultBundle = ResultBundle(url: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let buildResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let testResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
 
         defer {
             try? FileManager.default.removeItem(at: buildResultBundle.url)
@@ -190,8 +190,8 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16))
-        let buildResultBundle = ResultBundle(url: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        let testResultBundle = ResultBundle(url: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let buildResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let testResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
 
         defer {
             try? FileManager.default.removeItem(at: buildResultBundle.url)
@@ -230,7 +230,7 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)).appendingPathComponent("\(name).bundle")
-        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let resultBundle = ResultBundle.make(at: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
         
         defer {
             try? FileManager.default.removeItem(at: resultBundle.url)

@@ -34,9 +34,9 @@
                 <splitViewController id="YWw-Cd-K1e" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem id="ppB-1t-Fxh" userLabel="Error Summary Table View"/>
-                        <splitViewItem collapsed="YES" holdingPriority="255" behavior="contentList" id="RXr-mm-jX7" userLabel="Info Pane"/>
+                        <splitViewItem collapsed="YES" holdingPriority="255" behavior="contentList" id="RXr-mm-jX7" userLabel="Summary View Controller"/>
                     </splitViewItems>
-                    <splitView key="splitView" misplaced="YES" dividerStyle="paneSplitter" id="l2L-aw-EDd">
+                    <splitView key="splitView" misplaced="YES" dividerStyle="thin" id="l2L-aw-EDd">
                         <rect key="frame" x="0.0" y="0.0" width="850" height="622"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
@@ -62,13 +62,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView autohidesScrollers="YES" horizontalLineScroll="24" horizontalPageScroll="10" verticalLineScroll="24" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcu-gs-522">
-                                <rect key="frame" x="0.0" y="22" width="841" height="218"/>
+                                <rect key="frame" x="0.0" y="0.0" width="841" height="240"/>
                                 <clipView key="contentView" id="tqR-OQ-RGn">
-                                    <rect key="frame" x="1" y="0.0" width="839" height="217"/>
+                                    <rect key="frame" x="1" y="0.0" width="839" height="239"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" usesAutomaticRowHeights="YES" headerView="EGy-0K-vNQ" viewBased="YES" id="CNo-ob-fyL">
-                                            <rect key="frame" x="0.0" y="0.0" width="839" height="194"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="839" height="216"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -266,7 +266,6 @@
                                                 </tableColumn>
                                             </tableColumns>
                                             <connections>
-                                                <action trigger="doubleAction" selector="doubleAction:" target="4rf-4G-Ii2" id="cfL-ac-WTM"/>
                                                 <outlet property="dataSource" destination="4rf-4G-Ii2" id="d5c-hn-wvg"/>
                                                 <outlet property="delegate" destination="4rf-4G-Ii2" id="vYy-gs-6pV"/>
                                             </connections>
@@ -289,22 +288,11 @@
                                     </connections>
                                 </tableHeaderView>
                             </scrollView>
-                            <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WvD-1W-Yyz">
-                                <rect key="frame" x="0.0" y="0.0" width="841" height="22"/>
-                                <pathCell key="cell" selectable="YES" editable="YES" alignment="left" placeholderString="" id="LPC-0I-rYQ">
-                                    <font key="font" metaFont="system"/>
-                                    <url key="url" string="file:///HelloWindmill/HelloWindmill/HelloController.swift"/>
-                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </pathCell>
-                            </pathControl>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="WvD-1W-Yyz" secondAttribute="trailing" id="BWy-lJ-igS"/>
                             <constraint firstAttribute="trailing" secondItem="qcu-gs-522" secondAttribute="trailing" id="Rsv-5F-nLy"/>
                             <constraint firstItem="qcu-gs-522" firstAttribute="top" secondItem="A0y-6s-zPg" secondAttribute="top" id="XY1-Ol-eTy"/>
-                            <constraint firstItem="WvD-1W-Yyz" firstAttribute="top" secondItem="qcu-gs-522" secondAttribute="bottom" id="eas-UZ-v3U"/>
-                            <constraint firstAttribute="bottom" secondItem="WvD-1W-Yyz" secondAttribute="bottom" id="g3S-xV-WV8"/>
-                            <constraint firstItem="WvD-1W-Yyz" firstAttribute="leading" secondItem="A0y-6s-zPg" secondAttribute="leading" id="iYr-ZN-Pjp"/>
+                            <constraint firstAttribute="bottom" secondItem="qcu-gs-522" secondAttribute="bottom" id="jsX-cn-CyW"/>
                             <constraint firstItem="qcu-gs-522" firstAttribute="leading" secondItem="A0y-6s-zPg" secondAttribute="leading" id="o29-Mg-G9L"/>
                         </constraints>
                     </view>
@@ -331,17 +319,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="841" height="378"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <pathControl verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WvD-1W-Yyz">
+                                <rect key="frame" x="0.0" y="363" width="841" height="15"/>
+                                <pathCell key="cell" selectable="YES" editable="YES" alignment="left" placeholderString="" id="LPC-0I-rYQ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </pathCell>
+                            </pathControl>
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1qy-Nv-N9S">
-                                <rect key="frame" x="0.0" y="0.0" width="841" height="378"/>
+                                <rect key="frame" x="0.0" y="0.0" width="841" height="363"/>
                                 <clipView key="contentView" id="pkw-cI-dXT">
-                                    <rect key="frame" x="1" y="1" width="839" height="376"/>
+                                    <rect key="frame" x="1" y="1" width="839" height="361"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView editable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" textCompletion="NO" smartInsertDelete="YES" id="F01-if-lKW">
-                                            <rect key="frame" x="0.0" y="0.0" width="839" height="376"/>
+                                        <textView editable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" textCompletion="NO" id="F01-if-lKW">
+                                            <rect key="frame" x="0.0" y="0.0" width="839" height="361"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <size key="minSize" width="839" height="376"/>
+                                            <size key="minSize" width="839" height="361"/>
                                             <size key="maxSize" width="850" height="10000000"/>
                                             <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </textView>
@@ -353,7 +348,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="cxT-yx-Cqp">
-                                    <rect key="frame" x="824" y="1" width="16" height="376"/>
+                                    <rect key="frame" x="824" y="1" width="16" height="361"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
@@ -361,8 +356,11 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="1qy-Nv-N9S" secondAttribute="trailing" id="7aq-uD-OTR"/>
                             <constraint firstItem="1qy-Nv-N9S" firstAttribute="leading" secondItem="pKC-pZ-wM1" secondAttribute="leading" id="9EG-d8-IwH"/>
-                            <constraint firstItem="1qy-Nv-N9S" firstAttribute="top" secondItem="pKC-pZ-wM1" secondAttribute="top" id="TVR-9h-hyj"/>
+                            <constraint firstItem="WvD-1W-Yyz" firstAttribute="top" secondItem="pKC-pZ-wM1" secondAttribute="top" id="9sn-Ze-lgh"/>
+                            <constraint firstAttribute="trailing" secondItem="WvD-1W-Yyz" secondAttribute="trailing" id="G1P-oT-5wh"/>
                             <constraint firstAttribute="bottom" secondItem="1qy-Nv-N9S" secondAttribute="bottom" id="XUy-bi-cNy"/>
+                            <constraint firstItem="WvD-1W-Yyz" firstAttribute="leading" secondItem="pKC-pZ-wM1" secondAttribute="leading" id="a3v-gq-tpZ"/>
+                            <constraint firstItem="1qy-Nv-N9S" firstAttribute="top" secondItem="WvD-1W-Yyz" secondAttribute="bottom" id="cVe-Qe-zbK"/>
                         </constraints>
                     </view>
                     <connections>

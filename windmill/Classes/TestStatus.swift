@@ -8,24 +8,39 @@
 
 import AppKit
 
+enum TestStatus: String {
+    
+    case success = "Success"
+    case failure = "Failure"
+    
+    var image: NSImage {
+        switch self {
+        case .success:
+            return #imageLiteral(resourceName: "TestSuccess")
+        case .failure:
+            return #imageLiteral(resourceName: "TestFailure")
+        }
+    }
+}
+
 enum TestReport: CustomStringConvertible, Equatable {
     
-    static func ==(lhs: TestReport, rhs: TestReport) -> Bool {        
+    static func ==(lhs: TestReport, rhs: TestReport) -> Bool {
         switch (lhs, rhs) {
         case let (.success(l), .success(r)): return l == r
         case let (.failure(l), .failure(r)): return l == r
         default: return false
         }
     }
-    
+
     case success(testsCount: Int), failure(testsFailedCount: Int)
     
-    var image: NSImage {
+    var status: TestStatus {
         switch self {
         case .success(_):
-            return #imageLiteral(resourceName: "TestSuccess")
+            return .success
         case .failure(_):
-            return #imageLiteral(resourceName: "TestFailure")
+            return .failure
         }
     }
     

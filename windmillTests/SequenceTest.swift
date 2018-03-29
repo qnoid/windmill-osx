@@ -29,7 +29,7 @@ class SequenceTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(project.name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.alphanumerics, length: 32)).appendingPathComponent("\(name).bundle")
-        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let resultBundle = ResultBundle.make(at: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
         
         defer {
             try? FileManager.default.removeItem(at: resultBundleURL)
@@ -56,7 +56,7 @@ class SequenceTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(project.name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.alphanumerics, length: 32)).appendingPathComponent("\(name).bundle")
-        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let resultBundle = ResultBundle.make(at: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
         
         defer {
             try? FileManager.default.removeItem(at: resultBundleURL)
@@ -83,7 +83,7 @@ class SequenceTest: XCTestCase {
         let exportDirectoryURL = FileManager.default.trashDirectoryURL.appendingPathComponent("export")
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent(name)
-        let resultBundle = ResultBundle(url: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
+        let resultBundle = ResultBundle.make(at: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
         
         defer {
             try? FileManager.default.removeItem(at: resultBundleURL)

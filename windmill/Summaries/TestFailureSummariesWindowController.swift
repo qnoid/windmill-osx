@@ -51,20 +51,21 @@ class TestFailureSummariesWindowController: NSWindowController, TestFailureSumma
         window.titleVisibility = .hidden
     }
     
-    func toggleSummaryPane(isCollapsed: Bool? = nil) {
+    func toggleSummaryPane(isCollapsed: Bool? = nil, completionHandler: (() -> Swift.Void)? = nil) {
         
         NSAnimationContext.runAnimationGroup({ [summarySplitViewItem  = self.splitViewController?.splitViewItem(for: self.summaryViewController!)]_ in
             summarySplitViewItem?.animator().isCollapsed = isCollapsed ?? !summarySplitViewItem!.isCollapsed
-            }, completionHandler: nil)
+            }, completionHandler: completionHandler)
     }
     
     func didSelect(_ errorSummariesViewController: TestFailureSummariesViewController, testFailureSummary: ResultBundle.TestFailureSummary) {
-        self.summaryViewController?.summary = testFailureSummary
-    }
-    
-    func doubleAction(_ errorSummariesViewController: TestFailureSummariesViewController, testFailureSummary: ResultBundle.TestFailureSummary) {
-        self.toggleSummaryPane()
-        self.summaryViewController?.summary = testFailureSummary
-    }
+        guard let textDocumentLocation = testFailureSummary.textDocumentLocation else {
+            return
+        }
+
+        self.toggleSummaryPane(isCollapsed: false) {
+            self.summaryViewController?.summary = TextDocumentLocationSummary(textDocumentLocation: textDocumentLocation)
+        }
+    }    
 }
 

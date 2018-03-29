@@ -49,15 +49,16 @@ extension ApplicationSupportDirectory {
         let buildResultBundleURL = self.resultBundleURL(name: name, at: "build")
         let bundleResultInfoURL = buildResultBundleURL.appendingPathComponent("Info.plist")
         
-        return ResultBundle(url: buildResultBundleURL, info: ResultBundle.Info.make(at: bundleResultInfoURL))
+        return ResultBundle.make(at: buildResultBundleURL, info: ResultBundle.Info.make(at: bundleResultInfoURL))
     }
 
     public func testResultBundle(at name: String) -> ResultBundle {
         
         let testResultBundleURL = self.resultBundleURL(name: name, at: "test")
         let testResultInfoURL = testResultBundleURL.appendingPathComponent("Info.plist")
+        let testSummariesURL = testResultBundleURL.appendingPathComponent("TestSummaries.plist")
         
-        return ResultBundle(url: testResultBundleURL, info: ResultBundle.Info.make(at: testResultInfoURL))
+        return ResultBundle.make(at: testResultBundleURL, info: ResultBundle.Info.make(at: testResultInfoURL), testSummaries: TestSummaries.make(at: testSummariesURL))
     }
 
     public func archiveResultBundle(at name: String) -> ResultBundle {
@@ -65,7 +66,7 @@ extension ApplicationSupportDirectory {
         let archiveResultBundleURL = self.resultBundleURL(name: name, at: "archive")
         let archiveResultInfoURL = archiveResultBundleURL.appendingPathComponent("Info.plist")
         
-        return ResultBundle(url: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
+        return ResultBundle.make(at: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
     }
     
     public func exportResultBundle(at name: String) -> ResultBundle {
@@ -73,7 +74,7 @@ extension ApplicationSupportDirectory {
         let archiveResultBundleURL = self.resultBundleURL(name: name, at: "export")
         let archiveResultInfoURL = archiveResultBundleURL.appendingPathComponent("Info.plist")
         
-        return ResultBundle(url: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
+        return ResultBundle.make(at: archiveResultBundleURL, info: ResultBundle.Info.make(at: archiveResultInfoURL))
     }
 }
 
