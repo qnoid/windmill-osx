@@ -16,11 +16,11 @@ set -e
 
 
 function git_pull(){
-(git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules; git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH"; git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update)
+(xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules; xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH"; xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update)
 }
 
 function git_clone(){
-(git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}")
+(xcrun git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}")
 }
 
 directory_exist_at_path "${REPOSITORY_PATH_FOR_PROJECT}" git_pull git_clone

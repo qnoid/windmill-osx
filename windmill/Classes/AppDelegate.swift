@@ -101,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return true
     }
     
-    private func start(windmill: Windmill, sequence: Sequence) {
+    private func start(windmill: Windmill, chain: ProcessChain) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
@@ -109,7 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
         
-        windmill.run(sequence: sequence)
+        windmill.run(process: chain)
     }
     
     private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
@@ -118,14 +118,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.mainWindowViewController?.window?.makeKeyAndOrderFront(self)
     }
     
-    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, sequence: Sequence, project: Project) {
+    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, chain: ProcessChain, project: Project) {
         guard let mainWindowController = MainWindowController.make(windmill: windmill, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController), let window = mainWindowController.window else {
             return
         }
         
         window.title = project.name
         self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
-        self.start(windmill: windmill, sequence: sequence)
+        self.start(windmill: windmill, chain: chain)
     }
     
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -156,7 +156,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         if let project = projects.last {
             let pipeline = Windmill.make(project: project)
-            makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, sequence: pipeline.sequence, project: project)
+            makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
         }
         
         mainWindowViewController?.window?.setIsVisible(hasProjects)
@@ -227,7 +227,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
         
         let pipeline = Windmill.make(project: project)
-        makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, sequence: pipeline.sequence, project: project)
+        makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
 
         return true
     }
@@ -299,7 +299,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             
                 if self.add(project) {
                     let pipeline = Windmill.make(project: project)
-                    self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, sequence: pipeline.sequence, project: project)
+                    self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
                 }
             } catch let error as NSError {
                 alert(error, window: window)
@@ -404,22 +404,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
 
-    @IBAction func run(_ sender: Any) {
-        guard let project = projects.last else {
-            os_log("Did you add the last project dragged and dropped in `prepareForDragOperation`?", log: .default, type: .error)
+    func run(_ sender: Any, skipCheckout: Bool = false) {
+        guard let project = self.mainWindowViewController?.windmill.project else {
             return
         }
         
-        let pipeline = Windmill.make(project: project)
+        let pipeline = Windmill.make(project: project, skipCheckout: skipCheckout)
         self.mainWindowViewController?.windmill = pipeline.windmill
         self.toggleDebugArea(sender: sender, isCollapsed: true)
         self.errorSummariesWindowController?.close()
         self.testFailureSummariesWindowController?.close()
         self.testSummariesWindowController?.close()
         
-        self.start(windmill: pipeline.windmill, sequence: pipeline.sequence)
+        self.start(windmill: pipeline.windmill, chain: pipeline.chain)
     }
-    
+
+    @IBAction func run(_ sender: Any) {
+        self.run(sender)
+    }
+
+    @IBAction func runSkipCheckout(_ sender: Any) {
+        self.run(sender, skipCheckout: true)
+    }
+
     func didSelectScheme(mainWindowController: MainWindowController, project: Project, scheme: String) {
         self.projects = [project]
     }

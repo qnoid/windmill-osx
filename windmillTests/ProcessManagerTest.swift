@@ -90,7 +90,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let checkout = manager.sequence(process: process, wasSuccesful: ProcessWasSuccesful { _ in
+        let checkout = manager.processChain(process: process, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
         })
         
@@ -113,7 +113,7 @@ class ProcessManagerTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         let monitor = WillExitWithErrorExpectation(expectation: expectation)
         manager.monitor = monitor
-        let sequence = manager.sequence(process: process)
+        let sequence = manager.processChain(process: process)
         
         sequence.launch()
 
@@ -129,7 +129,7 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = XCTestExpectation()
         
-        let sequence = manager.sequence(process: process, wasSuccesful: ProcessWasSuccesful { _ in
+        let sequence = manager.processChain(process: process, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
         })
         
@@ -155,7 +155,7 @@ class ProcessManagerTest: XCTestCase {
         process.arguments = ["Hello World"]
         
         
-        let sequence = manager.sequence(process: process)
+        let sequence = manager.processChain(process: process)
         
         DispatchQueue.main.async {
             sequence.launch()
@@ -176,7 +176,7 @@ class ProcessManagerTest: XCTestCase {
         process.launchPath = Bundle(for: ProcessManagerTest.self).url(forResource: "exit", withExtension: "sh")?.path
         process.arguments = ["66"]
 
-        let sequence = manager.sequence(process: process)
+        let sequence = manager.processChain(process: process)
         
         let route66 = RecoverableProcess.recover(terminationStatus: 66) { (_) in
             canRecover.fulfill()

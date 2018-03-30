@@ -222,7 +222,7 @@ class ProcessManager {
         }
     }
 
-    public func sequence(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) -> Sequence {
-        return Sequence(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
+    public func processChain(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
+        return ProcessChain(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
     }
 }

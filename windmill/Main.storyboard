@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -611,6 +611,12 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                                 <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Run (Use Checkout Folder cache)" alternate="YES" keyEquivalent="r" toolTip="This can be useful when you have no internet connection." id="Sv9-RK-ZqQ">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -700,6 +706,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                         <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="VKK-Wx-1FL"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
                         <outlet property="projectTitlebarAccessoryViewController" destination="lHE-BB-cpm" id="jJu-0J-Uej"/>
+                        <outlet property="runSkipCheckout" destination="Sv9-RK-ZqQ" id="oiR-0R-Hbo"/>
                         <outlet property="sidePanelMenuItem" destination="6k2-Q8-62V" id="shh-N8-j4K"/>
                     </connections>
                 </customObject>

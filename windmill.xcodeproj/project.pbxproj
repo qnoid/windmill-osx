@@ -60,7 +60,7 @@
 		BD49F790204B730600F64687 /* ErrorSummariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F78F204B730600F64687 /* ErrorSummariesViewController.swift */; };
 		BD49F792204B766B00F64687 /* ErrorSummariesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F791204B766B00F64687 /* ErrorSummariesWindowController.swift */; };
 		BD49F794204B9DCA00F64687 /* SummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49F793204B9DCA00F64687 /* SummaryViewController.swift */; };
-		BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49FAAB20290C4500E12CB4 /* Sequence.swift */; };
+		BD49FAAC20290C4500E12CB4 /* ProcessChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD49FAAB20290C4500E12CB4 /* ProcessChain.swift */; };
 		BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */; };
 		BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */; };
 		BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */; };
@@ -222,7 +222,7 @@
 		BD49F78F204B730600F64687 /* ErrorSummariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSummariesViewController.swift; sourceTree = "<group>"; };
 		BD49F791204B766B00F64687 /* ErrorSummariesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorSummariesWindowController.swift; sourceTree = "<group>"; };
 		BD49F793204B9DCA00F64687 /* SummaryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryViewController.swift; sourceTree = "<group>"; };
-		BD49FAAB20290C4500E12CB4 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
+		BD49FAAB20290C4500E12CB4 /* ProcessChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessChain.swift; sourceTree = "<group>"; };
 		BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
 		BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTitlebarAccessoryViewController.xib; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
@@ -379,7 +379,7 @@
 			isa = PBXGroup;
 			children = (
 				BD1D17FE1F44BC670015C13C /* ProcessManager.swift */,
-				BD49FAAB20290C4500E12CB4 /* Sequence.swift */,
+				BD49FAAB20290C4500E12CB4 /* ProcessChain.swift */,
 			);
 			path = ProcessManager;
 			sourceTree = "<group>";
@@ -864,7 +864,7 @@
 				BD24DBF6205248E20080A09F /* Xcode.swift in Sources */,
 				BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */,
 				BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */,
-				BD49FAAC20290C4500E12CB4 /* Sequence.swift in Sources */,
+				BD49FAAC20290C4500E12CB4 /* ProcessChain.swift in Sources */,
 				BDD6F0AD20186EBB00D63D74 /* ArtefactsViewController.swift in Sources */,
 				BDD6F0B32018B5C100D63D74 /* DeployView.swift in Sources */,
 				BDEBAD72200D8FE300A7BBD0 /* ConsoleViewController.swift in Sources */,

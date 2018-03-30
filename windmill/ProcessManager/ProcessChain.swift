@@ -9,7 +9,7 @@
 import Foundation
 import os
 
-struct Sequence {
+struct ProcessChain {
     
     unowned var processManager: ProcessManager
     
@@ -17,7 +17,7 @@ struct Sequence {
     let userInfo: [AnyHashable : Any]?
     let wasSuccesful: ProcessWasSuccesful?
 
-    init(processManager: ProcessManager = ProcessManager(), process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) {
+    init(processManager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) {
         self.processManager = processManager
         self.process = process
         self.userInfo = userInfo

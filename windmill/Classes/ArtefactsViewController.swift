@@ -9,6 +9,15 @@
 import Cocoa
 import os
 
+public enum ArtefactType
+{
+    case appBundle
+    case testReport
+    case archiveBundle
+    case ipaFile
+    case otaDistribution
+}
+
 @IBDesignable class ArtefactsViewControllerView: NSView {
     
     
@@ -51,8 +60,8 @@ class ArtefactsViewController: NSViewController {
         }
     }
     
-    lazy var artefactViews: [ActivityType: ArtefactView] = { [unowned self] in
-        return [.build: self.buildArtefactView, .test: self.testArtefactView, .archive: self.archiveArtefactView, .export: self.exportArtefactView, .deploy: self.deployArtefactView]
+    lazy var artefactViews: [ArtefactType: ArtefactView] = { [unowned self] in
+        return [.appBundle: self.buildArtefactView, .testReport: self.testArtefactView, .archiveBundle: self.archiveArtefactView, .ipaFile: self.exportArtefactView, .otaDistribution: self.deployArtefactView]
         }()
     
     @IBOutlet weak var appView: AppView! {
@@ -81,8 +90,8 @@ class ArtefactsViewController: NSViewController {
         }
     }
     
-    lazy var views: [ActivityType: NSView] = { [unowned self] in
-        return [.build: self.appView, .test: self.testReportView, .archive: self.archiveView, .export: self.exportView, .deploy: self.deployView]
+    lazy var views: [ArtefactType: NSView] = { [unowned self] in
+        return [.appBundle: self.appView, .testReport: self.testReportView, .archiveBundle: self.archiveView, .ipaFile: self.exportView, .otaDistribution: self.deployView]
         }()
 
 
@@ -126,27 +135,21 @@ class ArtefactsViewController: NSViewController {
     }
 
     @objc func activityDidLaunch(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
-            return
+        if let artefact = aNotification.userInfo?["artefact"] as? ArtefactType {
+            self.artefactViews[artefact]?.startStageAnimation()
         }
-
-        if let skip = aNotification.userInfo?["skip"] as? Bool, skip == true {
-            return
-        }
-        
-        self.artefactViews[activity]?.startStageAnimation()
     }
 
     @objc func activityError(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, let artefact = aNotification.userInfo?["artefact"] as? ArtefactType  else {
             return
         }
         
-        self.artefactViews[activity]?.stopStageAnimation()
+        self.artefactViews[artefact]?.stopStageAnimation()
         
         switch activity {
         case .test:
-            self.artefactViews[activity]?.isHidden = true
+            self.artefactViews[artefact]?.isHidden = true
             
             if let testsFailedCount = aNotification.userInfo?["testsFailedCount"] as? Int {
                 self.testReportView.testReport = .failure(testsFailedCount: testsFailedCount)
@@ -170,13 +173,10 @@ class ArtefactsViewController: NSViewController {
             return
         }
 
-        self.artefactViews[activity]?.stopStageAnimation()
-        
-        if let skip = aNotification.userInfo?["skip"] as? Bool, skip == true {
-            return
+        if let artefact = aNotification.userInfo?["artefact"] as? ArtefactType {
+            self.artefactViews[artefact]?.stopStageAnimation()
+            self.artefactViews[artefact]?.isHidden = true
         }
-
-        self.artefactViews[activity]?.isHidden = true
         
         switch activity {
         case .checkout:

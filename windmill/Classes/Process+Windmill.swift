@@ -69,6 +69,15 @@ extension Process
         return Bundle.main.path(forResource: name, ofType:nil)
     }
     
+    public static func makeSuccess() -> Process {
+        
+        let process = Process()
+        process.launchPath = "/usr/bin/true"
+        process.qualityOfService = .utility
+        
+        return process
+    }
+    
     public static func makeReadBuildSettings(repositoryLocalURL: Repository.LocalURL, scheme: String, buildSettings: BuildSettings) -> Process {
         
         let process = Process()
