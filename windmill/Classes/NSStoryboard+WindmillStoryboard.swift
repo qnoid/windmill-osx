@@ -20,9 +20,16 @@ extension NSStoryboard
             return self.mainStoryboard().instantiateInitialController() as! MainWindowController
         }
         
-        static func reportsStoryboard() -> NSStoryboard {
-            return NSStoryboard(name: NSStoryboard.Name(rawValue: "Reports"), bundle: Bundle.main)
+        static func errorSummariesStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: NSStoryboard.Name(rawValue: "ErrorSummaries"), bundle: Bundle.main)
         }
 
+        static func testFailureSummariesStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestFailureSummaries"), bundle: Bundle.main)
+        }
+        
+        static func testSummariesStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestSummaries"), bundle: Bundle.main)
+        }
     }
 }

@@ -16,6 +16,10 @@ extension NSColor
             return NSColor(red: 64/255, green: 137/255, blue: 197/255, alpha: 1.0)
         }
 
+        static func green() -> NSColor {
+            return NSColor(red: 0/255, green: 250/255, blue: 146/255, alpha: 1.0)
+        }
+
         static func orange() -> NSColor {
             return NSColor(red: 255/255, green: 147/255, blue: 0/255, alpha: 1.0)
         }

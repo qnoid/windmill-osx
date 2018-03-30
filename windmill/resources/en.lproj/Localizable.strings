@@ -22,6 +22,7 @@
 "windmill.activity.test.description"="Testing";
 "windmill.activity.test.error.description"="Test Failed";
 "windmill.activity.test.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.test.failures.description"="Test Failed";
 "windmill.activity.devices.description"="counting digital sheep";
 "windmill.activity.devices.error.description"="Failed";
 "windmill.activity.devices.error.failure.reason"="Windmill failed with exit code ";
@@ -63,6 +64,15 @@
 "windmill.ui.toolbar.view.hideSidePanel"="Hide Side Panel";
 "windmill.ui.activityTextfield.idle"="idle";
 "windmill.ui.activityTextfield.stopped"="Stopped";
-"artefact.toolTip"="This artefact will become available once you complete the steps outlined.";
+"windmill.artefacts.build.header"="App bundle";
+"windmill.artefacts.build.tooltip"="Enables you to run your app on the Simulator without the need to have the source code.";
+"windmill.reports.test.header"="Test Report";
+"windmill.reports.test.tooltip"="A test report gives you the confidence that your app still works after any code changes.";
+"windmill.artefacts.archive.header"="Archive bundle";
+"windmill.artefacts.archive.tooltip"="Enables you to distribute to TestFlight or the App Store via iTunes Connect.";
+"windmill.artefacts.ipa.header"="IPA file";
+"windmill.artefacts.ipa.tooltip"="Enables you to run your app on a registered device.";
+"windmill.aspects.ota.header"="Over-the-air distribution";
+"windmill.aspects.ota.tooltip"="The latest build will be published to Windmill on the iPhone so it is always there when you need it.";
 "notification.gettingstarted"="Use the menu icon to start monitoring a project.";
 "notification.gettingstarted.action"="Show me";

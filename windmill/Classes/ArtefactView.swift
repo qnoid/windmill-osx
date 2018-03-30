@@ -22,7 +22,16 @@ import AppKit
 @IBDesignable
 class ArtefactView: NSView {
     
-    @IBOutlet weak var headerLabel: NSTextField!
+    @IBOutlet weak var headerTextField: LinkLabel! {
+        didSet{
+            let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
+                .foregroundColor: NSColor.white,
+                .font : headerTextField.font as Any])
+            headerTextField.attributedString = attributedString
+        }
+    }
+    
+    @IBOutlet weak var leadingLabel: NSTextField!
     @IBOutlet weak var stageIndicator: NSView! {
         didSet{
             stageIndicator.wantsLayer = true
@@ -63,22 +72,21 @@ class ArtefactView: NSView {
             var attributes: [NSAttributedStringKey : Any] = [.foregroundColor: NSColor.white, .font : stepsLabel.font as Any]
             if let url = url {
                 attributes[.link] = url
+                self.stepsLabel.isSelectable = true
             }
             
-            let attributedString = NSAttributedString(string: step, attributes: attributes)            
+            let attributedString = NSAttributedString(string: step, attributes: attributes)
             self.stepsLabel.attributedString = attributedString
         }
     }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.toolTip = NSLocalizedString("artefact.toolTip", comment: "")
         wml_addSubview(view: wml_load(view: ArtefactView.self)!, layout: .centered)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.toolTip = NSLocalizedString("artefact.toolTip", comment: "")
         wml_addSubview(view: wml_load(view: ArtefactView.self)!, layout: .centered)
     }
     

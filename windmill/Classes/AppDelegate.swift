@@ -71,8 +71,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
     
-    var reportsWindowController: ReportsWindowController?
+    var errorSummariesWindowController: ErrorSummariesWindowController?
+    var testFailureSummariesWindowController: TestFailureSummariesWindowController?
     var mainViewController: MainViewController?
+    
+    var testSummariesWindowController: TestSummariesWindowController?
     
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     
@@ -101,6 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     private func start(windmill: Windmill, sequence: Sequence) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
@@ -180,12 +184,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @objc func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .link;
+        return .link
     }
     
     @objc func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation
     {
-        return .link;
+        return .link
         
     }
     
@@ -244,11 +248,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return self.mainWindowViewController?.window != nil
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
             
-            guard let reportsWindowController = self.reportsWindowController else {
+            let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+            let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+            
+            switch (errorSummaries?.count, testFailureSummaries?.count) {
+            case (let errorSummaries?, _) where errorSummaries > 0:
+            return true
+            case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+                return true
+            default:
                 return false
             }
             
-            return reportsWindowController.errorSummariesViewController?.errorSummaries.count != 0
         } else if menuItem.action == #selector(cleanDerivedData(_:)) {
             return self.canCleanDerivedData
         } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
@@ -302,7 +313,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.canCleanDerivedData = false
         self.canRemoveCheckoutFolder = false
-        self.reportsWindowController?.errorSummariesViewController?.errorSummaries = []
+        self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = []
+        self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = []
     }
     
     @objc func windmillMonitoringProject(_ aNotification: Notification) {
@@ -318,6 +330,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         self.activityMenuItem.title = activity.description
     }
+    
+    
+    @objc func didTestProject(_ aNotification: Notification) {
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+            
+            self.testSummariesWindowController = testSummariesWindowController
+        }        
+    }
+
 
     @objc func activityError(_ aNotification: Notification) {
         
@@ -336,12 +360,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.canCleanDerivedData = true
         self.canRemoveCheckoutFolder = true
         
-        guard let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] else {
-            return
+        if let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] {
+            self.errorSummariesWindowController = ErrorSummariesWindowController.make()
+            self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = errorSummaries
         }
-     
-        self.reportsWindowController = self.mainWindowViewController?.reportsWindowController()
-        self.reportsWindowController?.errorSummariesViewController?.errorSummaries = errorSummaries
+        
+        if let testFailureSummaries = aNotification.userInfo?["testFailureSummaries"] as? [ResultBundle.TestFailureSummary] {
+            self.testFailureSummariesWindowController = TestFailureSummariesWindowController.make()
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = testFailureSummaries
+        }
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+        
+            self.testSummariesWindowController = testSummariesWindowController
+        }
     }
 
     func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
@@ -380,7 +413,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         let pipeline = Windmill.make(project: project)
         self.mainWindowViewController?.windmill = pipeline.windmill
         self.toggleDebugArea(sender: sender, isCollapsed: true)
-        self.reportsWindowController?.close()
+        self.errorSummariesWindowController?.close()
+        self.testFailureSummariesWindowController?.close()
+        self.testSummariesWindowController?.close()
         
         self.start(windmill: pipeline.windmill, sequence: pipeline.sequence)
     }
@@ -419,17 +454,60 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
     
-    @IBAction func showReportsWindowController(_ sender: Any?) {
-        mainWindowViewController?.show(reportsWindowController: self.reportsWindowController)
+    @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
+        self.mainWindowViewController?.show(errorSummariesWindowController: self.errorSummariesWindowController)
     }
-    
+
+    @IBAction func showTestFailureSummariesWindowController(_ sender: Any?) {
+        
+        switch sender {
+        case let testReportButton as TestReportButton:
+            if case .failure = testReportButton.testReport {
+                self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController)
+            }
+            return
+        case is NSMenuItem:
+            self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController)
+        default:
+            return
+        }
+    }
+
     @IBAction func jumpToNextIssue(_ sender: Any) {
-        showReportsWindowController(sender)
-        reportsWindowController?.errorSummariesViewController?.jumpToNextIssue()
+        
+        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+        
+        switch (errorSummaries?.count, testFailureSummaries?.count) {
+        case (let errorSummaries?, _) where errorSummaries > 0:
+            self.showErrorSummariesWindowController(sender)
+            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToNextIssue()
+        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+            self.showTestFailureSummariesWindowController(sender)
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToNextIssue()
+        default:
+            return
+        }
     }
     
     @IBAction func jumpToPreviousIssue(_ sender: Any) {
-        showReportsWindowController(sender)
-        reportsWindowController?.errorSummariesViewController?.jumpToPreviousIssue()
+        
+        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+
+        switch (errorSummaries?.count, testFailureSummaries?.count) {
+        case (let errorSummaries?, _) where errorSummaries > 0:
+            self.showErrorSummariesWindowController(sender)
+            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToPreviousIssue()
+        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+            self.showTestFailureSummariesWindowController(sender)
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToPreviousIssue()
+        default:
+            return
+        }
+    }
+    
+    @IBAction func showTestSummariesWindowController(_ sender: Any?) {
+        testSummariesWindowController?.showWindow(self)
     }
 }

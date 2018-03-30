@@ -11,16 +11,15 @@ import Cocoa
 
 class ErrorSummariesView: NSView {
     override var intrinsicContentSize: NSSize {
-        return NSSize(width: 329, height: 240);
+        return NSSize(width: 329, height: 240)
     }
 }
 
 protocol ErrorSummariesViewControllerDelegate: class {
     func didSelect(_ errorSummariesViewController: ErrorSummariesViewController, errorSummary: ResultBundle.ErrorSummary)
-    func doubleAction(_ errorSummariesViewController: ErrorSummariesViewController, errorSummary: ResultBundle.ErrorSummary)
 }
 
-class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate {
+class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, NSMenuDelegate, SummariesViewController {
 
     enum ErrorSummaryIdentifier: String {
         
@@ -56,21 +55,11 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         }
     }
     
-    @IBOutlet weak var pathControl: NSPathControl! {
-        didSet{
-            pathControl.isEditable = false
-        }
-    }
-
     weak var delegate: ErrorSummariesViewControllerDelegate?
     
     let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
     var commit: Repository.Commit?
-    var errorSummaries: [ResultBundle.ErrorSummary] = [] {
-        didSet{
-            pathControl.isHidden = true
-        }
-    }
+    var errorSummaries: [ResultBundle.ErrorSummary] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,42 +121,8 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         let errorSummary = errorSummaries[tableView.selectedRow]
         
         self.delegate?.didSelect(self, errorSummary: errorSummary)
-        
-        guard let documentURL = errorSummary.textDocumentLocation?.documentURL else{
-            return
-        }
-        
-        self.pathControl.isHidden = false
-        let string = documentURL.path.replacingOccurrences(of: applicationCachesDirectory.sourcesURL().path, with: "")
-        pathControl.url = URL(string: string)
-        pathControl.pathItems.forEach { path in
-            path.image = #imageLiteral(resourceName: "NavGroup")
-        }
-        pathControl.pathItems.first?.image = #imageLiteral(resourceName: "xcode-project_icon")
-        pathControl.pathItems.last?.image = #imageLiteral(resourceName: "swift-source_Icon")
     }
     
-    override func keyDown(with event: NSEvent) {
-        print(event.keyCode)
-        
-        switch event.keyCode {
-        case 49: //space
-            doubleAction(self.tableView)
-        default:
-            return
-        }
-    }
-    
-    @IBAction func doubleAction(_ sender: NSTableView) {
-        
-        guard tableView.selectedRow >= 0 && tableView.selectedRow < errorSummaries.count else {
-            return
-        }
-        
-        let errorSummary = errorSummaries[tableView.selectedRow]
-        
-        delegate?.doubleAction(self, errorSummary: errorSummary)
-    }
     
     @objc func didSelect(menuItem: NSMenuItem) {
         menuItem.state = (menuItem.state == .on) ? .off : .on
@@ -178,19 +133,5 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         
         let column = tableView.tableColumn(withIdentifier: identifier)
         column?.isHidden = menuItem.state == .off ? true : false
-    }
-    
-    func jumpToNextIssue() {
-        let next = min(self.tableView.numberOfRows, self.tableView.selectedRow + 1)
-        let nextSelectRowIndex = IndexSet(integer: next)
-        
-        self.tableView.selectRowIndexes(nextSelectRowIndex, byExtendingSelection: false)
-    }
-    
-    func jumpToPreviousIssue() {
-        let previous = max(0, self.tableView.selectedRow - 1)
-        let previousSelectRowIndex = IndexSet(integer: previous)
-
-        self.tableView.selectRowIndexes(previousSelectRowIndex, byExtendingSelection: false)
     }
 }

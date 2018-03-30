@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Window Controller-->
@@ -407,11 +408,6 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="jgg-2H-TJQ">
                                     <items>
-                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
-                                            <connections>
-                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Open..." keyEquivalent="o" id="xjJ-Gh-TYv">
                                             <string key="toolTip">Open the folder that contains your Xcode project/workspace as cloned by a remote repo. 
 
@@ -606,6 +602,18 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Scheme" id="ihl-kd-x45">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Scheme" id="zxF-ud-NaC">
+                                    <items>
+                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
+                                            <connections>
+                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Product" id="oEy-tP-65O">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Product" id="ecY-b3-fSp">
@@ -706,96 +714,156 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                         <rect key="frame" x="0.0" y="0.0" width="768" height="448"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h12-um-Bwf" userLabel="App Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="296" width="270" height="152"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="270" id="4Xa-Jd-KKT"/>
-                                    <constraint firstAttribute="height" constant="152" id="L4I-dc-8sR"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="application-icon"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                        <color key="value" red="0.25098039220000001" green="0.53725490200000003" blue="0.7725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Fix any build errors."/>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <customView hidden="YES" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vn2-oD-Jk4" customClass="AppView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="296" width="270" height="152"/>
-                            </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="cv1-tp-oYd" userLabel="Archive Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="296" width="270" height="152"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="archive"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                        <color key="value" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev23aab79b4"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yLb-mO-pCG" customClass="ArchiveView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="296" width="270" height="152"/>
-                            </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="ngG-eU-8IG" userLabel="Export Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="144" width="270" height="152"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="ipa"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                        <color key="value" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XHJ-ra-xrw" userLabel="Export View" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="144" width="270" height="152"/>
-                            </customView>
-                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="9aB-Oy-LgS" userLabel="OTA Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="0.0" width="270" height="144"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="144" id="JlN-T3-kgH"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="image" keyPath="image" value="iphone-x"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                        <color key="value" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Have an active Windmill subscription."/>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QyX-Qb-5N2" userLabel="Deploy View" customClass="DeployView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="270" y="0.0" width="270" height="144"/>
-                            </customView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KDw-dz-g2g">
+                                <rect key="frame" x="0.0" y="144" width="270" height="304"/>
+                                <subviews>
+                                    <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h12-um-Bwf" userLabel="App Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="152" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="270" id="4Xa-Jd-KKT"/>
+                                            <constraint firstAttribute="height" constant="152" id="L4I-dc-8sR"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="application-icon"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="0.25098039220000001" green="0.53725490200000003" blue="0.7725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* There are no build errors."/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <customView hidden="YES" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vn2-oD-Jk4" customClass="AppView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="152" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="270" id="kIj-gb-bhc"/>
+                                            <constraint firstAttribute="height" constant="152" id="oNT-28-LBL"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="lGg-xM-JmT" userLabel="Test Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="Mop-34-voN"/>
+                                            <constraint firstAttribute="width" constant="270" id="TTf-4x-KxH"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="unit-test_Icon"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="0.0" green="0.98106676339999999" blue="0.57369142770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev2ea31ea57"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Add a test target."/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <customView hidden="YES" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uk-LD-DdB" userLabel="Test View" customClass="TestReportView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="152" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="270" id="KoQ-Yx-8VH"/>
+                                            <constraint firstAttribute="height" constant="152" id="jsF-hM-fEs"/>
+                                        </constraints>
+                                    </customView>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AQu-qp-vqG">
+                                <rect key="frame" x="270" y="-8" width="270" height="456"/>
+                                <subviews>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="cv1-tp-oYd" userLabel="Archive Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="304" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="Yzz-Em-wHq"/>
+                                            <constraint firstAttribute="width" constant="270" id="cqo-yk-B9h"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="archive"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev23aab79b4"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yLb-mO-pCG" customClass="ArchiveView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="304" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="gqQ-VE-Hw4"/>
+                                            <constraint firstAttribute="width" constant="270" id="pv1-Mi-USq"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="ngG-eU-8IG" userLabel="Export Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="152" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="QmR-OE-5Pa"/>
+                                            <constraint firstAttribute="width" constant="270" id="cOk-dV-r4p"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="ipa"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XHJ-ra-xrw" userLabel="Export View" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="304" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="Ab6-6I-rkt"/>
+                                            <constraint firstAttribute="width" constant="270" id="qPX-9N-55P"/>
+                                        </constraints>
+                                    </customView>
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="9aB-Oy-LgS" userLabel="OTA Artefact View" customClass="ArtefactView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="JlN-T3-kgH"/>
+                                            <constraint firstAttribute="width" constant="270" id="NAT-UA-MhV"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="iphone-x"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                                <color key="value" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Have an active Windmill subscription."/>
+                                        </userDefinedRuntimeAttributes>
+                                    </customView>
+                                    <customView hidden="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QyX-Qb-5N2" userLabel="Deploy View" customClass="DeployView" customModule="Windmill" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="304" width="270" height="152"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="152" id="Kud-Ls-MAf"/>
+                                            <constraint firstAttribute="width" constant="270" id="QBd-hp-Efx"/>
+                                        </constraints>
+                                    </customView>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="cv1-tp-oYd" firstAttribute="top" secondItem="yLb-mO-pCG" secondAttribute="top" id="581-Bn-74n"/>
-                            <constraint firstItem="cv1-tp-oYd" firstAttribute="height" secondItem="yLb-mO-pCG" secondAttribute="height" id="5kB-GU-Noz"/>
-                            <constraint firstItem="yLb-mO-pCG" firstAttribute="width" secondItem="cv1-tp-oYd" secondAttribute="width" id="5po-0W-0Qu"/>
-                            <constraint firstItem="XHJ-ra-xrw" firstAttribute="top" secondItem="ngG-eU-8IG" secondAttribute="top" id="8xC-vm-n60"/>
-                            <constraint firstItem="yLb-mO-pCG" firstAttribute="top" secondItem="D3o-nq-crO" secondAttribute="top" id="AOc-s1-CEk"/>
-                            <constraint firstItem="Vn2-oD-Jk4" firstAttribute="leading" secondItem="D3o-nq-crO" secondAttribute="leading" id="BSI-e2-ktS"/>
-                            <constraint firstItem="XHJ-ra-xrw" firstAttribute="height" secondItem="ngG-eU-8IG" secondAttribute="height" id="BiZ-yJ-4Pu"/>
-                            <constraint firstItem="ngG-eU-8IG" firstAttribute="leading" secondItem="cv1-tp-oYd" secondAttribute="leading" id="G04-PK-NtW"/>
-                            <constraint firstItem="9aB-Oy-LgS" firstAttribute="leading" secondItem="ngG-eU-8IG" secondAttribute="leading" id="GG6-st-ijo"/>
-                            <constraint firstItem="ngG-eU-8IG" firstAttribute="top" secondItem="cv1-tp-oYd" secondAttribute="bottom" id="JPa-Uv-ua6"/>
-                            <constraint firstItem="Vn2-oD-Jk4" firstAttribute="width" secondItem="h12-um-Bwf" secondAttribute="width" id="Kg7-C5-aga"/>
-                            <constraint firstItem="QyX-Qb-5N2" firstAttribute="width" secondItem="9aB-Oy-LgS" secondAttribute="width" id="N9Y-cM-3p1"/>
-                            <constraint firstItem="cv1-tp-oYd" firstAttribute="leading" secondItem="yLb-mO-pCG" secondAttribute="leading" id="QD3-qP-rXN"/>
-                            <constraint firstItem="h12-um-Bwf" firstAttribute="leading" secondItem="D3o-nq-crO" secondAttribute="leading" id="RNz-VK-f22"/>
-                            <constraint firstItem="9aB-Oy-LgS" firstAttribute="width" secondItem="ngG-eU-8IG" secondAttribute="width" id="RfH-Uo-EnH"/>
-                            <constraint firstItem="h12-um-Bwf" firstAttribute="top" secondItem="D3o-nq-crO" secondAttribute="top" id="XY0-SX-otY"/>
-                            <constraint firstItem="QyX-Qb-5N2" firstAttribute="height" secondItem="9aB-Oy-LgS" secondAttribute="height" id="Y7Z-k4-RgG"/>
-                            <constraint firstItem="yLb-mO-pCG" firstAttribute="height" secondItem="h12-um-Bwf" secondAttribute="height" id="dJM-ij-Tp6"/>
-                            <constraint firstItem="Vn2-oD-Jk4" firstAttribute="top" secondItem="D3o-nq-crO" secondAttribute="top" id="dKq-WQ-Rcx"/>
-                            <constraint firstItem="Vn2-oD-Jk4" firstAttribute="height" secondItem="h12-um-Bwf" secondAttribute="height" id="f55-E9-DsC"/>
-                            <constraint firstItem="ngG-eU-8IG" firstAttribute="height" secondItem="cv1-tp-oYd" secondAttribute="height" id="fBa-eP-31L"/>
-                            <constraint firstItem="XHJ-ra-xrw" firstAttribute="leading" secondItem="ngG-eU-8IG" secondAttribute="leading" id="gXa-q6-4zL"/>
-                            <constraint firstItem="9aB-Oy-LgS" firstAttribute="top" secondItem="ngG-eU-8IG" secondAttribute="bottom" id="hL9-a3-HCR"/>
-                            <constraint firstItem="XHJ-ra-xrw" firstAttribute="width" secondItem="ngG-eU-8IG" secondAttribute="width" id="iH1-Hm-4X2"/>
-                            <constraint firstItem="QyX-Qb-5N2" firstAttribute="top" secondItem="9aB-Oy-LgS" secondAttribute="top" id="lpp-H1-p8U"/>
-                            <constraint firstItem="yLb-mO-pCG" firstAttribute="width" secondItem="h12-um-Bwf" secondAttribute="width" id="sdZ-yk-iIK"/>
-                            <constraint firstItem="QyX-Qb-5N2" firstAttribute="leading" secondItem="9aB-Oy-LgS" secondAttribute="leading" id="vy5-Tq-Xn1"/>
-                            <constraint firstItem="yLb-mO-pCG" firstAttribute="leading" secondItem="Vn2-oD-Jk4" secondAttribute="trailing" id="w0R-CG-2Es"/>
-                            <constraint firstItem="ngG-eU-8IG" firstAttribute="width" secondItem="cv1-tp-oYd" secondAttribute="width" id="yMC-g6-joE"/>
+                            <constraint firstItem="AQu-qp-vqG" firstAttribute="top" secondItem="KDw-dz-g2g" secondAttribute="top" id="C1y-ky-kH6"/>
+                            <constraint firstItem="KDw-dz-g2g" firstAttribute="leading" secondItem="D3o-nq-crO" secondAttribute="leading" id="SDP-gB-cmG"/>
+                            <constraint firstItem="KDw-dz-g2g" firstAttribute="top" secondItem="D3o-nq-crO" secondAttribute="top" id="UDo-z0-Bde"/>
+                            <constraint firstItem="AQu-qp-vqG" firstAttribute="leading" secondItem="KDw-dz-g2g" secondAttribute="trailing" id="rLd-UJ-1Sr"/>
                         </constraints>
                     </customView>
                     <connections>
@@ -807,6 +875,8 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                         <outlet property="deployView" destination="QyX-Qb-5N2" id="HZ0-jh-LOe"/>
                         <outlet property="exportArtefactView" destination="ngG-eU-8IG" id="kiW-JP-3ID"/>
                         <outlet property="exportView" destination="XHJ-ra-xrw" id="iyB-3y-NM4"/>
+                        <outlet property="testArtefactView" destination="lGg-xM-JmT" id="G7v-MZ-ad4"/>
+                        <outlet property="testReportView" destination="4uk-LD-DdB" id="uM9-II-d3N"/>
                     </connections>
                 </viewController>
                 <customObject id="IpP-dz-f2W" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -815,7 +885,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         </scene>
     </scenes>
     <resources>
-        <image name="application-icon" width="48" height="48"/>
+        <image name="application-icon" width="42" height="42"/>
         <image name="archive" width="128" height="128"/>
         <image name="bottom panel" width="18" height="14"/>
         <image name="divider" width="21.5" height="10.5"/>
@@ -828,5 +898,6 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <image name="lights-export" width="110" height="44"/>
         <image name="lights-test" width="110" height="44"/>
         <image name="right panel" width="18" height="14"/>
+        <image name="unit-test_Icon" width="128" height="128"/>
     </resources>
 </document>

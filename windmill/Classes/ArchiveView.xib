@@ -18,64 +18,9 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="315" height="153"/>
+            <rect key="frame" x="0.0" y="0.0" width="270" height="153"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <customView translatesAutoresizingMaskIntoConstraints="NO" id="xP1-QJ-MZY" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
-                    <rect key="frame" x="20" y="37" width="5" height="64"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="5" id="fSd-wq-w7f"/>
-                    </constraints>
-                </customView>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="Windmill" customModuleProvider="target">
-                    <rect key="frame" x="20" y="37" width="64" height="64"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="64" id="9uA-XC-QMn"/>
-                        <constraint firstAttribute="height" constant="64" id="fEf-Lc-rMZ"/>
-                    </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="archive" id="Qs7-Lp-YdD"/>
-                </imageView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="spO-1s-y1M">
-                    <rect key="frame" x="82" y="84" width="235" height="17"/>
-                    <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="windmill" id="30g-ww-UI7">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KV1-eO-OV4">
-                    <rect key="frame" x="82" y="59" width="52" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="1.2 (1.0)" id="YP7-XC-ouc">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cWw-Eh-eC1">
-                    <rect key="frame" x="82" y="34" width="112" height="17"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="13/08/2017, 19.40" id="yah-VM-ulq">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="67J-tG-tjl">
-                    <rect key="frame" x="17" y="5" width="70" height="26"/>
-                    <popUpButtonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" pullsDown="YES" preferredEdge="maxX" selectedItem="JuU-zZ-9b7" id="NRF-4H-3tA">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" id="lPq-SG-Mkb">
-                            <items>
-                                <menuItem title="Save" hidden="YES" id="JuU-zZ-9b7"/>
-                                <menuItem title="Save..." id="EN4-HP-Z3a"/>
-                                <menuItem title="Keep in Organizer" id="xp7-JL-jZN"/>
-                            </items>
-                        </menu>
-                        <connections>
-                            <action selector="didSelect:" target="-2" id="xB1-zX-EjH"/>
-                        </connections>
-                    </popUpButtonCell>
-                </popUpButton>
                 <scrollView horizontalHuggingPriority="251" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mij-Ew-Gpf">
                     <rect key="frame" x="16" y="109" width="240" height="36"/>
                     <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="2p4-63-vc5">
@@ -116,12 +61,67 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </scroller>
                 </scrollView>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="xP1-QJ-MZY" userLabel="Stage Indicator" customClass="StageIndicatorView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="20" y="37" width="5" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="5" id="fSd-wq-w7f"/>
+                    </constraints>
+                </customView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r2S-vK-C5x" customClass="FileImageView" customModule="Windmill" customModuleProvider="target">
+                    <rect key="frame" x="24" y="37" width="64" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="64" id="9uA-XC-QMn"/>
+                        <constraint firstAttribute="height" constant="64" id="fEf-Lc-rMZ"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="archive" id="Qs7-Lp-YdD"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="spO-1s-y1M">
+                    <rect key="frame" x="94" y="84" width="178" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="windmill" id="30g-ww-UI7">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KV1-eO-OV4">
+                    <rect key="frame" x="94" y="59" width="52" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="1.2 (1.0)" id="YP7-XC-ouc">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cWw-Eh-eC1">
+                    <rect key="frame" x="94" y="34" width="112" height="17"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="13/08/2017, 19.40" id="yah-VM-ulq">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="67J-tG-tjl">
+                    <rect key="frame" x="21" y="5" width="70" height="26"/>
+                    <popUpButtonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" pullsDown="YES" preferredEdge="maxX" selectedItem="JuU-zZ-9b7" id="NRF-4H-3tA">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="lPq-SG-Mkb">
+                            <items>
+                                <menuItem title="Save" hidden="YES" id="JuU-zZ-9b7"/>
+                                <menuItem title="Save..." id="EN4-HP-Z3a"/>
+                                <menuItem title="Keep in Organizer" id="xp7-JL-jZN"/>
+                            </items>
+                        </menu>
+                        <connections>
+                            <action selector="didSelect:" target="-2" id="xB1-zX-EjH"/>
+                        </connections>
+                    </popUpButtonCell>
+                </popUpButton>
             </subviews>
             <constraints>
                 <constraint firstItem="r2S-vK-C5x" firstAttribute="top" secondItem="mij-Ew-Gpf" secondAttribute="bottom" constant="8" id="1zZ-gc-u9y"/>
                 <constraint firstAttribute="trailing" secondItem="spO-1s-y1M" secondAttribute="trailing" id="3wW-zZ-Ihg"/>
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="top" secondItem="r2S-vK-C5x" secondAttribute="top" id="69W-W1-bhV"/>
-                <constraint firstItem="spO-1s-y1M" firstAttribute="leading" secondItem="67J-tG-tjl" secondAttribute="trailing" id="7A2-rE-C6p"/>
+                <constraint firstItem="spO-1s-y1M" firstAttribute="leading" secondItem="67J-tG-tjl" secondAttribute="trailing" constant="8" id="7A2-rE-C6p"/>
                 <constraint firstItem="cWw-Eh-eC1" firstAttribute="leading" secondItem="KV1-eO-OV4" secondAttribute="leading" id="KMN-Fo-h4V"/>
                 <constraint firstItem="KV1-eO-OV4" firstAttribute="leading" secondItem="spO-1s-y1M" secondAttribute="leading" id="MBP-KH-tbe"/>
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="bottom" secondItem="r2S-vK-C5x" secondAttribute="bottom" id="NmS-jj-lPr"/>
@@ -129,10 +129,10 @@
                 <constraint firstItem="cWw-Eh-eC1" firstAttribute="top" secondItem="KV1-eO-OV4" secondAttribute="bottom" constant="8" symbolic="YES" id="TDY-X6-ED0"/>
                 <constraint firstItem="xP1-QJ-MZY" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" symbolic="YES" id="UDl-z9-fR8"/>
                 <constraint firstItem="spO-1s-y1M" firstAttribute="top" secondItem="r2S-vK-C5x" secondAttribute="top" id="bVq-Mk-aTU"/>
+                <constraint firstItem="67J-tG-tjl" firstAttribute="centerX" secondItem="r2S-vK-C5x" secondAttribute="centerX" id="bwz-Xd-mML"/>
                 <constraint firstItem="mij-Ew-Gpf" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="gr8-f9-VaS"/>
                 <constraint firstItem="mij-Ew-Gpf" firstAttribute="leading" secondItem="xP1-QJ-MZY" secondAttribute="leading" constant="-4" id="mPu-eH-q17"/>
-                <constraint firstItem="spO-1s-y1M" firstAttribute="leading" secondItem="r2S-vK-C5x" secondAttribute="trailing" id="qyO-gr-ZfO"/>
-                <constraint firstItem="r2S-vK-C5x" firstAttribute="leading" secondItem="xP1-QJ-MZY" secondAttribute="leading" id="tjZ-Yo-uMU"/>
+                <constraint firstItem="r2S-vK-C5x" firstAttribute="leading" secondItem="xP1-QJ-MZY" secondAttribute="leading" constant="4" id="tjZ-Yo-uMU"/>
                 <constraint firstItem="67J-tG-tjl" firstAttribute="leading" secondItem="r2S-vK-C5x" secondAttribute="leading" id="v8v-ZR-trG"/>
                 <constraint firstItem="KV1-eO-OV4" firstAttribute="top" secondItem="spO-1s-y1M" secondAttribute="bottom" constant="8" symbolic="YES" id="wis-a7-iMp"/>
                 <constraint firstAttribute="bottom" secondItem="67J-tG-tjl" secondAttribute="bottom" constant="8" id="xZI-f1-uPa"/>

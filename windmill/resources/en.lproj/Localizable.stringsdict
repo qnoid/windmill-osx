@@ -50,6 +50,54 @@
 			<string>%d test errors.</string>
 		</dict>
 	</dict>
+	<key>%d test(s) failed.</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@errors@</string>
+		<key>errors</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>zero</key>
+			<string>Error.</string>
+			<key>one</key>
+			<string>%d test failed.</string>
+			<key>two</key>
+			<string></string>
+			<key>few</key>
+			<string></string>
+			<key>many</key>
+			<string></string>
+			<key>other</key>
+			<string>%d tests failed.</string>
+		</dict>
+	</dict>
+	<key>%d test(s).</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>zero</key>
+			<string></string>
+			<key>one</key>
+			<string>%d tests.</string>
+			<key>two</key>
+			<string></string>
+			<key>few</key>
+			<string></string>
+			<key>many</key>
+			<string></string>
+			<key>other</key>
+			<string>%d tests.</string>
+		</dict>
+	</dict>
 	<key>%d archive error(s).</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>

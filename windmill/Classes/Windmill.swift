@@ -63,6 +63,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
     struct Notifications {
         static let willStartProject = Notification.Name("will.start")
         static let didBuildProject = Notification.Name("did.build")
+        static let didTestProject = Notification.Name("did.test")
         static let didArchiveProject = Notification.Name("did.archive")
         static let didExportProject = Notification.Name("did.export")
         static let didDeployProject = Notification.Name("did.deploy")
@@ -119,6 +120,14 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         }
         
     }
+    
+    private func didTest(project: Project, testsCount: Int, devices: Devices, destination: Devices.Destination, testableSummaries: [TestableSummary]) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Windmill.Notifications.didTestProject, object: self, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": testableSummaries])
+        }
+        
+    }
+    
     private func didReadDevices(devices: Devices) {
         guard let destination = devices.destination else {
             os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a 'destination' dictionary?`", log: log, type: .debug, devices.url.path)
@@ -170,14 +179,18 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                             let testResultBundle = applicationSupportDirectory.testResultBundle(at: project.name)
                             
                             if WindmillStringKey.Test.nothing == (buildInfo?[WindmillStringKey.test] as? WindmillStringKey.Test) {
-                                userInfo = ["activity" : ActivityType.test]
+                                userInfo = ["activity" : ActivityType.test, "resultBundle": testResultBundle, "skip" : true]
                                 test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle)
                             } else {
-                                userInfo = ["activity" : ActivityType.test, "devices": devices, "destination": destination]
+                                userInfo = ["activity" : ActivityType.test, "devices": devices, "destination": destination, "resultBundle": testResultBundle]
                                 test = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle)
                             }
                             
                             self?.processManager.sequence(process: test, userInfo: userInfo, wasSuccesful: ProcessWasSuccesful { userInfo in
+
+                                if let testResultBundle = userInfo?["resultBundle"] as? ResultBundle, let testsCount = testResultBundle.info.testsCount, testsCount >= 0 {
+                                    self?.didTest(project: project, testsCount: testsCount, devices: devices, destination: destination, testableSummaries: testResultBundle.testSummaries?.testableSummaries ?? [])
+                                }
 
                                 let archive: Archive = directory.archive(name: scheme)
                                 let archiveResultBundle = applicationSupportDirectory.archiveResultBundle(at: project.name)
@@ -354,19 +367,33 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         
         switch activity {
         case .build, .test, .archive, .export:
-            
-            guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle, resultBundle.info.errorCount != 0 else {
-                NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity])
+
+            guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle else {
+                os_log("No 'resultBundle' was passed for activity: `%{public}@`. Have you set it in the userInfo?", log: log, type: .debug, activity.rawValue)
                 return
             }
             
-            DispatchQueue.main.async { [info = resultBundle.info] in
-                
-                let error = NSError.activityError(underlyingError: error, for: activity, status: process.terminationStatus, info: info)
-                
-                NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity, "errorCount":info.errorCount, "errorSummaries": info.errorSummaries])
+            switch (resultBundle.info.errorCount, resultBundle.info.testsFailedCount) {
+            case (let errorCount, let testsFailedCount?) where errorCount > 0 && testsFailedCount == 0:
+                DispatchQueue.main.async { [info = resultBundle.info] in
+                    
+                    let error = NSError.activityError(underlyingError: error, for: activity, status: process.terminationStatus, info: info)
+                    
+                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity, "errorCount":errorCount, "errorSummaries": info.errorSummaries])
+                }
+            case (let errorCount, let testsFailedCount?) where errorCount == 0 && testsFailedCount > 0:
+                DispatchQueue.main.async { [info = resultBundle.info] in
+                    let error = NSError.testError(underlyingError: error, status: process.terminationStatus, info: info)
+
+                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "testsFailedCount":testsFailedCount, "testFailureSummaries": info.testFailureSummaries, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []], uniquingKeysWith: { (userInfo, _) -> Any in
+                        return userInfo
+                    }))
+                }
+            default:
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity])
+                }
             }
-            
         default:
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Notifications.activityError, object: self, userInfo: ["error": error, "activity": activity])

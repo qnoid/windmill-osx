@@ -53,7 +53,7 @@ class AppView: NSView {
             }
 
             self.applicationImageView.image = iconImage
-            self.applicationImageView.image?.size = NSSize(width: 48, height: 48)
+            self.applicationImageView.image?.size = NSSize(width: 42, height: 42)
             self.applicationImageView.dragImage = iconImage
         }
     }

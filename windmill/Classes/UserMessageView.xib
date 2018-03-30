@@ -45,7 +45,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rZT-y6-pZx" userLabel="Pretty log Textfield" customClass="UserMessageViewTextField" customModule="Windmill" customModuleProvider="target">
-                    <rect key="frame" x="58" y="0.0" width="416" height="17"/>
+                    <rect key="frame" x="58" y="0.0" width="409" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" usesSingleLineMode="YES" id="Rv3-Hg-ylj">
                         <font key="font" metaFont="menu"/>
                         <color key="textColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
@@ -53,13 +53,13 @@
                     </textFieldCell>
                 </textField>
                 <button horizontalHuggingPriority="252" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Nob-aV-c9J" userLabel="Error Button">
-                    <rect key="frame" x="472" y="0.0" width="20" height="17"/>
+                    <rect key="frame" x="465" y="0.0" width="27" height="17"/>
                     <buttonCell key="cell" type="square" title="0" bezelStyle="shadowlessSquare" image="error" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="Ima-v3-52K" userLabel="Button">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="showReportsWindowController:" target="-1" id="H5F-Ac-8rD"/>
+                        <action selector="showErrorSummariesWindowController:" target="-1" id="O3n-ES-cch"/>
                     </connections>
                 </button>
             </subviews>

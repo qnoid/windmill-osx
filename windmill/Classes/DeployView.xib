@@ -35,7 +35,7 @@
                     </constraints>
                 </customView>
                 <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dGi-f0-szt">
-                    <rect key="frame" x="20" y="46" width="64" height="64"/>
+                    <rect key="frame" x="24" y="46" width="64" height="64"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="64" id="TWj-Qh-dwb"/>
                         <constraint firstAttribute="width" constant="64" id="dh4-A0-pfo"/>
@@ -43,7 +43,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="iphone-x" id="vLD-sn-Aku"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xA8-tx-WWc">
-                    <rect key="frame" x="90" y="93" width="182" height="17"/>
+                    <rect key="frame" x="94" y="93" width="178" height="17"/>
                     <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" title="windmill" id="64E-VJ-0CE">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -51,7 +51,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mz5-rg-8TC">
-                    <rect key="frame" x="90" y="68" width="182" height="17"/>
+                    <rect key="frame" x="94" y="68" width="178" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="1.0" id="ooG-IB-pJl">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -59,7 +59,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vDq-pI-d6Z" userLabel="Deployment Target Field">
-                    <rect key="frame" x="186" y="43" width="86" height="17"/>
+                    <rect key="frame" x="190" y="43" width="82" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="10.3" id="o0e-gD-YUq">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -85,7 +85,7 @@ install this over the air distribution.</string>
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="48X-Vb-oap">
-                    <rect key="frame" x="90" y="43" width="92" height="17"/>
+                    <rect key="frame" x="94" y="43" width="92" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Requires iOS:" id="xlG-Pa-NjS">
                         <font key="font" metaFont="systemBold"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -110,7 +110,7 @@ install this over the air distribution.</string>
                 <constraint firstAttribute="trailing" secondItem="4iC-Fo-ok7" secondAttribute="trailing" id="h9w-Ur-KE1"/>
                 <constraint firstAttribute="trailing" secondItem="vDq-pI-d6Z" secondAttribute="trailing" id="oeB-MU-6Db"/>
                 <constraint firstItem="4iC-Fo-ok7" firstAttribute="centerY" secondItem="eJo-8E-UQV" secondAttribute="centerY" id="qEl-EJ-xnY"/>
-                <constraint firstItem="dGi-f0-szt" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" id="qFE-ks-5t0"/>
+                <constraint firstItem="dGi-f0-szt" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" constant="4" id="qFE-ks-5t0"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="20" symbolic="YES" id="v2a-7A-CBn"/>
                 <constraint firstItem="Mz5-rg-8TC" firstAttribute="top" secondItem="xA8-tx-WWc" secondAttribute="bottom" constant="8" symbolic="YES" id="w1e-Jg-BaB"/>
                 <constraint firstAttribute="bottom" secondItem="eJo-8E-UQV" secondAttribute="bottom" constant="8" id="xNM-r4-iGw"/>
