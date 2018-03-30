@@ -93,7 +93,6 @@ class ProcessTest: XCTestCase {
     }
     
     /**
-     - Precondition: a checked out project
      */
     func testGivenProjectAssertMakeTestConfigurationFileExists() {
 
@@ -102,8 +101,7 @@ class ProcessTest: XCTestCase {
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let repositoryLocalURL = bundle.url(forResource: "helloworld", withExtension: "")!
-        let process = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "helloworld", devices: devices, buildSettings: buildSettings)
+        let process = Process.makeRead(devices: devices, for: buildSettings)
         
         process.launch()
         process.waitUntilExit()
@@ -126,9 +124,7 @@ class ProcessTest: XCTestCase {
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let repositoryLocalURL = bundle.url(forResource: "no_simulator_available", withExtension: "")!
-
-        let process = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: "no_simulator_available", devices: devices, buildSettings: buildSettings)
+        let process = Process.makeRead(devices: devices, for: buildSettings)
 
         process.launch()
         process.waitUntilExit()

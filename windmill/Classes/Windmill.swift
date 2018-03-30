@@ -103,7 +103,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         self.processManager.monitor = self
     }
     
-    private func build(scheme: String, destination: Devices.Destination, wasSuccesful: ProcessWasSuccesful) {
+    private func build(scheme: String, destination: Devices.Destination, wasSuccesful: ProcessWasSuccesful?) {
         
         self.build(scheme: scheme, destination: destination, repositoryLocalURL: projectSourceDirectory.URL, derivedDataURL: applicationCachesDirectory.derivedDataURL(at: project.name), resultBundle: applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: wasSuccesful)
     }
@@ -138,6 +138,38 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 
     // MARK: private
     
+    func buildSequence(repositoryLocalURL: URL? = nil, derivedDataURL: URL, resultBundle: ResultBundle, buildWasSuccesful: ProcessWasSuccesful? = nil) -> Sequence {
+        let directory = self.projectHomeDirectory
+        let repositoryLocalURL = repositoryLocalURL ?? projectSourceDirectory.URL
+        let configuration = directory.configuration()
+
+        let readProjectConfiguration = Process.makeReadProjectConfiguration(repositoryLocalURL: repositoryLocalURL, projectConfiguration: configuration)
+        return self.processManager.sequence(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [project = self.project, buildSettings = directory.buildSettings(), weak self] userInfo in
+            
+            let scheme = configuration.detectScheme(name: project.scheme)
+            let readBuildSettings = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: scheme, buildSettings: buildSettings)
+            self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
+                let readDevices = Process.makeRead(devices: devices, for: buildSettings)
+                self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
+                    
+                    self?.didReadDevices(devices: devices)
+                    
+                    let appBundle = directory.appBundle(name: buildSettings.product.name ?? project.name)
+                    try? FileManager.default.removeItem(at: appBundle.url)
+                    
+                    guard let destination = devices.destination else {
+                        if let log = self?.log {
+                            os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a '' dictionary?`", log: log, type: .debug, devices.url.path)
+                        }
+                        return
+                    }
+                    
+                    self?.build(scheme: scheme, destination: destination, repositoryLocalURL: repositoryLocalURL, derivedDataURL: derivedDataURL, resultBundle: resultBundle, wasSuccesful: buildWasSuccesful)
+                }).launch()
+            }).launch()
+        })
+    }
+    
     /* private */ func exportSequence(exportWasSuccesful: ProcessWasSuccesful? = nil) -> Sequence {
         
         let directory = self.projectHomeDirectory
@@ -154,7 +186,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                 let scheme = configuration.detectScheme(name: project.scheme)
                 let readBuildSettings = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: scheme, buildSettings: buildSettings)
                 self?.processManager.sequence(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
-                    let readDevices = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: scheme, devices: devices, buildSettings: buildSettings)
+                    let readDevices = Process.makeRead(devices: devices, for: buildSettings)
                     self?.processManager.sequence(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                         
                         self?.didReadDevices(devices: devices)
@@ -299,7 +331,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         return self.exportSequence(exportWasSuccesful: exportWasSuccesful)
     }
     
-    /* fileprivate */ func build(scheme: String, destination: Devices.Destination, repositoryLocalURL: URL, derivedDataURL: URL, resultBundle: ResultBundle, wasSuccesful: ProcessWasSuccesful) {
+    /* fileprivate */ func build(scheme: String, destination: Devices.Destination, repositoryLocalURL: URL, derivedDataURL: URL, resultBundle: ResultBundle, wasSuccesful: ProcessWasSuccesful?) {
         
         let buildForTesting = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: resultBundle)
         

@@ -41,7 +41,7 @@ public struct Devices {
         return metadata["platform"]
     }
 
-    var version: Float? {
+    var version: Double? {
         return metadata["version"]
     }
     

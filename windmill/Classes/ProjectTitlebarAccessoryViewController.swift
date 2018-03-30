@@ -64,8 +64,8 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
     }
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == #selector(launchOnSimulator(_:)) {
-            return self.launchButton.isEnabled
+        if menuItem.action == #selector(launchOnSimulator(_:)), let launchButton = self.launchButton {
+            return launchButton.isEnabled
         }
         
         return true

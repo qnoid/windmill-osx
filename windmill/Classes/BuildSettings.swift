@@ -24,9 +24,9 @@ public struct BuildSettings {
     }
     
     struct Deployment {
-        let value: [String: Float]?
+        let value: [String: Double]?
         
-        var target: Float? {
+        var target: Double? {
             return value?["target"]
         }
     }
@@ -44,6 +44,6 @@ public struct BuildSettings {
     }
     
     var deployment: Deployment {
-        return Deployment(value: metadata["deployment"] as [String: Float]?)
+        return Deployment(value: metadata["deployment"] as [String: Double]?)
     }
 }

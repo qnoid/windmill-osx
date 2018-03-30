@@ -39,6 +39,7 @@ class WindmillTimer {
     func observe(windmill: Windmill) {
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
     }
     
     @objc func willStartProject(_ aNotification: Notification) {
@@ -51,6 +52,10 @@ class WindmillTimer {
         self.executionTime = methodFinish.timeIntervalSince(self.startDate!)
         
         expectation.fulfill()
+    }
+    
+    @objc func activityError(_ aNotification: Notification) {
+        XCTFail()
     }
 }
 
@@ -76,16 +81,12 @@ class WindmillTest: XCTestCase {
         let name = "helloword-no-test-target"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
-        
         let project = Project(name: name, scheme: name, origin: "any")
         let windmill = Windmill(project: project)
         
-        NotificationCenter.default.addObserver(forName: Windmill.Notifications.activityDidExitSuccesfully, object: windmill, queue: OperationQueue.main) { notification in
+        windmill.buildSequence(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
-        }
-        
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
+        }).launch()
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -97,16 +98,14 @@ class WindmillTest: XCTestCase {
         let name = "project-with-unit-tests"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
-        
         let project = Project(name: name, scheme: name, origin: "any")
         let windmill = Windmill(project: project)
-        
-        NotificationCenter.default.addObserver(forName: Windmill.Notifications.activityDidExitSuccesfully, object: windmill, queue: OperationQueue.main) { notification in
+
+
+        windmill.buildSequence(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
-        }
-        
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
+        }).launch()
+
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -117,8 +116,6 @@ class WindmillTest: XCTestCase {
         
         let name = "project-with-build-errors"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
-        
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         
         let project = Project(name: name, scheme: name, origin: "any")
         let windmill = Windmill(project: project)
@@ -132,8 +129,8 @@ class WindmillTest: XCTestCase {
             expectation.fulfill()
         }
         
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), wasSuccesful: ProcessWasSuccesful.ok)
-        
+        windmill.buildSequence(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful.ok).launch()
+
         wait(for: [expectation], timeout: 30.0)
     }
 
@@ -164,7 +161,7 @@ class WindmillTest: XCTestCase {
         let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
         let windmill = Windmill(processManager: processManager, project: project)
         
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let testSkip = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
         windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
@@ -205,7 +202,7 @@ class WindmillTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
 
         windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
@@ -243,7 +240,7 @@ class WindmillTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
-        let readTestMetadata = Process.makeReadDevices(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, devices: devices, buildSettings: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
         windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
@@ -280,6 +277,9 @@ class WindmillTest: XCTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
     
+    /**
+     - Precondition: requires internet connection
+     */
     func testGivenWindmillRunAssertTimeTaken() {
 
         let expectation = self.expectation(description: #function)

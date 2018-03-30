@@ -72,6 +72,9 @@ class WillExitWithErrorExpectation: ProcessMonitor {
 
 class ProcessManagerTest: XCTestCase {
 
+    /**
+     - Precondition: requires internet connection
+    */
     func testGivenNameWithWhitespacesAssertSuccess() {
         let manager = ProcessManager()
         let repoName = "with white space"

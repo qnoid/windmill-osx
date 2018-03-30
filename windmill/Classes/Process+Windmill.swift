@@ -92,12 +92,11 @@ extension Process
     }
     
     
-    public static func makeReadDevices(repositoryLocalURL: Repository.LocalURL, scheme: String, devices: Devices, buildSettings: BuildSettings) -> Process {
+    public static func makeRead(devices: Devices, for buildSettings: BuildSettings) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_DEVICES, ofType: "sh")!
-        process.arguments = [devices.url.path, scheme, buildSettings.url.path, self.pathForDir("Scripts")]
+        process.arguments = [devices.url.path, buildSettings.url.path, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process
