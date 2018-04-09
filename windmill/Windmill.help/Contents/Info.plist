@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en-us</string>
+	<key>CFBundleIdentifier</key>
+	<string>io.windmill.windmill.help</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.6.0</string>
+	<key>CFBundleSignature</key>
+	<string>hbwr</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>CFBundleName</key>
+	<string>Windmill</string>
+	<key>HPDBookAccessPath</key>
+	<string>index.html</string>
+	<key>HPDBookIconPath</key>
+	<string>Windmill.png</string>
+	<key>HPDBookKBProduct</key>
+	<string>Windmill</string>
+	<key>HPDBookTitle</key>
+	<string>Windmill Help</string>
+	<key>HPDBookType</key>
+	<string>3</string>
+	<key>HPDBookIndexPath</key>
+	<string>Windmill.helpindex</string>
+	<key>HPDBookUsesExternalViewer</key>
+	<false/>
+	<key>HPDMaxWindowWidth</key>
+	<integer>938</integer>
+</dict>
+</plist>

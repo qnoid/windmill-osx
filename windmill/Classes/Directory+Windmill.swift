@@ -265,7 +265,7 @@ extension ProjectHomeDirectory {
 
     public func appBundle(archive: Archive, name: String) -> AppBundle {
         
-        let appBundleURL = archive.url.appendingPathComponent("Products/Applications/\(name).app")
+        let appBundleURL = archive.url.appendingPathComponent("Products/Applications/\(name)")
         let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
 
         return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))

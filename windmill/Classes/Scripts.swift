@@ -15,17 +15,27 @@ struct Scripts
     struct Xcodebuild {
         
         static let BUILD : BashScript = "Scripts/xcodebuild/build"
+        static let BUILD_PROJECT : BashScript = "Scripts/xcodebuild/build-project"
+        static let BUILD_WORKSPACE : BashScript = "Scripts/xcodebuild/build-workspace"
         static let BUILD_FOR_TESTING : BashScript = "Scripts/xcodebuild/build-for-testing"
+        static let BUILD_PROJECT_FOR_TESTING : BashScript = "Scripts/xcodebuild/build-project-for-testing"
+        static let BUILD_WORKSPACE_FOR_TESTING : BashScript = "Scripts/xcodebuild/build-workspace-for-testing"
         static let TEST_SKIP : BashScript = "Scripts/xcodebuild/test-skip"
         static let TEST_WITHOUT_BUILDING : BashScript = "Scripts/xcodebuild/test-without-building"
+        static let TEST_PROJECT_WITHOUT_BUILDING : BashScript = "Scripts/xcodebuild/test-project-without-building"
+        static let TEST_WORKSPACE_WITHOUT_BUILDING : BashScript = "Scripts/xcodebuild/test-workspace-without-building"
         static let ARCHIVE : BashScript = "Scripts/xcodebuild/archive"
+        static let ARCHIVE_PROJECT : BashScript = "Scripts/xcodebuild/archive-project"
+        static let ARCHIVE_WORKSPACE : BashScript = "Scripts/xcodebuild/archive-workspace"
         static let EXPORT : BashScript = "Scripts/xcodebuild/export"
         static let DEPLOY : BashScript = "Scripts/xcodebuild/deploy"
     }
 
     struct Git {
         static let CHECKOUT : BashScript = "Scripts/git/checkout"
+        static let CHECKOUT_DONT_RESET_HARD : BashScript = "Scripts/git/checkout_dont_reset_hard"
         static let POLL : BashScript = "Scripts/git/poll"
+        static let POLL_DONT_RESET_HARD : BashScript = "Scripts/git/poll_dont_reset_hard"
     }
     
     struct CommandLineTools {

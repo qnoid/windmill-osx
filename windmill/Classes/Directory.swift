@@ -16,6 +16,8 @@ public protocol DirectoryType
     
     func file(_ filename: String) -> Self
     
+    func exists() -> Bool
+    
     func fileExists(_ filename: String) -> Bool
     
     func traverse(_ pathComponent: PathComponent) -> Self
@@ -41,7 +43,11 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
         
         return Directory(URL:URLForFilename, fileManager: self.fileManager)
     }
-    
+
+    public func exists() -> Bool {
+        return self.fileManager.fileExists(atPath: self.URL.path)
+    }
+
     public func fileExists(_ filename: String) -> Bool {
         return self.fileManager.fileExists(atPath: (self.URL.path as NSString).appendingPathComponent(filename))
     }

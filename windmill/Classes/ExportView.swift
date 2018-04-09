@@ -54,11 +54,11 @@ class ExportView: NSView {
     @IBOutlet weak var ipaImageView: FileImageView!
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var versionTextField: NSTextField!
-    @IBOutlet weak var deploymentTargetTextField: NSTextField!
+    @IBOutlet weak var minimumOSVersionTextField: NSTextField!
     
     var appBundle: AppBundle? {
         didSet{
-            self.deploymentTargetTextField.stringValue = appBundle?.info.minimumOSVersion ?? ""
+            self.minimumOSVersionTextField.stringValue = appBundle?.info.minimumOSVersion ?? ""
             
             guard let iconURL = appBundle?.iconURL(), let dragImage = NSImage(contentsOf: iconURL) else {
                 self.ipaImageView.dragImage = #imageLiteral(resourceName: "ipa")
@@ -111,7 +111,7 @@ class ExportView: NSView {
 
         let savePanel = NSSavePanel()
             
-        savePanel.nameFieldStringValue = export.name
+        savePanel.nameFieldStringValue = export.filename
         savePanel.beginSheetModal(for: self.window!) { response in
             
             guard response == NSApplication.ModalResponse.OK else {

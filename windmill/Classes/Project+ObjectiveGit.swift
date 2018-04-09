@@ -15,45 +15,33 @@ public struct Repository: CustomDebugStringConvertible {
     public typealias LocalURL = URL    
 
     static func parse(localGitRepoURL: URL) throws -> Repository.Commit {
-        return try parse(fullPathOfLocalGitRepo: localGitRepoURL.path)
-    }
-    
-    static func parse(fullPathOfLocalGitRepo localGitRepo: String) throws -> Repository.Commit
-    {
+        
         let log = OSLog(subsystem: "io.windmill.windmill", category: "repository")
-        os_log("%{public}@", log: log, type: .debug, "Using: \(localGitRepo)")
-        
-        let localGitRepoURL: URL? = URL(fileURLWithPath: localGitRepo, isDirectory: true)
-        
-        guard let _localGitRepoURL = localGitRepoURL else {
-            os_log("%{public}@", log: log, type: .error, "Error parsing location of local git repo: \(localGitRepo)")
-            throw NSError.errorNoRepo(localGitRepo)
-        }
-        
+        os_log("%{public}@", log: log, type: .debug, "Using: \(localGitRepoURL.path)")
+
         do {
-            let repo = try GTRepository(url: _localGitRepoURL)
+            let repo = try GTRepository(url: localGitRepoURL)
             
             guard let currentBranch = try? repo.currentBranch(), let branch = currentBranch.shortName else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch branch")
-                throw NSError.errorRepo(localGitRepo, underlyingError:nil)
+                throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
             }
             
             guard let head = try repo.headReference().oid, let shortSha = head.sha?.git_shortUniqueSha() else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch head")
-                throw NSError.errorRepo(localGitRepo, underlyingError:nil)
+                throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
             }
             
-            let name = _localGitRepoURL.lastPathComponent
+            let name = localGitRepoURL.lastPathComponent
             let remote = try repo.configuration().remotes?.filter { remote in
                 return remote.name == "origin"
             }
             
             guard let origin = remote?.first?.urlString else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch origin")
-                throw NSError.noOriginError(localGitRepo)
+                throw NSError.noOriginError(localGitRepoURL.path)
             }
             
-            os_log("%{public}@", log: log, type: .debug, "Project name: \(name)")
             os_log("%{public}@", log: log, type: .debug, "Found remote repo at: \(String(describing: origin))")
             
             let repository = Repository(name: name, origin: origin)
@@ -63,9 +51,13 @@ public struct Repository: CustomDebugStringConvertible {
             
         }
         catch let error as NSError {
-            os_log("%{public}@", log: log, type: .error, "Could not open repository: \(error)")
-            throw NSError.errorNoRepo(localGitRepo)
+            os_log("%{public}@", log: log, type: .debug, "Could not open repository: \(error)")
+            throw NSError.errorNoRepo(localGitRepoURL.path)
         }
+    }
+    
+    static func parse(fullPathOfLocalGitRepo localGitRepo: String) throws -> Repository.Commit {
+        return try parse(localGitRepoURL: URL(fileURLWithPath: localGitRepo, isDirectory: true))
     }
 
     struct Commit: CustomDebugStringConvertible {
@@ -88,7 +80,11 @@ public struct Repository: CustomDebugStringConvertible {
 
 extension Project {
     
-    static func make(repository: Repository) -> Project {
-        return Project(name: repository.name, scheme: repository.name, origin: repository.origin)
+    static func make(isWorkspace: Bool? = nil, repository: Repository) -> Project {
+        return make(isWorkspace: isWorkspace, name: repository.name, repository: repository)
+    }
+    
+    static func make(isWorkspace: Bool? = nil, name: String, repository: Repository) -> Project {
+        return Project(isWorkspace: isWorkspace, name: name, scheme: repository.name, origin: repository.origin)
     }
 }

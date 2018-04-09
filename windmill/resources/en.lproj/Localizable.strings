@@ -6,7 +6,7 @@
   Copyright (c) 2015 qnoid.com. All rights reserved.
 */
 "windmill.paid"="You can unlock this feature with a Windmill subscription.";
-"windmill.toolTip"="Drag and drop the folder that contains your Xcode project/workspace as cloned by a remote repo.\n\nWindmill will clone the remote repo and start monitoring.";
+"windmill.toolTip"="Drag and drop your Xcode project/workspace from a folder cloned by a remote repo.\n\nWindmill will clone the remote repo and start monitoring.";
 "windmill.branch.toolTip"="Windmill ensures your %@ branch is always ready to release.";
 "windmill.launchsimulator.button.enabled.toolTip"="Launch the app on the simulator.";
 "windmill.launchsimulator.button.disabled.toolTip"="As soon as the test stage is complete, you will be able to run the app on the simulator.";

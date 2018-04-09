@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
             <connections>
-                <outlet property="deploymentTargetTextField" destination="cWw-Eh-eC1" id="caa-mK-YL8"/>
                 <outlet property="headerTextField" destination="BkY-iF-Rbe" id="IO5-uC-YD2"/>
                 <outlet property="ipaImageView" destination="r2S-vK-C5x" id="FFV-6q-D2k"/>
+                <outlet property="minimumOSVersionTextField" destination="cWw-Eh-eC1" id="SuS-LF-Xgk"/>
                 <outlet property="stageIndicatorView" destination="xP1-QJ-MZY" id="3EL-H3-eYm"/>
                 <outlet property="titleTextField" destination="spO-1s-y1M" id="nZh-ua-hHB"/>
                 <outlet property="versionTextField" destination="KV1-eO-OV4" id="XKl-rS-892"/>
@@ -96,7 +96,7 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cWw-Eh-eC1" userLabel="Deployment Target Field">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cWw-Eh-eC1" userLabel="Minimum OS Version Field">
                     <rect key="frame" x="196" y="34" width="30" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="10.3" id="yah-VM-ulq">
                         <font key="font" metaFont="system"/>
