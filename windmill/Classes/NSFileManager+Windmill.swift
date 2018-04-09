@@ -18,6 +18,10 @@ public extension FileManager
         return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
     }
 
+    var userDirectoryURL: URL {
+        return self.urls(for: .userDirectory, in: .userDomainMask)[0]
+    }
+
     var windmillHomeDirectory: WindmillHomeDirectory  {
         
         let url = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(".windmill")

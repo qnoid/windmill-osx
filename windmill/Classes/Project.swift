@@ -71,10 +71,19 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     }
     
     static let toDictionary : (Project) -> Dictionary<String, Any> = { project in
-        return [
-            "name": project.name,
-            "scheme": project.scheme,
-            "origin": project.origin ]
+        
+        if let isWorkspace = project.isWorkspace {
+            return [
+                "isWorkspace": isWorkspace,
+                "name": project.name,
+                "scheme": project.scheme,
+                "origin": project.origin ]
+        } else {
+            return [
+                "name": project.name,
+                "scheme": project.scheme,
+                "origin": project.origin ]
+        }
     }
 
     static let fromDictionary : (_ object : Any) -> Project = { (object : Any) -> Project in
@@ -89,15 +98,19 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         return self.origin
     }
     
-    let name : String
+    //nil means unknown
+    //false means project
+    var isWorkspace: Bool?
+    let name: String
     
     let scheme : String
     
     /// the origin of the git repo as returned by 'git remote -v', i.e. git@bitbucket.org:qnoid/balance.git
     let origin : String
     
-    public required init(name: String, scheme: String, origin: String)
+    public required init(isWorkspace: Bool? = nil, name: String, scheme: String, origin: String)
     {
+        self.isWorkspace = isWorkspace
         self.name = name
         self.scheme = scheme
         self.origin = origin
@@ -105,10 +118,11 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     
     convenience public init(dictionary aDictionary: Dictionary<String, AnyObject>)
     {
+        let isWorkspace = aDictionary["isWorkspace"] as? Bool
         let name = aDictionary["name"] as! String
         let scheme = aDictionary["scheme"] as! String
         let origin = aDictionary["origin"] as! String
         
-        self.init(name:name, scheme: scheme, origin:origin)
+        self.init(isWorkspace: isWorkspace, name:name, scheme: scheme, origin:origin)
     }
 }

@@ -93,6 +93,7 @@ class ConsoleViewController: NSViewController, ProcessManagerDelegate {
     @objc func activityError(_ aNotification: Notification) {
         if let error = aNotification.userInfo?["error"] as? NSError {
             self.outputBuffer.record(count: error.localizedDescription.count)
+            self.outputBuffer.record(count: "\n".count)
             self.outputBuffer.record(count: error.localizedFailureReason?.count ?? 0)
         }
         
@@ -108,6 +109,7 @@ class ConsoleViewController: NSViewController, ProcessManagerDelegate {
 
         if let error = aNotification.userInfo?["error"] as? NSError {
             self.outputBuffer.append(to: textView.textStorage, output: error.localizedDescription)
+            self.outputBuffer.append(to: textView.textStorage, output: "\n")
             self.outputBuffer.append(to: textView.textStorage, output: error.localizedFailureReason ?? "")
         }
         

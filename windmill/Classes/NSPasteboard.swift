@@ -11,16 +11,12 @@ import Foundation
 
 extension NSPasteboard
 {
-    func firstFilename() -> String?
+    func fileURL() -> URL?
     {
         guard self.availableType(from: [PasteboardType.fileURL]) != nil else {
             return nil
         }
         
-        guard let files = self.propertyList(forType: NSPasteboard.PasteboardType(rawValue: "NSFilenamesPboardType")) as? [String] else {
-            return nil
-        }
-        
-    return files.first
+    return NSURL(from: self) as URL?
     }
 }

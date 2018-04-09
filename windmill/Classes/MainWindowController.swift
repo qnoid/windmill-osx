@@ -203,7 +203,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
         
         let project = windmill.project
-        self.windmill.project = Project(name: project.name, scheme: scheme, origin: project.origin)
+        self.windmill.project = Project(isWorkspace: project.isWorkspace, name: project.name, scheme: scheme, origin: project.origin)
         self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
     }
     

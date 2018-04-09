@@ -68,7 +68,7 @@ struct MetadataMock: Metadata {
 
 class WindmillTest: XCTestCase {
     
-    let bundle = Bundle(for: SequenceTest.self)
+    let bundle = Bundle(for: ProcessChainTest.self)
     
     override func setUp() {
         continueAfterFailure = false
@@ -164,7 +164,7 @@ class WindmillTest: XCTestCase {
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let testSkip = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: testSkip, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -205,7 +205,7 @@ class WindmillTest: XCTestCase {
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: testWithoutBuilding, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -243,7 +243,7 @@ class WindmillTest: XCTestCase {
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
-        windmill.build(scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()

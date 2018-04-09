@@ -45,7 +45,11 @@ public struct Export {
         var key: String? {
             return metadata.dictionary?.keys.first
         }
-        
+
+        var name: String {
+            return dictionary?["name"] as? String ?? ""
+        }
+
         var team: [String: String]? {
             return dictionary?["team"] as? [String: String]
         }
@@ -133,7 +137,7 @@ public struct Export {
 
 extension Export {
     
-    var name: String {
+    var filename: String {
         return self.distributionSummary.key ?? self.url.lastPathComponent
     }
 }

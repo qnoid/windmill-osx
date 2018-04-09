@@ -1,5 +1,5 @@
 //
-//  SequenceTest.swift
+//  ProcessChainTest.swift
 //  windmillTests
 //
 //  Created by Markos Charatzas on 8/2/18.
@@ -10,9 +10,9 @@ import XCTest
 
 @testable import Windmill
 
-class SequenceTest: XCTestCase {
+class ProcessChainTest: XCTestCase {
 
-    let bundle = Bundle(for: SequenceTest.self)
+    let bundle = Bundle(for: ProcessChainTest.self)
     
     override func setUp() {
         continueAfterFailure = false
@@ -35,7 +35,7 @@ class SequenceTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }
 
-        let build = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        let build = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
         
         processManager.processChain(process: build).launch(recover: RecoverableProcess.recover(terminationStatus: 66) { process in
             XCTAssertEqual(66, process.terminationStatus, "Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
@@ -62,7 +62,7 @@ class SequenceTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }        
         
-        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
         
         processManager.processChain(process: build, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()

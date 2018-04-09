@@ -113,45 +113,112 @@ extension Process
     
     public static func makeCheckout(sourceDirectory: ProjectSourceDirectory, project: Project, branch: String = "master") -> Process {
         
-        let process = Process()
-        process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-        process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
-        process.qualityOfService = .utility
-        
-        return process
+        switch Preferences.shared.managedSource {
+            case false:
+                let process = Process()
+                process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
+                process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
+                process.qualityOfService = .utility
+            
+                return process
+            case true:
+                let process = Process()
+                process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT_DONT_RESET_HARD, ofType: "sh")!
+                process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
+                process.qualityOfService = .utility
+                
+                return process
+        }
     }
     
-    public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, project: Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
-        let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_FOR_TESTING, ofType: "sh")!
-        process.arguments = [destination.udid ?? "", scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
-        process.qualityOfService = .utility
-        
-        return process
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_WORKSPACE_FOR_TESTING, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_PROJECT_FOR_TESTING, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_FOR_TESTING, ofType: "sh")!
+            process.arguments = [scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
-    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    public static func makeBuild(repositoryLocalURL: Repository.LocalURL, project:Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
-        let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
-        process.arguments = [destination.udid ?? "", scheme, configuration.name, derivedDataURL.path, resultBundle.url.path]
-        process.qualityOfService = .utility
-        
-        return process
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_WORKSPACE, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD_PROJECT, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.BUILD, ofType: "sh")!
+            process.arguments = [scheme, configuration.name, destination.udid ?? "", derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
-    static func makeTestWithoutBuilding(repositoryLocalURL: Repository.LocalURL, scheme: String, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
+    static func makeTestWithoutBuilding(repositoryLocalURL: Repository.LocalURL, project:Project, scheme: String, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
         
-        let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_WITHOUT_BUILDING, ofType: "sh")!
-        process.arguments = [destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
-        process.qualityOfService = .utility
-        
-        return process
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_WORKSPACE_WITHOUT_BUILDING, ofType: "sh")!
+            process.arguments = [project.name, destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_PROJECT_WITHOUT_BUILDING, ofType: "sh")!
+            process.arguments = [project.name, destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.TEST_WITHOUT_BUILDING, ofType: "sh")!
+            process.arguments = [destination.udid ?? "", scheme, derivedDataURL.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
     static func makeTestSkip(repositoryLocalURL: Repository.LocalURL, scheme: String, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
@@ -165,15 +232,35 @@ extension Process
         return process
     }
     
-    public static func makeArchive(repositoryLocalURL: Repository.LocalURL, scheme: String, configuration: Configuration = .release, derivedDataURL: URL, archive: Archive, resultBundle: ResultBundle) -> Process {
+    public static func makeArchive(repositoryLocalURL: Repository.LocalURL, project:Project, scheme: String, configuration: Configuration = .release, derivedDataURL: URL, archive: Archive, resultBundle: ResultBundle) -> Process {
         
-        let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
-        process.arguments = [scheme, configuration.name, derivedDataURL.path, archive.url.path, resultBundle.url.path]
-        process.qualityOfService = .utility
-        
-        return process
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE_WORKSPACE, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, derivedDataURL.path, archive.url.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE_PROJECT, ofType: "sh")!
+            process.arguments = [project.name, scheme, configuration.name, derivedDataURL.path, archive.url.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.ARCHIVE, ofType: "sh")!
+            process.arguments = [scheme, configuration.name, derivedDataURL.path, archive.url.path, resultBundle.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
     public static func makeExport(repositoryLocalURL: Repository.LocalURL, archive: Archive, exportDirectoryURL: URL, resultBundle: ResultBundle) -> Process {
@@ -200,13 +287,25 @@ extension Process
     
     static func makePoll(repositoryLocalURL: Repository.LocalURL, pollDirectoryURL: URL, branch: String = "master") -> Process
     {
-        let process = Process()
-        process.currentDirectoryPath = repositoryLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-        process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
-        process.qualityOfService = .utility
         
-        return process
+        switch Preferences.shared.managedSource {
+        case false:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
+            process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case true:
+            let process = Process()
+            process.currentDirectoryPath = repositoryLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL_DONT_RESET_HARD, ofType: "sh")!
+            process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
     public static func makeBoot(destination: Devices.Destination) -> Process {

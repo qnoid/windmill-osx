@@ -23,6 +23,9 @@ import Cocoa
 @IBDesignable
 class LinkLabel: NSTextView {
     
+    @IBInspectable var foregroundColor: NSColor = NSColor.white
+    @IBInspectable var underlineColor: NSColor = NSColor.white
+    
     var attributedString: NSAttributedString? {
         didSet{
             guard let attributedString = attributedString else {
@@ -40,8 +43,8 @@ class LinkLabel: NSTextView {
     override func layout() {
         super.layout()
         self.textContainerInset = .zero
-        self.linkTextAttributes = [.foregroundColor: NSColor.white,
-                                   .underlineColor : NSColor.white,
+        self.linkTextAttributes = [.foregroundColor: self.foregroundColor,
+                                   .underlineColor : self.underlineColor,
                                    .underlineStyle: 1, //NSUnderlineStyle cases don't seem to work as of Xcode 9.2
                                    .cursor: NSCursor.pointingHand]
     }

@@ -371,7 +371,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="v6Q-34-Buh"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2">
+                                            <connections>
+                                                <segue destination="xZE-kV-n6Y" kind="show" id="3sW-pD-1Vv"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Crf-pA-7lD"/>
                                         <menuItem title="Services" id="Hql-Eo-Nmz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -589,6 +593,13 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Navigate" id="xY4-Lv-e5p">
                                     <items>
+                                        <menuItem title="Show Checkout Folder in Terminal" id="kmS-bs-JZS">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showProjectFolder:" target="jgg-ZM-qio" id="Ghz-Vn-mP7"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="GWc-sM-3F8"/>
                                         <menuItem title="Jump to Next Issue" keyEquivalent="'" id="cfx-7V-lRI" userLabel="Jump to Next Issue">
                                             <connections>
                                                 <action selector="jumpToNextIssue:" target="jgg-ZM-qio" id="UN0-Ps-lUM"/>
@@ -597,24 +608,6 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <menuItem title="Jump to Previous Issue" keyEquivalent="&quot;" id="5W7-6M-ziA" userLabel="Jump to Previous Issue">
                                             <connections>
                                                 <action selector="jumpToPreviousIssue:" target="jgg-ZM-qio" id="P2S-UB-ytI"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Scheme" id="ihl-kd-x45">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Scheme" id="zxF-ud-NaC">
-                                    <items>
-                                        <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
-                                            <connections>
-                                                <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Run (Use Checkout Folder cache)" alternate="YES" keyEquivalent="r" toolTip="This can be useful when you have no internet connection." id="Sv9-RK-ZqQ">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -630,12 +623,31 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="T7h-Ho-NMg"/>
+                                        <menuItem title="Scheme" id="cKD-Bp-G1K" userLabel="Scheme">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Scheme" id="pTv-jI-HhG">
+                                                <items>
+                                                    <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
+                                                        <connections>
+                                                            <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Run (Use the Checkout Folder)" alternate="YES" keyEquivalent="r" toolTip="Use the existing cloned repo; e.g. when there is no internet connection." id="Sv9-RK-ZqQ">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                        <connections>
+                                                            <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="2qi-MV-HHJ"/>
                                         <menuItem title="Clean Derived Data" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
                                             <connections>
                                                 <action selector="cleanDerivedData:" target="jgg-ZM-qio" id="5Mf-eo-406"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Remove Checkout Folder and Run..." enabled="NO" alternate="YES" keyEquivalent="K" toolTip="Perform a full checkout on the next run; enabled in case of an error." id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
+                                        <menuItem title="Remove the Checkout Folder and Run..." enabled="NO" alternate="YES" keyEquivalent="K" toolTip="Clone the repo instead of pulling any changes on the next run; enabled in case of an error." id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="cleanProjectFolder:" target="jgg-ZM-qio" id="Qik-OH-9Fj"/>
@@ -670,7 +682,24 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="PSG-tx-AM4">
                                     <items>
-                                        <menuItem title="Windmill Help" keyEquivalent="?" id="1Eq-Qr-NHr"/>
+                                        <menuItem title="Frequently Asked Questions" id="PBH-DH-kSg">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openFrequentlyAskedQuestions:" target="jgg-ZM-qio" id="o7u-e9-3wd"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Version History" id="Fxg-eC-UfX">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openVersionHistory:" target="jgg-ZM-qio" id="3Js-Ir-gNb"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="YYh-rU-rrD"/>
+                                        <menuItem title="Windmill Help" keyEquivalent="?" id="1Eq-Qr-NHr">
+                                            <connections>
+                                                <action selector="showHelp:" target="aS9-1w-R0E" id="0mI-H5-tgS"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -706,12 +735,19 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                         <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="VKK-Wx-1FL"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
                         <outlet property="projectTitlebarAccessoryViewController" destination="lHE-BB-cpm" id="jJu-0J-Uej"/>
-                        <outlet property="runSkipCheckout" destination="Sv9-RK-ZqQ" id="oiR-0R-Hbo"/>
                         <outlet property="sidePanelMenuItem" destination="6k2-Q8-62V" id="shh-N8-j4K"/>
                     </connections>
                 </customObject>
             </objects>
-            <point key="canvasLocation" x="957" y="-740"/>
+            <point key="canvasLocation" x="1048" y="-865"/>
+        </scene>
+        <!--Preferences-->
+        <scene sceneID="syg-U2-M4d">
+            <objects>
+                <controllerPlaceholder storyboardName="Preferences" id="xZE-kV-n6Y" sceneMemberID="viewController"/>
+                <customObject id="k47-R2-mJR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1048" y="-448"/>
         </scene>
         <!--Artefacts View Controller-->
         <scene sceneID="eP2-LE-yiG">

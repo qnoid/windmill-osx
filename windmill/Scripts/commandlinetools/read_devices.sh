@@ -12,7 +12,7 @@ SCRIPTS_ROOT=$3
 
 PARSE="import sys, json; print json.load(open(\"${BUILD_SETTINGS_FOR_PROJECT}\"))[\"deployment\"][\"target\"]"
 
-DEPLOYMENT_TARGET=$(python -c "$PARSE")
+DEPLOYMENT_TARGET=$(xcrun python -c "$PARSE")
 
 DESTINATION=$(xcrun simctl list devices --json | python "${SCRIPTS_ROOT}/python/devices.py" "${DEPLOYMENT_TARGET}" )
 

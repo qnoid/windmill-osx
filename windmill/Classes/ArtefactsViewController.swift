@@ -149,9 +149,8 @@ class ArtefactsViewController: NSViewController {
         
         switch activity {
         case .test:
-            self.artefactViews[artefact]?.isHidden = true
-            
             if let testsFailedCount = aNotification.userInfo?["testsFailedCount"] as? Int {
+                self.artefactViews[artefact]?.isHidden = true                
                 self.testReportView.testReport = .failure(testsFailedCount: testsFailedCount)
                 self.testReportView.isHidden = false
             }

@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
         statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
-        statusItem.button?.window?.registerForDraggedTypes([NSPasteboard.PasteboardType.fileURL])
+        statusItem.button?.window?.registerForDraggedTypes([.fileURL])
         statusItem.button?.window?.delegate = self
         
         return statusItem
@@ -197,18 +197,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     {
     }
     
-    @objc func prepareForDragOperation(_ info: NSDraggingInfo) -> Bool {
+    
+    func add(url: URL) -> Bool {
+        let lastPathComponent = url.lastPathComponent
+        let isWorkspace = lastPathComponent.hasSuffix(".xcworkspace")
+        let isProject = lastPathComponent.hasSuffix(".xcodeproj")
         
-        guard let folder = info.draggingPasteboard().firstFilename() else {
+        guard isWorkspace || isProject  else {
             return false
         }
 
-        os_log("%{public}@", log: .default, type: .info, folder)
-
         do {
-            let commit = try Repository.parse(fullPathOfLocalGitRepo: folder)
-            let project = Project.make(repository: commit.repository)
-
+            
+            let name = url.deletingPathExtension().lastPathComponent
+            let folder = url.deletingLastPathComponent()
+            let commit = try Repository.parse(localGitRepoURL: folder)
+            let project = Project.make(isWorkspace: isWorkspace, name: name, repository: commit.repository)
+            
             return self.add(project)
         } catch let error as NSError {
             guard let window = self.mainWindowViewController?.window else {
@@ -217,6 +222,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             alert(error, window: window)
             return false
         }
+    }
+    
+    @objc func prepareForDragOperation(_ info: NSDraggingInfo) -> Bool {
+        
+        guard let url = info.draggingPasteboard().fileURL() else {
+            return false
+        }
+
+        os_log("%{public}@", log: .default, type: .debug, url.path)
+
+        return self.add(url: url)
     }
     
     @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
@@ -244,6 +260,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(run(_:)) {
             return projects.last != nil
+        } else if menuItem.action == #selector(runSkipCheckout(_:)), let windmill = mainViewController?.windmill {
+            let projectSourceDirectory = windmill.projectSourceDirectory
+            let exists = try? Repository.parse(localGitRepoURL: projectSourceDirectory.URL)
+            return exists != nil
+        } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = mainViewController?.windmill {
+            return windmill.projectSourceDirectory.exists()
         } else if menuItem.action == #selector(openDocument(_:)) {
             return self.mainWindowViewController?.window != nil
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
@@ -283,8 +305,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
         
         let openPanel = NSOpenPanel()
-        openPanel.canChooseDirectories = true
-        openPanel.canChooseFiles = false
+        openPanel.canChooseDirectories = false
+        openPanel.canChooseFiles = true
 
         openPanel.beginSheetModal(for: window)  { response in
             
@@ -292,17 +314,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 return
             }
 
-            do{
-                let url = openPanel.urls[0]
-                let commit = try Repository.parse(localGitRepoURL: url)
-                let project = Project.make(repository: commit.repository)
+            guard let url = openPanel.urls.first else {
+                return
+            }
             
-                if self.add(project) {
-                    let pipeline = Windmill.make(project: project)
-                    self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+            if self.add(url: url) {
+                
+                guard let project = self.projects.last else {
+                    os_log("Did you add the project in the array?", log: .default, type: .error)
+                    return
                 }
-            } catch let error as NSError {
-                alert(error, window: window)
+
+                let pipeline = Windmill.make(project: project)
+                self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
             }
         }
     }
@@ -311,6 +335,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.statusItem.button?.toolTip = ""
         self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
+        self.activityMenuItem.toolTip = ""
         self.canCleanDerivedData = false
         self.canRemoveCheckoutFolder = false
         self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = []
@@ -404,7 +429,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
 
-    func run(_ sender: Any, skipCheckout: Bool = false) {
+    func run(_ sender: Any, skipCheckout: Bool) {
         guard let project = self.mainWindowViewController?.windmill.project else {
             return
         }
@@ -420,7 +445,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
 
     @IBAction func run(_ sender: Any) {
-        self.run(sender)
+        self.run(sender, skipCheckout: false)
     }
 
     @IBAction func runSkipCheckout(_ sender: Any) {
@@ -440,8 +465,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         let alert = NSAlert()
         alert.addButton(withTitle: "Remove")
         alert.addButton(withTitle: "Cancel")
-        alert.messageText = "Remove the checkout folder?"
-        alert.informativeText = "This will perform a new checkout of the repository and `Run` again."
+        alert.messageText = "Remove the Checkout Folder?"
+        alert.informativeText = "Windmill will clone the repo on the next `Run`."
         alert.alertStyle = .warning
         alert.window.appearance = NSAppearance(named: .vibrantDark)
 
@@ -459,6 +484,35 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 self.run(self)
             }
         }
+    }
+    
+    @IBAction func showProjectFolder(_ sender: Any) {
+        guard let windmill = self.mainViewController?.windmill else {
+            return
+        }
+        
+        let projectSourceURL = windmill.projectSourceDirectory.URL
+        
+        NSWorkspace.shared.openFile(projectSourceURL.path, withApplication: "Terminal")
+    }
+    
+    @IBAction func openFrequentlyAskedQuestions(_ sender: Any) {
+        let faqURL = URL(string: "https://windmill.io/faq/")!
+        NSWorkspace.shared.open(faqURL)
+    }
+    
+    @IBAction func openVersionHistory(_ sender: Any) {
+        let changelogURL = URL(string: "https://windmill.io/changelog/")!
+        NSWorkspace.shared.open(changelogURL)
+    }
+    
+    @IBAction func openSettingsHelp(_ sender: Any) {
+        
+        guard let bookName = Bundle.main.object(forInfoDictionaryKey: "CFBundleHelpBookName") as? String else {
+            return
+        }
+        
+        NSHelpManager.shared.openHelpAnchor(NSHelpManager.AnchorName(rawValue:"working_with_external_dependencies"), inBook: NSHelpManager.BookName(rawValue: bookName))
     }
     
     @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
@@ -501,7 +555,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         
         let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
         let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
-
+        
         switch (errorSummaries?.count, testFailureSummaries?.count) {
         case (let errorSummaries?, _) where errorSummaries > 0:
             self.showErrorSummariesWindowController(sender)
