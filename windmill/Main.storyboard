@@ -371,11 +371,7 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="v6Q-34-Buh"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2">
-                                            <connections>
-                                                <segue destination="xZE-kV-n6Y" kind="show" id="3sW-pD-1Vv"/>
-                                            </connections>
-                                        </menuItem>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2"/>
                                         <menuItem isSeparatorItem="YES" id="Crf-pA-7lD"/>
                                         <menuItem title="Services" id="Hql-Eo-Nmz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -740,14 +736,6 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 </customObject>
             </objects>
             <point key="canvasLocation" x="1048" y="-865"/>
-        </scene>
-        <!--Preferences-->
-        <scene sceneID="syg-U2-M4d">
-            <objects>
-                <controllerPlaceholder storyboardName="Preferences" id="xZE-kV-n6Y" sceneMemberID="viewController"/>
-                <customObject id="k47-R2-mJR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1048" y="-448"/>
         </scene>
         <!--Artefacts View Controller-->
         <scene sceneID="eP2-LE-yiG">

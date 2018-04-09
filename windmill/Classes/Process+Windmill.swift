@@ -112,23 +112,13 @@ extension Process
     }
     
     public static func makeCheckout(sourceDirectory: ProjectSourceDirectory, project: Project, branch: String = "master") -> Process {
-        
-        switch Preferences.shared.managedSource {
-            case false:
-                let process = Process()
-                process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
-                process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
-                process.qualityOfService = .utility
-            
-                return process
-            case true:
-                let process = Process()
-                process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT_DONT_RESET_HARD, ofType: "sh")!
-                process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
-                process.qualityOfService = .utility
-                
-                return process
-        }
+
+        let process = Process()
+        process.launchPath = Bundle.main.path(forResource: Scripts.Git.CHECKOUT, ofType: "sh")!
+        process.arguments = [sourceDirectory.URL.path, branch, project.origin, self.pathForDir("Scripts")]
+        process.qualityOfService = .utility
+    
+        return process
     }
     
     public static func makeBuildForTesting(repositoryLocalURL: Repository.LocalURL, project: Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedDataURL: URL, resultBundle: ResultBundle) -> Process {
@@ -288,24 +278,13 @@ extension Process
     static func makePoll(repositoryLocalURL: Repository.LocalURL, pollDirectoryURL: URL, branch: String = "master") -> Process
     {
         
-        switch Preferences.shared.managedSource {
-        case false:
-            let process = Process()
-            process.currentDirectoryPath = repositoryLocalURL.path
-            process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
-            process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
-            process.qualityOfService = .utility
-            
-            return process
-        case true:
-            let process = Process()
-            process.currentDirectoryPath = repositoryLocalURL.path
-            process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL_DONT_RESET_HARD, ofType: "sh")!
-            process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
-            process.qualityOfService = .utility
-            
-            return process
-        }
+        let process = Process()
+        process.currentDirectoryPath = repositoryLocalURL.path
+        process.launchPath = Bundle.main.path(forResource: Scripts.Git.POLL, ofType: "sh")!
+        process.arguments = [branch, self.pathForDir("Scripts"), pollDirectoryURL.path]
+        process.qualityOfService = .utility
+        
+        return process
     }
     
     public static func makeBoot(destination: Devices.Destination) -> Process {

@@ -76,7 +76,6 @@
 		BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
 		BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */; };
-		BD7C8A79206E8A8A00461FD9 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD7C8A78206E8A8A00461FD9 /* Preferences.storyboard */; };
 		BD7DDBFC204A5A57003541E8 /* InfoWithManyErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */; };
 		BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */; };
 		BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8364082039314200D1D381 /* CharacterSetTest.swift */; };
@@ -137,8 +136,6 @@
 		BDDF10C2205FA73C0093E811 /* TextViewRuler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C1205FA73C0093E811 /* TextViewRuler.swift */; };
 		BDDF10C4205FA7800093E811 /* NSTextView+LineEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C3205FA7800093E811 /* NSTextView+LineEnumerator.swift */; };
 		BDDF10C6205FAD390093E811 /* StringTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C5205FAD390093E811 /* StringTest.swift */; };
-		BDE16BAE206E8CEC00B14FDB /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE16BAD206E8CEC00B14FDB /* SettingsViewController.swift */; };
-		BDE16BC5206E900400B14FDB /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE16BC4206E900400B14FDB /* Preferences.swift */; };
 		BDEBAD70200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEBAD6F200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift */; };
 		BDEBAD72200D8FE300A7BBD0 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEBAD71200D8FE300A7BBD0 /* ConsoleViewController.swift */; };
 		BDF00B641F47582300572D03 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF00B631F47582300572D03 /* Archive.swift */; };
@@ -242,7 +239,6 @@
 		BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDocumentLocation.swift; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
 		BD7A7BA3201DB800002AFCC5 /* LinkLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLabel.swift; sourceTree = "<group>"; };
-		BD7C8A78206E8A8A00461FD9 /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Preferences.storyboard; sourceTree = "<group>"; };
 		BD7DDBFB204A5A57003541E8 /* InfoWithManyErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithManyErrorCount.plist; sourceTree = "<group>"; };
 		BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Windmill.swift"; sourceTree = "<group>"; };
 		BD8364082039314200D1D381 /* CharacterSetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSetTest.swift; sourceTree = "<group>"; };
@@ -307,8 +303,6 @@
 		BDDF10C3205FA7800093E811 /* NSTextView+LineEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextView+LineEnumerator.swift"; sourceTree = "<group>"; };
 		BDDF10C5205FAD390093E811 /* StringTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTest.swift; sourceTree = "<group>"; };
 		BDDF10C9205FAD8A0093E811 /* 25Lines.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 25Lines.txt; sourceTree = "<group>"; };
-		BDE16BAD206E8CEC00B14FDB /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		BDE16BC4206E900400B14FDB /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		BDEBAD6F200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPanelSplitViewController.swift; sourceTree = "<group>"; };
 		BDEBAD71200D8FE300A7BBD0 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		BDF00B631F47582300572D03 /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
@@ -496,16 +490,6 @@
 			path = repositories;
 			sourceTree = "<group>";
 		};
-		BD7C8A77206E8A5B00461FD9 /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				BD7C8A78206E8A8A00461FD9 /* Preferences.storyboard */,
-				BDE16BAD206E8CEC00B14FDB /* SettingsViewController.swift */,
-				BDE16BC4206E900400B14FDB /* Preferences.swift */,
-			);
-			path = Preferences;
-			sourceTree = "<group>";
-		};
 		BD8FBE0F204C96E30004C064 /* SequenceTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -546,7 +530,6 @@
 			isa = PBXGroup;
 			children = (
 				BD2CE8182077819000A557C6 /* HelpViewer */,
-				BD7C8A77206E8A5B00461FD9 /* Preferences */,
 				BDDF10BE205FA6F50093E811 /* RulerView */,
 				BD49F78C204B64A300F64687 /* Summaries */,
 				BD1D17FD1F44BC560015C13C /* ProcessManager */,
@@ -809,7 +792,6 @@
 				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
-				BD7C8A79206E8A8A00461FD9 /* Preferences.storyboard in Resources */,
 				BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */,
 				BD91EB5C19491C40002D8C1C /* Scripts in Resources */,
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
@@ -877,7 +859,6 @@
 				BD36CA51205A410C000B0A2B /* TestReportView.swift in Sources */,
 				BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */,
 				BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */,
-				BDE16BAE206E8CEC00B14FDB /* SettingsViewController.swift in Sources */,
 				BD6635881FF9DC1500951779 /* MetadataJSONEncoded.swift in Sources */,
 				BD083270206352D70093F5EE /* TestSummariesViewController.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
@@ -920,7 +901,6 @@
 				BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
 				BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */,
-				BDE16BC5206E900400B14FDB /* Preferences.swift in Sources */,
 				BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */,
 				BD30160519BB0F79001134F8 /* Keychain.swift in Sources */,
 				BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */,

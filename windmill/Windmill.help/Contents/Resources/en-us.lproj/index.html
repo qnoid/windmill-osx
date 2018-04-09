@@ -4,7 +4,6 @@
 		<title>Windmill Help</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="description" content="Working with external dependencies." />
-		<meta name="keywords" content="Cocoapods, cocoapods, cocopods, Carthage, carthage, dependencies, Podfile, Cartfile" />
 		<link rel="stylesheet" href="../css/app.css" type="text/css" />
 		<link rel="stylesheet" href="../css/main.css" type="text/css" />
 	</head>
@@ -25,17 +24,14 @@
 					<div>
 						<a id="working_with_external_dependencies" name="working_with_external_dependencies"></a>
 						<h2 class="Name">Working with external dependencies.</h2>
-						<p>Windmill, by default, will use the contents in the last commit that has been pushed to origin.</p>				
-						<p>Should you wish to make changes in the contents before Windmill starts building a project, you can do so under <b>Preferences</b>. Use the menu bar, select <b>Windmill</b> then <b>Preferences</b>. 
+						<p>Windmill, by default, will use the contents in the last commit that has been pushed to origin.
 
-						<figure><img class="full" src="../img/Windmill_Preferences.png" /></figure>
-
-						Select the <b>Settings</b> tab, under <b>Advanced</b> enable the <b>Let me bring external dependencies</b> checkbox. Windmill will not reset the contents to origin as part of the Checkout stage.
+						By integrating dependencies late in the development cycle, it takes longer to get feedback on the state of your project and with an added risk of it breaking in unexpected ways. It is recommended that you install, update, integrate and keep dependencies as part of the project's source code.
 						</p>
 
-						<figure><img class="full" src="../img/working_with_external_dependencies/HelloCocoapods_Let_me_bring_external_dependencies.png" /></figure>
+						<p>For CocoaPods consider <a href="https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control">checking the <i>Pods</i> directory into source control</a>.</p>
 
-						<b>Important!</b> By integrating dependencies late in the development cycle, it takes longer to get feedback on the state of your project and with an added risk of it breaking in unexpected ways. It is recommended that you install, update, integrate and keep dependencies as part of the project's source code. e.g. for CocoaPods that means <a href="https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control">checking the <i>Pods</i> directory into source control</a>.
+						<p>For Carthage consider <a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#with-submodules">using submodules</a>, in which case the <i>Carthage/Checkouts</i> folder should be under source control.</p>
 					</div>
 				</div>
 				
@@ -74,7 +70,7 @@
 					<div>
 						<a id="using_carthage" name="using_carthage"></a>
 						<h2 class="Name">Using Carthage.</h2>
-						<p>For a project that uses Carthage without checking the Carthage/Build directory into source control the Build stage will fail with a <b>Build Failed</b> error.</p>
+						<p>For a project that uses Carthage without submodules, the Build stage will fail with a <b>Build Failed</b> error.</p>
 
 						<figure><img class="full" src="../img/working_with_external_dependencies/HelloCarthage_Build_Failed.png" /></figure>
 

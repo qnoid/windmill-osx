@@ -506,15 +506,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         NSWorkspace.shared.open(changelogURL)
     }
     
-    @IBAction func openSettingsHelp(_ sender: Any) {
-        
-        guard let bookName = Bundle.main.object(forInfoDictionaryKey: "CFBundleHelpBookName") as? String else {
-            return
-        }
-        
-        NSHelpManager.shared.openHelpAnchor(NSHelpManager.AnchorName(rawValue:"working_with_external_dependencies"), inBook: NSHelpManager.BookName(rawValue: bookName))
-    }
-    
     @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
         self.mainWindowViewController?.show(errorSummariesWindowController: self.errorSummariesWindowController)
     }
