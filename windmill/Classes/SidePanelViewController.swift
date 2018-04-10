@@ -400,9 +400,12 @@ class SidePanelViewController: NSViewController {
             let distributionSummary = export.distributionSummary
             
             self.export.isHidden = false
-            self.certificate.isHidden = false
-            self.certificateValue.isHidden = false
-            self.certificateValue.stringValue = distributionSummary.certificateType
+
+            if let certificateType = distributionSummary.certificateType {
+                self.certificate.isHidden = false
+                self.certificateValue.isHidden = false
+                self.certificateValue.stringValue = certificateType
+            }
 
             if let expiryDate = distributionSummary.certificateExpiryDate {
                 self.certificateExpiryDate.isHidden = false
@@ -410,10 +413,11 @@ class SidePanelViewController: NSViewController {
                 self.certificateExpiryDateValue.stringValue = self.dateFormatter.string(from: expiryDate)
             }
 
-            self.provisioning.isHidden = false
-            self.provisioningValue.isHidden = false
-            self.provisioningValue.stringValue = distributionSummary.profileName
-            
+            if let profileName = distributionSummary.profileName {
+                self.provisioning.isHidden = false
+                self.provisioningValue.isHidden = false
+                self.provisioningValue.stringValue = profileName
+            }
         case .deploy:
             self.deploy.isHidden = false
             self.acccount.isHidden = false

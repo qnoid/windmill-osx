@@ -70,8 +70,8 @@ public struct Export {
             return team?["name"] ?? ""
         }
         
-        var certificateType: String {
-            return certificate?["type"] ?? ""
+        var certificateType: String? {
+            return certificate?["type"]
         }
         
         var certificateExpiryDate: Date? {
@@ -82,8 +82,8 @@ public struct Export {
             return dateFormatter.date(from: dateExpires)
         }
         
-        var profileName: String {
-            return profile?["name"] ?? ""
+        var profileName: String? {
+            return profile?["name"]
         }
     }
 

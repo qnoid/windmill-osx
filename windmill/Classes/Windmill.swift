@@ -235,9 +235,21 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                                     let makeExport = Process.makeExport(repositoryLocalURL: repositoryLocalURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL(), resultBundle: exportResultBundle)
                                     
                                     let export = directory.export(name: scheme)
-                                    let appBundle = directory.appBundle(archive: archive, name: export.distributionSummary.name)
                                     
-                                    self?.processManager.processChain(process: makeExport, userInfo: ["activity" : ActivityType.export, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": exportResultBundle], wasSuccesful: exportWasSuccesful).launch()
+                                    self?.processManager.processChain(process: makeExport, userInfo: ["activity" : ActivityType.export, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": exportResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
+                                        
+                                        let appBundle = directory.appBundle(archive: archive, name: export.distributionSummary.name)
+                                        
+                                        let userInfo = userInfo?.merging(["project":project, "appBundle": appBundle], uniquingKeysWith: { (userInfo, _) -> Any in
+                                            return userInfo
+                                        })
+                                        
+                                        DispatchQueue.main.async {
+                                            NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: userInfo)
+                                        }
+                                        
+                                        exportWasSuccesful?.perform(userInfo: userInfo)
+                                    }).launch()
                                 }).launch()
                             }).launch()
                         })
@@ -254,15 +266,10 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         
         let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
 
-            guard let export = userInfo?["export"] as? Export, let appBundle = userInfo?["appBundle"] as? AppBundle else {
+            guard let export = userInfo?["export"] as? Export else {
                 return
             }
 
-
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project, "export": export, "appBundle": appBundle])
-            }
-            
             let deploy = Process.makeDeploy(repositoryLocalURL: repositoryLocalURL, export: export, forUser: user)
             self?.processManager.processChain(process: deploy, userInfo: ["activity" : ActivityType.deploy, "artefact": ArtefactType.otaDistribution], wasSuccesful: ProcessWasSuccesful { userInfo in
                 DispatchQueue.main.async {
@@ -298,14 +305,6 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         let repositoryLocalURL = self.projectSourceDirectory.URL
         
         let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
-            
-            guard let export = userInfo?["export"] as? Export, let appBundle = userInfo?["appBundle"] as? AppBundle else {
-                return
-            }
-
-            DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: ["project":project, "export": export, "appBundle": appBundle])
-            }
             
             #if DEBUG
                 let delayInSeconds:Int = 5
