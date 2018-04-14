@@ -1,13 +1,14 @@
 #!/bin/bash
-set -e
-
 SCHEME=$1
 CONFIGURATION=$2
 DERIVED_DATA_PATH_FOR_PROJECT=$3
 ARCHIVE_PATH_FOR_PROJECT=$4
 RESULT_BUNDLE_PATH_FOR_PROJECT=$5
+LOG_FOR_PROJECT=$6
 
-xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}"
+set -eo pipefail
+
+xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 ## Archive
 #

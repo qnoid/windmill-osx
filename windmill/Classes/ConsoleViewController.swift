@@ -8,40 +8,28 @@
 
 import Cocoa
 
-struct OutputBuffer {
+class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
-    private(set) var count: Int = 0
-    private var buffer: String? = ""
-    
-    mutating public func record(count: Int) {
-        self.count = self.count + count
+    let dispatch_queue_serial = DispatchQueue(label: "io.windmil.console.raw", qos: .utility, attributes: [])
+
+    var queue: DispatchQueue {
+        return self.dispatch_queue_serial
     }
 
-    mutating public func write(output: String) {
-        self.buffer?.append(output)
-    }
-    
-    mutating func flush(to string: NSMutableAttributedString?, attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font : NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .bold), NSAttributedStringKey.kern : 0.4]) {
-        guard let buffer = self.buffer else {
-            return
+    var fileHandleForReading: FileHandle? {
+        guard let windmill = self.windmill else {
+            return nil
         }
-        self.append(to: string, output: buffer)
-        self.buffer = nil
+        
+        return try? FileHandle(forReadingFrom: windmill.projectLogURL)
     }
     
-    func append(to string: NSMutableAttributedString?, output: String, attributes: [NSAttributedStringKey : Any] = [NSAttributedStringKey.font : NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .bold), NSAttributedStringKey.kern : 0.4]) {
-        string?.append(NSAttributedString(string: output, attributes: attributes))
-    }
-}
-
-class ConsoleViewController: NSViewController, ProcessManagerDelegate {
-
     @IBOutlet weak var scrollView: NSScrollView! {
         didSet {
             scrollView.wantsLayer = true
         }
     }
-    @IBOutlet weak var textView: NSTextView! {
+    @IBOutlet weak var textView: TextView! {
         didSet {
             textView.layerContentsPlacement = .left
             textView.layerContentsRedrawPolicy = .onSetNeedsDisplay
@@ -66,77 +54,59 @@ class ConsoleViewController: NSViewController, ProcessManagerDelegate {
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
         }
     }
-    var outputBuffer = OutputBuffer()
-
+    
+    var dispatchSourceRead: DispatchSourceRead? {
+        didSet {
+            oldValue?.cancel()
+        }
+    }
+    
     static func make() -> ConsoleViewController {
         let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: ConsoleViewController.self))
         
         return mainStoryboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: String(describing: ConsoleViewController.self))) as! ConsoleViewController
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    deinit {
+        dispatchSourceRead?.cancel()
     }
     
+    /**
+     - Postcondition: the textview will have its string set to the any existing standardOutput
+     */
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        self.textView.string = ""
+        self.dispatchSourceRead = self.get()
+        self.dispatchSourceRead?.activate()
+    }
+    
+    override func viewWillDisappear() {
+        self.dispatchSourceRead?.cancel()
+    }
+
     @objc func willStartProject(_ aNotification: Notification) {
-        self.outputBuffer = OutputBuffer()
-        
         if let textView = textView {
             textView.string = ""
             textView.isSelectable = false
         }
     }
     
-    @objc func activityError(_ aNotification: Notification) {
-        if let error = aNotification.userInfo?["error"] as? NSError {
-            self.outputBuffer.record(count: error.localizedDescription.count)
-            self.outputBuffer.record(count: "\n".count)
-            self.outputBuffer.record(count: error.localizedFailureReason?.count ?? 0)
-        }
-        
-        guard let textView = textView else {
-            
-            if let error = aNotification.userInfo?["error"] as? NSError {
-                self.outputBuffer.write(output: error.localizedDescription)
-            }
-            return
-        }
-        
-        self.outputBuffer.flush(to: textView.textStorage)
-
-        if let error = aNotification.userInfo?["error"] as? NSError {
-            self.outputBuffer.append(to: textView.textStorage, output: error.localizedDescription)
-            self.outputBuffer.append(to: textView.textStorage, output: "\n")
-            self.outputBuffer.append(to: textView.textStorage, output: error.localizedFailureReason ?? "")
-        }
-        
-        let range = NSRange(location:self.outputBuffer.count,length:0)
-        self.textView.scrollRangeToVisible(range)
-        self.textView.isSelectable = true
-    }
-
-    func append(_ textView: NSTextView?, output: String, count: Int) {
-        self.outputBuffer.record(count: count)
-        
-        guard let textView = textView else {
-            self.outputBuffer.write(output: output)
-            return
-        }        
-        
-        self.outputBuffer.flush(to: textView.textStorage)
-        self.outputBuffer.append(to: textView.textStorage, output: output)
-        let range = NSRange(location:self.outputBuffer.count,length:0)
-        textView.scrollRangeToVisible(range)
+    /**
+     - Precondition: the textview holds any of the existing log
+     */
+    func append(_ textView: TextView?, output: String, count: Int) {
+        textView?.string.append(output)
+        textView?.scrollToEndOfDocumentPlease()
     }
     
-    func standardOutput(manager: ProcessManager, process: Process, part: String, count: Int) {
-        self.append(self.textView, output: part, count: count)
-    }
-    
-    func standardError(manager: ProcessManager, process: Process, part: String, count: Int) {
+    func output(part: String, count: Int) {
+        guard isViewLoaded else {
+            return
+        }
+
         self.append(self.textView, output: part, count: count)
     }
     
@@ -146,10 +116,7 @@ class ConsoleViewController: NSViewController, ProcessManagerDelegate {
         }
         
         self.textView.isHidden = isHidden
-        
-        self.outputBuffer.flush(to: self.textView.textStorage)
-        let range = NSRange(location:self.outputBuffer.count,length:0)
-        self.textView.scrollRangeToVisible(range)
+        self.textView?.scrollToEndOfDocumentPlease()
         self.textView.isSelectable = true
     }
 }

@@ -9,18 +9,20 @@ REPOSITORY_PATH_FOR_PROJECT=$1
 BRANCH=$2
 REMOTE=$3
 SCRIPTS_ROOT=$4
+LOG_FOR_PROJECT=$5
 
-set -e
+set -eo pipefail
 
 . $SCRIPTS_ROOT/common.sh
 
-
-function git_pull(){
-(xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules; xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH"; xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update)
+function git_pull(){ (
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules | tee -a "${LOG_FOR_PROJECT}";
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH" | tee -a "${LOG_FOR_PROJECT}";
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update | tee -a "${LOG_FOR_PROJECT}")
 }
 
 function git_clone(){
-(xcrun git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}")
+(xcrun git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}" | tee -a "${LOG_FOR_PROJECT}")
 }
 
 directory_exist_at_path "${REPOSITORY_PATH_FOR_PROJECT}" git_pull git_clone

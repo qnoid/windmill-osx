@@ -1,3 +1,12 @@
 img.full { 
-	width: 100% !important
+	width: 100% !important;
+}
+
+.landing .inner {
+	background: none !important;
+	background-color: #212121 !important;
+}
+
+.Hero h1 {
+	color: white !important;
 }

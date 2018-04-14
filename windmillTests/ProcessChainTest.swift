@@ -35,7 +35,7 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }
 
-        let build = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        let build = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.processChain(process: build).launch(recover: RecoverableProcess.recover(terminationStatus: 66) { process in
             XCTAssertEqual(66, process.terminationStatus, "Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
@@ -62,7 +62,7 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }        
         
-        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle)
+        let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.processChain(process: build, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()
@@ -95,7 +95,7 @@ class ProcessChainTest: XCTestCase {
         let info = Archive.Info.make(at: URL(string: "any")!)
         let archive = Archive(url: url, info: info)
         
-        let export = Process.makeExport(repositoryLocalURL: any, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle)
+        let export = Process.makeExport(repositoryLocalURL: any, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.processChain(process: export, wasSuccesful: ProcessWasSuccesful { _ in
             expectation.fulfill()

@@ -39,7 +39,7 @@ class WindmillTimer {
     func observe(windmill: Windmill) {
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
     }
     
     @objc func willStartProject(_ aNotification: Notification) {
@@ -120,7 +120,7 @@ class WindmillTest: XCTestCase {
         let project = Project(name: name, scheme: name, origin: "any")
         let windmill = Windmill(project: project)
         
-        NotificationCenter.default.addObserver(forName: Windmill.Notifications.activityError, object: windmill, queue: OperationQueue.main) { notification in
+        NotificationCenter.default.addObserver(forName: Windmill.Notifications.didError, object: windmill, queue: OperationQueue.main) { notification in
             let errorCount = notification.userInfo?["errorCount"] as? Int
             let errorSummaries = notification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary]
             
@@ -164,7 +164,7 @@ class WindmillTest: XCTestCase {
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let testSkip = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: testSkip, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -203,9 +203,9 @@ class WindmillTest: XCTestCase {
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
-        let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
+        let testWithoutBuilding = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
         
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: buildResultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: buildResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)), wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: testWithoutBuilding, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -243,7 +243,7 @@ class WindmillTest: XCTestCase {
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
         let test = Process.makeTestSkip(repositoryLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, wasSuccesful: ProcessWasSuccesful { _ in
+        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
                 processManager.processChain(process: test, wasSuccesful: ProcessWasSuccesful { _ in
                     expectation.fulfill()
@@ -261,7 +261,7 @@ class WindmillTest: XCTestCase {
         
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: project)
+        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: project, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         defer {
             try? FileManager.default.removeItem(at: url)

@@ -93,7 +93,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
         notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
-        notificationCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+        notificationCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
     }
     
     @objc func willStartProject(_ aNotification: Notification) {
@@ -130,7 +130,6 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
             self.errorButton.title = String(errorCount)
             self.errorButton.isHidden = false
         }
-
 
         if let error = aNotification.userInfo?["error"] as? NSError {
             self.toolTip = error.localizedFailureReason

@@ -168,6 +168,8 @@ extension WindmillHomeDirectory {
 
 public protocol ProjectHomeDirectory : DirectoryType
 {
+    
+    func log(name: String) -> URL
     func configuration() -> Project.Configuration
     func buildSettings() -> BuildSettings
     func devices() -> Devices
@@ -181,6 +183,19 @@ public protocol ProjectHomeDirectory : DirectoryType
 }
 
 extension ProjectHomeDirectory {
+
+    public func logDirectoryURL() -> URL {
+
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent("log"))
+
+        directory.create()
+        
+        return directory.URL
+    }
+    
+    public func log(name: String) -> URL {
+        return logDirectoryURL().appendingPathComponent("\(name).log")
+    }
     
     public func buildDirectoryURL() -> URL {
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("build"))

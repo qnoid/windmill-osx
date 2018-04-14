@@ -7,8 +7,11 @@ DESTINATION_ID=$1
 SCHEME_NAME=$2
 DERIVED_DATA_PATH_FOR_PROJECT=$3
 RESULT_BUNDLE_PATH_FOR_PROJECT=$4
+LOG_FOR_PROJECT=$5
 
-xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}"
+set -eo pipefail
+
+xcodebuild test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 # Cases
 ## 65
