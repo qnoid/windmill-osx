@@ -49,14 +49,17 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     var windmill: Windmill! {
         didSet{
-            let consoleViewController = self.bottomPanelSplitViewController?.consoleViewController
-            windmill.processManager.delegate = consoleViewController
+            let bottomViewController = self.bottomPanelSplitViewController?.bottomViewController
+            
+            let consoleViewController = bottomViewController?.consoleViewController
             consoleViewController?.windmill = windmill
+            let prettyConsoleViewController = bottomViewController?.prettyConsoleViewController
+            prettyConsoleViewController?.windmill = windmill
             mainViewController?.windmill = windmill
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
             
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.activityError, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
             self.projectTitlebarAccessoryViewController?.didSet(windmill: windmill)
@@ -87,7 +90,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         
         self.isBottomPanelCollapsedObserver = bottomPanelSplitViewController.onCollapsed { [weak self = self](splitviewitem, change) in
             if let isCollapsed = change.newValue {
-                bottomPanelSplitViewController.consoleViewController?.toggle(isHidden: isCollapsed)
                 self?.setBottomPanel(isOpen: !isCollapsed)
             }
         }

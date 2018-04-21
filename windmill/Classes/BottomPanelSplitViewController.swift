@@ -22,11 +22,11 @@ class BottomPanelSplitViewController: NSSplitViewController {
     var mainViewController: MainViewController? {
         return self.childViewControllers[0] as? MainViewController
     }
-    
-    var consoleViewController: ConsoleViewController? {
-        return self.childViewControllers[1] as? ConsoleViewController
+
+    var bottomViewController: BottomTabViewController? {
+        return self.childViewControllers[1] as? BottomTabViewController
     }
-    
+
     var isBottomPanelCollapsed: Bool {
         get {
             return self.bottomViewSplitViewItem.isCollapsed
@@ -36,8 +36,11 @@ class BottomPanelSplitViewController: NSSplitViewController {
     func toggleBottomPanel(isCollapsed: Bool? = nil, completionHandler: @escaping (_ isHidden: Bool) -> Void = {_ in }) {
         NSAnimationContext.runAnimationGroup({ _ in
             self.bottomViewSplitViewItem.animator().isCollapsed = isCollapsed ?? !self.isBottomPanelCollapsed
+            self.bottomViewController?.consoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
+            self.bottomViewController?.prettyConsoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
         }, completionHandler: {
-            self.consoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
+            self.bottomViewController?.consoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
+            self.bottomViewController?.prettyConsoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
             completionHandler(self.isBottomPanelCollapsed)
         })
     }

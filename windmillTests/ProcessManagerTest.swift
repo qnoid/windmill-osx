@@ -79,9 +79,9 @@ class ProcessManagerTest: XCTestCase {
         let manager = ProcessManager()
         let repoName = "with white space"
         let validOrigin = "git@github.com:windmill-io/blank.git"
-        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))        
+        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)))
         
-        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(name: repoName, scheme: "foo", origin: validOrigin))
+        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(name: repoName, scheme: "foo", origin: validOrigin), log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         defer {
             var trashDirectory = FileManager.default.trashDirectoryURL
@@ -104,7 +104,7 @@ class ProcessManagerTest: XCTestCase {
         let repoName = "any"
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: Project(name: repoName, scheme: "foo", origin: "invalid"))
+        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: Project(name: repoName, scheme: "foo", origin: "invalid"), log: FileManager.default.trashDirectoryURL)
         
         defer {
             try? FileManager.default.removeItem(at: url)

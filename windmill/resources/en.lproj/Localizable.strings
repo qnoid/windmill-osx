@@ -22,7 +22,7 @@
 "windmill.activity.test.description"="Testing";
 "windmill.activity.test.error.description"="Test Failed";
 "windmill.activity.test.error.failure.reason"="Command xcodebuild failed with exit code ";
-"windmill.activity.test.failures.description"="Test Failed";
+"windmill.activity.test.failures.description"="Test Cases Failed";
 "windmill.activity.devices.description"="counting digital sheep";
 "windmill.activity.devices.error.description"="Windmill Failed";
 "windmill.activity.devices.error.failure.reason"="Failed to list devices with exit code ";

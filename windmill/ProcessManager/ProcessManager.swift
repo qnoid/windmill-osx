@@ -107,12 +107,12 @@ class ProcessManager {
     // MARK: Process Pipe output
     
     private func didReceive(process: Process, standardOutput: String, count: Int) {
-        os_log("%{public}@", log: log, type: .debug, standardOutput)
-        self.delegate?.standardError(manager: self, process: process, part: standardOutput, count: count)
+        os_log("standardOutput: '%{public}@'", log: log, type: .debug, standardOutput)
+        self.delegate?.standardOutput(manager: self, process: process, part: standardOutput, count: count)
     }
     
     private func didReceive(process: Process, standardError: String, count: Int) {
-        os_log("%{public}@", log: log, type: .debug, standardError)
+        os_log("standardError: '%{public}@'", log: log, type: .debug, standardError)
         self.delegate?.standardError(manager: self, process: process, part: standardError, count: count)
     }
 
@@ -142,11 +142,19 @@ class ProcessManager {
         }
     }
 
-    func waitForStandardOutputInBackground(process: Process) -> DispatchSourceRead {
+    func waitForStandardOutputInBackground(process: Process) -> DispatchSourceRead? {
+        if delegate == nil {
+            return nil
+        }
+        
         return waitForStandardOutputInBackground(process: process, queue: self.dispatch_queue_serial)
     }
     
-    func waitForStandardErrorInBackground(process: Process) -> DispatchSourceRead {
+    func waitForStandardErrorInBackground(process: Process) -> DispatchSourceRead? {
+        if delegate == nil {
+            return nil
+        }
+
         return waitForStandardErrorInBackground(process: process, queue: self.dispatch_queue_serial)
     }
     
@@ -181,8 +189,8 @@ class ProcessManager {
             let canRecover = recover?.canRecover(process.terminationStatus) ?? false
 
             DispatchQueue.main.async { [isSuccess = (process.terminationStatus == 0)] in
-                waitForStandardOutputInBackground.cancel()
-                waitForStandardErrorInBackground.cancel()
+                waitForStandardOutputInBackground?.cancel()
+                waitForStandardErrorInBackground?.cancel()
 
                 self?.didExit(process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
                 guard isSuccess else {

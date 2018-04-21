@@ -7,10 +7,13 @@ ACCOUNT=$1
 EXPORT_IPA_FOR_PROJECT=$2
 EXPORT_MANIFEST_FOR_PROJECT=$3
 WINDMILL_BASE_URL=$4
+LOG_FOR_PROJECT=$5
 
-set -e
+set -eo pipefail
 
 curl --fail --silent --show-error -F "ipa=@${EXPORT_IPA_FOR_PROJECT}" -F "plist=@${EXPORT_MANIFEST_FOR_PROJECT}" "${WINDMILL_BASE_URL}/account/${ACCOUNT}/windmill" 2>/dev/null
+
+echo "** DEPLOY SUCCEEDED **" | tee -a "${LOG_FOR_PROJECT}"
 
 ## Deploy
 #

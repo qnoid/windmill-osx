@@ -89,7 +89,7 @@ extension NSError
     class func testError(underlyingError error: NSError, status code: Int32, info: ResultBundle.Info) -> NSError
     {
         return NSError(domain: XcodeBuildErrorDomain, code: Int(code), userInfo:
-            [NSUnderlyingErrorKey: error, NSLocalizedDescriptionKey: NSLocalizedString("windmill.activity.test.failures.description", comment: "Test(s) failed"), NSLocalizedFailureReasonErrorKey: String.localizedStringWithFormat(NSLocalizedString("%d test(s) failed.", comment: ""), info.testsFailedCount ?? 0)])
+            [NSUnderlyingErrorKey: error, NSLocalizedDescriptionKey: NSLocalizedString("windmill.activity.test.failures.description", comment: "Test case(s) failed"), NSLocalizedFailureReasonErrorKey: String.localizedStringWithFormat(NSLocalizedString("%d test case(s) failed.", comment: ""), info.testsFailedCount ?? 0)])
         
     }
 

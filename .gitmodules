@@ -1,0 +1,4 @@
+[submodule "windmillTests/Resources/projects/helloworld"]
+   path = windmillTests/Resources/projects/helloworld
+   url = git@github.com:qnoid/helloworld.git
+   ignore = dirty

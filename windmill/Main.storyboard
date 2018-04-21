@@ -108,7 +108,7 @@
                 <splitViewController id="e0O-BT-03d" customClass="BottomPanelSplitViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem id="5xq-V7-8cj"/>
-                        <splitViewItem canCollapse="YES" collapsed="YES" id="Xxb-TL-29N"/>
+                        <splitViewItem collapsed="YES" id="Pza-pz-edN" userLabel="Bottom View Split View Item"/>
                     </splitViewItems>
                     <splitView key="splitView" misplaced="YES" dividerStyle="paneSplitter" id="Cng-vI-Hrm">
                         <rect key="frame" x="0.0" y="0.0" width="850" height="722"/>
@@ -118,11 +118,11 @@
                         </connections>
                     </splitView>
                     <connections>
-                        <outlet property="bottomViewSplitViewItem" destination="Xxb-TL-29N" id="I8H-2S-ssf"/>
+                        <outlet property="bottomViewSplitViewItem" destination="Pza-pz-edN" id="Hag-lx-W1U"/>
                         <outlet property="mainViewSplitViewItem" destination="5xq-V7-8cj" id="8iU-kW-eMB"/>
                         <outlet property="splitView" destination="Cng-vI-Hrm" id="fg0-Ye-dIh"/>
                         <segue destination="Hwi-w3-Rle" kind="relationship" relationship="splitItems" id="ii6-xt-zFN"/>
-                        <segue destination="Pj9-T2-aOt" kind="relationship" relationship="splitItems" id="csJ-kq-TDG"/>
+                        <segue destination="rYT-dj-KwR" kind="relationship" relationship="splitItems" id="kjU-P3-Gkn"/>
                     </connections>
                 </splitViewController>
                 <customObject id="ETW-dW-QUk" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -311,18 +311,58 @@
         <scene sceneID="eWE-0B-wHp">
             <objects>
                 <viewController storyboardIdentifier="ConsoleViewController" id="Pj9-T2-aOt" customClass="ConsoleViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <outlet property="scrollView" destination="1kk-Jl-vm9" id="Pdo-kr-ifr"/>
+                        <outlet property="textView" destination="VvI-IN-zZ7" id="uzL-ST-zaP"/>
+                        <outlet property="view" destination="1kk-Jl-vm9" id="Lew-jw-ep1"/>
+                    </connections>
+                </viewController>
+                <customObject id="jni-cP-76A" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-986" y="1240"/>
+        </scene>
+        <!--Bottom Tab View Controller-->
+        <scene sceneID="vh4-np-aGm">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="1" tabStyle="bottom" id="rYT-dj-KwR" customClass="BottomTabViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem identifier="" id="Dtc-AU-Q8S"/>
+                        <tabViewItem identifier="" id="bJV-i6-RyP"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="0FP-1R-xe7">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="rYT-dj-KwR" id="4io-r0-ZA9"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="0FP-1R-xe7" id="Iwp-bu-nwu"/>
+                        <segue destination="YB2-6z-Ss2" kind="relationship" relationship="tabItems" id="cE7-OK-8q2"/>
+                        <segue destination="CCQ-Zh-8Bu" kind="relationship" relationship="tabItems" id="aWx-b8-QHk"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="IGb-xB-mL5" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="285" y="1331"/>
+        </scene>
+        <!--Complete-->
+        <scene sceneID="7dq-xA-She">
+            <objects>
+                <viewController title="Complete" storyboardIdentifier="ConsoleViewController" id="YB2-6z-Ss2" customClass="ConsoleViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <scrollView key="view" canDrawConcurrently="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="1kk-Jl-vm9">
-                        <rect key="frame" x="0.0" y="0.0" width="850" height="150"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <clipView key="contentView" canDrawConcurrently="YES" id="wKf-nu-3c7">
-                            <rect key="frame" x="1" y="1" width="848" height="148"/>
+                            <rect key="frame" x="1" y="1" width="448" height="298"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView editable="NO" selectable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="VvI-IN-zZ7">
-                                    <rect key="frame" x="0.0" y="0.0" width="848" height="148"/>
+                                <textView editable="NO" selectable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="VvI-IN-zZ7" customClass="TextView" customModule="Windmill" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="448" height="298"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <size key="minSize" width="848" height="148"/>
+                                    <size key="minSize" width="448" height="298"/>
                                     <size key="maxSize" width="915" height="10000000"/>
                                     <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </textView>
@@ -334,19 +374,58 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="gfU-Y7-RNJ">
-                            <rect key="frame" x="833" y="1" width="16" height="148"/>
+                            <rect key="frame" x="433" y="1" width="16" height="298"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <connections>
-                        <outlet property="scrollView" destination="1kk-Jl-vm9" id="Pdo-kr-ifr"/>
-                        <outlet property="textView" destination="VvI-IN-zZ7" id="uzL-ST-zaP"/>
-                        <outlet property="view" destination="1kk-Jl-vm9" id="Lew-jw-ep1"/>
+                        <outlet property="scrollView" destination="1kk-Jl-vm9" id="5bN-e5-E61"/>
+                        <outlet property="textView" destination="VvI-IN-zZ7" id="mPG-71-OXF"/>
                     </connections>
                 </viewController>
-                <customObject id="jni-cP-76A" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <customObject id="cAd-RN-TNv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-668" y="1232"/>
+            <point key="canvasLocation" x="-16" y="1827"/>
+        </scene>
+        <!--Distilled-->
+        <scene sceneID="hO6-JK-ZQ5">
+            <objects>
+                <viewController title="Distilled" id="CCQ-Zh-8Bu" customClass="PrettyConsoleViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <scrollView key="view" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="Tpk-3z-tdN">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" id="YPZ-KB-QgE">
+                            <rect key="frame" x="1" y="1" width="448" height="298"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView importsGraphics="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" selectionGranularity="paragraph" findStyle="bar" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="QiF-GR-eQF" customClass="TextView" customModule="Windmill" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="448" height="298"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="448" height="298"/>
+                                    <size key="maxSize" width="915" height="10000000"/>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="DYY-Hu-KHW">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="7BS-ln-oEw">
+                            <rect key="frame" x="433" y="1" width="16" height="298"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <connections>
+                        <outlet property="scrollView" destination="Tpk-3z-tdN" id="3yE-UW-y8J"/>
+                        <outlet property="textView" destination="QiF-GR-eQF" id="JUO-vO-aZW"/>
+                    </connections>
+                </viewController>
+                <customObject id="6tf-hb-TwP" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="579" y="1827"/>
         </scene>
         <!--Application-->
         <scene sceneID="6gf-Vf-nel">
@@ -638,7 +717,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             </menu>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="2qi-MV-HHJ"/>
-                                        <menuItem title="Clean Derived Data" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
+                                        <menuItem title="Clean DerivedData Folder" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
                                             <connections>
                                                 <action selector="cleanDerivedData:" target="jgg-ZM-qio" id="5Mf-eo-406"/>
                                             </connections>

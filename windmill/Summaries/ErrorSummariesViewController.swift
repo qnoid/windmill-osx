@@ -93,7 +93,7 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         } else if case ErrorSummaryIdentifier.Commit? = errorSummaryIdentifier {
             tableCellView.textField?.stringValue = commit?.shortSha ?? ""
         } else if case ErrorSummaryIdentifier.Target? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = errorSummaries[row].target
+            tableCellView.textField?.stringValue = errorSummaries[row].target ?? ""
         } else  if case ErrorSummaryIdentifier.IssueType? = errorSummaryIdentifier {
             tableCellView.textField?.stringValue = errorSummaries[row].issueType
         } else if case ErrorSummaryIdentifier.Message? = errorSummaryIdentifier {

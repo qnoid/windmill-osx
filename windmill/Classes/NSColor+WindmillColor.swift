@@ -43,13 +43,21 @@ extension NSColor
         static func gray() -> NSColor {
             return NSColor(red: 72/255, green: 72/255, blue: 72/255, alpha: 1.0)
         }
-    }
-    
-    class func greenBranchColor() -> NSColor {
-        return NSColor(calibratedRed:0.231, green:0.733, blue:0.200, alpha:1.00)
-    }
-    
-    class func yellowCommitColor() -> NSColor {
-        return NSColor(calibratedRed:0.682, green:0.675, blue:0.200, alpha:1.00)
+
+        static func red() -> NSColor {
+            return NSColor(red: 226/255, green: 20/255, blue: 20/255, alpha: 1.0)
+        }
+        
+        static func gitCyan() -> NSColor {
+            return NSColor(red: 0/255, green: 166/255, blue: 178/255, alpha: 1.0)
+        }
+
+        static func gitYellow() -> NSColor {
+            return NSColor(red: 153/255, green: 153/255, blue: 0/255, alpha: 1.0)
+        }
+        
+        static func gitGreen() -> NSColor {
+            return NSColor(red: 0/255, green: 166/255, blue: 0/255, alpha: 1.0)
+        }
     }
 }

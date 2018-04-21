@@ -5,8 +5,11 @@ CONFIGURATION=$2
 DESTINATION_ID=$3
 DERIVED_DATA_PATH_FOR_PROJECT=$4
 RESULT_BUNDLE_PATH_FOR_PROJECT=$5
+LOG_FOR_PROJECT=$6
 
-xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2> /dev/null
+set -eo pipefail
+
+xcodebuild -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 # Cases
 ## 65

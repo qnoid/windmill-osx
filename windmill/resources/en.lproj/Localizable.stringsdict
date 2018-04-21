@@ -50,7 +50,7 @@
 			<string>%d test errors.</string>
 		</dict>
 	</dict>
-	<key>%d test(s) failed.</key>
+	<key>%d test case(s) failed.</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@errors@</string>
@@ -63,7 +63,7 @@
 			<key>zero</key>
 			<string>Error.</string>
 			<key>one</key>
-			<string>%d test failed.</string>
+			<string>%d test case failed.</string>
 			<key>two</key>
 			<string></string>
 			<key>few</key>
@@ -71,7 +71,7 @@
 			<key>many</key>
 			<string></string>
 			<key>other</key>
-			<string>%d tests failed.</string>
+			<string>%d test cases failed.</string>
 		</dict>
 	</dict>
 	<key>%d test(s).</key>

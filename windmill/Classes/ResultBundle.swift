@@ -113,10 +113,8 @@ public struct ResultBundle {
             return message ?? ""
         }
         
-        var target: String {
-            let target = values["Target"] as? String
-            
-            return target ?? ""
+        var target: String? {
+            return values["Target"] as? String
         }
         
         /*
