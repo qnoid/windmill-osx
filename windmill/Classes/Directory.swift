@@ -32,7 +32,7 @@ public protocol DirectoryType
     @discardableResult func create(withIntermediateDirectories: Bool) -> Bool
 }
 
-public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillHomeDirectory, ProjectHomeDirectory, ProjectSourceDirectory
+public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillHomeDirectory, ProjectHomeDirectory, ProjectRepositoryDirectory
 {
     public let URL : Foundation.URL
     public let fileManager : FileManager

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 
 # {URL}/{project name}/configuration.json
 PROJECT_CONFIGURATION_FOR_PROJECT=$1

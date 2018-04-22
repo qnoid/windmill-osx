@@ -61,6 +61,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
     
     struct Notifications {
         static let willStartProject = Notification.Name("will.start")
+        static let didCheckoutProject = Notification.Name("did.checkout")
         static let didBuildProject = Notification.Name("did.build")
         static let didTestProject = Notification.Name("did.test")
         static let didArchiveProject = Notification.Name("did.archive")
@@ -83,8 +84,8 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 
     lazy var projectHomeDirectory: ProjectHomeDirectory = FileManager.default.windmillHomeDirectory.projectHomeDirectory(at: project.name)
     lazy var projectLogURL: URL = projectHomeDirectory.log(name: "raw")
-    lazy var projectSourceDirectory: ProjectSourceDirectory = applicationCachesDirectory.projectSourceDirectory(at: project.name)
-    
+    lazy var projectRepositoryDirectory: ProjectRepositoryDirectory = applicationCachesDirectory.projectRepositoryDirectory(at: project.name)
+
     //
     var project: Project
     let processManager: ProcessManager
@@ -105,9 +106,8 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         self.processManager.monitor = self
     }
     
-    private func build(project: Project, scheme: String, destination: Devices.Destination, wasSuccesful: ProcessWasSuccesful?) {
-        
-        self.build(project: project, scheme: scheme, destination: destination, repositoryLocalURL: projectSourceDirectory.URL, derivedDataURL: applicationCachesDirectory.derivedDataURL(at: project.name), resultBundle: applicationSupportDirectory.buildResultBundle(at: project.name), log: projectLogURL, wasSuccesful: wasSuccesful)
+    private func build(projectLocalURL: Project.LocalURL, project: Project, scheme: String, destination: Devices.Destination, wasSuccesful: ProcessWasSuccesful?) {
+        self.build(project: project, scheme: scheme, destination: destination, repositoryLocalURL: projectRepositoryDirectory.URL, projectLocalURL: projectLocalURL, derivedDataURL: applicationCachesDirectory.derivedDataURL(at: project.name), resultBundle: applicationSupportDirectory.buildResultBundle(at: project.name), log: projectLogURL, wasSuccesful: wasSuccesful)
     }
     
     private func didBuild(project: Project, using buildSettings: BuildSettings, appBundle: AppBundle, destination: Devices.Destination) {
@@ -127,7 +127,6 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Windmill.Notifications.didTestProject, object: self, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": testableSummaries])
         }
-        
     }
     
     private func didReadDevices(devices: Devices) {
@@ -137,20 +136,28 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         }
         Process.makeBoot(destination: destination).launch()
     }
+    
+    private func didCheckout(commit: Repository.Commit) {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Windmill.Notifications.didCheckoutProject, object: self, userInfo: ["commit": commit])
+        }
+    }
+
 
     // MARK: private
     
-    func buildChain(repositoryLocalURL: URL? = nil, derivedDataURL: URL, resultBundle: ResultBundle, buildWasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
+    func buildChain(repositoryLocalURL: Repository.LocalURL? = nil, projectLocalURL: Project.LocalURL? = nil, derivedDataURL: URL, resultBundle: ResultBundle, buildWasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
         let directory = self.projectHomeDirectory
         let log = self.projectLogURL
-        let repositoryLocalURL = repositoryLocalURL ?? projectSourceDirectory.URL
+        let repositoryLocalURL = repositoryLocalURL ?? projectRepositoryDirectory.URL
+        let projectLocalURL = projectLocalURL ?? repositoryLocalURL
         let configuration = directory.configuration()
 
-        let readProjectConfiguration = Process.makeReadProjectConfiguration(repositoryLocalURL: repositoryLocalURL, projectConfiguration: configuration)
+        let readProjectConfiguration = Process.makeReadProjectConfiguration(projectLocalURL: projectLocalURL, projectConfiguration: configuration)
         return self.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [project = self.project, buildSettings = directory.buildSettings(), weak self] userInfo in
             
             let scheme = configuration.detectScheme(name: project.scheme)
-            let readBuildSettings = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: scheme, buildSettings: buildSettings)
+            let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectLocalURL, scheme: scheme, buildSettings: buildSettings)
             self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
                 let readDevices = Process.makeRead(devices: devices, for: buildSettings)
                 self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
@@ -167,7 +174,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                         return
                     }
                     
-                    self?.build(project: project, scheme: scheme, destination: destination, repositoryLocalURL: repositoryLocalURL, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log, wasSuccesful: buildWasSuccesful)
+                    self?.build(project: project, scheme: scheme, destination: destination, repositoryLocalURL: repositoryLocalURL, projectLocalURL: projectLocalURL, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log, wasSuccesful: buildWasSuccesful)
                 }).launch()
             }).launch()
         })
@@ -176,109 +183,129 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
     /* private */ func exportChain(skipCheckout: Bool = false, exportWasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
         
         let directory = self.projectHomeDirectory
-        let log = self.projectLogURL
-        let repositoryLocalURL = projectSourceDirectory.URL
-        let checkout: Process = skipCheckout ? Process.makeSuccess() : Process.makeCheckout(sourceDirectory: projectSourceDirectory, project: self.project, log: log)
+        let projectLogURL = self.projectLogURL
+        let repositoryLocalURL = projectRepositoryDirectory
+        let checkout: Process = skipCheckout ? Process.makeSuccess() : Process.makeCheckout(sourceDirectory: repositoryLocalURL, project: self.project, log: projectLogURL)
         let derivedDataURL = applicationCachesDirectory.derivedDataURL(at: project.name)
         let applicationSupportDirectory = self.applicationSupportDirectory
         
         
-        try? FileManager.default.removeItem(at: log)
+        try? FileManager.default.removeItem(at: projectLogURL)
         
-        return self.processManager.processChain(process:checkout, userInfo: ["activity" : ActivityType.checkout, "repositoryLocalURL": repositoryLocalURL], wasSuccesful: ProcessWasSuccesful { [project = self.project, configuration = directory.configuration(), weak self] userInfo in
-            let readProjectConfiguration = Process.makeReadProjectConfiguration(repositoryLocalURL: repositoryLocalURL, projectConfiguration: configuration)
-            self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [buildSettings = directory.buildSettings()] userInfo in
+        return self.processManager.processChain(process:checkout, userInfo: ["activity" : ActivityType.checkout], wasSuccesful: ProcessWasSuccesful { [project = self.project, configuration = directory.configuration(), applicationCachesDirectory = applicationCachesDirectory, log = self.log, weak self] userInfo in
+            
+            os_log("Checked out source under: '%{public}@'", log: log, type: .debug, repositoryLocalURL.URL.path)
+
+            let findProject = Process.makeFind(project: project, repositoryLocalURL: repositoryLocalURL.URL)
+            
+            self?.processManager.processResult(process: findProject).launch { projectDirectory in
                 
-                let scheme = configuration.detectScheme(name: project.scheme)
-                let readBuildSettings = Process.makeReadBuildSettings(repositoryLocalURL: repositoryLocalURL, scheme: scheme, buildSettings: buildSettings)
-                self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
-                    let readDevices = Process.makeRead(devices: devices, for: buildSettings)
-                    self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
-                        
-                        self?.didReadDevices(devices: devices)
+                let projectURL: Project.LocalURL
+                
+                if let projectDirectory = projectDirectory.value {
+                    projectURL = URL(fileURLWithPath: projectDirectory)
+                } else {
+                    projectURL = repositoryLocalURL.URL
+                }
+                
+                os_log("Project found under: '%{public}@'", log: log, type: .debug, projectURL.path)                
 
-                        let appBundle = directory.appBundle(name: project.name)
-                        try? FileManager.default.removeItem(at: appBundle.url)
-                        
-                        guard let destination = devices.destination else {
-                            if let log = self?.log {
+                if let commit = applicationCachesDirectory.commit(baseURL: projectURL, project: project) {
+                    self?.didCheckout(commit: commit)
+                }
+            
+                let readProjectConfiguration = Process.makeReadProjectConfiguration(projectLocalURL: projectURL, projectConfiguration: configuration)
+                self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [buildSettings = directory.buildSettings()] userInfo in
+                    
+                    let scheme = configuration.detectScheme(name: project.scheme)
+                    let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectURL, scheme: scheme, buildSettings: buildSettings)
+                    self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
+                        let readDevices = Process.makeRead(devices: devices, for: buildSettings)
+                        self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
+                            
+                            self?.didReadDevices(devices: devices)
+
+                            let appBundle = directory.appBundle(name: project.name)
+                            try? FileManager.default.removeItem(at: appBundle.url)
+                            
+                            guard let destination = devices.destination else {
                                 os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a '' dictionary?`", log: log, type: .debug, devices.url.path)
+                                return
                             }
-                            return
-                        }
 
-                        self?.build(project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
+                            self?.build(projectLocalURL:projectURL, project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
 
-                            let appBundle = directory.appBundle(derivedDataURL: derivedDataURL, name: buildSettings.product.name ?? project.name)
-                            self?.didBuild(project: project, using: buildSettings, appBundle: appBundle, destination: destination)
+                                let appBundle = directory.appBundle(derivedDataURL: derivedDataURL, name: buildSettings.product.name ?? project.name)
+                                self?.didBuild(project: project, using: buildSettings, appBundle: appBundle, destination: destination)
 
-                            let test: Process
-                            let userInfo: [AnyHashable: Any]
-                            let testResultBundle = applicationSupportDirectory.testResultBundle(at: project.name)
-                            
-                            if WindmillStringKey.Test.nothing == (buildInfo?[WindmillStringKey.test] as? WindmillStringKey.Test) {
-                                userInfo = ["activity" : ActivityType.test, "resultBundle": testResultBundle]
-                                test = Process.makeSuccess()
-                            } else {
-                                userInfo = ["activity" : ActivityType.test, "artefact": ArtefactType.testReport, "devices": devices, "destination": destination, "resultBundle": testResultBundle]
-                                test = Process.makeTestWithoutBuilding(repositoryLocalURL: repositoryLocalURL, project: project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle, log: log)
-                            }
-                            
-                            self?.processManager.processChain(process: test, userInfo: userInfo, wasSuccesful: ProcessWasSuccesful { userInfo in
-
-                                if let testResultBundle = userInfo?["resultBundle"] as? ResultBundle, let testsCount = testResultBundle.info.testsCount, testsCount >= 0 {
-                                    self?.didTest(project: project, testsCount: testsCount, devices: devices, destination: destination, testableSummaries: testResultBundle.testSummaries?.testableSummaries ?? [])
+                                let test: Process
+                                let userInfo: [AnyHashable: Any]
+                                let testResultBundle = applicationSupportDirectory.testResultBundle(at: project.name)
+                                
+                                if WindmillStringKey.Test.nothing == (buildInfo?[WindmillStringKey.test] as? WindmillStringKey.Test) {
+                                    userInfo = ["activity" : ActivityType.test, "resultBundle": testResultBundle]
+                                    test = Process.makeSuccess()
+                                } else {
+                                    userInfo = ["activity" : ActivityType.test, "artefact": ArtefactType.testReport, "devices": devices, "destination": destination, "resultBundle": testResultBundle]
+                                    test = Process.makeTestWithoutBuilding(projectLocalURL: projectURL, project: project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle, log: projectLogURL)
                                 }
+                                
+                                self?.processManager.processChain(process: test, userInfo: userInfo, wasSuccesful: ProcessWasSuccesful { userInfo in
 
-                                let archive: Archive = directory.archive(name: scheme)
-                                let archiveResultBundle = applicationSupportDirectory.archiveResultBundle(at: project.name)
-                                let makeArchive = Process.makeArchive(repositoryLocalURL: repositoryLocalURL, project: project, scheme: scheme, derivedDataURL: derivedDataURL, archive: archive, resultBundle: archiveResultBundle, log: log)
-                                self?.processManager.processChain(process: makeArchive, userInfo: ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": archiveResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
-                                    DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project, "archive": archive])
+                                    if let testResultBundle = userInfo?["resultBundle"] as? ResultBundle, let testsCount = testResultBundle.info.testsCount, testsCount >= 0 {
+                                        self?.didTest(project: project, testsCount: testsCount, devices: devices, destination: destination, testableSummaries: testResultBundle.testSummaries?.testableSummaries ?? [])
                                     }
-                                    
-                                    let exportResultBundle = applicationSupportDirectory.exportResultBundle(at: project.name)
-                                    let makeExport = Process.makeExport(repositoryLocalURL: repositoryLocalURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL(), resultBundle: exportResultBundle, log: log)
-                                    
-                                    let export = directory.export(name: scheme)
-                                    
-                                    self?.processManager.processChain(process: makeExport, userInfo: ["activity" : ActivityType.export, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": exportResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
-                                        
-                                        let appBundle = directory.appBundle(archive: archive, name: export.distributionSummary.name)
-                                        
-                                        let userInfo = userInfo?.merging(["project":project, "appBundle": appBundle], uniquingKeysWith: { (userInfo, _) -> Any in
-                                            return userInfo
-                                        })
-                                        
+
+                                    let archive: Archive = directory.archive(name: scheme)
+                                    let archiveResultBundle = applicationSupportDirectory.archiveResultBundle(at: project.name)
+                                    let makeArchive = Process.makeArchive(projectLocalURL: projectURL, project: project, scheme: scheme, derivedDataURL: derivedDataURL, archive: archive, resultBundle: archiveResultBundle, log: projectLogURL)
+                                    self?.processManager.processChain(process: makeArchive, userInfo: ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": archiveResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
                                         DispatchQueue.main.async {
-                                            NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: userInfo)
+                                            NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project, "archive": archive])
                                         }
                                         
-                                        exportWasSuccesful?.perform(userInfo: userInfo)
+                                        let exportResultBundle = applicationSupportDirectory.exportResultBundle(at: project.name)
+                                        let makeExport = Process.makeExport(projectLocalURL: projectURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL(), resultBundle: exportResultBundle, log: projectLogURL)
+                                        
+                                        let export = directory.export(name: scheme)
+                                        
+                                        self?.processManager.processChain(process: makeExport, userInfo: ["activity" : ActivityType.export, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": exportResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
+                                            
+                                            let appBundle = directory.appBundle(archive: archive, name: export.distributionSummary.name)
+                                            
+                                            let userInfo = userInfo?.merging(["project":project, "appBundle": appBundle], uniquingKeysWith: { (userInfo, _) -> Any in
+                                                return userInfo
+                                            })
+                                            
+                                            DispatchQueue.main.async {
+                                                NotificationCenter.default.post(name: Windmill.Notifications.didExportProject, object: self, userInfo: userInfo)
+                                            }
+                                            
+                                            exportWasSuccesful?.perform(userInfo: userInfo)
+                                        }).launch()
                                     }).launch()
                                 }).launch()
-                            }).launch()
-                        })
+                            })
+                        }).launch()
                     }).launch()
                 }).launch()
-            }).launch()
+            }
         })
     }
     
     /* fileprivate */ func repeatableDeploy(user: String, skipCheckout: Bool = false) -> ProcessChain {
 
-        let log = self.projectLogURL
-        let repositoryLocalURL = self.projectSourceDirectory.URL
+        let projectLogURL = self.projectLogURL
+        let repositoryLocalURL = self.projectRepositoryDirectory.URL
         let buildSettings = self.projectHomeDirectory.buildSettings()
         
-        let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
+        let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), log = self.log, weak self] userInfo in
 
             guard let export = userInfo?["export"] as? Export else {
                 return
             }
 
-            let deploy = Process.makeDeploy(repositoryLocalURL: repositoryLocalURL, export: export, forUser: user, log: log)
+            let deploy = Process.makeDeploy(export: export, forUser: user, log: projectLogURL)
             self?.processManager.processChain(process: deploy, userInfo: ["activity" : ActivityType.deploy, "artefact": ArtefactType.otaDistribution], wasSuccesful: ProcessWasSuccesful { userInfo in
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project, "buildSettings":buildSettings, "export": export])
@@ -294,9 +321,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                     NotificationCenter.default.post(name: Windmill.Notifications.willMonitorProject, object: self, userInfo: ["project":project])
                 }
 
-                if let log = self?.log {
-                    os_log("will start monitoring", log: log, type: .debug)
-                }
+                os_log("will start monitoring", log: log, type: .debug)
 
                 self?.processManager.repeat(process: Process.makePoll(repositoryLocalURL: repositoryLocalURL, pollDirectoryURL: pollDirectoryURL), every: .seconds(delayInSeconds), until: 1, then: DispatchWorkItem {
                     self?.notificationCenter.post(name: Windmill.Notifications.willStartProject, object: self, userInfo: ["project":project])
@@ -310,7 +335,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
     
     /* fileprivate */ func repeatableExport(skipCheckout: Bool = false) -> ProcessChain {
 
-        let repositoryLocalURL = self.projectSourceDirectory.URL
+        let repositoryLocalURL = self.projectRepositoryDirectory.URL
         
         let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), weak self] userInfo in
             
@@ -337,14 +362,14 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         return self.exportChain(skipCheckout: skipCheckout, exportWasSuccesful: exportWasSuccesful)
     }
     
-    /* fileprivate */ func build(project: Project, scheme: String, destination: Devices.Destination, repositoryLocalURL: URL, derivedDataURL: URL, resultBundle: ResultBundle, log: URL, wasSuccesful: ProcessWasSuccesful?) {
+    /* fileprivate */ func build(project: Project, scheme: String, destination: Devices.Destination, repositoryLocalURL: Repository.LocalURL, projectLocalURL: Project.LocalURL, derivedDataURL: URL, resultBundle: ResultBundle, log: URL, wasSuccesful: ProcessWasSuccesful?) {
         
-        let buildForTesting = Process.makeBuildForTesting(repositoryLocalURL: repositoryLocalURL, project:project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log)
+        let buildForTesting = Process.makeBuildForTesting(projectLocalURL: projectLocalURL, project:project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log)
         
         self.processManager.processChain(process: buildForTesting, userInfo: ["activity" : ActivityType.build, "resultBundle": resultBundle, "artefact": ArtefactType.appBundle], wasSuccesful: wasSuccesful).launch(recover: RecoverableProcess.recover(terminationStatus: 66) { [applicationSupportDirectory = self.applicationSupportDirectory, project = self.project, weak self] process in
             
             let resultBundle = applicationSupportDirectory.buildResultBundle(at: project.name)
-            let build = Process.makeBuild(repositoryLocalURL: repositoryLocalURL, project:project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log)
+            let build = Process.makeBuild(projectLocalURL: projectLocalURL, project:project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log)
             self?.processManager.processChain(process: build, userInfo: ["activity" : ActivityType.build, "resultBundle": resultBundle, "artefact": ArtefactType.appBundle, WindmillStringKey.test: WindmillStringKey.Test.nothing], wasSuccesful: wasSuccesful).launch()
         })
     }
@@ -403,40 +428,45 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         
         os_log("activity '%{public}@' did error: %{public}@", log: log, type: .error, error)
         
-        switch activity {
-        case .build, .test, .archive, .export:
-
-            guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle else {
-                os_log("No 'resultBundle' was passed for activity: `%{public}@`. Have you set it in the userInfo?", log: log, type: .debug, activity.rawValue)
-                return
-            }
-            
-            if  resultBundle.info.errorCount > 0 {
-                DispatchQueue.main.async { [info = resultBundle.info, errorCount = resultBundle.info.errorCount] in
-                    
-                    let error = NSError.activityError(underlyingError: error, for: activity, status: process.terminationStatus, info: info)
-                    
-                    NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "errorCount":errorCount, "errorSummaries": info.errorSummaries], uniquingKeysWith: { (userInfo, _) -> Any in
-                        return userInfo
-                    }))
-                }
-            }
-            if let testsFailedCount = resultBundle.info.testsFailedCount, testsFailedCount > 0 {
-                DispatchQueue.main.async { [info = resultBundle.info] in
-                    let error = NSError.testError(underlyingError: error, status: process.terminationStatus, info: info)
-
-                    NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "testsFailedCount":testsFailedCount, "testFailureSummaries": info.testFailureSummaries, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []], uniquingKeysWith: { (userInfo, _) -> Any in
-                        return userInfo
-                    }))
-                }
-            }
-        default:
+        guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle else {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity], uniquingKeysWith:  { (userInfo, _) -> Any in
                     return userInfo
                 }))
             }
+            return
         }
-        return
+        
+        let info = resultBundle.info
+        
+        if info.errorCount == 0, info.testsFailedCount == 0 {
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity], uniquingKeysWith:  { (userInfo, _) -> Any in
+                    return userInfo
+                }))
+            }
+            return
+        }
+        
+        if info.errorCount > 0 {
+            DispatchQueue.main.async { [errorCount = info.errorCount] in
+                
+                let error = NSError.activityError(underlyingError: error, for: activity, status: process.terminationStatus, info: info)
+                
+                NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "errorCount":errorCount, "errorSummaries": info.errorSummaries], uniquingKeysWith: { (userInfo, _) -> Any in
+                    return userInfo
+                }))
+            }
+        }
+        
+        if let testsFailedCount = info.testsFailedCount, testsFailedCount > 0 {
+            DispatchQueue.main.async { [testableSummaries = resultBundle.testSummaries?.testableSummaries] in
+                let error = NSError.testError(underlyingError: error, status: process.terminationStatus, info: info)
+                
+                NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity, "testsFailedCount":testsFailedCount, "testFailureSummaries": info.testFailureSummaries, "testableSummaries": testableSummaries ?? []], uniquingKeysWith: { (userInfo, _) -> Any in
+                    return userInfo
+                }))
+            }
+        }
     }
 }

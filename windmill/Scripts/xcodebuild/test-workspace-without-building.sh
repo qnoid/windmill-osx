@@ -3,7 +3,7 @@
 # Requires the following variables to be set
 # SCHEME_NAME
 
-WORKSPACE=$1
+FILENAME=$1
 DESTINATION_ID=$2
 SCHEME_NAME=$3
 DERIVED_DATA_PATH_FOR_PROJECT=$4
@@ -12,7 +12,7 @@ LOG_FOR_PROJECT=$6
 
 set -eo pipefail
 
-xcodebuild -workspace "${WORKSPACE}".xcworkspace test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
+xcodebuild -workspace "${FILENAME}" test-without-building -scheme "${SCHEME_NAME}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 # Cases
 ## 65

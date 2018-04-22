@@ -20,7 +20,7 @@ public struct Repository: CustomDebugStringConvertible {
         os_log("%{public}@", log: log, type: .debug, "Using: \(localGitRepoURL.path)")
 
         do {
-            let repo = try GTRepository(url: localGitRepoURL)
+            let repo = try GTRepository(url: localGitRepoURL, flags: GTRepositoryOpenFlags.bare.rawValue, ceilingDirs: [localGitRepoURL])
             
             guard let currentBranch = try? repo.currentBranch(), let branch = currentBranch.shortName else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch branch")
@@ -86,5 +86,5 @@ extension Project {
     
     static func make(isWorkspace: Bool? = nil, name: String, repository: Repository) -> Project {
         return Project(isWorkspace: isWorkspace, name: name, scheme: repository.name, origin: repository.origin)
-    }
+    }    
 }

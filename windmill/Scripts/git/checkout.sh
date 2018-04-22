@@ -16,13 +16,13 @@ set -eo pipefail
 . $SCRIPTS_ROOT/common.sh
 
 function git_pull(){ (
-    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules | tee -a "${LOG_FOR_PROJECT}";
-    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH" | tee -a "${LOG_FOR_PROJECT}";
-    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update | tee -a "${LOG_FOR_PROJECT}")
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules 2>&1 | tee -a "${LOG_FOR_PROJECT}";
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" reset --hard origin/"$BRANCH" 2>&1 | tee -a "${LOG_FOR_PROJECT}";
+    xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" submodule update 2>&1 | tee -a "${LOG_FOR_PROJECT}")
 }
 
 function git_clone(){
-(xcrun git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}" | tee -a "${LOG_FOR_PROJECT}")
+(xcrun git clone --recurse-submodules -b "${BRANCH}" "${REMOTE}" "${REPOSITORY_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}")
 }
 
 directory_exist_at_path "${REPOSITORY_PATH_FOR_PROJECT}" git_pull git_clone

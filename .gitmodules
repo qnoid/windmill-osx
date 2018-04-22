@@ -2,3 +2,7 @@
    path = windmillTests/Resources/projects/helloworld
    url = git@github.com:qnoid/helloworld.git
    ignore = dirty
+[submodule "windmillTests/Resources/projects/project-not-at-root"]
+   path = windmillTests/Resources/projects/project-not-at-root
+   url = git@github.com:qnoid/project-not-at-root.git
+   ignore = dirty

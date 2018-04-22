@@ -126,6 +126,9 @@
 		BDD1750E208A152600CDE787 /* StandardOutFormattedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */; };
 		BDD17510208A154100CDE787 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1750F208A154100CDE787 /* TextView.swift */; };
 		BDD17512208A156F00CDE787 /* DispatchSourceReadProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17511208A156F00CDE787 /* DispatchSourceReadProvider.swift */; };
+		BDD17514208C72B400CDE787 /* project-not-at-root in Resources */ = {isa = PBXBuildFile; fileRef = BDD17513208C72B400CDE787 /* project-not-at-root */; };
+		BDD17517208C7F7300CDE787 /* ProcessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17516208C7F7300CDE787 /* ProcessResult.swift */; };
+		BDD17519208CD50600CDE787 /* RepositoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17518208CD50600CDE787 /* RepositoryTest.swift */; };
 		BDD5209B1FEA364300104FC3 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD5209A1FEA364300104FC3 /* Configuration.swift */; };
 		BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
 		BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDD6F0A420182AF200D63D74 /* ArtefactView.xib */; };
@@ -302,6 +305,9 @@
 		BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutFormattedReader.swift; sourceTree = "<group>"; };
 		BDD1750F208A154100CDE787 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		BDD17511208A156F00CDE787 /* DispatchSourceReadProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSourceReadProvider.swift; sourceTree = "<group>"; };
+		BDD17513208C72B400CDE787 /* project-not-at-root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-not-at-root"; sourceTree = "<group>"; };
+		BDD17516208C7F7300CDE787 /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
+		BDD17518208CD50600CDE787 /* RepositoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTest.swift; sourceTree = "<group>"; };
 		BDD5209A1FEA364300104FC3 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		BDD6F0A420182AF200D63D74 /* ArtefactView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtefactView.xib; sourceTree = "<group>"; };
 		BDD6F0A620182B0F00D63D74 /* ArtefactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtefactView.swift; sourceTree = "<group>"; };
@@ -400,6 +406,7 @@
 			children = (
 				BD1D17FE1F44BC670015C13C /* ProcessManager.swift */,
 				BD49FAAB20290C4500E12CB4 /* ProcessChain.swift */,
+				BDD17516208C7F7300CDE787 /* ProcessResult.swift */,
 			);
 			path = ProcessManager;
 			sourceTree = "<group>";
@@ -494,6 +501,7 @@
 		BD68054C202C127300F38D3B /* projects */ = {
 			isa = PBXGroup;
 			children = (
+				BDD17513208C72B400CDE787 /* project-not-at-root */,
 				BD14BC212051EEB00052AAA2 /* project-with-build-errors */,
 				BD14BC222051EEB00052AAA2 /* project-with-unit-tests */,
 				BD680587202C222200F38D3B /* no_simulator_available */,
@@ -582,7 +590,7 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
-				BDF6DDEF207D0CB7003B454F /* Logs */,
+				BDF6DDEF207D0CB7003B454F /* Formatters */,
 				BD08327520635A510093F5EE /* TestSummariesTest */,
 				BDDF10C8205FAD830093E811 /* StringTest */,
 				BD14BC1E2051E5950052AAA2 /* ProcessManagerTest */,
@@ -611,6 +619,7 @@
 				BD105046203A84530051F0D5 /* ConfigurationTest.swift */,
 				BDB96139204A56DC00E49258 /* ResultBundleTest.swift */,
 				BDDF10C5205FAD390093E811 /* StringTest.swift */,
+				BDD17518208CD50600CDE787 /* RepositoryTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -724,12 +733,12 @@
 			path = Formatters;
 			sourceTree = "<group>";
 		};
-		BDF6DDEF207D0CB7003B454F /* Logs */ = {
+		BDF6DDEF207D0CB7003B454F /* Formatters */ = {
 			isa = PBXGroup;
 			children = (
 				BDF6DDF0207D0CC1003B454F /* RegularExpressionMatchesFormatterTest.swift */,
 			);
-			path = Logs;
+			path = Formatters;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -861,6 +870,7 @@
 				BD08327720635ABE0093F5EE /* TestSummaries.plist in Resources */,
 				BD07C44C2064AC4800AFD0C9 /* TestSummariesWithFailureSummaries.plist in Resources */,
 				BD680582202C15C000F38D3B /* metadata in Resources */,
+				BDD17514208C72B400CDE787 /* project-not-at-root in Resources */,
 				BD680586202C1AC700F38D3B /* helloworld in Resources */,
 				BD3C0B65206CBDDC00B760DA /* TestSummariesWithPerformanceFailures.plist in Resources */,
 				BD8FBE11204C96F20004C064 /* HelloWindmill.xcarchive in Resources */,
@@ -955,6 +965,7 @@
 				BDF6DDEE207D0C5B003B454F /* RegularExpressionMatchesFormatter.swift in Sources */,
 				BD30160519BB0F79001134F8 /* Keychain.swift in Sources */,
 				BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */,
+				BDD17517208C7F7300CDE787 /* ProcessResult.swift in Sources */,
 				BD8B80BB208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift in Sources */,
 				BD2CEE5520316DB10048969D /* BuildSettings.swift in Sources */,
 				BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */,
@@ -973,6 +984,7 @@
 				BD021862203184470039BCCD /* AppBundleTest.swift in Sources */,
 				BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */,
 				BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */,
+				BDD17519208CD50600CDE787 /* RepositoryTest.swift in Sources */,
 				BD68054A202C120200F38D3B /* ProcessChainTest.swift in Sources */,
 				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
 				BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */,
@@ -1065,6 +1077,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Carthage/Build/iOS/ObjectiveGit.framework/Headers/";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1113,6 +1126,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/Carthage/Build/iOS/ObjectiveGit.framework/Headers/";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;

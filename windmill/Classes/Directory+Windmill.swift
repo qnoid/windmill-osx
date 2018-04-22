@@ -80,7 +80,7 @@ extension ApplicationSupportDirectory {
 
 public protocol ApplicationCachesDirectory : DirectoryType
 {
-    func projectSourceDirectory(at pathComponent: String) -> ProjectSourceDirectory
+    func projectRepositoryDirectory(at pathComponent: String) -> ProjectRepositoryDirectory
     func removeDerivedData(at pathComponent: String) -> Bool
 }
 
@@ -94,11 +94,16 @@ extension ApplicationCachesDirectory {
         return directory.URL
     }
     
-    public func projectSourceDirectory(at pathComponent: String) -> ProjectSourceDirectory {
+    public func projectRepositoryDirectory(at pathComponent: String) -> ProjectRepositoryDirectory {
         
         let directory = self.fileManager.directory(self.sourcesURL().appendingPathComponent(pathComponent))
         
         return directory
+    }
+    
+    func commit(baseURL projectURL: Project.LocalURL, project: Project) -> Repository.Commit? {
+        let localGitRepoURL = projectURL.appendingPathComponent(project.filename)
+        return try? Repository.parse(localGitRepoURL: localGitRepoURL)
     }
 
     public func derivedDataURL(at pathComponent: String) -> URL {
@@ -120,12 +125,12 @@ extension ApplicationCachesDirectory {
     }
 }
 
-public protocol ProjectSourceDirectory: DirectoryType {
+public protocol ProjectRepositoryDirectory: DirectoryType {
     
     func remove() -> Bool
 }
 
-extension ProjectSourceDirectory {
+extension ProjectRepositoryDirectory {
     
     public func remove() -> Bool {
         

@@ -209,13 +209,13 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
     }
     
-    func show(errorSummariesWindowController: ErrorSummariesWindowController?) {
-        errorSummariesWindowController?.errorSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
+    func show(errorSummariesWindowController: ErrorSummariesWindowController?, commit: Repository.Commit?) {
+        errorSummariesWindowController?.errorSummariesViewController?.commit = commit
         errorSummariesWindowController?.showWindow(self)
     }
 
-    func show(testFailureSummariesWindowController: TestFailureSummariesWindowController?) {
-        testFailureSummariesWindowController?.testFailureSummariesViewController?.commit = try? Repository.parse(localGitRepoURL: windmill.projectSourceDirectory.URL)
+    func show(testFailureSummariesWindowController: TestFailureSummariesWindowController?, commit: Repository.Commit?) {
+        testFailureSummariesWindowController?.testFailureSummariesViewController?.commit = commit
         testFailureSummariesWindowController?.showWindow(self)
     }
 

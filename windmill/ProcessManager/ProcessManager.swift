@@ -172,26 +172,53 @@ class ProcessManager {
         self.monitor?.didExit(manager: self, process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
     }
 
-    // MARK: public
+    // MARK: internal
 
-    /**
-     Launches the given `process`
- 
-    */
-    public func launch(process: Process, recover: RecoverableProcess? = nil, wasSuccesful: ProcessWasSuccesful? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    func launch(process: Process, buffer: NSMutableString, completion: @escaping (ProcessResult.StandardOutput) -> Void) {
+        
+        self.willLaunch(process: process)
 
+        let standardOutputPipe = Pipe()
+        process.standardOutput = standardOutputPipe
+        
+        let waitForStandardOutputInBackground = process.windmill_waitForDataInBackground(standardOutputPipe, queue: self.dispatch_queue_serial) { availableString, count in
+            buffer.append(availableString)
+        }
+        
+        process.terminationHandler = { [weak self] process in
+            let isSuccess = (process.terminationStatus == 0)
+            
+            DispatchQueue.main.async {
+                waitForStandardOutputInBackground.cancel()
+                
+                self?.didExit(process: process, isSuccess: isSuccess, canRecover: false)
+                guard isSuccess else {
+                    completion(.failure(process.terminationStatus))
+                    return
+                }
+                
+                completion(.success(buffer))
+            }
+        }
+        
+        process.launch()
+        self.didLaunch(process: process)
+    }
+    
+    func launch(process: Process, recover: RecoverableProcess? = nil, wasSuccesful: ProcessWasSuccesful? = nil, userInfo: [AnyHashable : Any]? = nil) {
+        
         self.willLaunch(process: process, userInfo: userInfo)
-
+        
         let waitForStandardOutputInBackground = self.waitForStandardOutputInBackground(process: process)
         let waitForStandardErrorInBackground = self.waitForStandardErrorInBackground(process: process)
-
+        
         process.terminationHandler = { [weak self] process in
             let canRecover = recover?.canRecover(process.terminationStatus) ?? false
-
+            
             DispatchQueue.main.async { [isSuccess = (process.terminationStatus == 0)] in
                 waitForStandardOutputInBackground?.cancel()
                 waitForStandardErrorInBackground?.cancel()
-
+                
                 self?.didExit(process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
                 guard isSuccess else {
                     recover?.perform(process: process)
@@ -201,12 +228,18 @@ class ProcessManager {
                 wasSuccesful?.perform(userInfo: userInfo)
             }
         }
-
+        
         process.launch()
-
+        
         self.didLaunch(process: process, userInfo: userInfo)
     }
     
+    // MARK: public
+
+    /**
+     Launches the given `process`
+ 
+    */
     public func `repeat`(process provider: @escaping @autoclosure () -> Process, every timeInterval: DispatchTimeInterval, until terminationStatus: Int, then eventHandler: DispatchWorkItem, deadline: DispatchTime = DispatchTime.now()) {
         
         let process = provider()
@@ -232,5 +265,9 @@ class ProcessManager {
 
     public func processChain(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
         return ProcessChain(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
+    }
+
+    public func processResult(process: Process) -> ProcessResult {
+        return ProcessResult(processManager: self, process: process)
     }
 }

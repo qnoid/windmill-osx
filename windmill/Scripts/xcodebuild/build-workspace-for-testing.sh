@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORKSPACE=$1
+FILENAME=$1
 SCHEME=$2
 CONFIGURATION=$3
 DESTINATION_ID=$4
@@ -10,7 +10,7 @@ LOG_FOR_PROJECT=$7
 
 set -eo pipefail
 
-xcodebuild -workspace "${WORKSPACE}".xcworkspace -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
+xcodebuild -workspace "${FILENAME}" -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build-for-testing -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 # Cases
 ## 65

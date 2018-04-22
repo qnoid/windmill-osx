@@ -26,8 +26,6 @@ extension DispatchSourceReadProvider {
             return nil
         }
         
-        let completion = completion ?? DispatchQueue.main
-        
         let fileDescriptor = fileHandleForReading.fileDescriptor
         let readSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: self.queue)
         
@@ -45,7 +43,7 @@ extension DispatchSourceReadProvider {
                 return
             }
             
-            completion.async {
+            (completion ?? DispatchQueue.main).async {
                 self.output(part: availableString, count: availableString.utf8.count)
             }
         }
