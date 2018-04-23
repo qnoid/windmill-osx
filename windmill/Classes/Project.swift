@@ -10,6 +10,13 @@ import Foundation
 
 final public class Project : Hashable, Equatable, CustomStringConvertible
 {
+    /*
+        The URL under which the Xcode project is located
+     
+     - SeeAlso: Process.makeFind(project:repositoryLocalURL:)
+    */
+    public typealias LocalURL = URL
+    
     public struct Configuration {
 
         static func make(at url: URL) -> Configuration {
@@ -91,12 +98,23 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     }
     
     public var hashValue: Int {
-        return self.origin.hashValue
+        return self.filename.hashValue
     }
     
     public var description: String {
-        return self.origin
+        return self.filename
     }
+    
+    lazy var filename: String = {
+        switch self.isWorkspace {
+        case true?:
+            return "\(self.name).xcworkspace"
+        case false?:
+            return "\(self.name).xcodeproj"
+        default:
+            return "\(self.name).xcodeproj"
+        }
+    }()
     
     //nil means unknown
     //false means project

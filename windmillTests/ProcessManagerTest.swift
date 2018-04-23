@@ -72,6 +72,8 @@ class WillExitWithErrorExpectation: ProcessMonitor {
 
 class ProcessManagerTest: XCTestCase {
 
+    let bundle: Bundle = Bundle(for: ProcessManagerTest.self)
+
     /**
      - Precondition: requires internet connection
     */
@@ -187,5 +189,32 @@ class ProcessManagerTest: XCTestCase {
         }
         
         wait(for: [canRecover], timeout: 5.0)
-    }    
+    }
+    
+    func testGivenFindProjectAssertProcessResult() {
+        
+        let expectation = self.expectation(description: #function)
+
+        let manager = ProcessManager()
+
+        let project = Project(name: "project-not-at-root", scheme: "project-not-at-root", origin: "any")
+        let repositoryLocalURL = bundle.url(forResource: "project-not-at-root", withExtension: "")!
+        
+        let process = Process.makeFind(project: project, repositoryLocalURL: repositoryLocalURL)
+
+        let processResult = manager.processResult(process: process)
+        
+        var actual: ProcessResult.StandardOutput?
+        processResult.launch { standardOutput in
+            actual = standardOutput
+            expectation.fulfill()
+        }
+     
+        wait(for: [expectation], timeout: 5.0)
+
+        XCTAssertTrue(actual!.isSuccess)
+        XCTAssertEqual(actual!.terminationStatus, 0)
+        
+        XCTAssertEqual(actual!.value, "/Users/qnoid/Library/Developer/Xcode/DerivedData/windmill-fezcvdrmroaraabfbnktjikmxgvk/Build/Products/Debug/Windmill.app/Contents/PlugIns/windmillTests.xctest/Contents/Resources/project-not-at-root/iOS")
+    }
 }

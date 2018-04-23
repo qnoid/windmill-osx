@@ -3,7 +3,7 @@
 # Requires the following variables to be set
 # TEMPORARY_DIRECTORY_FOR_PROJECT
 
-set -e
+set -eo pipefail
 
 # {URL}/{project name}/test/devices.json
 DEVICES_FOR_PROJECT=$1

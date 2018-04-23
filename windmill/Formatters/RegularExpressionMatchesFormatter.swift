@@ -148,6 +148,14 @@ extension NSRegularExpression {
         static let COMPILE_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:warning|error):\\s(.*)")
         
         // capture groups
+        // $1 error
+        static let CLANG_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^clang: error: (.*)$")
+        
+        // capture groups
+        // $1 error
+        static let GLOBAL_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "global: error: (.*)")
+        
+        // capture groups
         // $1 note
         static let NOTE_EXPRESSION = try! NSRegularExpression(pattern: "\\snote:\\s(.*)")
     }

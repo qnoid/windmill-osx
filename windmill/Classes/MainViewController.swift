@@ -161,6 +161,6 @@ class MainViewController: NSViewController {
     }
     
     @discardableResult func cleanProjectFolder() -> Bool {
-        return windmill?.projectSourceDirectory.remove() ?? false
+        return windmill?.projectRepositoryDirectory.remove() ?? false
     }
 }

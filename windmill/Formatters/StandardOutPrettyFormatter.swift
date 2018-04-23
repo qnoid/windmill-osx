@@ -18,6 +18,8 @@ class StandardOutPrettyFormatter: Formatter {
     let mergeModulesCommandFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let clangErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let globalErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let noteFormatter = RegularExpressionMatchesFormatter<String>.makeNote()
     let copyUsingDittoFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let createUniversalBinaryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -52,6 +54,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = compileFormatter
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
+        self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
+        self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
         self.compileSwiftSourcesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileSwiftSources(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
         self.compileStoryboardFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: descender)
@@ -87,6 +91,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
+        self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
+        self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
         self.compileStoryboardFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: descender)
         self.compileAssetCatalogFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileAssetCatalog(descender: descender)
@@ -147,6 +153,10 @@ class StandardOutPrettyFormatter: Formatter {
             return phaseSuccess
         } else if let compileError = self.compileErrorFormatter.format(for: obj) {
             return compileError
+        } else if let clangError = self.clangErrorFormatter.format(for: obj) {
+            return clangError
+        } else if let globalError = self.globalErrorFormatter.format(for: obj) {
+            return globalError
         } else if let mergeModulesCommand = self.mergeModulesCommandFormatter.format(for: obj) {
             return mergeModulesCommand
         } else if let compileXIB = self.compileXIBFormatter.format(for: obj) {

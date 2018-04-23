@@ -107,6 +107,7 @@ class ArtefactsViewController: NSViewController {
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
@@ -168,27 +169,20 @@ class ArtefactsViewController: NSViewController {
     
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
-            return
-        }
-
         if let artefact = aNotification.userInfo?["artefact"] as? ArtefactType {
             self.artefactViews[artefact]?.stopStageAnimation()
             self.artefactViews[artefact]?.isHidden = true
         }
+    }
+
+    @objc func didCheckoutProject(_ aNotification: Notification) {
         
-        switch activity {
-        case .checkout:
-            
-            guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
-            os_log("Repository for project not found. Have you cloned it? Did you pass the `repositoryLocalURL`?", log: .default, type: .error)
-            return
-            }
-        
-            self.appView.commit = commit
-        default:
+        guard let commit = aNotification.userInfo?["commit"] as? Repository.Commit else {
+            os_log("Commit for project not found.", log: .default, type: .debug)
             return
         }
+
+        self.appView.commit = commit
     }
 
     @objc func didBuildProject(_ aNotification: NSNotification) {

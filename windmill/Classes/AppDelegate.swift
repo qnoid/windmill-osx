@@ -76,6 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var mainViewController: MainViewController?
     
     var testSummariesWindowController: TestSummariesWindowController?
+    var commit: Repository.Commit?
     
     lazy var keychain: Keychain = Keychain.defaultKeychain()
     
@@ -104,6 +105,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     private func start(windmill: Windmill, chain: ProcessChain) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
@@ -210,8 +212,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         do {
             
             let name = url.deletingPathExtension().lastPathComponent
-            let folder = url.deletingLastPathComponent()
-            let commit = try Repository.parse(localGitRepoURL: folder)
+            let commit = try Repository.parse(localGitRepoURL: url)
             let project = Project.make(isWorkspace: isWorkspace, name: name, repository: commit.repository)
             
             return self.add(project)
@@ -260,12 +261,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(run(_:)) {
             return projects.last != nil
-        } else if menuItem.action == #selector(runSkipCheckout(_:)), let windmill = mainViewController?.windmill {
-            let projectSourceDirectory = windmill.projectSourceDirectory
-            let exists = try? Repository.parse(localGitRepoURL: projectSourceDirectory.URL)
+        } else if menuItem.action == #selector(runSkipCheckout(_:)) {
+            let exists = commit?.repository
             return exists != nil
         } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = mainViewController?.windmill {
-            return windmill.projectSourceDirectory.exists()
+            return windmill.projectRepositoryDirectory.exists()
         } else if menuItem.action == #selector(openDocument(_:)) {
             return self.mainWindowViewController?.window != nil
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
@@ -356,6 +356,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.activityMenuItem.title = activity.description
     }
     
+    @objc func didCheckoutProject(_ aNotification: Notification) {
+        
+        guard let commit = aNotification.userInfo?["commit"] as? Repository.Commit else {
+            os_log("Commit for project not found.", log: .default, type: .debug)
+            return
+        }
+        
+        self.commit = commit
+    }
     
     @objc func didTestProject(_ aNotification: Notification) {
         
@@ -491,7 +500,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return
         }
         
-        let projectSourceURL = windmill.projectSourceDirectory.URL
+        let projectSourceURL = windmill.projectRepositoryDirectory.URL
         
         NSWorkspace.shared.openFile(projectSourceURL.path, withApplication: "Terminal")
     }
@@ -507,7 +516,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
-        self.mainWindowViewController?.show(errorSummariesWindowController: self.errorSummariesWindowController)
+        self.mainWindowViewController?.show(errorSummariesWindowController: self.errorSummariesWindowController, commit: commit)
     }
 
     @IBAction func showTestFailureSummariesWindowController(_ sender: Any?) {
@@ -515,11 +524,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         switch sender {
         case let testReportButton as TestReportButton:
             if case .failure = testReportButton.testReport {
-                self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController)
+                self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
             }
             return
         case is NSMenuItem:
-            self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController)
+            self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
         default:
             return
         }

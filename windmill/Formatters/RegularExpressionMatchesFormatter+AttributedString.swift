@@ -156,7 +156,27 @@ extension RegularExpressionMatchesFormatter {
             return attributedString
         }
     }
+
+    static func makeClangError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CLANG_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { error in
+            let attributedString = NSMutableAttributedString(string: "\t")
+            attributedString.append(failedBuildStatus(descender: descender))
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            return attributedString
+        }
+    }
     
+    static func makeGlobalError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.GLOBAL_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { error in
+            let attributedString = NSMutableAttributedString(string: "\t")
+            attributedString.append(failedBuildStatus(descender: descender))
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            return attributedString
+        }
+    }
+
     static func makeMergeModulesCommand(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.MERGE_MODULES_COMMAND_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -334,7 +354,7 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile XIB file ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
             attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
             return attributedString
@@ -345,7 +365,7 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile Storyboard file ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
             attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
             return attributedString

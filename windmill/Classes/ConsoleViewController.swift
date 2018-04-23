@@ -83,10 +83,6 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
         self.dispatchSourceRead?.activate()
     }
     
-    override func viewWillDisappear() {
-        self.dispatchSourceRead?.cancel()
-    }
-
     @objc func willStartProject(_ aNotification: Notification) {
         if let textView = textView {
             textView.string = ""

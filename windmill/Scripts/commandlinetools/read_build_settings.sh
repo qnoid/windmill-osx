@@ -2,7 +2,6 @@
 
 # Requires the following variables to be set
 
-set -e
 set -eo pipefail
 
 # {URL}/{project name}/build/settings.json

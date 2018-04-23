@@ -242,6 +242,7 @@ class SidePanelViewController: NSViewController {
     weak var windmill: Windmill? {
         didSet {
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
         }
@@ -365,20 +366,6 @@ class SidePanelViewController: NSViewController {
         }
 
         switch activity {
-        case .checkout:
-            guard let repositoryLocalURL = aNotification.userInfo?["repositoryLocalURL"] as? URL, let commit = try? Repository.parse(localGitRepoURL: repositoryLocalURL) else {
-                os_log("Repository for project not found. Have you cloned it?", log: .default, type: .debug)
-                return
-            }
-            
-            self.checkout.isHidden = false
-            
-            self.origin.isHidden = false
-            self.originValue.stringValue = commit.repository.origin
-            self.originValue.isHidden = false
-            self.commit.isHidden = false
-            self.commitValue.stringValue = commit.shortSha
-            self.commitValue.isHidden = false
         case .archive:
             guard let archive = aNotification.userInfo?["archive"] as? Archive else {
                 return
@@ -425,6 +412,23 @@ class SidePanelViewController: NSViewController {
         default:
             break
         }
+    }
+    
+    @objc func didCheckoutProject(_ aNotification: Notification) {
+        
+        guard let commit = aNotification.userInfo?["commit"] as? Repository.Commit else {
+            os_log("Commit for project not found.", log: .default, type: .debug)
+            return
+        }
+
+        self.checkout.isHidden = false
+        
+        self.origin.isHidden = false
+        self.originValue.stringValue = commit.repository.origin
+        self.originValue.isHidden = false
+        self.commit.isHidden = false
+        self.commitValue.stringValue = commit.shortSha
+        self.commitValue.isHidden = false    
     }
     
     func toggle(isHidden: Bool) {

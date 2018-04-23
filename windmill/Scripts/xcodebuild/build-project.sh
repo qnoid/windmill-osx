@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT=$1
+FILENAME=$1
 SCHEME=$2
 CONFIGURATION=$3
 DESTINATION_ID=$4
@@ -8,9 +8,10 @@ DERIVED_DATA_PATH_FOR_PROJECT=$5
 RESULT_BUNDLE_PATH_FOR_PROJECT=$6
 LOG_FOR_PROJECT=$7
 
-set -eo pipefail
+set -e
+set -o pipefail
 
-xcodebuild -project "${PROJECT}".xcodeproj -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
+xcodebuild -project "${FILENAME}" -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "platform=iOS Simulator,id=${DESTINATION_ID}" clean build -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 #STATUS=$?
 

@@ -12,5 +12,5 @@ import Foundation
 /// https://twitter.com/andy_matuschak/status/576165111355723776
 
 public func == (lhs: Project, rhs: Project) -> Bool {
-    return lhs.origin == rhs.origin
+    return lhs.filename == rhs.filename
 }

@@ -54,7 +54,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
             return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         }
         
-        let baseDirectoryURL = windmill.projectSourceDirectory.URL.appendingPathComponent("/")
+        let baseDirectoryURL = windmill.projectRepositoryDirectory.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
 
@@ -87,11 +87,6 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
         super.viewWillAppear()
         self.textView.string = ""
         self.dispatchSourceRead = self.standardOutFormattedReader.activate()
-    }
-
-    override func viewWillDisappear() {
-        super.viewWillDisappear()
-        self.dispatchSourceRead?.cancel()
     }
     
     func append(_ textView: TextView?, line: NSAttributedString) {
