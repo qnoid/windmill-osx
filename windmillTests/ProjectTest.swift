@@ -14,17 +14,17 @@ class ProjectTest: XCTestCase {
     
     func testEquatable()
     {
-        let sameOrigin = "origin"
-        let x = Project(name: "x", scheme: "scheme", origin: sameOrigin)
+        let sameName = "name"
+        let x = Project(name: sameName, scheme: "scheme", origin: "x")
         
         XCTAssertTrue(x == x, "`x == x` should be `true`")
         
-        let y = Project(name: "y", scheme: "scheme", origin: sameOrigin)
+        let y = Project(name: sameName, scheme: "scheme", origin: "y")
         
         XCTAssertTrue(x == y, "`x == y` implies `y == x`")
         XCTAssertTrue(y == x, "`x == y` implies `y == x`")
         
-        let z = Project(name: "z", scheme: "scheme", origin: sameOrigin)
+        let z = Project(name: sameName, scheme: "scheme", origin: "z")
         
         XCTAssertTrue(y == z, "`x == y` and `y == z` implies `x == z`")
         XCTAssertTrue(x == z, "`x == y` and `y == z` implies `x == z`")
@@ -32,8 +32,8 @@ class ProjectTest: XCTestCase {
     
     func testNonEquatable()
     {
-        let this = Project(name: "foo", scheme: "scheme", origin: "this")
-        let that = Project(name: "foo", scheme: "scheme", origin: "that")
+        let this = Project(name: "this", scheme: "scheme", origin: "foo")
+        let that = Project(name: "that", scheme: "scheme", origin: "foo")
         
         XCTAssertFalse(this == that, "Projects without the same origin should not be equal.")
     }
@@ -53,8 +53,8 @@ class ProjectTest: XCTestCase {
     
     func testNonHashable()
     {
-        let this = Project(name: "foo", scheme: "scheme", origin: "this")
-        let that = Project(name: "foo", scheme: "scheme", origin: "that")
+        let this = Project(name: "this", scheme: "scheme", origin: "foo")
+        let that = Project(name: "that", scheme: "scheme", origin: "foo")
         
         var set : Set<Project> = []
         set.insert(this)

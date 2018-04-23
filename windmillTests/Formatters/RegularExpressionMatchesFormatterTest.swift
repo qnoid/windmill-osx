@@ -80,7 +80,7 @@ class RegularExpressionMatchesFormatterTest: XCTestCase {
         
         let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: 0.0)
         
-        XCTAssertEqual("Compile Main.storyboard ...in helloworld/Base.lproj/Main.storyboard", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
+        XCTAssertEqual("Compile Storyboard file Main.storyboard ...in helloworld/Base.lproj/Main.storyboard", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
     }
     
     func testGenerateDSYM() {

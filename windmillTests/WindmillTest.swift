@@ -203,7 +203,7 @@ class WindmillTest: XCTestCase {
         let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
         
         let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
-        let testWithoutBuilding = Process.makeTestWithoutBuilding(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
+        let testWithoutBuilding = Process.makeTestWithoutBuilding(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: buildResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)), wasSuccesful: ProcessWasSuccesful { _ in
             processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
