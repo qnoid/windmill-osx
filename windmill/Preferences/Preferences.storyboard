@@ -71,16 +71,16 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="t7m-df-IeA">
-                                <rect key="frame" x="20" y="196" width="440" height="28"/>
+                                <rect key="frame" x="20" y="182" width="440" height="42"/>
                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="cCl-uS-rQ9">
                                     <font key="font" metaFont="smallSystem"/>
-                                    <string key="title">Previews are features that do not yet meet the . Do NOT rely on them working as expected. Do use them and give feedback at qnoid@windmill.io</string>
+                                    <string key="title">Previews are features that are not quite there yet. Do *not* rely on them working as expected. Having said that, do *use* them and send feedback at qnoid@windmill.io</string>
                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cnC-rX-AA9">
-                                <rect key="frame" x="20" y="172" width="279" height="18"/>
+                                <rect key="frame" x="20" y="158" width="279" height="18"/>
                                 <buttonCell key="cell" type="check" title="Enable Video Recording menu in menu bar" bezelStyle="regularSquare" imagePosition="left" inset="2" id="3Jm-Pq-14G">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>

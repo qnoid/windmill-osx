@@ -311,7 +311,7 @@
 		BDD17513208C72B400CDE787 /* project-not-at-root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-not-at-root"; sourceTree = "<group>"; };
 		BDD17516208C7F7300CDE787 /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
 		BDD17518208CD50600CDE787 /* RepositoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTest.swift; sourceTree = "<group>"; };
-		BDD1751D208E5F3500CDE787 /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Preferences.storyboard; path = ../Preferences/Preferences.storyboard; sourceTree = "<group>"; };
+		BDD1751D208E5F3500CDE787 /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Preferences.storyboard; sourceTree = "<group>"; };
 		BDD1751F208E609800CDE787 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = windmill/Preferences/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
 		BDD17520208E609800CDE787 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preferences.swift; path = windmill/Preferences/Preferences.swift; sourceTree = SOURCE_ROOT; };
 		BDD5209A1FEA364300104FC3 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
@@ -708,8 +708,7 @@
 				BDD17520208E609800CDE787 /* Preferences.swift */,
 				BDD1751F208E609800CDE787 /* SettingsViewController.swift */,
 			);
-			name = Preferences;
-			path = Settings;
+			path = Preferences;
 			sourceTree = "<group>";
 		};
 		BDDF10BE205FA6F50093E811 /* RulerView */ = {
