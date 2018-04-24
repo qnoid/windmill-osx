@@ -11,7 +11,7 @@ import Foundation
 class ProcessResult {
     
     public enum StandardOutput {
-        case success(NSString)
+        case success(String?)
         case failure(Int32)
         
         public var isSuccess: Bool {
@@ -26,7 +26,7 @@ class ProcessResult {
         public var value: String? {
             switch self {
             case .success(let value):
-                return value.trimmingCharacters(in: CharacterSet.newlines)
+                return value
             case .failure:
                 return nil
             }
@@ -45,7 +45,6 @@ class ProcessResult {
     unowned var processManager: ProcessManager
     
     let process: Process
-    var standardOutput: NSMutableString = ""
     
     init(processManager: ProcessManager, process: Process) {
         self.processManager = processManager
@@ -53,6 +52,6 @@ class ProcessResult {
     }
     
     func launch(completion: @escaping (ProcessResult.StandardOutput) -> Void) {
-        self.processManager.launch(process: self.process, buffer: self.standardOutput, completion: completion)
+        self.processManager.launch(process: self.process, completion: completion)
     }
 }

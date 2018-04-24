@@ -325,6 +325,16 @@ extension Process
         
         return process
     }
+    
+    public static func makeRecordVideo(destination: Devices.Destination, file: URL) -> Process {
+        
+        let process = Process()
+        process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.RECORD_VIDEO, ofType: "sh")!
+        process.arguments = [destination.udid ?? "", file.path]
+        process.qualityOfService = .background
+        
+        return process
+    }
 }
 
 
