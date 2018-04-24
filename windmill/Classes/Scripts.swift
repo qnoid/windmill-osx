@@ -49,5 +49,6 @@ struct Scripts
         static let BOOT : BashScript = "Scripts/simctl/boot"
         static let INSTALL : BashScript = "Scripts/simctl/install"
         static let LAUNCH : BashScript = "Scripts/simctl/launch"
+        static let RECORD_VIDEO : BashScript = "Scripts/simctl/recordVideo"
     }
 }

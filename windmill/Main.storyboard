@@ -450,7 +450,11 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="v6Q-34-Buh"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2"/>
+                                        <menuItem title="Preferences…" keyEquivalent="," id="aIK-MS-EQ2">
+                                            <connections>
+                                                <segue destination="e2L-mV-EQ5" kind="show" id="X0V-DH-dw5"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Crf-pA-7lD"/>
                                         <menuItem title="Services" id="Hql-Eo-Nmz">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -487,6 +491,11 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" id="jgg-2H-TJQ">
                                     <items>
+                                        <menuItem title="New Video Recording (10 seconds)" keyEquivalent="s" toolTip="Allows you to record a 10 seconds video on the Simulator; enabled under Preferences ⌘," id="uUf-Ej-Dl2" userLabel="Record Video">
+                                            <connections>
+                                                <action selector="recordVideo:" target="lHE-BB-cpm" id="usL-yA-gdt"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Open..." keyEquivalent="o" id="xjJ-Gh-TYv">
                                             <string key="toolTip">Open the folder that contains your Xcode project/workspace as cloned by a remote repo. 
 
@@ -692,7 +701,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Product" id="ecY-b3-fSp">
                                     <items>
-                                        <menuItem title="Launch" keyEquivalent="l" id="s0S-Zb-aAH">
+                                        <menuItem title="Launch" keyEquivalent="l" toolTip="Launch the app on the Simulator." id="s0S-Zb-aAH">
                                             <connections>
                                                 <action selector="launchOnSimulator:" target="lHE-BB-cpm" id="C1l-IV-3Tb"/>
                                             </connections>
@@ -789,6 +798,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 <customObject id="lHE-BB-cpm" customClass="ProjectTitlebarAccessoryViewController" customModule="Windmill" customModuleProvider="target">
                     <connections>
                         <outlet property="launchMenuItem" destination="s0S-Zb-aAH" id="VtP-e6-4Zb"/>
+                        <outlet property="recordVideoButton" destination="uUf-Ej-Dl2" id="5ow-4h-7K4"/>
                     </connections>
                 </customObject>
                 <menu id="HyG-96-1Q3">
@@ -815,6 +825,14 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 </customObject>
             </objects>
             <point key="canvasLocation" x="1048" y="-865"/>
+        </scene>
+        <!--Preferences-->
+        <scene sceneID="e2O-J8-yOA">
+            <objects>
+                <controllerPlaceholder storyboardName="Preferences" id="e2L-mV-EQ5" sceneMemberID="viewController"/>
+                <customObject id="gkW-NW-Vav" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1048" y="-607"/>
         </scene>
         <!--Artefacts View Controller-->
         <scene sceneID="eP2-LE-yiG">

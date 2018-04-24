@@ -287,7 +287,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
             return self.canRemoveCheckoutFolder
         }
-        
+
         return true
     }
     

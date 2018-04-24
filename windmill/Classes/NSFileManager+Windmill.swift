@@ -15,11 +15,15 @@ public extension FileManager
     public typealias UserApplicationSupportDirectoryView = (URL:URL, directory:ApplicationSupportDirectory)
 
     var trashDirectoryURL: URL {
-        return self.urls(for: .trashDirectory, in: .userDomainMask)[0]
+        return self.urls(for: .trashDirectory, in: .userDomainMask).first!
     }
 
     var userDirectoryURL: URL {
-        return self.urls(for: .userDirectory, in: .userDomainMask)[0]
+        return self.urls(for: .userDirectory, in: .userDomainMask).first!
+    }
+
+    var desktopDirectoryURL: URL {
+        return self.urls(for: .desktopDirectory, in: .userDomainMask).first!
     }
 
     var windmillHomeDirectory: WindmillHomeDirectory  {

@@ -29,16 +29,42 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         }
     }
     
+    @IBOutlet weak var recordVideoButton: NSMenuItem! {
+        didSet {
+            self.isRecordVideoButtonEnabledObserver = recordVideoButton.observe(\.isEnabled, options: [.initial, .new]) { [weak self] (button, change) in
+                if let isEnabled = change.newValue {
+                    if isEnabled {
+                        button.toolTip = NSLocalizedString("windmill.recordVideo.button.enabled.toolTip", comment: "")
+                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.enabled.toolTip", comment: "")
+                    } else {
+                        button.toolTip = NSLocalizedString("windmill.recordVideo.button.disabled.toolTip", comment: "")
+                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.disabled.toolTip", comment: "")
+                    }
+                }
+            }
+            self.recordVideoButton.isEnabled = false
+        }
+    }
+    
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     
     var isLaunchButtonEnabledObserver: NSKeyValueObservation?
+    var isRecordVideoButtonEnabledObserver: NSKeyValueObservation?
     
+    lazy var recordVideoDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "Y-MM-dd 'at' HH.mm.ss"
+        
+        return dateFormatter
+    }()
+
     var appBundle: AppBundle?
     
     var destination: Devices.Destination?
     
     deinit {
         isLaunchButtonEnabledObserver?.invalidate()
+        isRecordVideoButtonEnabledObserver?.invalidate()
     }
     
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
@@ -66,6 +92,8 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(launchOnSimulator(_:)), let launchButton = self.launchButton {
             return launchButton.isEnabled
+        } else if menuItem.action == #selector(recordVideo(_:)) {
+            return Preferences.shared.recordVideo
         }
         
         return true
@@ -97,6 +125,23 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         self.appBundle = appBundle
         self.destination = destination
         Process.makeInstall(destination: destination, appBundle: appBundle).launch()
+    }
+
+    @IBAction func recordVideo(_ sender: Any) {
+        
+        guard let destination = self.destination else {
+            os_log("Destination is not available.", log: log, type: .debug)
+            return
+        }
+        
+        let file = FileManager.default.desktopDirectoryURL.appendingPathComponent("Windmill Video Recording - \(destination.name ?? "iOS Simulator") - \(recordVideoDateFormatter.string(from: Date())).mp4")
+        
+        let process = Process.makeRecordVideo(destination: destination, file: file)
+        process.launch()
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + .seconds(12)) {
+            process.interrupt()
+        }
     }
 
     @IBAction func launchOnSimulator(_ sender: Any) {

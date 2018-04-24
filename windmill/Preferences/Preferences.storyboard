@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="fUJ-Nl-CBO">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+    </dependencies>
+    <scenes>
+        <!--Window Controller-->
+        <scene sceneID="gUF-3q-G8j">
+            <objects>
+                <windowController showSeguePresentationStyle="single" id="fUJ-Nl-CBO" sceneMemberID="viewController">
+                    <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="T0u-wy-ETg">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" fullScreenNone="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="0.0" y="608" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+                        <value key="minSize" type="size" width="480" height="270"/>
+                        <value key="maxSize" type="size" width="480" height="270"/>
+                        <connections>
+                            <outlet property="delegate" destination="fUJ-Nl-CBO" id="C6o-57-eaG"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="01o-qj-9NP" kind="relationship" relationship="window.shadowedContentViewController" id="1c7-Bi-dNg"/>
+                    </connections>
+                </windowController>
+                <customObject id="2x3-ki-LXE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-252" y="226"/>
+        </scene>
+        <!--Tab View Controller-->
+        <scene sceneID="FIw-83-rpH">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="0" tabStyle="toolbar" id="01o-qj-9NP" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem identifier="" image="NSPreferencesGeneral" id="17q-qn-W2Z"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="8ye-l5-6eI">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="01o-qj-9NP" id="WlB-cn-IFf"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="8ye-l5-6eI" id="4u4-ZE-4qM"/>
+                        <segue destination="V4W-D4-vWf" kind="relationship" relationship="tabItems" id="Fzn-ol-BzM"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="4ld-qF-Hzj" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="345" y="219"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="hqG-to-daj">
+            <objects>
+                <viewController title="Settings" id="V4W-D4-vWf" customClass="SettingsViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="iO3-Yc-tMc">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ycg-Fx-LA1">
+                                <rect key="frame" x="20" y="232" width="61" height="18"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Previews" usesSingleLineMode="YES" id="8JV-8h-fHw">
+                                    <font key="font" metaFont="systemLight" size="14"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="t7m-df-IeA">
+                                <rect key="frame" x="20" y="196" width="440" height="28"/>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" id="cCl-uS-rQ9">
+                                    <font key="font" metaFont="smallSystem"/>
+                                    <string key="title">Previews are features that do not yet meet the . Do NOT rely on them working as expected. Do use them and give feedback at qnoid@windmill.io</string>
+                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cnC-rX-AA9">
+                                <rect key="frame" x="20" y="172" width="279" height="18"/>
+                                <buttonCell key="cell" type="check" title="Enable Video Recording menu in menu bar" bezelStyle="regularSquare" imagePosition="left" inset="2" id="3Jm-Pq-14G">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <binding destination="ucS-Db-z0t" name="value" keyPath="values.recordVideo" id="4jk-at-obb">
+                                        <dictionary key="options">
+                                            <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
+                                            <bool key="NSConditionallySetsEnabled" value="NO"/>
+                                            <integer key="NSMultipleValuesPlaceholder" value="0"/>
+                                            <integer key="NSNoSelectionPlaceholder" value="0"/>
+                                            <integer key="NSNotApplicablePlaceholder" value="0"/>
+                                            <integer key="NSNullPlaceholder" value="0"/>
+                                            <bool key="NSRaisesForNotApplicableKeys" value="NO"/>
+                                        </dictionary>
+                                    </binding>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="cnC-rX-AA9" firstAttribute="leading" secondItem="Ycg-Fx-LA1" secondAttribute="leading" id="56C-6a-jpS"/>
+                            <constraint firstItem="Ycg-Fx-LA1" firstAttribute="leading" secondItem="iO3-Yc-tMc" secondAttribute="leading" constant="22" id="E1k-2p-vjl"/>
+                            <constraint firstItem="Ycg-Fx-LA1" firstAttribute="top" secondItem="iO3-Yc-tMc" secondAttribute="top" constant="20" id="Jko-qN-oCr"/>
+                            <constraint firstItem="t7m-df-IeA" firstAttribute="leading" secondItem="cnC-rX-AA9" secondAttribute="leading" id="W7a-3M-ZcG"/>
+                            <constraint firstItem="t7m-df-IeA" firstAttribute="top" secondItem="Ycg-Fx-LA1" secondAttribute="bottom" constant="8" id="bzn-ph-Gvx"/>
+                            <constraint firstItem="cnC-rX-AA9" firstAttribute="top" secondItem="t7m-df-IeA" secondAttribute="bottom" constant="8" id="en4-ee-2Aq"/>
+                            <constraint firstItem="t7m-df-IeA" firstAttribute="centerX" secondItem="iO3-Yc-tMc" secondAttribute="centerX" id="wmV-hT-MnI"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="qNe-rQ-sOf" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="ucS-Db-z0t"/>
+            </objects>
+            <point key="canvasLocation" x="962" y="219"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="NSPreferencesGeneral" width="32" height="32"/>
+    </resources>
+</document>

@@ -174,22 +174,23 @@ class ProcessManager {
 
     // MARK: internal
 
-    func launch(process: Process, buffer: NSMutableString, completion: @escaping (ProcessResult.StandardOutput) -> Void) {
+    func launch(process: Process, completion: @escaping (ProcessResult.StandardOutput) -> Void) {
         
         self.willLaunch(process: process)
 
         let standardOutputPipe = Pipe()
         process.standardOutput = standardOutputPipe
         
-        let waitForStandardOutputInBackground = process.windmill_waitForDataInBackground(standardOutputPipe, queue: self.dispatch_queue_serial) { availableString, count in
-            buffer.append(availableString)
-        }
-        
         process.terminationHandler = { [weak self] process in
             let isSuccess = (process.terminationStatus == 0)
             
+            var value: String? = nil
+            if isSuccess {
+                let data = standardOutputPipe.fileHandleForReading.readDataToEndOfFile()
+                value = String(bytes: data, encoding: .utf8)?.trimmingCharacters(in: CharacterSet.newlines)
+            }
+            
             DispatchQueue.main.async {
-                waitForStandardOutputInBackground.cancel()
                 
                 self?.didExit(process: process, isSuccess: isSuccess, canRecover: false)
                 guard isSuccess else {
@@ -197,7 +198,7 @@ class ProcessManager {
                     return
                 }
                 
-                completion(.success(buffer))
+                completion(.success(value))
             }
         }
         

@@ -129,6 +129,9 @@
 		BDD17514208C72B400CDE787 /* project-not-at-root in Resources */ = {isa = PBXBuildFile; fileRef = BDD17513208C72B400CDE787 /* project-not-at-root */; };
 		BDD17517208C7F7300CDE787 /* ProcessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17516208C7F7300CDE787 /* ProcessResult.swift */; };
 		BDD17519208CD50600CDE787 /* RepositoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17518208CD50600CDE787 /* RepositoryTest.swift */; };
+		BDD1751E208E5F3500CDE787 /* Preferences.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDD1751D208E5F3500CDE787 /* Preferences.storyboard */; };
+		BDD17521208E609800CDE787 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1751F208E609800CDE787 /* SettingsViewController.swift */; };
+		BDD17522208E609800CDE787 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17520208E609800CDE787 /* Preferences.swift */; };
 		BDD5209B1FEA364300104FC3 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD5209A1FEA364300104FC3 /* Configuration.swift */; };
 		BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; };
 		BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDD6F0A420182AF200D63D74 /* ArtefactView.xib */; };
@@ -308,6 +311,9 @@
 		BDD17513208C72B400CDE787 /* project-not-at-root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-not-at-root"; sourceTree = "<group>"; };
 		BDD17516208C7F7300CDE787 /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
 		BDD17518208CD50600CDE787 /* RepositoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryTest.swift; sourceTree = "<group>"; };
+		BDD1751D208E5F3500CDE787 /* Preferences.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Preferences.storyboard; path = ../Preferences/Preferences.storyboard; sourceTree = "<group>"; };
+		BDD1751F208E609800CDE787 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = windmill/Preferences/SettingsViewController.swift; sourceTree = SOURCE_ROOT; };
+		BDD17520208E609800CDE787 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Preferences.swift; path = windmill/Preferences/Preferences.swift; sourceTree = SOURCE_ROOT; };
 		BDD5209A1FEA364300104FC3 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		BDD6F0A420182AF200D63D74 /* ArtefactView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArtefactView.xib; sourceTree = "<group>"; };
 		BDD6F0A620182B0F00D63D74 /* ArtefactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtefactView.swift; sourceTree = "<group>"; };
@@ -557,6 +563,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BDD1751C208E5F1B00CDE787 /* Preferences */,
 				BDF6DDEC207D0C4B003B454F /* Formatters */,
 				BD2CE8182077819000A557C6 /* HelpViewer */,
 				BDDF10BE205FA6F50093E811 /* RulerView */,
@@ -692,6 +699,17 @@
 				BDD002201ABA3ECD00F8E34A /* Scripts.swift */,
 			);
 			name = scripts;
+			sourceTree = "<group>";
+		};
+		BDD1751C208E5F1B00CDE787 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				BDD1751D208E5F3500CDE787 /* Preferences.storyboard */,
+				BDD17520208E609800CDE787 /* Preferences.swift */,
+				BDD1751F208E609800CDE787 /* SettingsViewController.swift */,
+			);
+			name = Preferences;
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		BDDF10BE205FA6F50093E811 /* RulerView */ = {
@@ -832,6 +850,7 @@
 			files = (
 				BD0BDF712075FD0C005754AE /* Windmill.help in Resources */,
 				BD243A861C42AB570015A13A /* Main.storyboard in Resources */,
+				BDD1751E208E5F3500CDE787 /* Preferences.storyboard in Resources */,
 				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
 				BDB961082049F00500E49258 /* UserMessageView.xib in Resources */,
@@ -919,6 +938,7 @@
 				BD083270206352D70093F5EE /* TestSummariesViewController.swift in Sources */,
 				BD30160C19BCBE30001134F8 /* NSPasteboard.swift in Sources */,
 				BDBD520D1CD6053B0023F460 /* ActivityView.swift in Sources */,
+				BDD17521208E609800CDE787 /* SettingsViewController.swift in Sources */,
 				BD243A8A1C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift in Sources */,
 				BDD1750E208A152600CDE787 /* StandardOutFormattedReader.swift in Sources */,
 				BD083272206357460093F5EE /* TestSummaries.swift in Sources */,
@@ -940,6 +960,7 @@
 				BDD6F0B32018B5C100D63D74 /* DeployView.swift in Sources */,
 				BDEBAD72200D8FE300A7BBD0 /* ConsoleViewController.swift in Sources */,
 				BD25DB791C9ED2700001FEDF /* MainViewController.swift in Sources */,
+				BDD17522208E609800CDE787 /* Preferences.swift in Sources */,
 				BDD5209B1FEA364300104FC3 /* Configuration.swift in Sources */,
 				BDD6F0AF20187C2500D63D74 /* Export.swift in Sources */,
 				BD25E381207FAD56003C5782 /* PrettyConsoleViewController.swift in Sources */,
