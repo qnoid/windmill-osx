@@ -434,7 +434,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         
         os_log("activity '%{public}@' did error: %{public}@", log: log, type: .error, error)
         
-        guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle else {
+        guard let resultBundle = userInfo?["resultBundle"] as? ResultBundle, FileManager.default.fileExists(atPath: resultBundle.url.path) else {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: userInfo?.merging(["error": error, "activity": activity], uniquingKeysWith:  { (userInfo, _) -> Any in
                     return userInfo
