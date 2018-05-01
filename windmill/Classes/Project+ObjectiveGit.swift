@@ -85,6 +85,6 @@ extension Project {
     }
     
     static func make(isWorkspace: Bool? = nil, name: String, repository: Repository) -> Project {
-        return Project(isWorkspace: isWorkspace, name: name, scheme: repository.name, origin: repository.origin)
+        return Project(isWorkspace: isWorkspace, name: name, scheme: name, origin: repository.origin)
     }    
 }
