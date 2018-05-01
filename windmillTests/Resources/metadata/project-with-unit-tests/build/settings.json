@@ -1,1 +1,15 @@
-{"deployment":{"target":11.2}, "product":{"name":"project-with-unit-tests"}}
+[{
+ "deployment": {
+ "target": 11.2
+ },
+ "product": {
+ "name": "project-with-unit-tests",
+ "type": "com.apple.product-type.application"
+ },
+ "project": {
+ "name": "project-with-unit-tests"
+ },
+ "target": {
+ "name": "project-with-unit-tests"
+ }
+ }]

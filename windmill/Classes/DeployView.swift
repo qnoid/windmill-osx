@@ -33,7 +33,7 @@ class DeployView: NSView {
     
     var buildSettings: BuildSettings? {
         didSet {
-            self.deploymentTargetTextField.stringValue = buildSettings?.deployment.target?.description ?? ""
+            self.deploymentTargetTextField.stringValue = buildSettings?.deployment?.target?.description ?? ""
         }
     }
     

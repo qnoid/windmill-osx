@@ -44,7 +44,7 @@ public class MetadataJSONEncoded: Metadata, CustomDebugStringConvertible {
         
         return dictionary
     }()
-    
+        
     init(url: URL) {
         self.url = url
     }

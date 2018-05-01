@@ -146,7 +146,7 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
+        let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
         let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)).appendingPathComponent("\(name).bundle")
         let buildResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
@@ -161,7 +161,7 @@ class WindmillTest: XCTestCase {
         let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
         let windmill = Windmill(processManager: processManager, project: project)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let testSkip = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
@@ -200,9 +200,9 @@ class WindmillTest: XCTestCase {
         let windmill = Windmill(processManager: processManager, project: project)
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
+        let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let testWithoutBuilding = Process.makeTestWithoutBuilding(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: buildResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)), wasSuccesful: ProcessWasSuccesful { _ in
@@ -238,9 +238,9 @@ class WindmillTest: XCTestCase {
         let windmill = Windmill(processManager: processManager, project: project)
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!))
+        let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings)
+        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let test = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
@@ -285,14 +285,14 @@ class WindmillTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         
         let name = "helloword-no-test-target"
-        let project = Project(name: name, scheme: "helloworld", origin: "any")
+        let project = Project(name: name, scheme: "helloworld", origin: "git@github.com:qnoid/helloword-no-test-target.git")
         let timer = WindmillTimer(expectation: expectation)
         let windmill = Windmill(project: project)
         
         timer.observe(windmill: windmill)
-        windmill.run(process: windmill.repeatableExport())
+        windmill.run(process: windmill.repeatableExport(skipCheckout: true))
         
         wait(for: [expectation], timeout: 90.0)
-        XCTAssertLessThanOrEqual(timer.executionTime, 30.0)
+        XCTAssertLessThanOrEqual(timer.executionTime, 45.0)
     }
 }
