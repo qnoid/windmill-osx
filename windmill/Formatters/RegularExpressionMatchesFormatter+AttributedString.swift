@@ -42,7 +42,17 @@ extension RegularExpressionMatchesFormatter {
         return failedTestStatus
     }
 
-    static func makeCheckoutSuccess(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CHECKOUT_SUCCESS) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makeCloning(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CLONING_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, name in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Cloning into ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string:  "\(name)\n"))
+            return attributedString
+        }
+    }
+
+    static func makeCheckoutSuccess(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CHECKOUT_SUCCESS_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { commit, log in
             let attributedString = successBuildStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " Checkout", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))

@@ -11,11 +11,16 @@ import Foundation
 extension NSRegularExpression {
 
     struct Windmill {
+
+        // capture groups
+        // $1 path
+        // $2 name
+        static let CLONING_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Cloning into '(.*\\/(.*))'")
         
         // capture groups
         // $1 commit
         // $2 log
-        static let CHECKOUT_SUCCESS = try! NSRegularExpression(pattern: "^HEAD is now at (.*?)\\s(.*)")
+        static let CHECKOUT_SUCCESS_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^HEAD is now at (.*?)\\s(.*)")
         
         // capture groups
         // $1 target

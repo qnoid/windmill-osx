@@ -10,6 +10,7 @@ import Foundation
 
 class StandardOutPrettyFormatter: Formatter {
     
+    let cloningFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let checkoutSuccessFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let buildTargetFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let writeAuxiliaryfilesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -48,6 +49,7 @@ class StandardOutPrettyFormatter: Formatter {
     
     init(descender: CGFloat, compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>) {
         self.descender = descender
+        self.cloningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCloning(descender: descender)
         self.checkoutSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCheckoutSuccess(descender: descender)
         self.buildTargetFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeBuildTarget(descender: descender)
         self.writeAuxiliaryfilesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfiles(descender: descender)
@@ -85,6 +87,7 @@ class StandardOutPrettyFormatter: Formatter {
     
     required init?(coder aDecoder: NSCoder) {
         self.descender = 0.0
+        self.cloningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCloning(descender: descender)
         self.checkoutSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCheckoutSuccess(descender: descender)
         self.buildTargetFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeBuildTarget(descender: descender)
         self.writeAuxiliaryfilesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfiles(descender: descender)
@@ -129,9 +132,11 @@ class StandardOutPrettyFormatter: Formatter {
     }
     
     override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedStringKey : Any]? = nil) -> NSAttributedString? {
-        if let checkoutSuccess = self.checkoutSuccessFormatter.format(for: obj) {
+        if let cloning = self.cloningFormatter.format(for: obj) {
+            return cloning
+        } else if let checkoutSuccess = self.checkoutSuccessFormatter.format(for: obj) {
             return checkoutSuccess
-        }else if let buildTarget = self.buildTargetFormatter.format(for: obj) {
+        } else if let buildTarget = self.buildTargetFormatter.format(for: obj) {
             return buildTarget
         } else if let compile = self.compileFormatter.format(for: obj) {
             return compile
