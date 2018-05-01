@@ -97,11 +97,11 @@ class ProcessTest: XCTestCase {
     func testGivenProjectAssertMakeTestConfigurationFileExists() {
 
         let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: buildSettingsMetadataURL))
+        let buildSettings = BuildSettings(url: buildSettingsMetadataURL)
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let process = Process.makeRead(devices: devices, for: buildSettings)
+        let process = Process.makeRead(devices: devices, for: buildSettings.deployment)
         
         process.launch()
         process.waitUntilExit()
@@ -120,11 +120,11 @@ class ProcessTest: XCTestCase {
     func testGivenProjectWithoutAvailableSimulatorAssertMakeTestConfigurationFileExists() {
         
         let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
-        let buildSettings = BuildSettings(metadata: MetadataJSONEncoded(url: buildSettingsMetadataURL))
+        let buildSettings = BuildSettings(url: buildSettingsMetadataURL)
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let process = Process.makeRead(devices: devices, for: buildSettings)
+        let process = Process.makeRead(devices: devices, for: buildSettings.deployment)
 
         process.launch()
         process.waitUntilExit()

@@ -9,10 +9,10 @@
 
 import Foundation
 
-public struct BuildSettings {
+public class BuildSettings {
     
     static func make(at url: URL) -> BuildSettings {
-        return BuildSettings(metadata: MetadataJSONEncoded(url: url))
+        return BuildSettings(url: url)
     }
     
     struct Product {
@@ -21,9 +21,13 @@ public struct BuildSettings {
         var name: String? {
             return value?["name"]
         }
+        
+        var type: String? {
+            return value?["type"]
+        }
     }
     
-    struct Deployment {
+    public struct Deployment {
         let value: [String: Double]?
         
         var target: Double? {
@@ -31,19 +35,63 @@ public struct BuildSettings {
         }
     }
     
-    private let metadata: Metadata
+    struct Target {
+        let value: [String: String]?
+        
+        var name: String? {
+            return value?["name"]
+        }
+    }
+
     let url: URL
+    let values: [String: Any]
     
-    init(metadata: Metadata) {
-        self.metadata = metadata
-        self.url = metadata.url
+    public lazy var array: [[String: Any]]? = {
+        guard let data = try? Data(contentsOf: url) else {
+            return nil
+        }
+        
+        guard let jsonObject = try? JSONSerialization.jsonObject(with: data, options: .allowFragments), let array = jsonObject as? [[String: Any]] else {
+            return nil
+        }
+        
+        return array
+    }()
+    
+    init(url: URL, values: [String: Any] = [:]) {
+        self.url = url
+        self.values = values
     }
     
-    var product: Product {
-        return Product(value: metadata["product"] as [String: String]?)
+    var projectName: String? {
+        guard let project = values["project"] as? [String: String]?, let name = project?["name"] as String? else {
+            return nil
+        }
+        
+        return name
     }
     
-    var deployment: Deployment {
-        return Deployment(value: metadata["deployment"] as [String: Double]?)
+    var product: Product? {
+        guard let value = values["product"] as? [String: String]? else {
+            return nil
+        }
+        
+        return Product(value: value)
+    }
+    
+    var deployment: Deployment? {
+        guard let value = values["deployment"] as? [String: Double]? else {
+            return nil
+        }
+        
+        return Deployment(value: value)
+    }
+    
+    func `for`(project name: String, type: String = "com.apple.product-type.application") -> BuildSettings {
+        return self.array?.map({ dictionary -> BuildSettings in
+            return BuildSettings(url: self.url, values: dictionary)
+        }).first(where: { settings -> Bool in
+            return settings?.projectName == name && settings?.product?.type == type
+        }) ?? BuildSettings(url: self.url)
     }
 }

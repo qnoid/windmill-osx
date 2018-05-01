@@ -93,7 +93,7 @@ extension Process
         let process = Process()
         process.currentDirectoryPath = projectLocalURL.path
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_BUILD_SETTINGS, ofType: "sh")!
-        process.arguments = [buildSettings.url.path, scheme]
+        process.arguments = [buildSettings.url.path, scheme, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process
@@ -111,11 +111,15 @@ extension Process
     }
     
     
-    public static func makeRead(devices: Devices, for buildSettings: BuildSettings) -> Process {
+    public static func makeRead(devices: Devices, for deployment: BuildSettings.Deployment?, or minimum: String = "11.0") -> Process {
+        
+        let target: String = deployment?.target.flatMap { (value) -> String? in
+            return String(value)
+        } ?? minimum
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_DEVICES, ofType: "sh")!
-        process.arguments = [devices.url.path, buildSettings.url.path, self.pathForDir("Scripts")]
+        process.arguments = [devices.url.path, target, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         
         return process

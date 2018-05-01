@@ -1,1 +1,15 @@
-{"deployment":{"target":11.2}, "product":{"name":"project-with-build-errors"}}
+[{
+ "deployment": {
+ "target": 11.2
+ },
+ "product": {
+ "name": "project-with-build-errors",
+ "type": "com.apple.product-type.application"
+ },
+ "project": {
+ "name": "project-with-build-errors"
+ },
+ "target": {
+ "name": "project-with-build-errors"
+ }
+ }]

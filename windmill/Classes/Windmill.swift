@@ -158,8 +158,10 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
             
             let scheme = configuration.detectScheme(name: project.scheme)
             let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectLocalURL, scheme: scheme, buildSettings: buildSettings)
-            self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
-                let readDevices = Process.makeRead(devices: devices, for: buildSettings)
+            self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices()] userInfo in
+                
+                let buildSettings = directory.buildSettings().for(project: project.name)
+                let readDevices = Process.makeRead(devices: devices, for: buildSettings.deployment)
                 self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
                     self?.didReadDevices(devices: devices)
@@ -215,12 +217,16 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                 }
             
                 let readProjectConfiguration = Process.makeReadProjectConfiguration(projectLocalURL: projectURL, projectConfiguration: configuration)
-                self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [buildSettings = directory.buildSettings()] userInfo in
+                self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
                     let scheme = configuration.detectScheme(name: project.scheme)
-                    let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectURL, scheme: scheme, buildSettings: buildSettings)
-                    self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices(), buildSettings = directory.buildSettings()] userInfo in
-                        let readDevices = Process.makeRead(devices: devices, for: buildSettings)
+                    let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectURL, scheme: scheme, buildSettings: directory.buildSettings())
+                    self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices()] userInfo in
+                        
+                        let buildSettings = directory.buildSettings().for(project: project.name)
+                        
+                        let deployment = buildSettings.deployment!
+                        let readDevices = Process.makeRead(devices: devices, for: deployment)
                         self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                             
                             self?.didReadDevices(devices: devices)
@@ -235,7 +241,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 
                             self?.build(projectLocalURL:projectURL, project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
 
-                                let appBundle = directory.appBundle(derivedDataURL: derivedDataURL, name: buildSettings.product.name ?? project.name)
+                                let appBundle = directory.appBundle(derivedDataURL: derivedDataURL, name: buildSettings.product?.name ?? project.name)
                                 self?.didBuild(project: project, using: buildSettings, appBundle: appBundle, destination: destination)
 
                                 let test: Process
