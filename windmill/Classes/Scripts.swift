@@ -14,6 +14,10 @@ struct Scripts
 {
     struct Xcodebuild {
         
+        static let LIST_CONFIGURATION : BashScript = "Scripts/xcodebuild/list_configuration"
+        static let SHOW_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings"
+        static let SHOW_PROJECT_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings-project"
+        static let SHOW_WORKSPACE_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings-workspace"
         static let BUILD : BashScript = "Scripts/xcodebuild/build"
         static let BUILD_PROJECT : BashScript = "Scripts/xcodebuild/build-project"
         static let BUILD_WORKSPACE : BashScript = "Scripts/xcodebuild/build-workspace"
@@ -39,13 +43,11 @@ struct Scripts
     }
     
     struct CommandLineTools {
-        static let READ_PROJECT_CONFIGURATION : BashScript = "Scripts/commandlinetools/read_project_configuration"
-        static let READ_BUILD_SETTINGS : BashScript = "Scripts/commandlinetools/read_build_settings"
-        static let READ_DEVICES : BashScript = "Scripts/commandlinetools/read_devices"
         static let FIND_PROJECT_DIRECTORY : BashScript = "Scripts/commandlinetools/find_project_directory"
     }
     
     struct Simctl {
+        static let LIST_DEVICES : BashScript = "Scripts/simctl/list_devices"
         static let BOOT : BashScript = "Scripts/simctl/boot"
         static let INSTALL : BashScript = "Scripts/simctl/install"
         static let LAUNCH : BashScript = "Scripts/simctl/launch"

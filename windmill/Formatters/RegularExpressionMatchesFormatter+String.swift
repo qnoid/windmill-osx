@@ -15,4 +15,10 @@ extension RegularExpressionMatchesFormatter {
             return "\t\t \(note)\n"
         }
     }
+    
+    static func makeReason(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.REASON_EXPRESSION) -> RegularExpressionMatchesFormatter<String> {
+        return single(match: regularExpression) { reason in
+            return "\t\t \(reason)\n"
+        }
+    }
 }

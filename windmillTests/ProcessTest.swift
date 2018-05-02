@@ -101,7 +101,7 @@ class ProcessTest: XCTestCase {
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let process = Process.makeRead(devices: devices, for: buildSettings.deployment)
+        let process = Process.makeList(devices: devices, for: buildSettings.deployment)
         
         process.launch()
         process.waitUntilExit()
@@ -124,7 +124,7 @@ class ProcessTest: XCTestCase {
         let devicesMetadataURL = Bundle(for: ProcessTest.self).url(forResource: "ProcessTest/test/devices", withExtension: "json")!
         let devices = Devices(metadata: MetadataJSONEncoded(url: devicesMetadataURL))
         
-        let process = Process.makeRead(devices: devices, for: buildSettings.deployment)
+        let process = Process.makeList(devices: devices, for: buildSettings.deployment)
 
         process.launch()
         process.waitUntilExit()

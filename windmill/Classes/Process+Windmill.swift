@@ -88,37 +88,56 @@ extension Process
         return process
     }
 
-    public static func makeReadBuildSettings(projectLocalURL: Project.LocalURL, scheme: String, buildSettings: BuildSettings) -> Process {
+    public static func makeShowBuildSettings(projectLocalURL: Project.LocalURL, project: Project, scheme: String, buildSettings: BuildSettings) -> Process {
+        
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.SHOW_WORKSPACE_BUILD_SETTINGS, ofType: "sh")!
+            process.arguments = [project.filename, scheme, buildSettings.url.path, self.pathForDir("Scripts")]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.SHOW_PROJECT_BUILD_SETTINGS, ofType: "sh")!
+            process.arguments = [project.filename, buildSettings.url.path, self.pathForDir("Scripts")]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.SHOW_BUILD_SETTINGS, ofType: "sh")!
+            process.arguments = [buildSettings.url.path, self.pathForDir("Scripts")]
+            process.qualityOfService = .utility
+            
+            return process
+        }
+    }
+    
+    public static func makeList(configuration: Project.Configuration, projectLocalURL: Project.LocalURL) -> Process {
         
         let process = Process()
         process.currentDirectoryPath = projectLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_BUILD_SETTINGS, ofType: "sh")!
-        process.arguments = [buildSettings.url.path, scheme, self.pathForDir("Scripts")]
+        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.LIST_CONFIGURATION, ofType: "sh")!
+        process.arguments = [configuration.url.path]
         process.qualityOfService = .utility
         
         return process
     }
     
-    public static func makeReadProjectConfiguration(projectLocalURL: Project.LocalURL, projectConfiguration: Project.Configuration) -> Process {
-        
-        let process = Process()
-        process.currentDirectoryPath = projectLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_PROJECT_CONFIGURATION, ofType: "sh")!
-        process.arguments = [projectConfiguration.url.path]
-        process.qualityOfService = .utility
-        
-        return process
-    }
     
-    
-    public static func makeRead(devices: Devices, for deployment: BuildSettings.Deployment?, or minimum: String = "11.0") -> Process {
+    public static func makeList(devices: Devices, for deployment: BuildSettings.Deployment?, or minimum: String = "11.0") -> Process {
         
         let target: String = deployment?.target.flatMap { (value) -> String? in
             return String(value)
         } ?? minimum
         
         let process = Process()
-        process.launchPath = Bundle.main.path(forResource: Scripts.CommandLineTools.READ_DEVICES, ofType: "sh")!
+        process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.LIST_DEVICES, ofType: "sh")!
         process.arguments = [devices.url.path, target, self.pathForDir("Scripts")]
         process.qualityOfService = .utility
         

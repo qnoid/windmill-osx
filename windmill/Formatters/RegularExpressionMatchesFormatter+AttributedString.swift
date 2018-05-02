@@ -187,6 +187,25 @@ extension RegularExpressionMatchesFormatter {
         }
     }
 
+    static func makeXcodeBuildError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.XCODEBUILD_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { error in
+            let attributedString = failedBuildStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            return attributedString
+        }
+    }
+    
+    static func makeLibraryNotFound(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.LIBRARY_NOT_FOUND_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { library in
+            let attributedString = NSMutableAttributedString(string: "\t")
+            attributedString.append(NSAttributedString(string: " Library not found for "))
+            attributedString.append(NSAttributedString(string: "\(library)\n"))
+            return attributedString
+        }
+    }
+
+
     static func makeMergeModulesCommand(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.MERGE_MODULES_COMMAND_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)

@@ -153,15 +153,15 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         let projectLocalURL = projectLocalURL ?? repositoryLocalURL
         let configuration = directory.configuration()
 
-        let readProjectConfiguration = Process.makeReadProjectConfiguration(projectLocalURL: projectLocalURL, projectConfiguration: configuration)
+        let readProjectConfiguration = Process.makeList(configuration: configuration, projectLocalURL: projectLocalURL)
         return self.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [project = self.project, buildSettings = directory.buildSettings(), weak self] userInfo in
             
             let scheme = configuration.detectScheme(name: project.scheme)
-            let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectLocalURL, scheme: scheme, buildSettings: buildSettings)
+            let readBuildSettings = Process.makeShowBuildSettings(projectLocalURL: projectLocalURL, project: project, scheme: scheme, buildSettings: buildSettings)
             self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices()] userInfo in
                 
                 let buildSettings = directory.buildSettings().for(project: project.name)
-                let readDevices = Process.makeRead(devices: devices, for: buildSettings.deployment)
+                let readDevices = Process.makeList(devices: devices, for: buildSettings.deployment)
                 self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
                     self?.didReadDevices(devices: devices)
@@ -202,31 +202,30 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
             
             self?.processManager.processResult(process: findProject).launch { projectDirectory in
                 
-                let projectURL: Project.LocalURL
+                let projectLocalURL: Project.LocalURL
                 
                 if let projectDirectory = projectDirectory.value {
-                    projectURL = URL(fileURLWithPath: projectDirectory)
+                    projectLocalURL = URL(fileURLWithPath: projectDirectory)
                 } else {
-                    projectURL = repositoryLocalURL.URL
+                    projectLocalURL = repositoryLocalURL.URL
                 }
                 
-                os_log("Project found under: '%{public}@'", log: log, type: .debug, projectURL.path)                
+                os_log("Project found under: '%{public}@'", log: log, type: .debug, projectLocalURL.path)
 
-                if let commit = applicationCachesDirectory.commit(baseURL: projectURL, project: project) {
+                if let commit = applicationCachesDirectory.commit(baseURL: projectLocalURL, project: project) {
                     self?.didCheckout(commit: commit)
                 }
             
-                let readProjectConfiguration = Process.makeReadProjectConfiguration(projectLocalURL: projectURL, projectConfiguration: configuration)
+                let readProjectConfiguration = Process.makeList(configuration: configuration, projectLocalURL: projectLocalURL)
                 self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
                     let scheme = configuration.detectScheme(name: project.scheme)
-                    let readBuildSettings = Process.makeReadBuildSettings(projectLocalURL: projectURL, scheme: scheme, buildSettings: directory.buildSettings())
+                    let readBuildSettings = Process.makeShowBuildSettings(projectLocalURL: projectLocalURL, project: project, scheme: scheme, buildSettings: directory.buildSettings())
                     self?.processManager.processChain(process: readBuildSettings, userInfo: ["activity" : ActivityType.showBuildSettings], wasSuccesful: ProcessWasSuccesful { [devices = directory.devices()] userInfo in
                         
                         let buildSettings = directory.buildSettings().for(project: project.name)
                         
-                        let deployment = buildSettings.deployment!
-                        let readDevices = Process.makeRead(devices: devices, for: deployment)
+                        let readDevices = Process.makeList(devices: devices, for: buildSettings.deployment)
                         self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                             
                             self?.didReadDevices(devices: devices)
@@ -239,7 +238,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                                 return
                             }
 
-                            self?.build(projectLocalURL:projectURL, project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
+                            self?.build(projectLocalURL:projectLocalURL, project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
 
                                 let appBundle = directory.appBundle(derivedDataURL: derivedDataURL, name: buildSettings.product?.name ?? project.name)
                                 self?.didBuild(project: project, using: buildSettings, appBundle: appBundle, destination: destination)
@@ -253,7 +252,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                                     test = Process.makeSuccess()
                                 } else {
                                     userInfo = ["activity" : ActivityType.test, "artefact": ArtefactType.testReport, "devices": devices, "destination": destination, "resultBundle": testResultBundle]
-                                    test = Process.makeTestWithoutBuilding(projectLocalURL: projectURL, project: project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle, log: projectLogURL)
+                                    test = Process.makeTestWithoutBuilding(projectLocalURL: projectLocalURL, project: project, scheme: scheme, destination: destination, derivedDataURL: derivedDataURL, resultBundle: testResultBundle, log: projectLogURL)
                                 }
                                 
                                 self?.processManager.processChain(process: test, userInfo: userInfo, wasSuccesful: ProcessWasSuccesful { userInfo in
@@ -264,14 +263,14 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 
                                     let archive: Archive = directory.archive(name: scheme)
                                     let archiveResultBundle = applicationSupportDirectory.archiveResultBundle(at: project.name)
-                                    let makeArchive = Process.makeArchive(projectLocalURL: projectURL, project: project, scheme: scheme, derivedDataURL: derivedDataURL, archive: archive, resultBundle: archiveResultBundle, log: projectLogURL)
+                                    let makeArchive = Process.makeArchive(projectLocalURL: projectLocalURL, project: project, scheme: scheme, derivedDataURL: derivedDataURL, archive: archive, resultBundle: archiveResultBundle, log: projectLogURL)
                                     self?.processManager.processChain(process: makeArchive, userInfo: ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": archiveResultBundle], wasSuccesful: ProcessWasSuccesful { userInfo in
                                         DispatchQueue.main.async {
                                             NotificationCenter.default.post(name: Windmill.Notifications.didArchiveProject, object: self, userInfo: ["project":project, "archive": archive])
                                         }
                                         
                                         let exportResultBundle = applicationSupportDirectory.exportResultBundle(at: project.name)
-                                        let makeExport = Process.makeExport(projectLocalURL: projectURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL(), resultBundle: exportResultBundle, log: projectLogURL)
+                                        let makeExport = Process.makeExport(projectLocalURL: projectLocalURL, archive: archive, exportDirectoryURL: directory.exportDirectoryURL(), resultBundle: exportResultBundle, log: projectLogURL)
                                         
                                         let export = directory.export(name: scheme)
                                         

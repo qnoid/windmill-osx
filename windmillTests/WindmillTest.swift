@@ -161,7 +161,7 @@ class WindmillTest: XCTestCase {
         let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
         let windmill = Windmill(processManager: processManager, project: project)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
+        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let testSkip = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
@@ -202,7 +202,7 @@ class WindmillTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
+        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let testWithoutBuilding = Process.makeTestWithoutBuilding(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: buildResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)), wasSuccesful: ProcessWasSuccesful { _ in
@@ -240,7 +240,7 @@ class WindmillTest: XCTestCase {
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeRead(devices: devices, for: buildSettings.for(project: project.name).deployment)
+        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
         let test = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
         
         windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in

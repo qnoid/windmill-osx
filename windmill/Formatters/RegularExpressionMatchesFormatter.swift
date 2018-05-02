@@ -149,7 +149,7 @@ extension NSRegularExpression {
         // capture groups
         // $1 path
         // $2 file
-        // $3 = error
+        // $3 error
         static let COMPILE_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:warning|error):\\s(.*)")
         
         // capture groups
@@ -159,10 +159,22 @@ extension NSRegularExpression {
         // capture groups
         // $1 error
         static let GLOBAL_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "global: error: (.*)")
-        
+
+        // capture groups
+        // $1 error
+        static let XCODEBUILD_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "xcodebuild: error: (.*)")
+
+        // capture groups
+        // $1 library
+        static let LIBRARY_NOT_FOUND_EXPRESSION = try! NSRegularExpression(pattern: "^ld: library not found for (.*)")
+
         // capture groups
         // $1 note
         static let NOTE_EXPRESSION = try! NSRegularExpression(pattern: "\\snote:\\s(.*)")
+
+        // capture groups
+        // $1 reason
+        static let REASON_EXPRESSION = try! NSRegularExpression(pattern: "Reason: (.*)")
     }
 }
 

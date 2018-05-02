@@ -21,7 +21,10 @@ class StandardOutPrettyFormatter: Formatter {
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let clangErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let globalErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let xcodeBuildErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let libraryNotFoundFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let noteFormatter = RegularExpressionMatchesFormatter<String>.makeNote()
+    let reasonFormatter = RegularExpressionMatchesFormatter<String>.makeReason()
     let copyUsingDittoFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let createUniversalBinaryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileXIBFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -58,6 +61,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
+        self.xcodeBuildErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeXcodeBuildError(descender: descender)
+        self.libraryNotFoundFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLibraryNotFound(descender: descender)
         self.compileSwiftSourcesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileSwiftSources(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
         self.compileStoryboardFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: descender)
@@ -96,6 +101,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
+        self.xcodeBuildErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeXcodeBuildError(descender: descender)
+        self.libraryNotFoundFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLibraryNotFound(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
         self.compileStoryboardFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: descender)
         self.compileAssetCatalogFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileAssetCatalog(descender: descender)
@@ -126,6 +133,8 @@ class StandardOutPrettyFormatter: Formatter {
     override func string(for obj: Any?) -> String? {
         if let note = noteFormatter.format(for: obj) {
             return note
+        } else if let reason = reasonFormatter.format(for: obj) {
+            return reason
         } else {
             return nil
         }
@@ -162,6 +171,10 @@ class StandardOutPrettyFormatter: Formatter {
             return clangError
         } else if let globalError = self.globalErrorFormatter.format(for: obj) {
             return globalError
+        } else if let xcodeBuildError = self.xcodeBuildErrorFormatter.format(for: obj) {
+            return xcodeBuildError
+        } else if let libraryNotFound = self.libraryNotFoundFormatter.format(for: obj) {
+            return libraryNotFound
         } else if let mergeModulesCommand = self.mergeModulesCommandFormatter.format(for: obj) {
             return mergeModulesCommand
         } else if let compileXIB = self.compileXIBFormatter.format(for: obj) {
