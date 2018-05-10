@@ -130,6 +130,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.start(windmill: windmill, chain: chain)
     }
     
+    func application(_ sender: NSApplication, openFile filename: String) -> Bool {
+        return self.add(url: URL(fileURLWithPath: filename))
+    }
+    
     func applicationWillFinishLaunching(_ notification: Notification) {
         self.mainWindowViewController?.window?.setIsVisible(false)
     }
