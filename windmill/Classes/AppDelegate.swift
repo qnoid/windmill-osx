@@ -124,8 +124,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         guard let mainWindowController = MainWindowController.make(windmill: windmill, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController), let window = mainWindowController.window else {
             return
         }
-        
-        window.title = project.name
+
+        window.title = project.filename
         self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
         self.start(windmill: windmill, chain: chain)
     }

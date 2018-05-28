@@ -32,6 +32,19 @@ class SidePanelViewController: NSViewController {
         originValue.isSelectable = true
         return originValue
     }()
+    
+    lazy var branch: NSTextField = {
+        let branch = NSTextField(labelWithString: "Branch:")
+        branch.isHidden = true
+        return branch
+    }()
+    
+    lazy var branchValue: NSTextField = {
+        let branchValue = NSTextField(labelWithString: "")
+        branchValue.isHidden = true
+        branchValue.isSelectable = true
+        return branchValue
+    }()
 
     lazy var commit: NSTextField = {
         let commit = NSTextField(labelWithString: "Commit:")
@@ -274,6 +287,7 @@ class SidePanelViewController: NSViewController {
         let gridView = NSGridView(views: [
             [checkout, empty],
             [origin, originValue],
+            [branch, branchValue],
             [commit, commitValue],
             [build, empty],
             [buildConfiguration, buildConfigurationValue],
@@ -426,6 +440,9 @@ class SidePanelViewController: NSViewController {
         self.origin.isHidden = false
         self.originValue.stringValue = commit.repository.origin
         self.originValue.isHidden = false
+        self.branch.isHidden = false
+        self.branchValue.stringValue = commit.branch
+        self.branchValue.isHidden = false
         self.commit.isHidden = false
         self.commitValue.stringValue = commit.shortSha
         self.commitValue.isHidden = false    
