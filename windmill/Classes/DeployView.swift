@@ -31,9 +31,9 @@ class DeployView: NSView {
         }
     }
     
-    var buildSettings: BuildSettings? {
+    var appBundle: AppBundle? {
         didSet {
-            self.deploymentTargetTextField.stringValue = buildSettings?.deployment?.target?.description ?? ""
+            self.deploymentTargetTextField.stringValue = appBundle?.info.minimumOSVersion ?? ""
         }
     }
     

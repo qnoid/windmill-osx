@@ -302,18 +302,17 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 
         let projectLogURL = self.projectLogURL
         let repositoryLocalURL = self.projectRepositoryDirectory.URL
-        let buildSettings = self.projectHomeDirectory.buildSettings()
         
         let exportWasSuccesful = ProcessWasSuccesful { [project = self.project, pollDirectoryURL = self.projectHomeDirectory.pollURL(), log = self.log, weak self] userInfo in
 
-            guard let export = userInfo?["export"] as? Export else {
+            guard let export = userInfo?["export"] as? Export, let appBundle = userInfo?["appBundle"] as? AppBundle else {
                 return
             }
 
             let deploy = Process.makeDeploy(export: export, forUser: user, log: projectLogURL)
             self?.processManager.processChain(process: deploy, userInfo: ["activity" : ActivityType.deploy, "artefact": ArtefactType.otaDistribution], wasSuccesful: ProcessWasSuccesful { userInfo in
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project, "buildSettings":buildSettings, "export": export])
+                    NotificationCenter.default.post(name: Windmill.Notifications.didDeployProject, object: self, userInfo: ["project":project, "export": export, "appBundle":appBundle])
                 }
                 
                 #if DEBUG

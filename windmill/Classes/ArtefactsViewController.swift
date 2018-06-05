@@ -245,8 +245,8 @@ class ArtefactsViewController: NSViewController {
             self.deployView.export = export
         }
 
-        if let buildSettings = aNotification.userInfo?["buildSettings"] as? BuildSettings {
-            self.deployView.buildSettings = buildSettings
+        if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
+            self.deployView.appBundle = appBundle
         }
         
         self.deployView.isHidden = false

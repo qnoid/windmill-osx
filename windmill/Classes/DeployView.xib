@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="DeployView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="deploymentTargetTextField" destination="vDq-pI-d6Z" id="XHy-H0-Yx0"/>
-                <outlet property="infoImageView" destination="eJo-8E-UQV" id="ypX-QY-ENk"/>
                 <outlet property="stageIndicatorView" destination="uWb-UZ-C5A" id="Wsn-Uh-tE6"/>
                 <outlet property="titleTextField" destination="xA8-tx-WWc" id="3gU-As-rSl"/>
                 <outlet property="versionTextField" destination="Mz5-rg-8TC" id="pxp-UJ-KGp"/>
@@ -21,8 +20,8 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tBh-Wp-mlc" userLabel="titleLabel">
-                    <rect key="frame" x="18" y="118" width="169" height="18"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Over the air distribution" id="oya-J0-hzP">
+                    <rect key="frame" x="18" y="118" width="174" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Over-the-air distribution" id="oya-J0-hzP">
                         <font key="font" metaFont="systemBold" size="14"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -66,16 +65,8 @@
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eJo-8E-UQV" userLabel="Info View">
-                    <rect key="frame" x="8" y="8" width="30" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="fu2-GW-qVB"/>
-                        <constraint firstAttribute="width" constant="30" id="pMJ-Ns-RJb"/>
-                    </constraints>
-                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="info" id="WTy-If-21r"/>
-                </imageView>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4iC-Fo-ok7">
-                    <rect key="frame" x="44" y="6" width="228" height="34"/>
+                    <rect key="frame" x="6" y="1" width="266" height="34"/>
                     <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" id="cfE-PY-oh0">
                         <font key="font" metaFont="system"/>
                         <string key="title">You have to use Windmill for iOS to 
@@ -103,27 +94,23 @@ install this over the air distribution.</string>
                 <constraint firstAttribute="trailing" secondItem="xA8-tx-WWc" secondAttribute="trailing" id="JE4-SJ-y6V"/>
                 <constraint firstItem="Mz5-rg-8TC" firstAttribute="leading" secondItem="xA8-tx-WWc" secondAttribute="leading" id="Kf3-6n-sQI"/>
                 <constraint firstItem="tBh-Wp-mlc" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" id="Q1n-fx-iaI"/>
-                <constraint firstItem="eJo-8E-UQV" firstAttribute="centerX" secondItem="uWb-UZ-C5A" secondAttribute="centerX" id="WFi-QI-m4j"/>
-                <constraint firstItem="4iC-Fo-ok7" firstAttribute="leading" secondItem="eJo-8E-UQV" secondAttribute="trailing" constant="8" symbolic="YES" id="a6k-cK-K6K"/>
+                <constraint firstItem="4iC-Fo-ok7" firstAttribute="top" secondItem="48X-Vb-oap" secondAttribute="bottom" constant="8" id="S1d-Ak-qeH"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="top" secondItem="tBh-Wp-mlc" secondAttribute="bottom" constant="8" symbolic="YES" id="cje-nz-l8h"/>
                 <constraint firstItem="xA8-tx-WWc" firstAttribute="top" secondItem="dGi-f0-szt" secondAttribute="top" id="euu-FR-nWz"/>
                 <constraint firstAttribute="trailing" secondItem="4iC-Fo-ok7" secondAttribute="trailing" id="h9w-Ur-KE1"/>
+                <constraint firstItem="4iC-Fo-ok7" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="8" id="nYZ-o6-lE2"/>
                 <constraint firstAttribute="trailing" secondItem="vDq-pI-d6Z" secondAttribute="trailing" id="oeB-MU-6Db"/>
-                <constraint firstItem="4iC-Fo-ok7" firstAttribute="centerY" secondItem="eJo-8E-UQV" secondAttribute="centerY" id="qEl-EJ-xnY"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" constant="4" id="qFE-ks-5t0"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="20" symbolic="YES" id="v2a-7A-CBn"/>
                 <constraint firstItem="Mz5-rg-8TC" firstAttribute="top" secondItem="xA8-tx-WWc" secondAttribute="bottom" constant="8" symbolic="YES" id="w1e-Jg-BaB"/>
-                <constraint firstAttribute="bottom" secondItem="eJo-8E-UQV" secondAttribute="bottom" constant="8" id="xNM-r4-iGw"/>
                 <constraint firstItem="tBh-Wp-mlc" firstAttribute="top" secondItem="81Z-61-umx" secondAttribute="top" constant="8" id="yhr-R5-aSD"/>
-                <constraint firstItem="eJo-8E-UQV" firstAttribute="top" secondItem="uWb-UZ-C5A" secondAttribute="bottom" constant="8" id="z0d-U2-Xwu"/>
                 <constraint firstItem="xA8-tx-WWc" firstAttribute="leading" secondItem="dGi-f0-szt" secondAttribute="trailing" constant="8" id="zh9-U2-9SB"/>
                 <constraint firstAttribute="trailing" secondItem="Mz5-rg-8TC" secondAttribute="trailing" id="zpK-0N-lDS"/>
             </constraints>
-            <point key="canvasLocation" x="105" y="522.5"/>
+            <point key="canvasLocation" x="105" y="522"/>
         </customView>
     </objects>
     <resources>
-        <image name="info" width="28.799999237060547" height="28.799999237060547"/>
         <image name="iphone-x" width="128" height="128"/>
     </resources>
 </document>

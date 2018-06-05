@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
@@ -174,7 +174,7 @@
             <objects>
                 <viewController storyboardIdentifier="MainViewController" id="Hwi-w3-Rle" customClass="MainViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="6j5-vW-ygG" customClass="MainView" customModule="Windmill" customModuleProvider="target">
-                        <rect key="frame" x="0.0" y="0.0" width="796" height="722"/>
+                        <rect key="frame" x="0.0" y="0.0" width="866" height="722"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Nrz-3h-enE" userLabel="Branch">
@@ -244,10 +244,10 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="QRl-WA-0CJ" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
-                                <rect key="frame" x="726" y="642" width="110" height="80"/>
+                                <rect key="frame" x="726" y="642" width="120" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="47M-z4-pHy"/>
-                                    <constraint firstAttribute="width" constant="110" id="Ig8-iU-TAw"/>
+                                    <constraint firstAttribute="width" constant="120" id="Ig8-iU-TAw"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="deploy"/>
@@ -255,11 +255,11 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AnH-wR-VPq" userLabel="Divider">
-                                <rect key="frame" x="8" y="619" width="718" height="11"/>
+                                <rect key="frame" x="8" y="619" width="838" height="11"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="divider" id="xte-0F-nSP"/>
                             </imageView>
                             <containerView translatesAutoresizingMaskIntoConstraints="NO" id="gzb-Ou-pnU">
-                                <rect key="frame" x="8" y="163" width="768" height="448"/>
+                                <rect key="frame" x="8" y="163" width="838" height="448"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="448" id="5Uw-cS-Rcb"/>
                                 </constraints>
@@ -281,6 +281,7 @@
                             <constraint firstItem="Nrz-3h-enE" firstAttribute="baseline" secondItem="bvb-g2-0Id" secondAttribute="baseline" id="U1g-RQ-etI"/>
                             <constraint firstItem="AnH-wR-VPq" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="leading" id="UJF-nx-8O3"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="leading" secondItem="RWe-v3-81B" secondAttribute="trailing" id="VpB-x2-hJq"/>
+                            <constraint firstItem="AnH-wR-VPq" firstAttribute="trailing" secondItem="QRl-WA-0CJ" secondAttribute="trailing" id="Y2i-qh-f7v"/>
                             <constraint firstItem="gzb-Ou-pnU" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="leading" id="a7L-RO-wgY"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="dZI-a9-pLN"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="trailing" constant="8" id="ebI-1X-sFO"/>
@@ -289,7 +290,6 @@
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="leading" secondItem="miV-du-5Xh" secondAttribute="trailing" id="l7b-GM-Vv8"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="top" secondItem="6j5-vW-ygG" secondAttribute="top" placeholder="YES" id="lle-cj-2KR"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="top" secondItem="dmf-os-213" secondAttribute="top" id="ta7-EF-JCs"/>
-                            <constraint firstItem="AnH-wR-VPq" firstAttribute="trailing" secondItem="miV-du-5Xh" secondAttribute="trailing" id="wLc-3I-KBy"/>
                         </constraints>
                     </view>
                     <connections>
@@ -305,7 +305,7 @@
                 </viewController>
                 <customObject id="hSJ-Do-QdR" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-892" y="479"/>
+            <point key="canvasLocation" x="-857" y="479"/>
         </scene>
         <!--Console View Controller-->
         <scene sceneID="eWE-0B-wHp">
