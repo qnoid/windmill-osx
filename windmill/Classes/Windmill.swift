@@ -153,7 +153,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         let projectLocalURL = projectLocalURL ?? repositoryLocalURL
         let configuration = directory.configuration()
 
-        let readProjectConfiguration = Process.makeList(configuration: configuration, projectLocalURL: projectLocalURL)
+        let readProjectConfiguration = Process.makeList(project: project, configuration: configuration, projectLocalURL: projectLocalURL)
         return self.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { [project = self.project, buildSettings = directory.buildSettings(), weak self] userInfo in
             
             let scheme = configuration.detectScheme(name: project.scheme)
@@ -216,7 +216,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                     self?.didCheckout(commit: commit)
                 }
             
-                let readProjectConfiguration = Process.makeList(configuration: configuration, projectLocalURL: projectLocalURL)
+                let readProjectConfiguration = Process.makeList(project: project, configuration: configuration, projectLocalURL: projectLocalURL)
                 self?.processManager.processChain(process: readProjectConfiguration, userInfo: ["activity": ActivityType.readProjectConfiguration, "configuration": configuration], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
                     let scheme = configuration.detectScheme(name: project.scheme)

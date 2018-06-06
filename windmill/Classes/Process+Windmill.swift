@@ -118,15 +118,34 @@ extension Process
         }
     }
     
-    public static func makeList(configuration: Project.Configuration, projectLocalURL: Project.LocalURL) -> Process {
+    public static func makeList(project: Project, configuration: Project.Configuration, projectLocalURL: Project.LocalURL) -> Process {
         
-        let process = Process()
-        process.currentDirectoryPath = projectLocalURL.path
-        process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.LIST_CONFIGURATION, ofType: "sh")!
-        process.arguments = [configuration.url.path]
-        process.qualityOfService = .utility
-        
-        return process
+        switch project.isWorkspace {
+        case true?:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.LIST_WORKSPACE_CONFIGURATION, ofType: "sh")!
+            process.arguments = [project.filename, configuration.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        case false?:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.LIST_PROJECT_CONFIGURATION, ofType: "sh")!
+            process.arguments = [project.filename, configuration.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        default:
+            let process = Process()
+            process.currentDirectoryPath = projectLocalURL.path
+            process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.LIST_CONFIGURATION, ofType: "sh")!
+            process.arguments = [configuration.url.path]
+            process.qualityOfService = .utility
+            
+            return process
+        }
     }
     
     

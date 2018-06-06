@@ -15,6 +15,8 @@ struct Scripts
     struct Xcodebuild {
         
         static let LIST_CONFIGURATION : BashScript = "Scripts/xcodebuild/list_configuration"
+        static let LIST_PROJECT_CONFIGURATION : BashScript = "Scripts/xcodebuild/list_configuration-project"
+        static let LIST_WORKSPACE_CONFIGURATION : BashScript = "Scripts/xcodebuild/list_configuration-workspace"
         static let SHOW_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings"
         static let SHOW_PROJECT_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings-project"
         static let SHOW_WORKSPACE_BUILD_SETTINGS : BashScript = "Scripts/xcodebuild/showBuildSettings-workspace"

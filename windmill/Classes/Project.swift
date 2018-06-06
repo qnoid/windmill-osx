@@ -34,13 +34,20 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         var project: [String: Any]? {
             return metadata["project"]
         }
-        
+
+        var workspace: [String: Any]? {
+            return metadata["workspace"]
+        }
+
         var name: String? {
-            return project?["name"] as? String
+            
+            let name = project?["name"] as? String
+            return name ?? workspace?["name"] as? String
         }
         
         var schemes: [String]? {
-            return project?["schemes"] as? [String]
+            let schemes = project?["schemes"] as? [String]            
+            return schemes ?? workspace?["schemes"] as? [String]
         }
 
         var configurations: [String]? {
