@@ -126,12 +126,12 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeCreateUniversalBinary(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CREATE_UNIVERSAL_BINARY_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makeCreateUniversalBinary(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CREATE_UNIVERSAL_BINARY_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return single(match: regularExpression) { path in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
             attributedString.append(NSAttributedString(string: "Create", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
-            attributedString.append(NSAttributedString(string: " universal binary ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string: " universal binary ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -232,7 +232,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { dsym in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Generating ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Generate ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: "\(dsym)\n"))
             return attributedString
         }
@@ -325,17 +325,28 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeLinking(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.LINKING_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makeLinking(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.LINKING_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return quadriple(match: regularExpression) { path, filename, variant, architecture in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
             attributedString.append(NSAttributedString(string: "Link", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " \(filename)"))
-            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
     
+    static func makeLinkRelative(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.LINK_RELATIVE_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return quadriple(match: regularExpression) { path, filename, variant, architecture in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Link", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " \(filename)"))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
     static func makeProcessProductPackaging(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PROCESS_PRODUCT_PACKAGINGREGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
@@ -418,7 +429,84 @@ extension RegularExpressionMatchesFormatter {
             attributedString.append(NSAttributedString(string: " "))
             attributedString.append(NSAttributedString(string: "Compile ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+    
+    static func makeStrip(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.STRIP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, name in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Strip ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: name))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makeSetOwnerAndGroup(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.SET_OWNER_AND_GROUP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Set owner and group of ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makeSetMode(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.SET_MODE_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Set mode of ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+    
+    static func makeSymLink(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.SYMLINK_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Make symlink ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+    
+    static func makeCpHeader(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CPHEADER_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { filename, path in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makeCpHeader(descender: CGFloat, baseDirectoryURL: URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CPHEADER_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makeSwiftCodeGeneration(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.SWIFT_CODE_GENERATION_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(NSAttributedString(string: "Code Generation ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: filename))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }

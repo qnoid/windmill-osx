@@ -9,7 +9,7 @@ LOG_FOR_PROJECT=$7
 
 set -eo pipefail
 
-xcodebuild -project "${FILENAME}" -scheme "${SCHEME}" -configuration "${CONFIGURATION}" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
+xcodebuild -project "${FILENAME}" -scheme "${SCHEME}" -configuration "${CONFIGURATION}" -destination "generic/platform=iOS" archive -derivedDataPath "${DERIVED_DATA_PATH_FOR_PROJECT}" -archivePath "${ARCHIVE_PATH_FOR_PROJECT}" -resultBundlePath "${RESULT_BUNDLE_PATH_FOR_PROJECT}" 2>&1 | tee -a "${LOG_FOR_PROJECT}"
 
 ## Archive
 #

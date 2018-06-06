@@ -108,10 +108,10 @@ class ProcessTest: XCTestCase {
         
         XCTAssertTrue(FileManager.default.fileExists(atPath: devices.url.path))
         
-        XCTAssertEqual(devices.version, 11.3)
+        XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
         XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "8196A97D-747C-45FD-88CE-0BDD4ACEA1D9")
+        XCTAssertEqual(devices.destination?.udid, "461A4D6E-7215-4665-80FD-48311E77297B")
     }
     
     /**
@@ -132,9 +132,9 @@ class ProcessTest: XCTestCase {
         XCTAssertTrue(FileManager.default.fileExists(atPath: devices.url.path))
         
 
-        XCTAssertEqual(devices.version, 11.3)
+        XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
         XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "8196A97D-747C-45FD-88CE-0BDD4ACEA1D9")
+        XCTAssertEqual(devices.destination?.udid, "461A4D6E-7215-4665-80FD-48311E77297B")
     }    
 }

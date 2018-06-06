@@ -16,6 +16,7 @@ class StandardOutPrettyFormatter: Formatter {
     let writeAuxiliaryfilesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let createProductStructureFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileSwiftSourcesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let swiftCodeGenerationFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let mergeModulesCommandFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -32,6 +33,11 @@ class StandardOutPrettyFormatter: Formatter {
     let compileAssetCatalogFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processInfoPlistFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let pbxcpFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let stripFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let setOwnerAndGroupFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let setModeFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let symLinkFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let cpHeaderFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let generateDSYMFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let linkStoryboardsFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let phaseScriptExecutionFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -39,6 +45,7 @@ class StandardOutPrettyFormatter: Formatter {
     let touchFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processProductPackagingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let linkingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let linkRelativeFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let codeSignFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let phaseSuccessFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let phaseFailureFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -50,7 +57,7 @@ class StandardOutPrettyFormatter: Formatter {
 
     let descender: CGFloat
     
-    init(descender: CGFloat, compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>) {
+    init(descender: CGFloat, compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>, cpHeaderFormatter: RegularExpressionMatchesFormatter<NSAttributedString>) {
         self.descender = descender
         self.cloningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCloning(descender: descender)
         self.checkoutSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCheckoutSuccess(descender: descender)
@@ -64,6 +71,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.xcodeBuildErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeXcodeBuildError(descender: descender)
         self.libraryNotFoundFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLibraryNotFound(descender: descender)
         self.compileSwiftSourcesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileSwiftSources(descender: descender)
+        self.swiftCodeGenerationFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSwiftCodeGeneration(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
         self.compileStoryboardFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileStoryboard(descender: descender)
         self.compileAssetCatalogFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileAssetCatalog(descender: descender)
@@ -72,6 +80,11 @@ class StandardOutPrettyFormatter: Formatter {
         self.copyUsingDittoFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyUsingDitto(descender: descender)
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
+        self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
+        self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
+        self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
+        self.symLinkFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSymLink(descender: descender)
+        self.cpHeaderFormatter = cpHeaderFormatter
         self.generateDSYMFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGenerateDSYM(descender: descender)
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
@@ -79,6 +92,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
+        self.linkRelativeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
         self.codeSignFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCodeSign(descender: descender)
         self.phaseSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseSuccess(descender: descender)
         self.phaseFailureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseFailure(descender: descender)
@@ -109,9 +123,15 @@ class StandardOutPrettyFormatter: Formatter {
         self.processInfoPlistFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessInfoPlist(descender: descender)
         self.mergeModulesCommandFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeMergeModulesCommand(descender: descender)
         self.compileSwiftSourcesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileSwiftSources(descender: descender)
+        self.swiftCodeGenerationFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSwiftCodeGeneration(descender: descender)
         self.copyUsingDittoFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyUsingDitto(descender: descender)
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
+        self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
+        self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
+        self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
+        self.symLinkFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSymLink(descender: descender)
+        self.cpHeaderFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender)
         self.generateDSYMFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGenerateDSYM(descender: descender)
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
@@ -119,6 +139,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
+        self.linkRelativeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
         self.codeSignFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCodeSign(descender: descender)
         self.phaseSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseSuccess(descender: descender)
         self.phaseFailureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseFailure(descender: descender)
@@ -159,6 +180,12 @@ class StandardOutPrettyFormatter: Formatter {
             return copyUsingDitto
         } else if let compileAssetCatalog = self.compileAssetCatalogFormatter.format(for: obj) {
             return compileAssetCatalog
+        } else if let symLink = self.symLinkFormatter.format(for: obj) {
+            return symLink
+        } else if let swiftCodeGeneration = self.swiftCodeGenerationFormatter.format(for: obj) {
+            return swiftCodeGeneration
+        } else if let cpHeader = self.cpHeaderFormatter.format(for: obj) {
+            return cpHeader
         } else if let processInfoPlist = self.processInfoPlistFormatter.format(for: obj) {
             return processInfoPlist
         } else if let createUniversalBinary = self.createUniversalBinaryFormatter.format(for: obj) {
@@ -183,6 +210,12 @@ class StandardOutPrettyFormatter: Formatter {
             return compileStoryboard
         } else if let pbxcp = self.pbxcpFormatter.format(for: obj) {
             return pbxcp
+        } else if let strip = self.stripFormatter.format(for: obj) {
+            return strip
+        } else if let setOwnerAndGroup = self.setOwnerAndGroupFormatter.format(for: obj) {
+            return setOwnerAndGroup
+        } else if let setMode = self.setModeFormatter.format(for: obj) {
+            return setMode
         } else if let touch = self.touchFormatter.format(for: obj) {
             return touch
         } else if let codeSign = self.codeSignFormatter.format(for: obj) {
@@ -199,6 +232,8 @@ class StandardOutPrettyFormatter: Formatter {
             return processProductPackaging
         } else if let linking = self.linkingFormatter.format(for: obj) {
             return linking
+        } else if let linkRelative = self.linkRelativeFormatter.format(for: obj) {
+            return linkRelative
         } else if let phaseFailure = self.phaseFailureFormatter.format(for: obj) {
             return phaseFailure
         } else if let testSuiteAllTestsStarted = self.testSuiteAllTestsStartedFormatter.format(for: obj) {

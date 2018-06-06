@@ -57,6 +57,16 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
         let baseDirectoryURL = windmill.projectRepositoryDirectory.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
+    
+    lazy var cpHeaderFormatter: RegularExpressionMatchesFormatter<NSAttributedString> = {
+        guard let windmill = self.windmill else {
+            return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender)
+        }
+        
+        let baseDirectoryURL = windmill.projectRepositoryDirectory.URL.appendingPathComponent("/")
+        return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender, baseDirectoryURL: baseDirectoryURL)
+    }()
+
 
     var dispatchSourceRead: DispatchSourceRead? {
         didSet {
@@ -65,7 +75,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
 
     lazy var standardOutFormattedReader: StandardOutFormattedReader = {
-        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter), fileURL: self.windmill?.projectLogURL)
+        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), fileURL: self.windmill?.projectLogURL)
         standardOutFormattedReader.delegate = self
         return standardOutFormattedReader
     }()

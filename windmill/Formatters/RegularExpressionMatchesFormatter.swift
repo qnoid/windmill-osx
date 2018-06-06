@@ -59,11 +59,11 @@ extension NSRegularExpression {
         // $1 source
         // $2 destination
         // $3 filename
-        static let COPY_USING_DITTO_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Ditto\\s(.*\\.(?:h|swiftmodule|swiftdoc))\\s(.*\\/(.*\\.(?:h|swiftmodule|swiftdoc)))")
+        static let COPY_USING_DITTO_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Ditto\\s(.*\\.(?:h|swiftmodule|swiftdoc|modulemap))\\s(.*\\/(.*\\.(?:h|swiftmodule|swiftdoc|modulemap)))")
         
         // capture groups
         // $1 path
-        static let CREATE_UNIVERSAL_BINARY_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^CreateUniversalBinary\\s(.*?)\\s")
+        static let CREATE_UNIVERSAL_BINARY_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^CreateUniversalBinary (?:.*(/DerivedData/.*?) )")
         
         static let COMPILE_ASSET_CATALOG_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^CompileAssetCatalog")
         
@@ -80,7 +80,14 @@ extension NSRegularExpression {
         // $2 filename
         // $3 variant
         // $4 architecture
-        static let LINKING_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Ld\\s(.*\\/.*.app\\/([^\\s]+))\\s([^\\s]+)\\s([^\\s]+)")
+        static let LINKING_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Ld\\s(?:.*(/DerivedData/.*\\/([^\\s]+)))\\s([^\\s]+)\\s([^\\s]+)")
+        
+        // capture groups
+        // $1 path
+        // $2 filename
+        // $3 variant
+        // $4 architecture
+        static let LINK_RELATIVE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Ld\\s(.*\\/([^\\s]+))\\s([^\\s]+)\\s([^\\s]+)")
         
         // capture groups
         // $1 path
@@ -110,7 +117,37 @@ extension NSRegularExpression {
         // $1 path
         // $2 filename
         static let PROCESS_INFO_PLIST_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^ProcessInfoPlistFile\\s.*\\.plist\\s(.*\\/+(.*\\.plist))")
+
+        // capture groups
+        // $1 destination
+        // $2 name
+        static let STRIP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*\\/(.*)\\s))")
         
+        // capture groups
+        // $1 path
+        // $2 filename
+        static let SET_OWNER_AND_GROUP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^SetOwnerAndGroup (?:.*(/DerivedData/.*\\/(.*\\.(?:app|framework))))")
+
+        // capture groups
+        // $1 path
+        // $2 filename
+        static let SET_MODE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^SetMode (?:.*(/DerivedData/.*\\/(.*\\.(?:app|framework))))")
+
+        // capture groups
+        // $1 path
+        // $2 filename
+        static let SYMLINK_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^SymLink (?:.*(/DerivedData/.*\\/(.*\\.framework)))")
+
+        // capture groups
+        // $1 filename
+        // $2 path
+        static let CPHEADER_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^CpHeader (?:.*\\/(.*\\.h))\\s.*\\s.*\\s.*(?:-resolve-src-symlinks (.* )+)")
+        
+        // capture groups
+        // $1 path
+        // $2 filename
+        static let SWIFT_CODE_GENERATION_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^SwiftCodeGeneration (?:.*(/DerivedData/.*\\/(.*\\.bc)))")        
+
         // capture groups
         // $1 suite
         // $2 test_case

@@ -13,7 +13,7 @@ LOG_FOR_PROJECT=$5
 
 set -eo pipefail
 
-. $SCRIPTS_ROOT/common.sh
+. "${SCRIPTS_ROOT}/common.sh"
 
 function git_pull(){ (
     xcrun git -C "${REPOSITORY_PATH_FOR_PROJECT}" fetch --recurse-submodules 2>&1 | tee -a "${LOG_FOR_PROJECT}";

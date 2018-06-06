@@ -88,10 +88,12 @@ public class BuildSettings {
     }
     
     func `for`(project name: String, type: String = "com.apple.product-type.application") -> BuildSettings {
-        return self.array?.map({ dictionary -> BuildSettings in
+        let settings: [BuildSettings]? = self.array?.map({ dictionary -> BuildSettings in
             return BuildSettings(url: self.url, values: dictionary)
-        }).first(where: { settings -> Bool in
-            return settings?.projectName == name && settings?.product?.type == type
-        }) ?? BuildSettings(url: self.url)
+        })
+        
+        return settings?.first(where: { settings -> Bool in
+            return settings.projectName == name && settings.product?.type == type
+        }) ?? settings?.first ?? BuildSettings(url: self.url)
     }
 }
