@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ExportView" customModule="Windmill" customModuleProvider="target">
             <connections>
-                <outlet property="headerTextField" destination="BkY-iF-Rbe" id="IO5-uC-YD2"/>
                 <outlet property="ipaImageView" destination="r2S-vK-C5x" id="FFV-6q-D2k"/>
                 <outlet property="minimumOSVersionTextField" destination="cWw-Eh-eC1" id="SuS-LF-Xgk"/>
                 <outlet property="stageIndicatorView" destination="xP1-QJ-MZY" id="3EL-H3-eYm"/>
@@ -30,21 +29,16 @@
                             <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="BkY-iF-Rbe" customClass="LinkLabel" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="textColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 <size key="minSize" width="240" height="36"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
-                                    <fragment content="Install apps on a device">
+                                    <fragment content="IPA file">
                                         <attributes>
-                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <color key="NSColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <font key="NSFont" metaFont="systemBold" size="14"/>
-                                            <real key="NSKern" value="0.0"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops/>
-                                            </paragraphStyle>
-                                            <color key="NSStrokeColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>

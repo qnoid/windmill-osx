@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -10,7 +10,6 @@
                 <outlet property="applicationImageView" destination="nv3-q0-bZV" id="9RW-s5-22h"/>
                 <outlet property="bundleTextField" destination="GVk-rl-uuo" id="I5X-yA-4DA"/>
                 <outlet property="commitTextField" destination="LCE-Bm-43e" id="5CP-HI-GoI"/>
-                <outlet property="headerTextField" destination="yqC-Pk-JBz" id="dZk-mG-36T"/>
                 <outlet property="minimumOSVersionTextField" destination="9kZ-LL-Xd5" id="ZE1-YS-HkB"/>
                 <outlet property="stageIndicatorView" destination="akk-Pr-ed7" id="mqL-NL-5Fk"/>
             </connections>
@@ -30,21 +29,16 @@
                             <textView editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" baseWritingDirection="leftToRight" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="yqC-Pk-JBz" customClass="LinkLabel" customModule="Windmill" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="36"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="textColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 <size key="minSize" width="240" height="36"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
-                                    <fragment content="Install your app on a simulated device">
+                                    <fragment content="Application bundle">
                                         <attributes>
-                                            <color key="NSBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <color key="NSColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <font key="NSFont" metaFont="systemBold" size="14"/>
-                                            <real key="NSKern" value="0.0"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="leftToRight" defaultTabInterval="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops/>
-                                            </paragraphStyle>
-                                            <color key="NSStrokeColor" red="0.29411999999999999" green="0.29411999999999999" blue="0.29411999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>

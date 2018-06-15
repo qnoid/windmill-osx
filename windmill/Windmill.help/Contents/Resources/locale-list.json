@@ -1,0 +1,12 @@
+[
+  {
+    "text-direction": "ltr",
+    "name": "English (U.S.)\u200e",
+    "isoName": "English (U.S.)\u200e",
+    "isoCodes": [
+      "en",
+      "en-us"
+    ],
+    "folder": "en.lproj"
+  }
+]

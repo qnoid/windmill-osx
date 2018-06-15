@@ -36,15 +36,6 @@ class FileImageView: NSImageView, NSDraggingSource {
 @IBDesignable
 class ExportView: NSView {
     
-    @IBOutlet weak var headerTextField: LinkLabel! {
-        didSet{
-            let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .link : "https://help.apple.com/xcode/mac/9.0/#/devade83d1d7?sub=dev103e8473e",
-                .font : headerTextField.font as Any])
-            headerTextField.attributedString = attributedString
-        }
-    }
-
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
             self.stageIndicatorView.wantsLayer = true

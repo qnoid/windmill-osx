@@ -20,7 +20,6 @@
 		BD08327720635ABE0093F5EE /* TestSummaries.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD08327620635ABE0093F5EE /* TestSummaries.plist */; };
 		BD08327B2063FF360093F5EE /* TestSummaryCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD08327A2063FF360093F5EE /* TestSummaryCellView.swift */; };
 		BD08328E2064A0200093F5EE /* TestSummariesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD08328D2064A0200093F5EE /* TestSummariesWindowController.swift */; };
-		BD0BDF712075FD0C005754AE /* Windmill.help in Resources */ = {isa = PBXBuildFile; fileRef = BD0BDF6F2075FAEB005754AE /* Windmill.help */; };
 		BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD105019203A32680051F0D5 /* Directory+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD105018203A32680051F0D5 /* Directory+Windmill.swift */; };
 		BD105047203A84530051F0D5 /* ConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD105046203A84530051F0D5 /* ConfigurationTest.swift */; };
@@ -84,6 +83,7 @@
 		BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8364082039314200D1D381 /* CharacterSetTest.swift */; };
 		BD8B80B920810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8B80B820810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift */; };
 		BD8B80BB208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8B80BA208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift */; };
+		BD8EA83C20D1677D006776C5 /* Windmill.help in Resources */ = {isa = PBXBuildFile; fileRef = BD8EA83B20D1677D006776C5 /* Windmill.help */; };
 		BD8FBE11204C96F20004C064 /* HelloWindmill.xcarchive in Resources */ = {isa = PBXBuildFile; fileRef = BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */; };
 		BD8FBE13204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */; };
 		BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */; };
@@ -198,7 +198,6 @@
 		BD08327620635ABE0093F5EE /* TestSummaries.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestSummaries.plist; sourceTree = "<group>"; };
 		BD08327A2063FF360093F5EE /* TestSummaryCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSummaryCellView.swift; sourceTree = "<group>"; };
 		BD08328D2064A0200093F5EE /* TestSummariesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSummariesWindowController.swift; sourceTree = "<group>"; };
-		BD0BDF6F2075FAEB005754AE /* Windmill.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Windmill.help; sourceTree = "<group>"; };
 		BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectiveGit.framework; path = Carthage/Build/Mac/ObjectiveGit.framework; sourceTree = "<group>"; };
 		BD105018203A32680051F0D5 /* Directory+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Directory+Windmill.swift"; sourceTree = "<group>"; };
 		BD105046203A84530051F0D5 /* ConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTest.swift; sourceTree = "<group>"; };
@@ -262,6 +261,7 @@
 		BD8364082039314200D1D381 /* CharacterSetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSetTest.swift; sourceTree = "<group>"; };
 		BD8B80B820810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RegularExpressionMatchesFormatter+AttributedString.swift"; sourceTree = "<group>"; };
 		BD8B80BA208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RegularExpressionMatchesFormatter+String.swift"; sourceTree = "<group>"; };
+		BD8EA83B20D1677D006776C5 /* Windmill.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Windmill.help; sourceTree = "<group>"; };
 		BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HelloWindmill.xcarchive; sourceTree = "<group>"; };
 		BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessMonitorFailOnUnsuccessfulExit.swift; sourceTree = "<group>"; };
 		BD915E6F202036B8006551A5 /* GettingStartedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettingStartedWindowController.swift; sourceTree = "<group>"; };
@@ -417,13 +417,6 @@
 			path = ProcessManager;
 			sourceTree = "<group>";
 		};
-		BD2CE8182077819000A557C6 /* HelpViewer */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = HelpViewer;
-			sourceTree = "<group>";
-		};
 		BD3015FF19BB0F79001134F8 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -565,7 +558,6 @@
 			children = (
 				BDD1751C208E5F1B00CDE787 /* Preferences */,
 				BDF6DDEC207D0C4B003B454F /* Formatters */,
-				BD2CE8182077819000A557C6 /* HelpViewer */,
 				BDDF10BE205FA6F50093E811 /* RulerView */,
 				BD49F78C204B64A300F64687 /* Summaries */,
 				BD1D17FD1F44BC560015C13C /* ProcessManager */,
@@ -584,7 +576,7 @@
 		BDB6D53E19440392001340B4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				BD0BDF6F2075FAEB005754AE /* Windmill.help */,
+				BD8EA83B20D1677D006776C5 /* Windmill.help */,
 				BD915E7320207139006551A5 /* getting-started.mp4 */,
 				BD081A231AB0AD1700B8E948 /* en.lproj */,
 				BDB6D53F19440392001340B4 /* Info.plist */,
@@ -847,7 +839,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BD0BDF712075FD0C005754AE /* Windmill.help in Resources */,
 				BD243A861C42AB570015A13A /* Main.storyboard in Resources */,
 				BDD1751E208E5F3500CDE787 /* Preferences.storyboard in Resources */,
 				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
@@ -860,6 +851,7 @@
 				BD36CAAB205B40F0000B0A2B /* TestFailureSummaries.storyboard in Resources */,
 				BD915E742020715A006551A5 /* getting-started.mp4 in Resources */,
 				BD915E72202036B8006551A5 /* GettingStartedWindowController.xib in Resources */,
+				BD8EA83C20D1677D006776C5 /* Windmill.help in Resources */,
 				BDD6F0A920185C8900D63D74 /* ExportView.xib in Resources */,
 				BD081A291AB0ADEF00B8E948 /* Localizable.strings in Resources */,
 				BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */,

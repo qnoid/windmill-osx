@@ -14,15 +14,6 @@ import os
 @IBDesignable
 class AppView: NSView {
     
-    @IBOutlet weak var headerTextField: LinkLabel!{
-        didSet{
-            let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .link : "https://help.apple.com/simulator/mac/9.0/#/deve2c6f33cc",
-                .font : headerTextField.font as Any])
-            headerTextField.attributedString = attributedString
-        }
-    }
-    
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
             self.stageIndicatorView.wantsLayer = true

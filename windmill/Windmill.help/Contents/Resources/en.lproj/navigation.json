@@ -1,0 +1,174 @@
+{
+    "birdseed_version": 5,
+    "build_id": "4.0.0",
+    "build_date": "2018.05.14-18:57:10",
+    "collect_feedback": false,
+    "copyright": "",
+    "copyright_text": "",
+    "css": "",
+    "enable_tracking": false,
+    "framework": "middlemac-3.0.0.wip",
+    "icon": "",
+    "landing": "topic-overview",
+    "locale": "en-us",
+    "platform": "mac",
+    "printable_page": "",
+    "product": "Windmill",
+    "quick_links": [],
+    "sections": {
+        "section-getting_started-index": {
+            "name": "Getting Started",
+            "children": [
+                "topic-getting_started-where_to_start",
+                "topic-getting_started-start",
+                "topic-windmill_basics-toggle_console",
+                "topic-windmill_basics-stage_lights",
+                "topic-windmill_basics-toggle_settings"
+            ]
+        },
+        "section-windmill_basics-index": {
+            "name": "Windmill Basics",
+            "children": [
+                "topic-windmill_basics-error_highlighting",
+                "topic-windmill_basics-test_failures",
+                "topic-windmill_basics-test_summary"
+            ]
+        },
+        "section-working_with_external_dependencies-index": {
+            "name": "Working with external dependencies",
+            "children": [
+                "topic-working_with_external_dependencies-overview",
+                "topic-working_with_external_dependencies-using_cocoapods",
+                "topic-working_with_external_dependencies-using_carthage"
+            ]
+        },
+        "section-xcode_integration-index": {
+            "name": "Xcode Integration",
+            "children": [
+                "topic-xcode_integration-launch_the_app_on_the_simulator",
+                "topic-xcode_integration-install_your_app_on_a_simulated_device",
+                "topic-xcode_integration-install_the_app_on_a_device",
+                "topic-xcode_integration-upload_an_app_to_itunes_connect"
+            ]            
+        }
+    },
+    "show_previous_next": false,
+    "source_schema": "apd-schema",
+    "title": "Windmill Help",
+    "toc": [
+        "topic-overview",
+        "section-getting_started-index",
+        "section-windmill_basics-index",
+        "section-xcode_integration-index",
+        "section-working_with_external_dependencies-index",
+        "topic-contact"
+    ],
+    "topics": {
+        "topic-overview": {
+            "name": "Welcome",
+            "href": "index.html",
+            "categories": [
+              "landing"
+            ]
+        },        
+        "topic-getting_started-where_to_start": {
+            "name": "Where to start",
+            "href": "getting_started/where_to_start.html",
+            "categories": [
+            ]
+        },        
+        "topic-getting_started-start": {
+            "name": "Running",
+            "href": "getting_started/start.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-error_highlighting": {
+            "name": "Dealing with errors",
+            "href": "basics/error_highlighting.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-test_failures": {
+            "name": "Dealing with test failures",
+            "href": "basics/test_failures.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-test_summary": {
+            "name": "Test Summary",
+            "href": "basics/test_summary.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-toggle_console": {
+            "name": "Console",
+            "href": "basics/console.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-stage_lights": {
+            "name": "Stage lights",
+            "href": "basics/stage_lights.html",
+            "categories": [
+            ]
+        },        
+        "topic-windmill_basics-toggle_settings": {
+            "name": "Settings",
+            "href": "basics/settings.html",
+            "categories": [
+            ]
+        },        
+        "topic-working_with_external_dependencies-overview": {
+            "name": "Overview",
+            "href": "working_with_external_dependencies/overview.html",
+            "categories": [
+            ]
+        },        
+        "topic-working_with_external_dependencies-using_cocoapods": {
+            "name": "Using CocoaPods",
+            "href": "working_with_external_dependencies/using_cocoapods.html",
+            "categories": [
+            ]
+        },        
+        "topic-working_with_external_dependencies-using_carthage": {
+            "name": "Using Carthage",
+            "href": "working_with_external_dependencies/using_carthage.html",
+            "categories": [
+            ]
+        },
+        "topic-xcode_integration-launch_the_app_on_the_simulator": {
+            "name": "Launch the app on the Simulator",
+            "href": "xcode_integration/launch_the_app_on_the_simulator.html",
+            "categories": [
+            ]
+        },
+        "topic-xcode_integration-install_your_app_on_a_simulated_device": {
+            "name": "Install your app on a simulated device",
+            "href": "xcode_integration/install_your_app_on_a_simulated_device.html",
+            "categories": [
+            ]
+        },
+        "topic-xcode_integration-install_the_app_on_a_device": {
+            "name": "Install the app on a device",
+            "href": "xcode_integration/install_the_app_on_a_device.html",
+            "categories": [
+            ]
+        },
+        "topic-xcode_integration-upload_an_app_to_itunes_connect": {
+            "name": "Upload an app to iTunes Connect",
+            "href": "xcode_integration/upload_an_app_to_itunes_connect.html",
+            "categories": [
+            ]
+        },
+        "topic-contact": {
+            "name": "Get in touch",
+            "href": "contact.html",
+            "categories": [
+              "landing"
+            ]
+        }
+    },
+    "urls": {},
+    "version": "4.0.0"
+}

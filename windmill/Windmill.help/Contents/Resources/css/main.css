@@ -1,3 +1,12 @@
+
+header {
+	all: unset;
+}
+
+.landing-toc-btn {
+	display: none !important;
+}
+
 img.full { 
 	width: 100% !important;
 }
@@ -5,8 +14,42 @@ img.full {
 .landing .inner {
 	background: none !important;
 	background-color: #212121 !important;
+	padding: 8px;
+	color: white;
 }
 
-.Hero h1 {
-	color: white !important;
+.Feature {
+	text-align: left !important;
+	padding: 0 20px !important
+}
+
+p {
+	font-size: 13px;
+}
+
+.is-mobile.is-safari8 .landing-page .topic-container .topic-page,.is-mobile.is-safari9 .landing-page .topic-container .topic-page,.is-modern-hv .landing-page .topic-container .topic-page{
+    padding: 0 !important
+}
+
+.navigation {
+	width: 95%;
+	display: inline-block;
+    padding-top: .76923em;
+    padding-bottom: .76923em;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.toc-toggle a {
+	background:	url(../img/toc.svg) no-repeat;
+	padding-left:	2em;
+}
+
+.navigation .toc-toggle a {
+	font-size: 1.154em;
+}
+
+ul.toc a {
+	color: black !important;
+	font-size: 1.08em !important;
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>cocoapods</key>
+	<string>topic-working_with_external_dependencies-using_cocoapods</string>
+	<key>carthage</key>
+	<string>topic-working_with_external_dependencies-using_carthage</string>
+	<key>contact</key>
+	<string>topic-contact</string>	
+</dict>
+</plist>
+

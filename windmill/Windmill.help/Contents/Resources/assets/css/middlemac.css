@@ -1,0 +1,100 @@
+.middlemac-debug {
+  text-align: left;
+  font-size: 75%;
+  white-space: pre-wrap;
+}
+
+p.note,
+p.tip,
+p.warning {
+  background-image: url("apple_img/tip.svg");
+  background-repeat: no-repeat;
+  background-size: 1.6em;
+  background-position: top left;
+  text-indent: 2em;
+  display: block;
+}
+
+p.note {
+  background-image: url("middlemac_img/note.svg");
+}
+
+p.warning {
+  background-image: url("middlemac_img/warning.svg");
+}
+
+p.note::before {
+  content: "Note: ";
+  font-weight: bold;
+}
+
+p.tip::before {
+  content: "Tip: ";
+  font-weight: bold;
+}
+
+p.warning::before {
+  content: "Warning: ";
+  font-weight: bold;
+}
+
+.apd-topic dl dt {
+  float: none;
+  font-weight: initial;
+  display: block;
+  margin: initial;
+}
+.apd-topic dl dt::after {
+  content: none;
+}
+.apd-topic dl dd {
+  display: block;
+  margin: initial;
+}
+.apd-topic dl {
+  border-top: 1px solid #e4e4e4;
+  border-bottom: 1px solid #e4e4e4;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+.apd-topic dl dt:not(:first-child), .apd-topic dl dt:not(:first-child) + dd {
+  padding-top: 5px;
+  margin-top: 5px;
+}
+.apd-topic dl dt {
+  box-sizing: border-box;
+  width: 30%;
+  word-wrap: break-word;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+.apd-topic dl dt + dt {
+  width: 100%;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+.apd-topic dl dt + dt + dd {
+  width: 100%;
+  margin-left: 30%;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+.apd-topic dl dd {
+  box-sizing: border-box;
+  margin-left: auto;
+  width: 70%;
+}
+.apd-topic dl.wide_dl dt, .apd-topic dl.wide_dl dd {
+  width: 50%;
+}
+
+img.dropshadow {
+  box-shadow: 15px 15px 43px -10px rgba(0, 0, 0, 0.47);
+}
+
+img.menu_dropshadow {
+  box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.14);
+}

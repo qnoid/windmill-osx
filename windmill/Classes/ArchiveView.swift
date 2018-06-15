@@ -12,15 +12,6 @@ import os
 @IBDesignable
 class ArchiveView: NSView {
     
-    @IBOutlet weak var headerTextField: LinkLabel! {
-        didSet{
-            let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .link : "http://help.apple.com/xcode/mac/9.0/#/dev442d7f2ca",
-                .font : headerTextField.font as Any])
-            headerTextField.attributedString = attributedString
-        }
-    }
-    
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
             self.stageIndicatorView.wantsLayer = true

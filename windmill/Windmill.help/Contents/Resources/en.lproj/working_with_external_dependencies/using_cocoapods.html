@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="Using Cocoapods" />
+<meta content='0;url=../../index.html?localePath=en.lproj#/topic-working_with_external_dependencies-using_cocoapods' http-equiv='refresh' />
+<title>Using Cocoapods</title>
+</head>
+<body class='AppleTopic' dir='ltr'>
+	<a id="topic-working_with_external_dependencies-using_cocoapods" name="topic-working_with_external_dependencies-using_cocoapods"></a>
+	<h1>Using CocoaPods</h1>
+
+	<p>For a project that uses CocoaPods without checking the Pods directory into source control the Build stage will fail with a <b>Build Failed</b> error.</p>
+
+	<figure><img class="full" src="img/working_with_external_dependencies/HelloCocoaPods_Build_Failed.png" /></figure>
+
+
+	<p>Click <img src="img/error.png" alt="the Error icon" /> in the toolbar to open the Error Summary window.</p>
+
+	<figure><img class="full" src="img/working_with_external_dependencies/HelloCocoaPods_Error_Summary.png" /></figure>
+
+	<p>You should see an error as reported by CocoaPods.
+
+	Use the menu bar, select <b>Navigate</b>, then <b>Show Checkout Folder In Terminal</b> to open a terminal in the location of the project folder.</p>
+
+	<figure><img class="full" src="img/working_with_external_dependencies/show-checkout-folder.png" /></figure>
+
+	<p>Run <b>`$ pod install`</b> in the project directory.</p>
+
+
+	<figure><img class="full" src="img/working_with_external_dependencies/HelloCocoaPods_Terminal.png" /></figure>
+
+
+	<p>Wait for the installation to complete. Click <img src="img/run.png" alt="the Run button" /> in the toolbar to start Windmill.</p>
+
+	<figure><img class="full" src="img/working_with_external_dependencies/HelloCocoaPods_Success.png" /></figure>
+
+	<p>Consider <a href="https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control">checking the <i>Pods</i> directory into source control</a>.</p>
+
+</body></html>

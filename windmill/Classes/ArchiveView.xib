@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -9,7 +9,6 @@
             <connections>
                 <outlet property="archiveImageView" destination="r2S-vK-C5x" id="8iW-l0-FE5"/>
                 <outlet property="dateTextField" destination="cWw-Eh-eC1" id="Jas-c2-Oah"/>
-                <outlet property="headerTextField" destination="WrF-0t-8Dj" id="b8Y-7j-pht"/>
                 <outlet property="stageIndicatorView" destination="xP1-QJ-MZY" id="3EL-H3-eYm"/>
                 <outlet property="titleTextField" destination="spO-1s-y1M" id="6Ta-H2-BqF"/>
                 <outlet property="versionTextField" destination="KV1-eO-OV4" id="XKl-rS-892"/>
@@ -35,7 +34,7 @@
                                 <size key="minSize" width="240" height="36"/>
                                 <size key="maxSize" width="463" height="10000000"/>
                                 <attributedString key="textStorage">
-                                    <fragment content="Upload an app to iTunes Connect">
+                                    <fragment content="Archive bundle">
                                         <attributes>
                                             <color key="NSColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                             <font key="NSFont" metaFont="systemBold" size="14"/>
