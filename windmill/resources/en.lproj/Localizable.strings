@@ -1,10 +1,10 @@
-/* 
-  Localizable.strings
-  windmill
-
-  Created by Markos Charatzas on 11/03/2015.
-  Copyright (c) 2015 qnoid.com. All rights reserved.
-*/
+/*
+ Localizable.strings
+ windmill
+ 
+ Created by Markos Charatzas on 11/03/2015.
+ Copyright (c) 2015 qnoid.com. All rights reserved.
+ */
 "windmill.paid"="You can unlock this feature with a Windmill subscription.";
 "windmill.toolTip"="Drag and drop your Xcode project/workspace from a folder cloned by a remote repo.\n\nWindmill will clone the remote repo and start monitoring.";
 "windmill.branch.toolTip"="Windmill ensures your %@ branch is always ready to release.";
@@ -14,35 +14,36 @@
 "windmill.recordVideo.button.disabled.toolTip"="Allows you to record a 10 seconds video on the Simulator; enabled under Preferences ⌘,";
 "windmill.activity.checkout.description"="Checking out";
 "windmill.activity.checkout.error.description"="Checkout Failed";
-"windmill.activity.checkout.error.failure.reason"="Activity checkout failed with exit code ";
+"windmill.activity.checkout.error.failure.reason.exitStatus"="Activity checkout failed with exit code ";
 "windmill.activity.build.description"="Building";
 "windmill.activity.build.error.description"="Build Failed";
-"windmill.activity.build.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.build.error.failure.reason.exitStatus"="Command xcodebuild failed with exit code ";
 "windmill.activity.showBuildSettings.description"="dreaming of electric sheep";
 "windmill.activity.showBuildSettings.error.description"="Windmill Failed";
-"windmill.activity.showBuildSettings.error.failure.reason"="Failed to read build settings with exit code ";
+"windmill.activity.showBuildSettings.error.failure.reason.exitStatus"="Failed to read build settings with exit code ";
 "windmill.activity.test.description"="Testing";
 "windmill.activity.test.error.description"="Test Failed";
-"windmill.activity.test.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.test.error.failure.reason.exitStatus"="Command xcodebuild failed with exit code ";
 "windmill.activity.test.failures.description"="Test Cases Failed";
 "windmill.activity.devices.description"="Here's to the crazy ones.";
 "windmill.activity.devices.error.description"="Windmill Failed";
-"windmill.activity.devices.error.failure.reason"="Failed to list devices with exit code ";
+"windmill.activity.devices.error.failure.reason.exitStatus"="Failed to list devices with exit code ";
+"windmill.activity.devices.error.failure.reason"="Failed to list devices";
 "windmill.activity.readProjectConfiguration.description"="reticulating splines";
 "windmill.activity.readProjectConfiguration.error.description"="Windmill Failed";
-"windmill.activity.readProjectConfiguration.error.failure.reason"="Failed to read project configuration with exit code ";
+"windmill.activity.readProjectConfiguration.error.failure.reason.exitStatus"="Failed to read project configuration with exit code ";
 "windmill.activity.archive.description"="Archiving";
 "windmill.activity.archive.error.description"="Archive Failed";
-"windmill.activity.archive.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.archive.error.failure.reason.exitStatus"="Command xcodebuild failed with exit code ";
 "windmill.activity.export.description"="Exporting";
 "windmill.activity.export.error.description"="Export Failed";
-"windmill.activity.export.error.failure.reason"="Command xcodebuild failed with exit code ";
+"windmill.activity.export.error.failure.reason.exitStatus"="Command xcodebuild failed with exit code ";
 "windmill.activity.deploy.description"="Deploying";
 "windmill.activity.deploy.error.description"="Deploy Failed";
-"windmill.activity.deploy.error.failure.reason"="Activity deploy failed with exit code ";
+"windmill.activity.deploy.error.failure.reason.exitStatus"="Activity deploy failed with exit code ";
 "windmill.activity.monitor.description"="Monitoring";
 "windmill.activity.monitor.error.description"="Monitoring Failed";
-"windmill.activity.monitor.error.failure.reason"="Windmill failed with exit code ";
+"windmill.activity.monitor.error.failure.reason.exitStatus"="Windmill failed with exit code ";
 "windmill.toolTip.active.checkout"="Windmill is currently checking out your project from the remote repo.";
 "windmill.toolTip.active.build"="Windmill is currently building your app to make sure you haven't forgotten to check in any files.";
 "windmill.toolTip.active.test"="Windmill is currently running any test targets the project has.";

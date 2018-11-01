@@ -43,7 +43,17 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
     }
 }
 
-/* final */ class Windmill: ProcessMonitor
+/**
+ 
+ In case on an error, Windmill will post a `Notifications.didError` notification with userInfo: ["error": error, "activity": activity])
+ 
+
+ - SeeAlso: Windmill.Notifications
+ - SeeAlso: ActivityType
+ - SeeAlso: NSError+WindmillError
+ */
+class Windmill: ProcessMonitor
+/* final */
 {
     
     class func make(project: Project, user: String? = try? Keychain.defaultKeychain().findWindmillUser(), skipCheckout: Bool = false) -> (windmill: Windmill, chain: ProcessChain) {
@@ -129,11 +139,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
         }
     }
     
-    private func didReadDevices(devices: Devices) {
-        guard let destination = devices.destination else {
-            os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a 'destination' dictionary?`", log: log, type: .debug, devices.url.path)
-            return
-        }
+    private func didReadDevices(destination: Devices.Destination) {
         Process.makeBoot(destination: destination).launch()
     }
     
@@ -164,17 +170,20 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                 let readDevices = Process.makeList(devices: devices, for: buildSettings.deployment)
                 self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                     
-                    self?.didReadDevices(devices: devices)
-                    
                     let appBundle = directory.appBundle(name: project.name)
                     try? FileManager.default.removeItem(at: appBundle.url)
                     
                     guard let destination = devices.destination else {
-                        if let log = self?.log {
-                            os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a '' dictionary?`", log: log, type: .debug, devices.url.path)
+                        if let activity = userInfo?["activity"] as? ActivityType {
+                            DispatchQueue.main.async {
+                                let error = NSError.error(for: activity, code: NSError.WindmillErrorCode.listDevicesError.rawValue)
+                                NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: ["error": error, "activity": activity])
+                            }
                         }
                         return
                     }
+                    
+                    self?.didReadDevices(destination: destination)
                     
                     self?.build(project: project, scheme: scheme, destination: destination, repositoryLocalURL: repositoryLocalURL, projectLocalURL: projectLocalURL, derivedDataURL: derivedDataURL, resultBundle: resultBundle, log: log, wasSuccesful: buildWasSuccesful)
                 }).launch()
@@ -228,15 +237,22 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
                         let readDevices = Process.makeList(devices: devices, for: buildSettings.deployment)
                         self?.processManager.processChain(process: readDevices, userInfo: ["activity" : ActivityType.devices, "devices": devices], wasSuccesful: ProcessWasSuccesful { userInfo in
                             
-                            self?.didReadDevices(devices: devices)
-
                             let appBundle = directory.appBundle(name: project.name)
                             try? FileManager.default.removeItem(at: appBundle.url)
                             
                             guard let destination = devices.destination else {
-                                os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a '' dictionary?`", log: log, type: .debug, devices.url.path)
+
+                                if let activity = userInfo?["activity"] as? ActivityType {
+                                    DispatchQueue.main.async {
+                                        let error = NSError.error(for: activity, code: NSError.WindmillErrorCode.listDevicesError.rawValue)
+                                        NotificationCenter.default.post(name: Notifications.didError, object: self, userInfo: ["error": error, "activity": activity])
+                                    }
+                                }
+                                
                                 return
                             }
+
+                            self?.didReadDevices(destination: destination)
 
                             self?.build(projectLocalURL:projectLocalURL, project: project, scheme: scheme, destination: destination, wasSuccesful: ProcessWasSuccesful { [destination = destination, devices = devices] buildInfo in
 

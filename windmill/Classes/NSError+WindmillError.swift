@@ -25,8 +25,20 @@ extension NSError
         
         /// Error loading commit
         case commitError
+        
+        /// Error loading commit
+        case listDevicesError
     }
     
+    class func domain(type: ActivityType) -> String {
+        switch type {
+        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .deploy:
+            return WindmillErrorDomain
+        case .build, .test, .archive, .export:
+            return NSPOSIXErrorDomain
+        }
+    }
+
     class func errorNoRepo(_ localGitRepo: String) -> Error
     {
         let failureDescription = "Error parsing location of local git repo: \(localGitRepo)"
@@ -72,7 +84,7 @@ extension NSError
     
     class func errorTermination(process: Process, for activityType: ActivityType, status code: Int32) -> NSError
     {
-        let domain = process.domain(type: activityType)
+        let domain = NSError.domain(type: activityType)
         let localizedFailureReason = process.localizedFailureReason(type: activityType, exitStatus: code)
         
         return NSError(domain: domain, code: Int(code), userInfo:
@@ -93,4 +105,12 @@ extension NSError
         
     }
 
+    class func error(for activityType: ActivityType, code: Int) -> NSError
+    {
+        let domain = NSError.domain(type: activityType)
+        
+        return NSError(domain: domain, code: code, userInfo:
+            [NSLocalizedDescriptionKey: NSLocalizedString("windmill.activity.\(activityType.rawValue).error.description", comment: "Failed"),
+             NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.activity.\(activityType.rawValue).error.failure.reason", comment: "")])
+    }
 }
