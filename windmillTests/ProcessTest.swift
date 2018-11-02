@@ -111,7 +111,7 @@ class ProcessTest: XCTestCase {
         XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
         XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "3FA86B8D-EF8A-4E7C-8C39-681E33A6E99F")
+        XCTAssertEqual(devices.destination?.udid, "9960DAB6-A343-4BFD-81E7-9995B274A034")
     }
     
     /**
@@ -135,6 +135,6 @@ class ProcessTest: XCTestCase {
         XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
         XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "461A4D6E-7215-4665-80FD-48311E77297B")
+        XCTAssertEqual(devices.destination?.udid, "9960DAB6-A343-4BFD-81E7-9995B274A034")
     }    
 }

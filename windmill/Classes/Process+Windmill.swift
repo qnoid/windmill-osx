@@ -51,18 +51,9 @@ extension Process {
 }
 
 extension Process
-{
-    func domain(type: ActivityType) -> String {
-        switch type {
-        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .deploy:
-            return WindmillErrorDomain
-        case .build, .test, .archive, .export:
-            return NSPOSIXErrorDomain
-        }
-    }
-    
+{    
     func localizedFailureReason(type: ActivityType, exitStatus: Int32) -> String {
-        return NSLocalizedString("windmill.activity.\(type.rawValue).error.failure.reason", comment: "") + "\(exitStatus)"
+        return NSLocalizedString("windmill.activity.\(type.rawValue).error.failure.reason.exitStatus", comment: "") + "\(exitStatus)"
     }
     
     fileprivate class func pathForDir(_ name: String) -> String! {

@@ -16,18 +16,19 @@ public struct Devices {
     }
     
     public struct Destination {
-        let value: [String: String]
+        let value: [String: AnyObject]
 
         var udid: String? {
-            return value["udid"]
+            return value["udid"] as? String
         }
 
         var name: String? {
-            return value["name"]
+            return value["name"] as? String
         }
     }
 
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
+    let logCompatibility = OSLog(subsystem: "io.windmill.windmill", category: "compatibility")
     
     private let metadata: Metadata
     let url: URL
@@ -46,9 +47,14 @@ public struct Devices {
     }
     
     var destination: Destination? {
-        guard let destination: [String: String] = metadata["destination"] else {
-            os_log("'destination' must be present with a 'udid' and 'name' keys; e.g. 'destination': {'udid': 'B7901B24-A855-4767-860B-A34F11168F4D', 'name': 'iPhone 5s'}`", log: log, type: .debug)
+        guard let dictionary: AnyObject = metadata["destination"] else {
+            os_log("Destination couldn't not be read from devices at '%{public}@'. Is a 'devices.json' present? Does it define a 'destination' dictionary?`", log: log, type: .debug, url.path)
             return nil
+        }
+        
+        guard let destination = dictionary as? [String: AnyObject] else {
+            os_log("'destination' dictionary in JSON is incompatible to type [String: AnyObject]. See '%{public}@'", log: logCompatibility, type: .error, dictionary.debugDescription)
+        return nil
         }
         
         return Destination(value: destination)
