@@ -276,7 +276,7 @@
 		BD947844205395DA00878731 /* AppView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppView.xib; sourceTree = "<group>"; };
 		BD947846205395FD00878731 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		BDAA0582205FAF0B00B295AF /* Empty.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Empty.txt; sourceTree = "<group>"; };
-		BDB6D53B19440392001340B4 /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = windmill.app; path = Windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDB6D53B19440392001340B4 /* Windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -547,7 +547,7 @@
 		BDB6D53C19440392001340B4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BDB6D53B19440392001340B4 /* windmill.app */,
+				BDB6D53B19440392001340B4 /* Windmill.app */,
 				BDB6D54D19440392001340B4 /* windmillTests.xctest */,
 			);
 			name = Products;
@@ -768,7 +768,7 @@
 			);
 			name = windmill;
 			productName = windmill;
-			productReference = BDB6D53B19440392001340B4 /* windmill.app */;
+			productReference = BDB6D53B19440392001340B4 /* Windmill.app */;
 			productType = "com.apple.product-type.application";
 		};
 		BDB6D54C19440392001340B4 /* windmillTests */ = {
@@ -1097,6 +1097,7 @@
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1145,6 +1146,7 @@
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -1169,7 +1171,6 @@
 				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1194,7 +1195,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.windmill.windmill;
 				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
