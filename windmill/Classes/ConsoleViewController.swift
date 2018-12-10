@@ -64,9 +64,9 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     }
     
     static func make() -> ConsoleViewController {
-        let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: ConsoleViewController.self))
+        let mainStoryboard = NSStoryboard(name: "Main", bundle: Bundle(for: ConsoleViewController.self))
         
-        return mainStoryboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: String(describing: ConsoleViewController.self))) as! ConsoleViewController
+        return mainStoryboard.instantiateController(withIdentifier: String(describing: ConsoleViewController.self)) as! ConsoleViewController
     }
     
     deinit {

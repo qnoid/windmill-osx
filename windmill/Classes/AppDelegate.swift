@@ -11,7 +11,7 @@ import Foundation
 import os
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate, MainWindowControllerDelegate
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate, NSMenuItemValidation, MainWindowControllerDelegate
 {
     @IBOutlet weak var menu: NSMenu! {
         didSet {
@@ -231,7 +231,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @objc func prepareForDragOperation(_ info: NSDraggingInfo) -> Bool {
         
-        guard let url = info.draggingPasteboard().fileURL() else {
+        guard let url = info.draggingPasteboard.fileURL() else {
             return false
         }
 
@@ -262,7 +262,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.mainWindowViewController?.window?.orderFrontRegardless()
     }
     
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(run(_:)) {
             return projects.last != nil
         } else if menuItem.action == #selector(runSkipCheckout(_:)) {

@@ -18,7 +18,7 @@ class SidePanelSplitViewController: NSSplitViewController {
     }
 
     var bottomPanelSplitViewController: BottomPanelSplitViewController? {
-        return self.childViewControllers[0] as? BottomPanelSplitViewController
+        return self.children[0] as? BottomPanelSplitViewController
     }
     
     var mainViewController: MainViewController? {
@@ -26,7 +26,7 @@ class SidePanelSplitViewController: NSSplitViewController {
     }
     
     var sidePanelViewController: SidePanelViewController? {
-        return self.childViewControllers[1] as? SidePanelViewController
+        return self.children[1] as? SidePanelViewController
     }
     
     var isSidePanelHidden: Bool {

@@ -123,7 +123,7 @@ class SummaryViewController: NSViewController {
             textView.toolTip = "In Xcode, \"Jump Line In “\(documentURL.lastPathComponent)“... ⌘L\" \(summary.lineNumber)"
             
             if let characterRange = summary.characterRange {
-                textStorage.addAttributes([NSAttributedStringKey.underlineColor : NSColor.red, NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid.rawValue | NSUnderlineStyle.styleSingle.rawValue], range: characterRange)
+                textStorage.addAttributes([.underlineColor : NSColor.red, .underlineStyle: NSUnderlineStyle.single], range: characterRange)
             }
             
             let lineRange: NSRange
@@ -134,7 +134,7 @@ class SummaryViewController: NSViewController {
                 lineRange = textView.lineRange(startingLineNumber: summary.lineNumber)
             }
             
-            textStorage.addAttributes([NSAttributedStringKey.backgroundColor : NSColor.Windmill.errorLine()], range: lineRange)
+            textStorage.addAttributes([NSAttributedString.Key.backgroundColor : NSColor.Windmill.errorLine()], range: lineRange)
             
             textView.scrollRangeToVisible(lineRange)
         }

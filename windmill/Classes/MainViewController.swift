@@ -84,7 +84,7 @@ class MainViewController: NSViewController {
     }()
     
     var artefactsViewController: ArtefactsViewController? {
-        return self.childViewControllers[0] as? ArtefactsViewController
+        return self.children[0] as? ArtefactsViewController
     }
     
     let defaultCenter = NotificationCenter.default
@@ -100,9 +100,9 @@ class MainViewController: NSViewController {
     }
     
     static func make() -> MainViewController {
-        let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle(for: MainViewController.self))
+        let mainStoryboard = NSStoryboard(name: "Main", bundle: Bundle(for: MainViewController.self))
         
-        return mainStoryboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(rawValue: String(describing: MainViewController.self))) as! MainViewController
+        return mainStoryboard.instantiateController(withIdentifier: String(describing: MainViewController.self)) as! MainViewController
     }
     
     override func updateViewConstraints() {

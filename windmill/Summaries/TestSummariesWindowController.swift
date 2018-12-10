@@ -29,7 +29,7 @@ class TestSummariesWindowController: NSWindowController, TestSummariesViewContro
             return nil
         }
         
-        return splitViewController.childViewControllers[0] as? TestSummariesViewController
+        return splitViewController.children[0] as? TestSummariesViewController
     }()
     
     lazy var summaryViewController: SummaryViewController? = {
@@ -37,7 +37,7 @@ class TestSummariesWindowController: NSWindowController, TestSummariesViewContro
             return nil
         }
         
-        return splitViewController.childViewControllers[1] as? SummaryViewController
+        return splitViewController.children[1] as? SummaryViewController
     }()
     
     override func windowDidLoad() {

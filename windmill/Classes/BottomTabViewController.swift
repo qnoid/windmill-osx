@@ -11,10 +11,10 @@ import Cocoa
 class BottomTabViewController: NSTabViewController {
     
     var consoleViewController: ConsoleViewController? {
-        return self.childViewControllers[0] as? ConsoleViewController
+        return self.children[0] as? ConsoleViewController
     }
 
     var prettyConsoleViewController: PrettyConsoleViewController? {
-        return self.childViewControllers[1] as? PrettyConsoleViewController
+        return self.children[1] as? PrettyConsoleViewController
     }    
 }

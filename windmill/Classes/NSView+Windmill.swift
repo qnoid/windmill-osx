@@ -50,7 +50,7 @@ extension NSObject {
 extension NSView {
     
     func wml_load<T: NSView>(view: T.Type) -> NSView? {
-    return wml_load(name: NSNib.Name(rawValue: String(describing: view)))
+    return wml_load(name: String(describing: view))
     }
     
     func wml_addSubview(view: NSView, layout: Layout = .centered) {

@@ -54,7 +54,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
         didSet{
             let layer = CALayer()
             layer.contentsScale = 2.0
-            layer.contentsGravity = "aspectFit"
+            layer.contentsGravity = .resizeAspect
             layer.contents = #imageLiteral(resourceName: "windmill-activity-indicator")
             windmillImageView.layer = layer
             windmillImageView.wantsLayer = true
@@ -74,7 +74,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
     @IBOutlet weak var prettyLogTextField: NSTextField!
     @IBOutlet weak var errorButton: NSButton! {
         didSet{
-            errorButton.attributedTitle = NSAttributedString(string: errorButton.stringValue, attributes: [ NSAttributedStringKey.backgroundColor: NSColor.windowBackgroundColor, NSAttributedStringKey.foregroundColor : NSColor.white])
+            errorButton.attributedTitle = NSAttributedString(string: errorButton.stringValue, attributes: [ .backgroundColor: NSColor.windowBackgroundColor, .foregroundColor : NSColor.white])
             errorButton.isHidden = true
         }
     }
@@ -82,7 +82,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
     override init(itemIdentifier: NSToolbarItem.Identifier) {
         super.init(itemIdentifier: itemIdentifier)
         
-        self.view = wml_load(name: NSNib.Name(rawValue: String(describing: UserMessageView.self)))!
+        self.view = wml_load(name: String(describing: UserMessageView.self))!
     }
     
     func display(_ layer: CALayer) {
@@ -116,7 +116,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
             return
         }
         
-        self.windmillImageView.layer?.contents = NSImage(named: NSImage.Name(rawValue: activity.imageName))
+        self.windmillImageView.layer?.contents = NSImage(named: activity.imageName)
         self.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
         self.activityTextfield.stringValue = activity.description
     }
@@ -137,7 +137,7 @@ class UserMessageView: NSToolbarItem, CALayerDelegate {
         }
         
         if let activity = aNotification.userInfo?["activity"] as? ActivityType {
-            self.windmillImageView.layer?.contents = NSImage(named: NSImage.Name(rawValue: activity.imageName))
+            self.windmillImageView.layer?.contents = NSImage(named: activity.imageName)
         } else {
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
         }

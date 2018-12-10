@@ -53,10 +53,10 @@ class TextViewRuler<ClientView:NSView>: NSRulerView where ClientView: LineEnumer
         }
     }
     
-    func textAttributes() -> [NSAttributedStringKey: AnyObject] {
+    func textAttributes() -> [NSAttributedString.Key: AnyObject] {
         return [
-            NSAttributedStringKey.font: NSFont.labelFont(ofSize: NSFont.systemFontSize(for: .mini)),
-            NSAttributedStringKey.foregroundColor: NSColor(calibratedWhite: 0.42, alpha: 1),
+            .font: NSFont.labelFont(ofSize: NSFont.systemFontSize(for: .mini)),
+            .foregroundColor: NSColor(calibratedWhite: 0.42, alpha: 1),
         ]
     }
 }

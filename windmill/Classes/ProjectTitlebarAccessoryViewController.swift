@@ -9,7 +9,7 @@
 import AppKit
 import os
 
-class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController {
+class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController, NSMenuItemValidation, NSToolbarItemValidation {
     
     @IBOutlet weak var launchMenuItem: NSMenuItem!
     @IBOutlet weak var launchButton: NSButton! {
@@ -81,7 +81,7 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         notificationCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
     }
     
-    override func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
+    func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
         if item.action == #selector(launchOnSimulator(_:)) {
             return self.launchButton.isEnabled
         }
@@ -89,7 +89,7 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController 
         return true
     }
     
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(launchOnSimulator(_:)), let launchButton = self.launchButton {
             return launchButton.isEnabled
         } else if menuItem.action == #selector(recordVideo(_:)) {

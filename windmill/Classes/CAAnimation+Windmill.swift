@@ -25,7 +25,7 @@ extension CAAnimation {
         static func lightsAnimation(size: CGSize, animations images: [NSImage]) -> CAAnimation {
             let keyPath = "contents"
             let keyframeAnimation = CAKeyframeAnimation(keyPath: keyPath)
-            keyframeAnimation.calculationMode = kCAAnimationDiscrete
+            keyframeAnimation.calculationMode = .discrete
             
             let durationOfAnimation: CFTimeInterval = 2.0
             keyframeAnimation.duration = durationOfAnimation
@@ -41,7 +41,7 @@ extension CAAnimation {
             opacityAnimation.fromValue = 0.25
             opacityAnimation.toValue = 1.0
             opacityAnimation.duration = 0.75
-            opacityAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            opacityAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
             opacityAnimation.autoreverses = true
             opacityAnimation.repeatCount = .greatestFiniteMagnitude
             

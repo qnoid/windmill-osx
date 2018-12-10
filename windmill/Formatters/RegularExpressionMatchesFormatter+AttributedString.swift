@@ -13,7 +13,7 @@ extension RegularExpressionMatchesFormatter {
     static func buildInProgressStatus(descender: CGFloat) -> NSMutableAttributedString {
         let buildInProgressStatus = NSAttributedString(attachment: NSTextAttachment.Windmill.make(image: #imageLiteral(resourceName: "Status-BuildInProgress"))) as! NSMutableAttributedString
         
-        buildInProgressStatus.addAttribute(NSAttributedStringKey.baselineOffset, value: descender, range: NSMakeRange(0, buildInProgressStatus.length))
+        buildInProgressStatus.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, buildInProgressStatus.length))
         
         return buildInProgressStatus
     }
@@ -21,7 +21,7 @@ extension RegularExpressionMatchesFormatter {
     static func failedBuildStatus(descender: CGFloat) -> NSMutableAttributedString {
         let failedBuildStatus = NSAttributedString(attachment: NSTextAttachment.Windmill.make(image: #imageLiteral(resourceName: "error"))) as! NSMutableAttributedString
         
-        failedBuildStatus.addAttribute(NSAttributedStringKey.baselineOffset, value: descender, range: NSMakeRange(0, failedBuildStatus.length))
+        failedBuildStatus.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, failedBuildStatus.length))
         
         return failedBuildStatus
     }
@@ -29,7 +29,7 @@ extension RegularExpressionMatchesFormatter {
     static func successBuildStatus(descender: CGFloat) -> NSMutableAttributedString {
         let successBuildStatus = NSAttributedString(attachment: NSTextAttachment.Windmill.make(image: #imageLiteral(resourceName: "Success"))) as! NSMutableAttributedString
         
-        successBuildStatus.addAttribute(NSAttributedStringKey.baselineOffset, value: descender, range: NSMakeRange(0, successBuildStatus.length))
+        successBuildStatus.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, successBuildStatus.length))
         
         return successBuildStatus
     }
@@ -37,7 +37,7 @@ extension RegularExpressionMatchesFormatter {
     static func failedTestStatus(descender: CGFloat) -> NSMutableAttributedString {
         let failedTestStatus = NSAttributedString(attachment: NSTextAttachment.Windmill.make(image: #imageLiteral(resourceName: "test-failure"))) as! NSMutableAttributedString
         
-        failedTestStatus.addAttribute(NSAttributedStringKey.baselineOffset, value: descender, range: NSMakeRange(0, failedTestStatus.length))
+        failedTestStatus.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, failedTestStatus.length))
         
         return failedTestStatus
     }
@@ -46,7 +46,7 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, name in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Cloning into ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Cloning into ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string:  "\(name)\n"))
             return attributedString
         }
@@ -55,13 +55,13 @@ extension RegularExpressionMatchesFormatter {
     static func makeCheckoutSuccess(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CHECKOUT_SUCCESS_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { commit, log in
             let attributedString = successBuildStatus(descender: descender)
-            attributedString.append(NSAttributedString(string: " Checkout", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " Checkout", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " succeeded\n\tNo issues"))
-            attributedString.append(NSAttributedString(string: "\n\t\t \(commit) (", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.gitYellow()]))
-            attributedString.append(NSAttributedString(string: "HEAD ->", attributes: [NSAttributedStringKey.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular), NSAttributedStringKey.foregroundColor : NSColor.Windmill.gitCyan()]))
-            attributedString.append(NSAttributedString(string: " master", attributes: [NSAttributedStringKey.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular), NSAttributedStringKey.foregroundColor : NSColor.Windmill.gitGreen()]))
-            attributedString.append(NSAttributedString(string: ")", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.gitYellow()]))
-            attributedString.append(NSAttributedString(string: " \(log)\n", attributes: [NSAttributedStringKey.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)]))
+            attributedString.append(NSAttributedString(string: "\n\t\t \(commit) (", attributes: [.foregroundColor : NSColor.Windmill.gitYellow()]))
+            attributedString.append(NSAttributedString(string: "HEAD ->", attributes: [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular), .foregroundColor : NSColor.Windmill.gitCyan()]))
+            attributedString.append(NSAttributedString(string: " master", attributes: [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular), .foregroundColor : NSColor.Windmill.gitGreen()]))
+            attributedString.append(NSAttributedString(string: ")", attributes: [.foregroundColor : NSColor.Windmill.gitYellow()]))
+            attributedString.append(NSAttributedString(string: " \(log)\n", attributes: [.font: NSFont.monospacedDigitSystemFont(ofSize: 11, weight: .regular)]))
             return attributedString
         }
     }
@@ -70,7 +70,7 @@ extension RegularExpressionMatchesFormatter {
         return triple(match: regularExpression) { target, project, configuration in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Build target", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Build target", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " \(target)\n"))
             return attributedString
         }
@@ -80,7 +80,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Link", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " Storyboards\n"))
             return attributedString
         }
@@ -90,7 +90,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Write", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Write", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " auxiliary files\n"))
             return attributedString
         }
@@ -100,7 +100,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { script in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Run custom shell script ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Run custom shell script ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: "'\(script)'\n"))
             return attributedString
         }
@@ -110,7 +110,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Create", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Create", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " product structure\n"))
             return attributedString
         }
@@ -120,7 +120,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " Swift source files\n"))
             return attributedString
         }
@@ -130,8 +130,8 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { path in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Create", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
-            attributedString.append(NSAttributedString(string: " universal binary ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string: "Create", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " universal binary ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -140,9 +140,9 @@ extension RegularExpressionMatchesFormatter {
         return triple(match: regularExpression) { source, destination, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...at \(destination.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...at \(destination.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -151,7 +151,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { phase in
             let attributedString = successBuildStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: phase.prefix(1).uppercased() + phase.lowercased().dropFirst(), attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: phase.prefix(1).uppercased() + phase.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " succeeded\n\tNo issues\n"))
             return attributedString
         }
@@ -162,7 +162,7 @@ extension RegularExpressionMatchesFormatter {
             let attributedString = NSMutableAttributedString(string: "\t")
             attributedString.append(failedBuildStatus(descender: descender))
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.Windmill.red()]))
             return attributedString
         }
     }
@@ -172,7 +172,7 @@ extension RegularExpressionMatchesFormatter {
             let attributedString = NSMutableAttributedString(string: "\t")
             attributedString.append(failedBuildStatus(descender: descender))
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.Windmill.red()]))
             return attributedString
         }
     }
@@ -182,7 +182,7 @@ extension RegularExpressionMatchesFormatter {
             let attributedString = NSMutableAttributedString(string: "\t")
             attributedString.append(failedBuildStatus(descender: descender))
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.Windmill.red()]))
             return attributedString
         }
     }
@@ -191,7 +191,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { error in
             let attributedString = failedBuildStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.Windmill.red()]))
             return attributedString
         }
     }
@@ -210,9 +210,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Merge ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Merge ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string: " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string: " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -221,9 +221,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { filename, path in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -232,7 +232,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { dsym in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Generate ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Generate ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: "\(dsym)\n"))
             return attributedString
         }
@@ -242,9 +242,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Copy Swift standard libraries ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Copy Swift standard libraries ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -253,7 +253,7 @@ extension RegularExpressionMatchesFormatter {
         return single(match: regularExpression) { phase in
             let attributedString = failedBuildStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: phase.prefix(1).uppercased() + phase.lowercased().dropFirst(), attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: phase.prefix(1).uppercased() + phase.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " failed\n"))
             return attributedString
         }
@@ -262,7 +262,7 @@ extension RegularExpressionMatchesFormatter {
     static func makeTestSuiteAllTestsStarted(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TEST_SUITE_ALL_TESTS_STARTED_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
-            attributedString.append(NSAttributedString(string: " Run test suite", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " Run test suite", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " All Tests\n"))
             return attributedString
         }
@@ -273,7 +273,7 @@ extension RegularExpressionMatchesFormatter {
             let attributedString = NSMutableAttributedString(string: "\t")
             attributedString.append(buildInProgressStatus(descender: descender))
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Test Suite", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Test Suite", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " '\(xctest)'\n"))
             return attributedString
         }
@@ -284,7 +284,7 @@ extension RegularExpressionMatchesFormatter {
             let attributedString = NSMutableAttributedString(string: "\t\t")
             attributedString.append(buildInProgressStatus(descender: descender))
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Test Suite", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Test Suite", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " '\(testsuite)'\n"))
             return attributedString
         }
@@ -294,9 +294,9 @@ extension RegularExpressionMatchesFormatter {
         return triple(match: regularExpression) { suite, testcase, duration in
             let attributedString = NSMutableAttributedString(string: "\t\t\t")
             attributedString.append(successBuildStatus(descender: descender))
-            attributedString.append(NSAttributedString(string: " Run test case", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " Run test case", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " '\(testcase)()'"))
-            attributedString.append(NSAttributedString(string: " \(duration) seconds\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string: " \(duration) seconds\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -305,11 +305,11 @@ extension RegularExpressionMatchesFormatter {
         return quadriple(match: regularExpression) { path, suite, testcase, message in
             let attributedString = NSMutableAttributedString(string: "\t\t")
             attributedString.append(failedTestStatus(descender: descender))
-            attributedString.append(NSAttributedString(string: " Run test case", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: " Run test case", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " '\(testcase)()'"))
             attributedString.append(NSAttributedString(string: "\n\t\t\t"))
             attributedString.append(failedTestStatus(descender: descender))
-            attributedString.append(NSAttributedString(string: " \(message)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.Windmill.red()]))
+            attributedString.append(NSAttributedString(string: " \(message)\n", attributes: [.foregroundColor : NSColor.Windmill.red()]))
             return attributedString
         }
     }
@@ -318,9 +318,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Sign ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Sign ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -329,9 +329,9 @@ extension RegularExpressionMatchesFormatter {
         return quadriple(match: regularExpression) { path, filename, variant, architecture in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Link", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " \(filename)"))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -340,9 +340,9 @@ extension RegularExpressionMatchesFormatter {
         return quadriple(match: regularExpression) { path, filename, variant, architecture in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Link", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " \(filename)"))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -351,7 +351,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Process", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Process", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " product packaging\n"))
             return attributedString
         }
@@ -361,9 +361,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Touch ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Touch ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -372,9 +372,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Process", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Process", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " \(filename)"))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -384,7 +384,7 @@ extension RegularExpressionMatchesFormatter {
         return match(regularExpression) {
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: " asset catalogs\n"))
             return attributedString
         }
@@ -394,9 +394,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile XIB file ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile XIB file ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -405,9 +405,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile Storyboard file ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile Storyboard file ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -416,9 +416,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -427,9 +427,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Compile ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Compile ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -438,9 +438,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, name in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Strip ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Strip ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: name))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -449,9 +449,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Set owner and group of ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Set owner and group of ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -460,9 +460,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Set mode of ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Set mode of ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -471,9 +471,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Make symlink ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Make symlink ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -482,9 +482,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { filename, path in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -493,9 +493,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Copy ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -504,9 +504,9 @@ extension RegularExpressionMatchesFormatter {
         return double(match: regularExpression) { path, filename in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " "))
-            attributedString.append(NSAttributedString(string: "Code Generation ", attributes: [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 13)]))
+            attributedString.append(NSAttributedString(string: "Code Generation ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13)]))
             attributedString.append(NSAttributedString(string: filename))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [NSAttributedStringKey.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }

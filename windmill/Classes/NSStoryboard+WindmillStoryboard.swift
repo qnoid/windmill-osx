@@ -13,7 +13,7 @@ extension NSStoryboard
     struct Windmill
     {
         static func mainStoryboard() -> NSStoryboard {
-            return NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: Bundle.main)
+            return NSStoryboard(name: "Main", bundle: Bundle.main)
         }
         
         static func mainWindowController() -> MainWindowController {
@@ -21,15 +21,15 @@ extension NSStoryboard
         }
         
         static func errorSummariesStoryboard() -> NSStoryboard {
-            return NSStoryboard(name: NSStoryboard.Name(rawValue: "ErrorSummaries"), bundle: Bundle.main)
+            return NSStoryboard(name: "ErrorSummaries", bundle: Bundle.main)
         }
 
         static func testFailureSummariesStoryboard() -> NSStoryboard {
-            return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestFailureSummaries"), bundle: Bundle.main)
+            return NSStoryboard(name: "TestFailureSummaries", bundle: Bundle.main)
         }
         
         static func testSummariesStoryboard() -> NSStoryboard {
-            return NSStoryboard(name: NSStoryboard.Name(rawValue: "TestSummaries"), bundle: Bundle.main)
+            return NSStoryboard(name: "TestSummaries", bundle: Bundle.main)
         }
     }
 }

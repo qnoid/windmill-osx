@@ -161,7 +161,7 @@ class StandardOutPrettyFormatter: Formatter {
         }
     }
     
-    override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedStringKey : Any]? = nil) -> NSAttributedString? {
+    override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
         if let cloning = self.cloningFormatter.format(for: obj) {
             return cloning
         } else if let checkoutSuccess = self.checkoutSuccessFormatter.format(for: obj) {

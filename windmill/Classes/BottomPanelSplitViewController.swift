@@ -20,11 +20,11 @@ class BottomPanelSplitViewController: NSSplitViewController {
     }
     
     var mainViewController: MainViewController? {
-        return self.childViewControllers[0] as? MainViewController
+        return self.children[0] as? MainViewController
     }
 
     var bottomViewController: BottomTabViewController? {
-        return self.childViewControllers[1] as? BottomTabViewController
+        return self.children[1] as? BottomTabViewController
     }
 
     var isBottomPanelCollapsed: Bool {

@@ -69,7 +69,7 @@ class ArtefactView: NSView {
                 return
             }
             
-            var attributes: [NSAttributedStringKey : Any] = [.foregroundColor: NSColor.white, .font : stepsLabel.font as Any]
+            var attributes: [NSAttributedString.Key : Any] = [.foregroundColor: NSColor.white, .font : stepsLabel.font as Any]
             if let url = url {
                 attributes[.link] = url
                 self.stepsLabel.isSelectable = true

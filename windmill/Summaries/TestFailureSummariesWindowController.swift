@@ -28,7 +28,7 @@ class TestFailureSummariesWindowController: NSWindowController, TestFailureSumma
             return nil
         }
         
-        return splitViewController.childViewControllers[0] as? TestFailureSummariesViewController
+        return splitViewController.children[0] as? TestFailureSummariesViewController
     }()
     
     lazy var summaryViewController: SummaryViewController? = {
@@ -36,7 +36,7 @@ class TestFailureSummariesWindowController: NSWindowController, TestFailureSumma
             return nil
         }
         
-        return splitViewController.childViewControllers[1] as? SummaryViewController
+        return splitViewController.children[1] as? SummaryViewController
     }()
     
     override func windowDidLoad() {
