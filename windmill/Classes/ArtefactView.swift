@@ -41,8 +41,6 @@ class ArtefactView: NSView {
 
     @IBOutlet weak var imageView: NSImageView! {
         didSet{
-            imageView.layer = CALayer()
-            imageView.wantsLayer = true
             imageView.alphaValue = 0.25
         }
     }
