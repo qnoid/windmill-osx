@@ -12,13 +12,13 @@ extension RegularExpressionMatchesFormatter {
     
     static func makeNote(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.NOTE_EXPRESSION) -> RegularExpressionMatchesFormatter<String> {
         return single(match: regularExpression) { note in
-            return "\t\t \(note)\n"
+            return "\(note)\n"
         }
     }
     
     static func makeReason(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.REASON_EXPRESSION) -> RegularExpressionMatchesFormatter<String> {
         return single(match: regularExpression) { reason in
-            return "\t\t \(reason)\n"
+            return "\(reason)\n"
         }
     }
 }

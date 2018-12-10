@@ -166,6 +166,8 @@ class StandardOutPrettyFormatter: Formatter {
             return cloning
         } else if let checkoutSuccess = self.checkoutSuccessFormatter.format(for: obj) {
             return checkoutSuccess
+        } else if let note = noteFormatter.format(for: obj) {
+            return NSAttributedString(string: note)
         } else if let buildTarget = self.buildTargetFormatter.format(for: obj) {
             return buildTarget
         } else if let compile = self.compileFormatter.format(for: obj) {
