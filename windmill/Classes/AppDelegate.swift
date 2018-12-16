@@ -158,7 +158,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             let notification = NSUserNotification()
             notification.title = "Getting started."
             notification.informativeText = NSLocalizedString("notification.gettingstarted", comment: "")
-            notification.contentImage = #imageLiteral(resourceName: "statusItem")
             
             
             notification.actionButtonTitle = NSLocalizedString("notification.gettingstarted.action", comment: "")
