@@ -37,7 +37,7 @@ extension NSView {
 }
 
 @IBDesignable
-class MainView: NSView, CALayerDelegate {
+class MainView: NSView {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

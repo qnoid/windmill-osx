@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="stacking Non-gravity area distributions on NSStackView" minToolsVersion="7.0" minSystemVersion="10.11"/>
     </dependencies>
     <scenes>
         <!--Window Controller-->
         <scene sceneID="21W-NP-aZ8">
             <objects>
                 <windowController storyboardIdentifier="MainWindowController" id="CPq-1v-PfW" customClass="MainWindowController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
+                    <window key="window" title="Windmill" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="pyI-Y3-0Vi">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -52,7 +53,7 @@
                                         </popUpButtonCell>
                                     </popUpButton>
                                 </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="F4822D55-0245-4D96-8675-044986B53AEC" label="User Message View " paletteLabel="" id="whK-6v-q5N" userLabel="User messages" customClass="UserMessageView" customModule="Windmill" customModuleProvider="target">
+                                <toolbarItem implicitItemIdentifier="F4822D55-0245-4D96-8675-044986B53AEC" label="User Message View " paletteLabel="" id="whK-6v-q5N" userLabel="User messages" customClass="UserMessageToolbarItem" customModule="Windmill" customModuleProvider="target">
                                     <size key="minSize" width="150" height="22"/>
                                     <size key="maxSize" width="500" height="22"/>
                                 </toolbarItem>
@@ -62,7 +63,7 @@
                                     <size key="minSize" width="67" height="23"/>
                                     <size key="maxSize" width="100" height="28"/>
                                     <segmentedControl key="view" verticalHuggingPriority="750" id="ESA-yL-4Qj">
-                                        <rect key="frame" x="0.0" y="14" width="75" height="23"/>
+                                        <rect key="frame" x="0.0" y="14" width="74" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectAny" id="6sZ-bs-Bt0">
                                             <font key="font" metaFont="system"/>
@@ -185,7 +186,7 @@
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="master" id="T91-8m-BB8">
                                     <font key="font" metaFont="system" size="18"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="bvb-g2-0Id" customClass="ActivityView" customModule="Windmill" customModuleProvider="target">
@@ -324,7 +325,7 @@
         <!--Bottom Tab View Controller-->
         <scene sceneID="vh4-np-aGm">
             <objects>
-                <tabViewController selectedTabViewItemIndex="1" tabStyle="bottom" id="rYT-dj-KwR" customClass="BottomTabViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <tabViewController selectedTabViewItemIndex="0" tabStyle="bottom" id="rYT-dj-KwR" customClass="BottomTabViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem identifier="" id="Dtc-AU-Q8S"/>
                         <tabViewItem identifier="" id="bJV-i6-RyP"/>
@@ -354,26 +355,26 @@
                     <scrollView key="view" canDrawConcurrently="YES" horizontalLineScroll="0.0" horizontalPageScroll="0.0" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="1kk-Jl-vm9">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" canDrawConcurrently="YES" id="wKf-nu-3c7">
+                        <clipView key="contentView" canDrawConcurrently="YES" drawsBackground="NO" id="wKf-nu-3c7">
                             <rect key="frame" x="1" y="1" width="448" height="298"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView editable="NO" selectable="NO" importsGraphics="NO" richText="NO" horizontallyResizable="YES" verticallyResizable="YES" findStyle="panel" allowsCharacterPickerTouchBarItem="NO" allowsNonContiguousLayout="YES" textCompletion="NO" id="VvI-IN-zZ7" customClass="TextView" customModule="Windmill" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="448" height="298"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <size key="minSize" width="448" height="298"/>
                                     <size key="maxSize" width="915" height="10000000"/>
-                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="TPm-iV-z0o">
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="TPm-iV-z0o">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="gfU-Y7-RNJ">
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="gfU-Y7-RNJ">
                             <rect key="frame" x="433" y="1" width="16" height="298"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -384,6 +385,7 @@
                     </connections>
                 </viewController>
                 <customObject id="cAd-RN-TNv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <userDefaultsController representsSharedInstance="YES" id="b7a-TG-0yW"/>
             </objects>
             <point key="canvasLocation" x="-16" y="1827"/>
         </scene>
@@ -394,26 +396,26 @@
                     <scrollView key="view" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" id="Tpk-3z-tdN">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <clipView key="contentView" id="YPZ-KB-QgE">
+                        <clipView key="contentView" drawsBackground="NO" id="YPZ-KB-QgE">
                             <rect key="frame" x="1" y="1" width="448" height="298"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView importsGraphics="NO" horizontallyResizable="YES" verticallyResizable="YES" usesFontPanel="YES" selectionGranularity="paragraph" findStyle="bar" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="QiF-GR-eQF" customClass="TextView" customModule="Windmill" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="448" height="298"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <size key="minSize" width="448" height="298"/>
                                     <size key="maxSize" width="915" height="10000000"/>
-                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="DYY-Hu-KHW">
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="DYY-Hu-KHW">
                             <rect key="frame" x="-100" y="-100" width="87" height="18"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="7BS-ln-oEw">
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="7BS-ln-oEw">
                             <rect key="frame" x="433" y="1" width="16" height="298"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -854,7 +856,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="image" keyPath="image" value="application-icon"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="0.25098039220000001" green="0.53725490200000003" blue="0.7725490196" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" name="build"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="step" value="* There are no build errors."/>
                                         </userDefinedRuntimeAttributes>
@@ -873,12 +875,12 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             <constraint firstAttribute="width" constant="270" id="TTf-4x-KxH"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="unit-test_Icon"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="0.0" green="0.98106676339999999" blue="0.57369142770000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" name="test"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev2ea31ea57"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Add a test target."/>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="image" value="unit-test_Icon"/>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
                                     <customView hidden="YES" autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4uk-LD-DdB" userLabel="Test View" customClass="TestReportView" customModule="Windmill" customModuleProvider="target">
@@ -914,7 +916,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="image" keyPath="image" value="archive"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" name="archive"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="url" value="https://help.apple.com/xcode/mac/9.0/#/dev23aab79b4"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Assign a project to a team."/>
@@ -936,7 +938,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="image" keyPath="image" value="ipa"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="0.46202266219999999" green="0.83828371759999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" name="export"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </customView>
@@ -956,7 +958,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="image" keyPath="image" value="iphone-x"/>
                                             <userDefinedRuntimeAttribute type="color" keyPath="color">
-                                                <color key="value" red="1" green="0.1857388616" blue="0.57339501380000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="value" name="deploy"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="step" value="* Have an active Windmill subscription."/>
                                         </userDefinedRuntimeAttributes>
@@ -1019,13 +1021,28 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <image name="divider" width="21.5" height="10.5"/>
         <image name="ipa" width="128" height="128"/>
         <image name="iphone-x" width="128" height="128"/>
-        <image name="lights-archive" width="110" height="44"/>
+        <image name="lights-archive" width="220" height="88"/>
         <image name="lights-build" width="110" height="44"/>
-        <image name="lights-checkout" width="110" height="44"/>
-        <image name="lights-deploy" width="110" height="44"/>
-        <image name="lights-export" width="110" height="44"/>
-        <image name="lights-test" width="110" height="44"/>
+        <image name="lights-checkout" width="220" height="88"/>
+        <image name="lights-deploy" width="220" height="88"/>
+        <image name="lights-export" width="220" height="88"/>
+        <image name="lights-test" width="220" height="88"/>
         <image name="right panel" width="18" height="14"/>
         <image name="unit-test_Icon" width="128" height="128"/>
+        <namedColor name="archive">
+            <color name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
+        </namedColor>
+        <namedColor name="build">
+            <color name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+        </namedColor>
+        <namedColor name="deploy">
+            <color name="systemPinkColor" catalog="System" colorSpace="catalog"/>
+        </namedColor>
+        <namedColor name="export">
+            <color red="0.039215686274509803" green="0.83137254901960789" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="test">
+            <color name="systemGreenColor" catalog="System" colorSpace="catalog"/>
+        </namedColor>
     </resources>
 </document>

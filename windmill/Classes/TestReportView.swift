@@ -18,8 +18,7 @@ class TestReportButton: NSButton {
         didSet {
             self.attributedTitle = NSAttributedString(string: self._title,
                                                       attributes: [
-                                                        .backgroundColor : NSColor.windowBackgroundColor,
-                                                        .foregroundColor : NSColor.white,
+                                                        .foregroundColor : NSColor.textColor,
                                                         .font : self.font as Any ])
         }
     }
@@ -47,7 +46,7 @@ class TestReportView: NSView {
     @IBOutlet weak var headerTextField: LinkLabel! {
         didSet{
             let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .foregroundColor: NSColor.white,
+                .foregroundColor: NSColor.labelColor,
                 .font : headerTextField.font as Any])
             headerTextField.attributedString = attributedString
         }
@@ -55,8 +54,7 @@ class TestReportView: NSView {
     
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
-            self.stageIndicatorView.wantsLayer = true
-            self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.green().cgColor
+            self.stageIndicatorView.color = NSColor(named:"test")
         }
     }
     @IBOutlet weak var testButton: TestReportButton! {

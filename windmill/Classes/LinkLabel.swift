@@ -23,8 +23,8 @@ import Cocoa
 @IBDesignable
 class LinkLabel: NSTextView {
     
-    @IBInspectable var foregroundColor: NSColor = NSColor.white
-    @IBInspectable var underlineColor: NSColor = NSColor.white
+    @IBInspectable var foregroundColor: NSColor = NSColor.linkColor
+    @IBInspectable var underlineColor: NSColor = NSColor.linkColor
     
     var attributedString: NSAttributedString? {
         didSet{

@@ -14,8 +14,7 @@ class ArchiveView: NSView {
     
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
-            self.stageIndicatorView.wantsLayer = true
-            self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.orange().cgColor
+            self.stageIndicatorView.color = NSColor(named:"archive")
         }
     }
     

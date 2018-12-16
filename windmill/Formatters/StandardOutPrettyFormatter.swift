@@ -19,6 +19,7 @@ class StandardOutPrettyFormatter: Formatter {
     let swiftCodeGenerationFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let mergeModulesCommandFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let compileNoteFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileNote()
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let clangErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let globalErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -166,12 +167,12 @@ class StandardOutPrettyFormatter: Formatter {
             return cloning
         } else if let checkoutSuccess = self.checkoutSuccessFormatter.format(for: obj) {
             return checkoutSuccess
-        } else if let note = noteFormatter.format(for: obj) {
-            return NSAttributedString(string: note)
         } else if let buildTarget = self.buildTargetFormatter.format(for: obj) {
             return buildTarget
         } else if let compile = self.compileFormatter.format(for: obj) {
             return compile
+        } else if let compileNote = self.compileNoteFormatter.format(for: obj) {
+            return compileNote
         } else if let writeAuxiliaryfiles = self.writeAuxiliaryfilesFormatter.format(for: obj) {
             return writeAuxiliaryfiles
         } else if let createProductStructure = self.createProductStructureFormatter.format(for: obj) {

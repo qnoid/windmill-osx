@@ -16,8 +16,7 @@ class DeployView: NSView {
     
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
-            self.stageIndicatorView.wantsLayer = true
-            self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.purple().cgColor
+            self.stageIndicatorView.color = NSColor(named:"deploy")
         }
     }
     
@@ -27,7 +26,7 @@ class DeployView: NSView {
 
     @IBOutlet weak var infoImageView: NSImageView! {
         didSet{
-            infoImageView.image?.backgroundColor = NSColor.white
+            infoImageView.image?.backgroundColor = NSColor.controlBackgroundColor
         }
     }
     

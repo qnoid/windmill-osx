@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AppKit.NSColor
 
 protocol StandardOutFormattedReaderDelegate: class {
     
@@ -60,7 +61,7 @@ class StandardOutFormattedReader: DispatchSourceReadProvider {
             if let attributedString = self.standardOutFormatter.attributedString(for: line) {
                 formatted = attributedString
             } else if let string = self.standardOutFormatter.string(for: line) {
-                formatted = NSMutableAttributedString(string: string)
+                formatted = NSAttributedString(string: string, attributes: [.foregroundColor : NSColor.textColor])
             } else {
                 return
             }

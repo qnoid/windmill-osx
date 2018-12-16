@@ -481,7 +481,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         alert.messageText = "Remove the Checkout Folder?"
         alert.informativeText = "Windmill will clone the repo on the next `Run`."
         alert.alertStyle = .warning
-        alert.window.appearance = NSAppearance(named: .vibrantDark)
+        
+        if #available(OSX 10.14, *) {
+
+        } else {
+            alert.window.appearance = NSAppearance(named: .vibrantDark)
+        }
 
         guard let window = self.mainWindowViewController?.window else {
             return

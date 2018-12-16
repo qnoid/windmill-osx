@@ -31,7 +31,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     @IBOutlet weak var schemeButton: NSPopUpButton!
-    @IBOutlet weak var userMessageView: UserMessageView!
+    @IBOutlet weak var userMessageView: UserMessageToolbarItem!
     @IBOutlet weak var panels: NSSegmentedControl!
 
     let defaultCenter = NotificationCenter.default
@@ -126,7 +126,11 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
 
         window.titleVisibility = .hidden
-        window.appearance = NSAppearance(named: .vibrantDark)
+        if #available(OSX 10.14, *) {
+            
+        } else {
+            window.appearance = NSAppearance(named: .vibrantDark)
+        }
     }
     
     fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {

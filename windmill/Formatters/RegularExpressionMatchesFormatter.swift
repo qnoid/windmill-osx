@@ -207,7 +207,11 @@ extension NSRegularExpression {
 
         // capture groups
         // $1 note
-        static let NOTE_EXPRESSION = try! NSRegularExpression(pattern: "(?:\\s|^)note:\\s(.*)")
+        static let NOTE_EXPRESSION = try! NSRegularExpression(pattern: "^note:\\s(.*)")
+
+        // capture groups
+        // $1 note
+        static let COMPILE_NOTE_EXPRESSION = try! NSRegularExpression(pattern: "(?:\\s)note:\\s(.*)")
 
         // capture groups
         // $1 reason

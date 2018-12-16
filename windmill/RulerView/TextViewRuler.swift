@@ -37,7 +37,7 @@ class TextViewRuler<ClientView:NSView>: NSRulerView where ClientView: LineEnumer
     }
     
     override func drawHashMarksAndLabels(in rect: NSRect) {
-        NSColor.white.set()
+        NSColor.textBackgroundColor.set()
         NSRect(x: 0, y: rect.minY, width: rect.width, height: rect.height).fill()
         
         let origin = self.convert(NSPoint.zero, from:_clientView)

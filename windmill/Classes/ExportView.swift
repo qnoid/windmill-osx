@@ -38,8 +38,7 @@ class ExportView: NSView {
     
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
-            self.stageIndicatorView.wantsLayer = true
-            self.stageIndicatorView.layer?.backgroundColor = NSColor.Windmill.cyan().cgColor
+            self.stageIndicatorView.color = NSColor(named:"export")
         }
     }
     @IBOutlet weak var ipaImageView: FileImageView!

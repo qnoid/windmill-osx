@@ -2,17 +2,60 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "windmill-activity-indicator.png",
+      "filename" : "windmill-activity-indicator-dark-1.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "windmill-activity-indicator@2x.png",
+      "filename" : "windmill-activity-indicator.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "windmill-activity-indicator-dark.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "windmill-activity-indicator-dark@2x-3.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "windmill-activity-indicator@3x.png",
+      "filename" : "windmill-activity-indicator@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "windmill-activity-indicator-dark@2x-2.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
       "scale" : "3x"
     }
   ],

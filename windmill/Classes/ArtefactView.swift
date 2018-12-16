@@ -10,12 +10,34 @@ import AppKit
 
 @IBDesignable class StageIndicatorView: NSView {
     
-    override func makeBackingLayer() -> CALayer {
-        let backingLayer = CALayer()
-        backingLayer.masksToBounds = true
-        backingLayer.cornerRadius = 2.0
+    var color: NSColor? {
+        didSet {
+            self.needsDisplay = true
+        }
+    }
+    
+    override var wantsUpdateLayer: Bool {
+        return true
+    }
+    
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+
+        self.wantsLayer = true
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
         
-        return backingLayer
+        self.wantsLayer = true
+        self.layerContentsRedrawPolicy = .onSetNeedsDisplay
+    }
+    
+    override func updateLayer() {
+        self.layer?.masksToBounds = true
+        self.layer?.cornerRadius = 2.0
+        self.layer?.backgroundColor = self.color?.cgColor
     }
 }
 
@@ -25,16 +47,15 @@ class ArtefactView: NSView {
     @IBOutlet weak var headerTextField: LinkLabel! {
         didSet{
             let attributedString = NSAttributedString(string: headerTextField.string, attributes: [
-                .foregroundColor: NSColor.white,
+                .foregroundColor: NSColor.textColor,
                 .font : headerTextField.font as Any])
             headerTextField.attributedString = attributedString
         }
     }
     
     @IBOutlet weak var leadingLabel: NSTextField!
-    @IBOutlet weak var stageIndicator: NSView! {
+    @IBOutlet weak var stageIndicator: StageIndicatorView! {
         didSet{
-            stageIndicator.wantsLayer = true
             stageIndicator.alphaValue = 0.25
         }
     }
@@ -54,7 +75,7 @@ class ArtefactView: NSView {
     
     @IBInspectable var color: NSColor? {
         didSet{
-            self.stageIndicator.layer?.backgroundColor = color?.cgColor
+            self.stageIndicator.color = color
         }
     }
 
@@ -67,7 +88,7 @@ class ArtefactView: NSView {
                 return
             }
             
-            var attributes: [NSAttributedString.Key : Any] = [.foregroundColor: NSColor.white, .font : stepsLabel.font as Any]
+            var attributes: [NSAttributedString.Key : Any] = [.foregroundColor: NSColor.textColor, .font : stepsLabel.font as Any]
             if let url = url {
                 attributes[.link] = url
                 self.stepsLabel.isSelectable = true

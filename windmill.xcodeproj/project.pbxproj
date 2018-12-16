@@ -30,6 +30,7 @@
 		BD14BC202051E5CF0052AAA2 /* exit.sh in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC1F2051E5CF0052AAA2 /* exit.sh */; };
 		BD14BC232051EEB00052AAA2 /* project-with-build-errors in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC212051EEB00052AAA2 /* project-with-build-errors */; };
 		BD14BC242051EEB00052AAA2 /* project-with-unit-tests in Resources */ = {isa = PBXBuildFile; fileRef = BD14BC222051EEB00052AAA2 /* project-with-unit-tests */; };
+		BD1601C721BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD1601C621BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift */; };
 		BD182C102026878A00E98E02 /* Acknowledgements.rtf in Resources */ = {isa = PBXBuildFile; fileRef = BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */; };
 		BD189BC81FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */; };
 		BD189BCB1FF9FD5900BBEBA4 /* DistributionSummary.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */; };
@@ -67,6 +68,7 @@
 		BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */; };
 		BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */; };
 		BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */; };
+		BD61A63421BEA7820012F680 /* Colours.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD61A63321BEA7820012F680 /* Colours.xcassets */; };
 		BD6635881FF9DC1500951779 /* MetadataJSONEncoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */; };
 		BD663E76206D024000BBD478 /* TestSummariesProducedInRuntimeByFramework.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD663E75206D024000BBD478 /* TestSummariesProducedInRuntimeByFramework.plist */; };
 		BD68054A202C120200F38D3B /* ProcessChainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD680549202C120200F38D3B /* ProcessChainTest.swift */; };
@@ -82,7 +84,6 @@
 		BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */; };
 		BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8364082039314200D1D381 /* CharacterSetTest.swift */; };
 		BD8B80B920810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8B80B820810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift */; };
-		BD8B80BB208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8B80BA208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift */; };
 		BD8EA83C20D1677D006776C5 /* Windmill.help in Resources */ = {isa = PBXBuildFile; fileRef = BD8EA83B20D1677D006776C5 /* Windmill.help */; };
 		BD8FBE11204C96F20004C064 /* HelloWindmill.xcarchive in Resources */ = {isa = PBXBuildFile; fileRef = BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */; };
 		BD8FBE13204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */; };
@@ -100,8 +101,8 @@
 		BDAA0581205FAEC600B295AF /* 25Lines.txt in Resources */ = {isa = PBXBuildFile; fileRef = BDDF10C9205FAD8A0093E811 /* 25Lines.txt */; };
 		BDAA0583205FAF0C00B295AF /* Empty.txt in Resources */ = {isa = PBXBuildFile; fileRef = BDAA0582205FAF0B00B295AF /* Empty.txt */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
-		BDB961082049F00500E49258 /* UserMessageView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB961072049F00500E49258 /* UserMessageView.xib */; };
-		BDB9610A2049F06800E49258 /* UserMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB961092049F06800E49258 /* UserMessageView.swift */; };
+		BDB961082049F00500E49258 /* UserMessageToolbarItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB961072049F00500E49258 /* UserMessageToolbarItem.xib */; };
+		BDB9610A2049F06800E49258 /* UserMessageToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB961092049F06800E49258 /* UserMessageToolbarItem.swift */; };
 		BDB96138204A500100E49258 /* ResultBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB96137204A500100E49258 /* ResultBundle.swift */; };
 		BDB9613A204A56DC00E49258 /* ResultBundleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB96139204A56DC00E49258 /* ResultBundleTest.swift */; };
 		BDB9613D204A581D00E49258 /* InfoWithZeroErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BDB9613C204A581D00E49258 /* InfoWithZeroErrorCount.plist */; };
@@ -122,7 +123,6 @@
 		BDD002181AB8807A00F8E34A /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002171AB8807A00F8E34A /* Projects.swift */; };
 		BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002191AB8B5AD00F8E34A /* Alerts.swift */; };
 		BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Scripts.swift */; };
-		BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */; };
 		BDD1750E208A152600CDE787 /* StandardOutFormattedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */; };
 		BDD17510208A154100CDE787 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1750F208A154100CDE787 /* TextView.swift */; };
 		BDD17512208A156F00CDE787 /* DispatchSourceReadProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD17511208A156F00CDE787 /* DispatchSourceReadProvider.swift */; };
@@ -208,6 +208,7 @@
 		BD14BC1F2051E5CF0052AAA2 /* exit.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = exit.sh; sourceTree = "<group>"; };
 		BD14BC212051EEB00052AAA2 /* project-with-build-errors */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-with-build-errors"; sourceTree = "<group>"; };
 		BD14BC222051EEB00052AAA2 /* project-with-unit-tests */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "project-with-unit-tests"; sourceTree = "<group>"; };
+		BD1601C621BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RegularExpressionMatchesFormatter+String.swift"; sourceTree = "<group>"; };
 		BD182C0F2026878A00E98E02 /* Acknowledgements.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Acknowledgements.rtf; path = Classes/Acknowledgements.rtf; sourceTree = "<group>"; };
 		BD189BC71FF9FD3000BBEBA4 /* MetadataPlistEncodedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataPlistEncodedTest.swift; sourceTree = "<group>"; };
 		BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DistributionSummary.plist; sourceTree = "<group>"; };
@@ -245,6 +246,7 @@
 		BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
 		BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTitlebarAccessoryViewController.xib; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
+		BD61A63321BEA7820012F680 /* Colours.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colours.xcassets; sourceTree = "<group>"; };
 		BD6635871FF9DC1500951779 /* MetadataJSONEncoded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataJSONEncoded.swift; sourceTree = "<group>"; };
 		BD663E75206D024000BBD478 /* TestSummariesProducedInRuntimeByFramework.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestSummariesProducedInRuntimeByFramework.plist; sourceTree = "<group>"; };
 		BD680549202C120200F38D3B /* ProcessChainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessChainTest.swift; sourceTree = "<group>"; };
@@ -260,7 +262,6 @@
 		BD83640620392AC200D1D381 /* CharacterSet+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CharacterSet+Windmill.swift"; sourceTree = "<group>"; };
 		BD8364082039314200D1D381 /* CharacterSetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSetTest.swift; sourceTree = "<group>"; };
 		BD8B80B820810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RegularExpressionMatchesFormatter+AttributedString.swift"; sourceTree = "<group>"; };
-		BD8B80BA208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RegularExpressionMatchesFormatter+String.swift"; sourceTree = "<group>"; };
 		BD8EA83B20D1677D006776C5 /* Windmill.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Windmill.help; sourceTree = "<group>"; };
 		BD8FBE10204C96F20004C064 /* HelloWindmill.xcarchive */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HelloWindmill.xcarchive; sourceTree = "<group>"; };
 		BD8FBE12204C98870004C064 /* ProcessMonitorFailOnUnsuccessfulExit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessMonitorFailOnUnsuccessfulExit.swift; sourceTree = "<group>"; };
@@ -281,8 +282,8 @@
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BDB6D54D19440392001340B4 /* windmillTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = windmillTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D55219440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BDB961072049F00500E49258 /* UserMessageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserMessageView.xib; sourceTree = "<group>"; };
-		BDB961092049F06800E49258 /* UserMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageView.swift; sourceTree = "<group>"; };
+		BDB961072049F00500E49258 /* UserMessageToolbarItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserMessageToolbarItem.xib; sourceTree = "<group>"; };
+		BDB961092049F06800E49258 /* UserMessageToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageToolbarItem.swift; sourceTree = "<group>"; };
 		BDB96137204A500100E49258 /* ResultBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBundle.swift; sourceTree = "<group>"; };
 		BDB96139204A56DC00E49258 /* ResultBundleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultBundleTest.swift; sourceTree = "<group>"; };
 		BDB9613C204A581D00E49258 /* InfoWithZeroErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithZeroErrorCount.plist; sourceTree = "<group>"; };
@@ -304,7 +305,6 @@
 		BDD002171AB8807A00F8E34A /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
 		BDD002191AB8B5AD00F8E34A /* Alerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
-		BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+WindmillColor.swift"; sourceTree = "<group>"; };
 		BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutFormattedReader.swift; sourceTree = "<group>"; };
 		BDD1750F208A154100CDE787 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		BDD17511208A156F00CDE787 /* DispatchSourceReadProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSourceReadProvider.swift; sourceTree = "<group>"; };
@@ -456,8 +456,8 @@
 				BD915E70202036B8006551A5 /* GettingStartedWindowController.xib */,
 				BD2CEE52203117EC0048969D /* AppBundle.swift */,
 				BDB96137204A500100E49258 /* ResultBundle.swift */,
-				BDB961072049F00500E49258 /* UserMessageView.xib */,
-				BDB961092049F06800E49258 /* UserMessageView.swift */,
+				BDB961072049F00500E49258 /* UserMessageToolbarItem.xib */,
+				BDB961092049F06800E49258 /* UserMessageToolbarItem.swift */,
 				BD36CA4E205A40A2000B0A2B /* TestReportView.xib */,
 				BD36CA50205A410C000B0A2B /* TestReportView.swift */,
 				BD25E37E207FAD01003C5782 /* BottomTabViewController.swift */,
@@ -569,6 +569,7 @@
 				BD91EB5B19491C40002D8C1C /* Scripts */,
 				BDB6D54419440392001340B4 /* Images.xcassets */,
 				BDB6D53E19440392001340B4 /* Supporting Files */,
+				BD61A63321BEA7820012F680 /* Colours.xcassets */,
 			);
 			path = windmill;
 			sourceTree = "<group>";
@@ -653,7 +654,6 @@
 				BDD002021AB2F26400F8E34A /* PathComponent.swift */,
 				BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */,
 				BDD002191AB8B5AD00F8E34A /* Alerts.swift */,
-				BDD002241ABB21B900F8E34A /* NSColor+WindmillColor.swift */,
 				BD243A891C42BE2A0015A13A /* NSStoryboard+WindmillStoryboard.swift */,
 				BDBD52081CD5ED4B0023F460 /* CAAnimation+Windmill.swift */,
 				BDBE325E1F31301200BCE4D9 /* ActivityType.swift */,
@@ -735,8 +735,8 @@
 			children = (
 				BDF6DDED207D0C5B003B454F /* RegularExpressionMatchesFormatter.swift */,
 				BD25E37C207FA95F003C5782 /* StandardOutPrettyFormatter.swift */,
+				BD1601C621BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift */,
 				BD8B80B820810B610040CC8B /* RegularExpressionMatchesFormatter+AttributedString.swift */,
-				BD8B80BA208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift */,
 				BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */,
 			);
 			path = Formatters;
@@ -843,7 +843,7 @@
 				BDD1751E208E5F3500CDE787 /* Preferences.storyboard in Resources */,
 				BD91A7111F41EFDE004CA64B /* ActivityView.xib in Resources */,
 				BDF6B75C199A428D008B09D9 /* resources in Resources */,
-				BDB961082049F00500E49258 /* UserMessageView.xib in Resources */,
+				BDB961082049F00500E49258 /* UserMessageToolbarItem.xib in Resources */,
 				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
 				BD36CA4F205A40A2000B0A2B /* TestReportView.xib in Resources */,
 				BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */,
@@ -858,6 +858,7 @@
 				BD91EB5C19491C40002D8C1C /* Scripts in Resources */,
 				BDD6F0B12018B57500D63D74 /* DeployView.xib in Resources */,
 				BD08326E206351E50093F5EE /* TestSummaries.storyboard in Resources */,
+				BD61A63421BEA7820012F680 /* Colours.xcassets in Resources */,
 				BD947845205395DA00878731 /* AppView.xib in Resources */,
 				BDD6F0A520182AF200D63D74 /* ArtefactView.xib in Resources */,
 				BDB6D54519440392001340B4 /* Images.xcassets in Resources */,
@@ -905,7 +906,7 @@
 			files = (
 				BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */,
 				BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */,
-				BDB9610A2049F06800E49258 /* UserMessageView.swift in Sources */,
+				BDB9610A2049F06800E49258 /* UserMessageToolbarItem.swift in Sources */,
 				BDD17510208A154100CDE787 /* TextView.swift in Sources */,
 				BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */,
 				BD25E37D207FA95F003C5782 /* StandardOutPrettyFormatter.swift in Sources */,
@@ -914,6 +915,7 @@
 				BD36CAAD205B411E000B0A2B /* TestFailureSummariesWindowController.swift in Sources */,
 				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,
 				BDDF108F205B6D0D0093E811 /* TextDocumentLocation+Windmill.swift in Sources */,
+				BD1601C721BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift in Sources */,
 				BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */,
 				BDD6F0A720182B0F00D63D74 /* ArtefactView.swift in Sources */,
 				BD105019203A32680051F0D5 /* Directory+Windmill.swift in Sources */,
@@ -941,7 +943,6 @@
 				BDDF10C0205FA7020093E811 /* LineEnumerator.swift in Sources */,
 				BD08328E2064A0200093F5EE /* TestSummariesWindowController.swift in Sources */,
 				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
-				BDD002251ABB21B900F8E34A /* NSColor+WindmillColor.swift in Sources */,
 				BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */,
 				BD24DBF6205248E20080A09F /* Xcode.swift in Sources */,
 				BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */,
@@ -978,7 +979,6 @@
 				BD30160519BB0F79001134F8 /* Keychain.swift in Sources */,
 				BD7A7BA4201DB800002AFCC5 /* LinkLabel.swift in Sources */,
 				BDD17517208C7F7300CDE787 /* ProcessResult.swift in Sources */,
-				BD8B80BB208270F00040CC8B /* RegularExpressionMatchesFormatter+String.swift in Sources */,
 				BD2CEE5520316DB10048969D /* BuildSettings.swift in Sources */,
 				BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */,
 				BD947847205395FD00878731 /* AppView.swift in Sources */,
