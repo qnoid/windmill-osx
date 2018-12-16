@@ -131,7 +131,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
-        return self.add(url: URL(fileURLWithPath: filename))
+        guard let project = self.add(url: URL(fileURLWithPath: filename)) else {
+            os_log("Did you add the project in the array?", log: .default, type: .error)
+            return false
+        }
+        
+        let pipeline = Windmill.make(project: project)
+        self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+        
+        return true
     }
     
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -204,13 +212,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     
-    func add(url: URL) -> Bool {
+    func add(url: URL) -> Project? {
         let lastPathComponent = url.lastPathComponent
         let isWorkspace = lastPathComponent.hasSuffix(".xcworkspace")
         let isProject = lastPathComponent.hasSuffix(".xcodeproj")
         
         guard isWorkspace || isProject  else {
-            return false
+            return nil
         }
 
         do {
@@ -219,13 +227,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             let commit = try Repository.parse(localGitRepoURL: url)
             let project = Project.make(isWorkspace: isWorkspace, name: name, repository: commit.repository)
             
-            return self.add(project)
+            return self.add(project) == true ? project : nil
         } catch let error as NSError {
             guard let window = self.mainWindowViewController?.window else {
-                return false
+                return nil
             }
             alert(error, window: window)
-            return false
+            return nil
         }
     }
     
@@ -237,7 +245,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         os_log("%{public}@", log: .default, type: .debug, url.path)
 
-        return self.add(url: url)
+        return self.add(url: url) == nil ? false : true
     }
     
     @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
@@ -322,16 +330,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 return
             }
             
-            if self.add(url: url) {
-                
-                guard let project = self.projects.last else {
-                    os_log("Did you add the project in the array?", log: .default, type: .error)
-                    return
-                }
-
-                let pipeline = Windmill.make(project: project)
-                self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+            guard let project = self.add(url: url) else {
+                os_log("Did you add the project in the array?", log: .default, type: .error)
+                return
             }
+
+            let pipeline = Windmill.make(project: project)
+            self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
         }
     }
     
