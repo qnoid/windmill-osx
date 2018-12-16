@@ -14,6 +14,7 @@ class StandardOutPrettyFormatter: Formatter {
     let checkoutSuccessFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let buildTargetFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let writeAuxiliaryfilesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let writeAuxiliaryfileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let createProductStructureFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileSwiftSourcesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let swiftCodeGenerationFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -29,11 +30,15 @@ class StandardOutPrettyFormatter: Formatter {
     let reasonFormatter = RegularExpressionMatchesFormatter<String>.makeReason()
     let copyUsingDittoFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let createUniversalBinaryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let createBuildDirectoryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let createAppDirectoryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileXIBFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileStoryboardFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileAssetCatalogFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processInfoPlistFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let pbxcp0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let pbxcpFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let strip0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let stripFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let setOwnerAndGroupFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let setModeFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -43,6 +48,7 @@ class StandardOutPrettyFormatter: Formatter {
     let linkStoryboardsFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let phaseScriptExecutionFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let copyStandardLibrariesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let touch0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let touchFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processProductPackagingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let linkingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -64,6 +70,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.checkoutSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCheckoutSuccess(descender: descender)
         self.buildTargetFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeBuildTarget(descender: descender)
         self.writeAuxiliaryfilesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfiles(descender: descender)
+        self.writeAuxiliaryfileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfile(descender: descender)
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = compileFormatter
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
@@ -80,7 +87,11 @@ class StandardOutPrettyFormatter: Formatter {
         self.mergeModulesCommandFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeMergeModulesCommand(descender: descender)
         self.copyUsingDittoFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyUsingDitto(descender: descender)
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
+        self.createBuildDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateBuildDirectory(descender: descender)
+        self.createAppDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateAppDirectory(descender: descender)
+        self.pbxcp0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP0900(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
+        self.strip0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: descender)
         self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
         self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
         self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
@@ -90,6 +101,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
         self.copyStandardLibrariesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyStandardLibraries(descender: descender)
+        self.touch0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: descender)
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
@@ -111,6 +123,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.checkoutSuccessFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCheckoutSuccess(descender: descender)
         self.buildTargetFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeBuildTarget(descender: descender)
         self.writeAuxiliaryfilesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfiles(descender: descender)
+        self.writeAuxiliaryfileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWriteAuxiliaryfile(descender: descender)
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
@@ -127,7 +140,11 @@ class StandardOutPrettyFormatter: Formatter {
         self.swiftCodeGenerationFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSwiftCodeGeneration(descender: descender)
         self.copyUsingDittoFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyUsingDitto(descender: descender)
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
+        self.createBuildDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateBuildDirectory(descender: descender)
+        self.createAppDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateAppDirectory(descender: descender)
+        self.pbxcp0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP0900(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
+        self.strip0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: descender)
         self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
         self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
         self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
@@ -137,6 +154,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
         self.copyStandardLibrariesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyStandardLibraries(descender: descender)
+        self.touch0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: descender)
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
@@ -175,6 +193,8 @@ class StandardOutPrettyFormatter: Formatter {
             return compileNote
         } else if let writeAuxiliaryfiles = self.writeAuxiliaryfilesFormatter.format(for: obj) {
             return writeAuxiliaryfiles
+        } else if let writeAuxiliaryfile = self.writeAuxiliaryfileFormatter.format(for: obj) {
+            return writeAuxiliaryfile
         } else if let createProductStructure = self.createProductStructureFormatter.format(for: obj) {
             return createProductStructure
         } else if let compileSwiftSources = self.compileSwiftSourcesFormatter.format(for: obj) {
@@ -193,6 +213,10 @@ class StandardOutPrettyFormatter: Formatter {
             return processInfoPlist
         } else if let createUniversalBinary = self.createUniversalBinaryFormatter.format(for: obj) {
             return createUniversalBinary
+        } else if let createBuildDirectory = self.createBuildDirectoryFormatter.format(for: obj) {
+            return createBuildDirectory
+        } else if let createAppDirectory = self.createAppDirectoryFormatter.format(for: obj) {
+            return createAppDirectory
         } else if let phaseSuccess = self.phaseSuccessFormatter.format(for: obj) {
             return phaseSuccess
         } else if let compileError = self.compileErrorFormatter.format(for: obj) {
@@ -213,14 +237,20 @@ class StandardOutPrettyFormatter: Formatter {
             return compileStoryboard
         } else if let pbxcp = self.pbxcpFormatter.format(for: obj) {
             return pbxcp
+        } else if let pbxcp0900 = self.pbxcp0900Formatter.format(for: obj) {
+            return pbxcp0900
         } else if let strip = self.stripFormatter.format(for: obj) {
             return strip
+        } else if let strip0900 = self.strip0900Formatter.format(for: obj) {
+            return strip0900
         } else if let setOwnerAndGroup = self.setOwnerAndGroupFormatter.format(for: obj) {
             return setOwnerAndGroup
         } else if let setMode = self.setModeFormatter.format(for: obj) {
             return setMode
         } else if let touch = self.touchFormatter.format(for: obj) {
             return touch
+        } else if let touch0900 = self.touch0900Formatter.format(for: obj) {
+            return touch0900
         } else if let codeSign = self.codeSignFormatter.format(for: obj) {
             return codeSign
         } else if let generateDSYM = self.generateDSYMFormatter.format(for: obj) {

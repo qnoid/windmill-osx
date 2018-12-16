@@ -69,6 +69,17 @@ extension NSRegularExpression {
         
         static let CREATE_PRODUCT_STRUCTURE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Create product structure")
         
+        // capture groups
+        // $1 path
+        // $2 filename
+        // $3 target
+        static let CREATE_BUILD_DIRECTORY_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^CreateBuildDirectory\\s(.*\\/(.*))\\s\\(in target: (.*)\\)")
+        
+        // capture groups
+        // $1 filename
+        static let CREATE_APP_DIRECTORY_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^MkDir.*\\/(.*\\.app)")
+
+        
         static let PROCESS_PRODUCT_PACKAGINGREGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^ProcessProductPackaging")
         
         // capture groups
@@ -111,7 +122,10 @@ extension NSRegularExpression {
         // capture groups
         // $1 path
         // $2 filename
-        static let PBXCP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^PBXCp\\s.*\\/(.*.framework) (.*)")
+        // $3 target
+        static let PBXCP_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^PBXCp\\s.*\\/(.*.framework) (.*)()")
+        
+        static let PBXCP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^PBXCp\\s(.*)\\/(.*.framework)\\s\\(in target: (.*)\\)")
         
         // capture groups
         // $1 path
@@ -119,9 +133,12 @@ extension NSRegularExpression {
         static let PROCESS_INFO_PLIST_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^ProcessInfoPlistFile\\s.*\\.plist\\s(.*\\/+(.*\\.plist))")
 
         // capture groups
-        // $1 destination
-        // $2 name
-        static let STRIP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*\\/(.*)\\s))")
+        // $1 path
+        // $2 filename
+        // $3 target
+        static let STRIP_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*\\/(.*)\\s))()")
+        
+        static let STRIP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*/(.*))\\s\\(in target: (.*)\\))")
         
         // capture groups
         // $1 path
@@ -177,11 +194,20 @@ extension NSRegularExpression {
         
         // capture groups
         // $1 path
-        // $2 file
-        static let TOUCH_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Touch\\s(.*\\/(.+))")
+        // $2 filename
+        // $3 target
+        static let TOUCH_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^Touch\\s(.*\\/(.+))")
+        
+        static let TOUCH_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Touch\\s(?:(.*\\/(.*)))\\s\\(in target:\\s(.*)\\)")
         
         // capture groups
         static let WRITE_AUXILIARY_FILES_EXPRESSION = try! NSRegularExpression(pattern: "^Write auxiliary files")
+        
+        // capture groups
+        // $1 destination
+        // $2 file
+        // $3 target
+        static let WRITE_AUXILIARY_FILE_EXPRESSION = try! NSRegularExpression(pattern: "^WriteAuxiliaryFile\\s(.*\\/(.*))\\s\\(in target: (.*)\\)")
         
         // capture groups
         // $1 path

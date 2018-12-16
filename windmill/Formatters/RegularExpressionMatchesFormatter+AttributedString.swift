@@ -95,7 +95,18 @@ extension RegularExpressionMatchesFormatter {
             return attributedString
         }
     }
-    
+
+    static func makeWriteAuxiliaryfile(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.WRITE_AUXILIARY_FILE_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, file, target in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Write", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \(file)", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
     static func makePhaseScriptExecution(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PHASE_SCRIPT_EXECUTION_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return single(match: regularExpression) { script in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -136,6 +147,27 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
+    static func makeCreateBuildDirectory(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CREATE_BUILD_DIRECTORY_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, filename, target in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "CreateBuildDirectory", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \(filename)", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makeCreateAppDirectory(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CREATE_APP_DIRECTORY_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Create Directory", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \"\(filename)\"\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
     static func makeCopyUsingDitto(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.COPY_USING_DITTO_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return triple(match: regularExpression) { source, destination, filename in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -217,13 +249,23 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makePBXCP(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PBXCP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makePBXCP0900(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PBXCP_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { filename, path in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: filename, attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+
+    static func makePBXCP(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PBXCP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, filename, target in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(filename)\n", attributes: [.foregroundColor : NSColor.textColor]))
             return attributedString
         }
     }
@@ -357,8 +399,18 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeTouch(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TOUCH_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makeTouch0900(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TOUCH_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { path, filename in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Touch ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: filename, attributes: [.foregroundColor : NSColor.textColor]))
+            return attributedString
+        }
+    }
+    
+    static func makeTouch(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TOUCH_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, filename, target in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Touch ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -429,7 +481,7 @@ extension RegularExpressionMatchesFormatter {
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: filename, attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string:  "...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            attributedString.append(NSAttributedString(string:  " ...in \(path.replacingOccurrences(of: baseDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
@@ -440,13 +492,24 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeStrip(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.STRIP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+    static func makeStrip0900(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.STRIP_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { path, name in
             let attributedString = buildInProgressStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Strip ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: name, attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
+            return attributedString
+        }
+    }
+    
+    static func makeStrip(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.STRIP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, filename, target in
+            let attributedString = buildInProgressStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Strip ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(filename)", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
             return attributedString
         }
     }
