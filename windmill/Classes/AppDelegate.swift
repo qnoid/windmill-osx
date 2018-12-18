@@ -277,8 +277,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return exists != nil
         } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = mainViewController?.windmill {
             return windmill.projectRepositoryDirectory.exists()
-        } else if menuItem.action == #selector(openDocument(_:)) {
-            return self.mainWindowViewController?.window != nil
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
             
             let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
@@ -311,15 +309,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     @IBAction func openDocument(_ sender: Any) {
-        guard let window = self.mainWindowViewController?.window else {
-            return
-        }
-        
         let openPanel = NSOpenPanel()
         openPanel.canChooseDirectories = false
         openPanel.canChooseFiles = true
+        openPanel.allowedFileTypes = ["com.apple.dt.document.workspace","com.apple.xcode.project"]
 
-        openPanel.beginSheetModal(for: window)  { response in
+        openPanel.begin { response in
             
             guard response == NSApplication.ModalResponse.OK else {
                 return
