@@ -110,13 +110,10 @@ class ProcessTest: XCTestCase {
         
         XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
-        XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "9960DAB6-A343-4BFD-81E7-9995B274A034")
+        XCTAssertNotNil(devices.destination?.name)
+        XCTAssertNotNil(devices.destination?.udid)
     }
     
-    /**
-     - Precondition: a checked out project
-     */
     func testGivenProjectWithoutAvailableSimulatorAssertMakeTestConfigurationFileExists() {
         
         let buildSettingsMetadataURL = bundle.url(forResource: "ProcessTest/build/settings", withExtension: "json")!
@@ -134,7 +131,7 @@ class ProcessTest: XCTestCase {
 
         XCTAssertGreaterThanOrEqual(devices.version!, 11.3)
         XCTAssertEqual(devices.platform, "iOS")
-        XCTAssertEqual(devices.destination?.name, "iPhone 5s")
-        XCTAssertEqual(devices.destination?.udid, "9960DAB6-A343-4BFD-81E7-9995B274A034")
-    }    
+        XCTAssertNotNil(devices.destination?.name)
+        XCTAssertNotNil(devices.destination?.udid)
+    }
 }

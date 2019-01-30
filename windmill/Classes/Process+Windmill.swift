@@ -109,7 +109,7 @@ extension Process
         }
     }
     
-    public static func makeList(project: Project, configuration: Project.Configuration, projectLocalURL: Project.LocalURL) -> Process {
+    public static func makeListConfiguration(project: Project, configuration: Project.Configuration, projectLocalURL: Project.LocalURL) -> Process {
         
         switch project.isWorkspace {
         case true?:
@@ -140,7 +140,7 @@ extension Process
     }
     
     
-    public static func makeList(devices: Devices, for deployment: BuildSettings.Deployment?, or minimum: String = "11.0") -> Process {
+    public static func makeList(devices: Devices, for deployment: BuildSettings.Deployment?, or minimum: String = "11.0", xcode: Xcode.Build = .XCODE_10_2_BETA_1) -> Process {
         
         let target: String = deployment?.target.flatMap { (value) -> String? in
             return String(value)
@@ -148,7 +148,7 @@ extension Process
         
         let process = Process()
         process.launchPath = Bundle.main.path(forResource: Scripts.Simctl.LIST_DEVICES, ofType: "sh")!
-        process.arguments = [devices.url.path, target, self.pathForDir("Scripts")]
+        process.arguments = [devices.url.path, target, self.pathForDir("Scripts"), xcode.rawValue]
         process.qualityOfService = .utility
         
         return process

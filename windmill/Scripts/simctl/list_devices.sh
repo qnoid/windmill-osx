@@ -9,7 +9,12 @@ set -eo pipefail
 DEVICES_FOR_PROJECT=$1
 DEPLOYMENT_TARGET=$2
 SCRIPTS_ROOT=$3
+XCODE_BUILD=$4
 
-DESTINATION=$(xcrun simctl list devices --json | python "${SCRIPTS_ROOT}/python/devices.py" "${DEPLOYMENT_TARGET}" )
+DESTINATION=$(xcrun simctl list devices --json | xcrun python "${SCRIPTS_ROOT}/python/${XCODE_BUILD}/devices.py" "${DEPLOYMENT_TARGET}" )
 
-echo ${DESTINATION} > "${DEVICES_FOR_PROJECT}"
+if [ "${DESTINATION}" == "None" ]; then
+    exit 1
+else
+    echo ${DESTINATION} > "${DEVICES_FOR_PROJECT}"
+fi

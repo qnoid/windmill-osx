@@ -11,7 +11,8 @@ def find(devices):
     for name, version in map(pair, filter(lambda key:key.startswith(platform), devices.keys())):
         if (version >= target):
             devices_for_name = devices[name]
-            if devices_for_name:
+            destination = devices_for_name[0]
+            if devices_for_name and destination["isAvailable"]:
                 return json.dumps({"platform":platform,"version":version,"destination":devices_for_name[0]})
 
 print find(data["devices"])
