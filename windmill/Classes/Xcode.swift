@@ -8,6 +8,14 @@
 
 import Foundation
 
+
+public class Xcode {
+    public enum Build: String {
+        case XCODE_10_2_BETA_1 = "10P82s"
+        case XCODE_10_1 = "10B61"
+    }
+}
+
 extension FileManager {
     
     var xcodeArchivesURL: URL {
