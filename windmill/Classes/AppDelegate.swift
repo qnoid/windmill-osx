@@ -148,10 +148,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
-        #if DEBUG
-        self.keychain.createUser(UUID().uuidString)
-        #endif
-
         let hasProjects = projects.count > 0
 
         if !hasProjects {
@@ -356,6 +352,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return
         }
 
+        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
         self.activityMenuItem.title = activity.description
     }
     

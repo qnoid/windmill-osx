@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.64"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -42,18 +42,17 @@
                         <constraint firstAttribute="height" constant="10" id="aJo-PY-LEr"/>
                         <constraint firstAttribute="width" constant="1" id="vqs-1p-u07"/>
                     </constraints>
-                    <font key="titleFont" metaFont="smallSystem"/>
                 </box>
                 <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rZT-y6-pZx" userLabel="Pretty log Textfield" customClass="UserMessageViewTextField" customModule="Windmill" customModuleProvider="target">
-                    <rect key="frame" x="58" y="2" width="417" height="16"/>
+                    <rect key="frame" x="58" y="2" width="410" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" usesSingleLineMode="YES" id="Rv3-Hg-ylj">
-                        <font key="font" metaFont="controlContent"/>
+                        <font key="font" metaFont="cellTitle"/>
                         <color key="textColor" name="windowFrameTextColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="windowBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
                 <button horizontalHuggingPriority="252" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Nob-aV-c9J" userLabel="Error Button">
-                    <rect key="frame" x="473" y="2" width="19" height="16"/>
+                    <rect key="frame" x="466" y="2" width="26" height="16"/>
                     <buttonCell key="cell" type="square" title="0" bezelStyle="shadowlessSquare" image="error" imagePosition="left" alignment="left" imageScaling="proportionallyDown" inset="2" id="Ima-v3-52K" userLabel="Button">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="controlContent"/>
@@ -80,6 +79,6 @@
     </objects>
     <resources>
         <image name="error" width="14" height="14"/>
-        <image name="windmill-activity-indicator" width="32" height="32"/>
+        <image name="windmill-activity-indicator" width="16" height="16"/>
     </resources>
 </document>

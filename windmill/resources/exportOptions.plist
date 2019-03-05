@@ -17,5 +17,7 @@
 	<false/>
 	<key>compileBitcode</key>
 	<false/>
+	<key>iCloudContainerEnvironment</key>
+	<string>Development</string>
 </dict>
 </plist>
