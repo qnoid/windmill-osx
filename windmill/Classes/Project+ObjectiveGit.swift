@@ -27,7 +27,7 @@ public struct Repository: CustomDebugStringConvertible {
                 throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
             }
             
-            guard let head = try repo.headReference().oid, let shortSha = head.sha?.git_shortUniqueSha() else {
+            guard let head = try repo.headReference().oid, let shortSha = head.sha.git_shortUniqueSha() else {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch head")
                 throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
             }

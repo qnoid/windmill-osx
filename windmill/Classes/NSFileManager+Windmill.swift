@@ -11,8 +11,8 @@ import os
 
 public extension FileManager
 {
-    public typealias UserLibraryDirectoryView = (URL:URL, directory:UserLibraryDirectory)
-    public typealias UserApplicationSupportDirectoryView = (URL:URL, directory:ApplicationSupportDirectory)
+    typealias UserLibraryDirectoryView = (URL:URL, directory:UserLibraryDirectory)
+    typealias UserApplicationSupportDirectoryView = (URL:URL, directory:ApplicationSupportDirectory)
 
     var trashDirectoryURL: URL {
         return self.urls(for: .trashDirectory, in: .userDomainMask).first!

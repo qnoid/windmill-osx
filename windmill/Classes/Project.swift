@@ -104,10 +104,6 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         return Project(dictionary: object as! Dictionary<String, AnyObject>)
     }
     
-    public var hashValue: Int {
-        return self.filename.hashValue
-    }
-    
     public var description: String {
         return self.filename
     }
@@ -149,5 +145,9 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         let origin = aDictionary["origin"] as! String
         
         self.init(isWorkspace: isWorkspace, name:name, scheme: scheme, origin:origin)
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.filename)
     }
 }
