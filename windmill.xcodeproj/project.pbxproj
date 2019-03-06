@@ -111,6 +111,7 @@
 		BDBE325F1F31301200BCE4D9 /* ActivityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDBE325E1F31301200BCE4D9 /* ActivityType.swift */; };
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
 		BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC9D4951C43164C00FA018E /* MainWindowController.swift */; };
+		BDCA749D222FFC05006E35F9 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDCA749C222FFC05006E35F9 /* AVKit.framework */; };
 		BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCB38281F06B9BA000825C1 /* WindmillTest.swift */; };
 		BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCEFE481CD6B58D004D2890 /* Windmill.swift */; };
 		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
@@ -292,6 +293,7 @@
 		BDBE325E1F31301200BCE4D9 /* ActivityType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityType.swift; sourceTree = "<group>"; };
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
 		BDC9D4951C43164C00FA018E /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		BDCA749C222FFC05006E35F9 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		BDCB38281F06B9BA000825C1 /* WindmillTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindmillTest.swift; sourceTree = "<group>"; };
 		BDCEFE481CD6B58D004D2890 /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
 		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDCA749D222FFC05006E35F9 /* AVKit.framework in Frameworks */,
 				BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,6 +368,7 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BDCA749C222FFC05006E35F9 /* AVKit.framework */,
 				BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */,
 			);
 			name = Frameworks;
