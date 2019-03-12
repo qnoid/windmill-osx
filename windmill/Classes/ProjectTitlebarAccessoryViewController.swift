@@ -75,7 +75,7 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController,
         super.init(coder: coder)
     }
     
-    func didSet(windmill: Windmill, notificationCenter: NotificationCenter = NotificationCenter.default) {
+    func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
         notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)

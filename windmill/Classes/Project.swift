@@ -17,6 +17,14 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     */
     public typealias LocalURL = URL
     
+    public class Location {
+        var url: LocalURL
+        
+        init(url: LocalURL) {
+            self.url = url
+        }
+    }
+    
     public struct Configuration {
 
         static func make(at url: URL) -> Configuration {

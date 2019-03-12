@@ -43,6 +43,10 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
 
     let defaultCenter = NotificationCenter.default
     
+    var configuration: Windmill.Configuration? {
+        return windmill?.configuration
+    }
+    
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
@@ -50,20 +54,20 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
 
     lazy var compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString> = {
-        guard let windmill = self.windmill else {
+        guard let configuration = self.windmill?.configuration else {
             return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         }
         
-        let baseDirectoryURL = windmill.projectRepositoryDirectory.URL.appendingPathComponent("/")
+        let baseDirectoryURL = configuration.projectRepositoryDirectory.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
     
     lazy var cpHeaderFormatter: RegularExpressionMatchesFormatter<NSAttributedString> = {
-        guard let windmill = self.windmill else {
+        guard let configuration = self.windmill?.configuration else {
             return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender)
         }
         
-        let baseDirectoryURL = windmill.projectRepositoryDirectory.URL.appendingPathComponent("/")
+        let baseDirectoryURL = configuration.projectRepositoryDirectory.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
 
@@ -75,7 +79,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
 
     lazy var standardOutFormattedReader: StandardOutFormattedReader = {
-        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), fileURL: self.windmill?.projectLogURL)
+        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), fileURL: self.configuration?.projectLogURL)
         standardOutFormattedReader.delegate = self
         return standardOutFormattedReader
     }()

@@ -112,7 +112,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         self.view = view
     }
     
-    func didSet(notificationCenter: NotificationCenter = NotificationCenter.default, windmill: Windmill) {
+    func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
         notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
@@ -155,7 +155,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         }
 
         if let error = aNotification.userInfo?["error"] as? NSError {
-            self.toolTip = error.localizedFailureReason
+            self.toolTip = error.localizedFailureReason ?? error.localizedRecoverySuggestion
             self.prettyLogTextField.stringValue = error.localizedDescription
         }
         

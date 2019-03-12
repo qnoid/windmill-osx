@@ -9,6 +9,38 @@
 import Foundation
 import os
 
+extension Process {
+    
+    /* fileprivate */ func manager_waitForDataInBackground(_ pipe: Pipe, queue: DispatchQueue, callback: @escaping (_ data: String, _ count: Int) -> Void) -> DispatchSourceRead {
+        
+        let fileDescriptor = pipe.fileHandleForReading.fileDescriptor
+        let readSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: queue)
+        
+        readSource.setEventHandler { [weak readSource = readSource] in
+            guard let data = readSource?.data else {
+                return
+            }
+            
+            let estimatedBytesAvailableToRead = Int(data)
+            
+            var buffer = [UInt8](repeating: 0, count: estimatedBytesAvailableToRead)
+            let bytesRead = read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
+            
+            guard bytesRead > 0, let availableString = String(bytes: buffer, encoding: .utf8) else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                callback(availableString, availableString.utf8.count)
+            }
+        }
+        
+        readSource.activate()
+        
+        return readSource
+    }
+}
+
 typealias ProcessIdentifer = Int32
 
 protocol ProcessManagerDelegate: class {
@@ -25,6 +57,27 @@ protocol ProcessMonitor: class {
     func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?)
     
     func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?)
+    
+    func didTerminate(manager: ProcessManager, process: Process, status: Int32, userInfo: [AnyHashable : Any]?)
+}
+
+extension ProcessMonitor {
+
+    func willLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
+        
+    }
+    
+    func didTerminate(manager: ProcessManager, process: Process, status: Int32, userInfo: [AnyHashable : Any]?) {
+        
+    }
 }
 
 struct RecoverableProcess {
@@ -61,41 +114,41 @@ struct RecoverableProcess {
     }
 }
 
-struct ProcessWasSuccesful {
-    
-    static let ok: ProcessWasSuccesful = ProcessWasSuccesful { _ in }
-    
-    typealias WasSuccesful = (_ :[AnyHashable : Any]?) -> Swift.Void
-    
-    let block: WasSuccesful
-    
-    func perform(userInfo: [AnyHashable : Any]?) {
-        block(userInfo)
-    }
-}
-
-public struct ProcessManagerStringKey : RawRepresentable, Equatable, Hashable {
-    
-    public static let recoverable: ProcessManagerStringKey = ProcessManagerStringKey(rawValue: "io.windmill.process.manager.key.recoverable")!
-    
-    public static func ==(lhs: ProcessManagerStringKey, rhs: ProcessManagerStringKey) -> Bool {
-        return lhs.rawValue == rhs.rawValue
-    }
-
-    public typealias RawValue = String
-    
-    public var hashValue: Int {
-        return self.rawValue.hashValue
-    }
-
-    public var rawValue: String
-    
-    public init?(rawValue: String) {
-        self.rawValue = rawValue
-    }
-}
+typealias ProcessSuccess = (_ userInfo:[AnyHashable : Any]) -> Swift.Void
 
 class ProcessManager {
+
+    public enum StandardOutput {
+        case success(String?)
+        case failure(Int32)
+        
+        public var isSuccess: Bool {
+            switch self {
+            case .success:
+                return true
+            case .failure:
+                return false
+            }
+        }
+        
+        public var value: String? {
+            switch self {
+            case .success(let value):
+                return value
+            case .failure:
+                return nil
+            }
+        }
+        
+        public var terminationStatus: Int32? {
+            switch self {
+            case .success:
+                return 0
+            case .failure(let terminationStatus):
+                return terminationStatus
+            }
+        }
+    }
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "process.manager")
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.process.output", qos: .utility, attributes: [])
@@ -120,7 +173,7 @@ class ProcessManager {
         let standardOutputPipe = Pipe()
         process.standardOutput = standardOutputPipe
         
-        return process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
+        return process.manager_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
             guard let process = process else {
                 return
             }
@@ -133,7 +186,7 @@ class ProcessManager {
         let standardErrorPipe = Pipe()
         process.standardError = standardErrorPipe
         
-        return process.windmill_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
+        return process.manager_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
             guard let process = process else {
                 return
             }
@@ -172,9 +225,13 @@ class ProcessManager {
         self.monitor?.didExit(manager: self, process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
     }
 
+    func didTerminate(process: Process, status: Int32, userInfo: [AnyHashable : Any]? = nil) {
+        self.monitor?.didTerminate(manager: self, process: process, status: status, userInfo: userInfo)
+    }
+
     // MARK: internal
 
-    func launch(process: Process, completion: @escaping (ProcessResult.StandardOutput) -> Void) {
+    func launch(process: Process, completion: @escaping (ProcessManager.StandardOutput) -> Void) {
         
         self.willLaunch(process: process)
 
@@ -206,7 +263,7 @@ class ProcessManager {
         self.didLaunch(process: process)
     }
     
-    func launch(process: Process, recover: RecoverableProcess? = nil, wasSuccesful: ProcessWasSuccesful? = nil, userInfo: [AnyHashable : Any]? = nil) {
+    func launch(process: Process, recover: RecoverableProcess? = nil, userInfo: [AnyHashable : Any] = [:], wasSuccesful: ProcessSuccess? = nil) {
         
         self.willLaunch(process: process, userInfo: userInfo)
         
@@ -222,11 +279,18 @@ class ProcessManager {
                 
                 self?.didExit(process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
                 guard isSuccess else {
-                    recover?.perform(process: process)
+                    
+                    if canRecover {
+                        os_log("will attempt to recover process '%{public}@'", log: .default, type: .debug, process.executableURL?.lastPathComponent ?? "")
+                        recover?.perform(process: process)
+                    } else {
+                        self?.didTerminate(process: process, status: process.terminationStatus, userInfo: userInfo)
+                    }
+                    
                     return
                 }
                 
-                wasSuccesful?.perform(userInfo: userInfo)
+                wasSuccesful?(userInfo)
             }
         }
         
@@ -241,7 +305,7 @@ class ProcessManager {
      Launches the given `process`
  
     */
-    public func `repeat`(process provider: @escaping @autoclosure () -> Process, every timeInterval: DispatchTimeInterval, until terminationStatus: Int, then eventHandler: DispatchWorkItem, deadline: DispatchTime = DispatchTime.now()) {
+    public func `repeat`(process provider: @escaping () -> Process, every timeInterval: DispatchTimeInterval, untilTerminationStatus terminationStatus: Int, then eventHandler: DispatchWorkItem, deadline: DispatchTime = DispatchTime.now()) {
         
         let process = provider()
         
@@ -255,20 +319,12 @@ class ProcessManager {
             }
 
             DispatchQueue.main.async { [weak self] in 
-                self?.repeat(process: provider, every: timeInterval, until: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
+                self?.repeat(process: provider, every: timeInterval, untilTerminationStatus: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
             }
         }
         
         DispatchQueue.main.asyncAfter(deadline: deadline) {
             process.launch()
         }
-    }
-
-    public func processChain(process: Process, userInfo: [AnyHashable : Any]? = nil, wasSuccesful: ProcessWasSuccesful? = nil) -> ProcessChain {
-        return ProcessChain(processManager: self, process: process, userInfo: userInfo, wasSuccesful: wasSuccesful)
-    }
-
-    public func processResult(process: Process) -> ProcessResult {
-        return ProcessResult(processManager: self, process: process)
     }
 }

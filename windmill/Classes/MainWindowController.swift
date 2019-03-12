@@ -15,12 +15,13 @@ protocol MainWindowControllerDelegate {
 
 class MainWindowController: NSWindowController, NSToolbarDelegate {
     
-    @discardableResult static func make(windmill: Windmill, projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController) -> MainWindowController? {
+    @discardableResult static func make(windmill: Windmill, project: Project, projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController) -> MainWindowController? {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: Bundle(for: self))
         
         let mainWindowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("MainWindowController")) as? MainWindowController
         mainWindowController?.projectTitlebarAccessoryViewController = projectTitlebarAccessoryViewController
         mainWindowController?.windmill = windmill
+        mainWindowController?.project = project
         
         return mainWindowController
     }
@@ -47,7 +48,13 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     }
 
     lazy var keychain: Keychain = Keychain.defaultKeychain()
-    var windmill: Windmill! {
+    var project: Project? {
+        didSet {
+            self.window?.title = project?.filename ?? ""
+        }
+    }
+    
+    var windmill: Windmill? {
         didSet{
             let bottomViewController = self.bottomPanelSplitViewController?.bottomViewController
             
@@ -125,6 +132,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         
         window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
 
+        window.title = project?.filename ?? ""
         window.titleVisibility = .hidden
         if #available(OSX 10.14, *) {
             
@@ -173,18 +181,18 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
                 return
             }
             
-            if let schemes = configuration.schemes, !schemes.isEmpty {
+            if let schemes = configuration.schemes, !schemes.isEmpty, let scheme = aNotification.userInfo?["scheme"] as? String {
                 addItems(with: schemes) { button in
-                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                    button.selectItem(withTitle: scheme)
                 }
             }
-            else if let targets = configuration.targets, let name = configuration.name, let target = targets.first(where: { return $0.elementsEqual(name) }) {
+            else if let targets = configuration.targets, let name = configuration.name, let target = targets.first(where: { return $0.elementsEqual(name) }), let scheme = aNotification.userInfo?["scheme"] as? String {
                 addItems(with: [target]) { button in
-                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                    button.selectItem(withTitle: scheme)
                 }
-            } else if let name = configuration.name {
+            } else if let name = configuration.name, let scheme = aNotification.userInfo?["scheme"] as? String {
                 addItems(with: [name]) { button in
-                    button.selectItem(withTitle: configuration.detectScheme(name: self.windmill.project.scheme))
+                    button.selectItem(withTitle: scheme)
                 }
             }
         default:
@@ -204,13 +212,13 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     }
 
     @IBAction func didSelectScheme(_ sender: NSPopUpButton) {
-        guard let scheme = sender.titleOfSelectedItem else {
+        guard let scheme = sender.titleOfSelectedItem, let project = self.project else {
             return
         }
         
-        let project = windmill.project
-        self.windmill.project = Project(isWorkspace: project.isWorkspace, name: project.name, scheme: scheme, origin: project.origin)
-        self.delegate?.didSelectScheme(mainWindowController: self, project: self.windmill.project, scheme: scheme)
+        let newValue = Project(isWorkspace: project.isWorkspace, name: project.name, scheme: scheme, origin: project.origin)
+        self.delegate?.didSelectScheme(mainWindowController: self, project: newValue, scheme: scheme)
+        self.project = newValue
     }
     
     func show(errorSummariesWindowController: ErrorSummariesWindowController?, commit: Repository.Commit?) {

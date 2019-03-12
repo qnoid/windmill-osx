@@ -221,23 +221,23 @@ class SidePanelViewController: NSViewController {
     }()
     
     // MARK: Deploy views
-    lazy var deploy: NSTextField = {
-        let deploy = NSTextField(labelWithString: "deploy")
+    lazy var publish: NSTextField = {
+        let deploy = NSTextField(labelWithString: "publish")
         deploy.isHidden = true
         return deploy
     }()
     
-    lazy var acccount: NSTextField = {
-        let acccount = NSTextField(labelWithString: "Account:")
-        acccount.isHidden = true
-        return acccount
+    lazy var publishURL: NSTextField = {
+        let publishURL = NSTextField(labelWithString: "URL:")
+        publishURL.isHidden = true
+        return publishURL
     }()
     
-    lazy var accountValue: NSTextField = {
-        let accountValue = NSTextField(labelWithString: (try? Keychain.defaultKeychain().findWindmillUser()) ?? "")
-        accountValue.isHidden = true
-        accountValue.isSelectable = true
-        return accountValue
+    lazy var publishURLValue: NSTextField = {
+        let publishURLValue = NSTextField(labelWithString: "")
+        publishURLValue.isHidden = true
+        publishURLValue.isSelectable = true
+        return publishURLValue
     }()
     
     weak var topConstraint: NSLayoutConstraint!
@@ -303,8 +303,8 @@ class SidePanelViewController: NSViewController {
             [certificate, certificateValue],
             [certificateExpiryDate, certificateExpiryDateValue],
             [provisioning, provisioningValue],
-            [deploy, empty],
-            [acccount, accountValue]
+            [publish, empty],
+            [publishURL, publishURLValue]
             ])
         
         self.view.wml_addSubview(view: gridView, layout: .equalWidth)
@@ -318,7 +318,7 @@ class SidePanelViewController: NSViewController {
         headerCell(for: test, cell:gridView.cell(for:test)!)
         headerCell(for: archive, cell:gridView.cell(for:archive)!)
         headerCell(for: export, cell:gridView.cell(for:export)!)
-        headerCell(for: deploy, cell:gridView.cell(for:deploy)!)
+        headerCell(for: publish, cell:gridView.cell(for:publish)!)
     }
     
     func headerCell(for view: NSTextField, cell: NSGridCell) {
@@ -419,10 +419,6 @@ class SidePanelViewController: NSViewController {
                 self.provisioningValue.isHidden = false
                 self.provisioningValue.stringValue = profileName
             }
-        case .deploy:
-            self.deploy.isHidden = false
-            self.acccount.isHidden = false
-            self.accountValue.isHidden = false
         default:
             break
         }
@@ -451,4 +447,5 @@ class SidePanelViewController: NSViewController {
     func toggle(isHidden: Bool) {
         self.gridView?.isHidden = isHidden
     }
+    
 }

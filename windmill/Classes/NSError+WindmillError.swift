@@ -25,14 +25,14 @@ extension NSError
         
         /// Error loading commit
         case commitError
-        
+
         /// Error loading commit
-        case listDevicesError
+        case listDevicesError        
     }
     
     class func domain(type: ActivityType) -> String {
         switch type {
-        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .deploy:
+        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .publish:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain

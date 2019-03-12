@@ -17,11 +17,11 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     }
 
     var fileHandleForReading: FileHandle? {
-        guard let windmill = self.windmill else {
+        guard let configuration = self.configuration else {
             return nil
         }
         
-        return try? FileHandle(forReadingFrom: windmill.projectLogURL)
+        return try? FileHandle(forReadingFrom: configuration.projectLogURL)
     }
     
     @IBOutlet weak var scrollView: NSScrollView! {
@@ -51,6 +51,10 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     let defaultCenter = NotificationCenter.default
     
+    var configuration: Windmill.Configuration? {
+        return windmill?.configuration
+    }
+
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)

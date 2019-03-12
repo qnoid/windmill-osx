@@ -71,16 +71,16 @@ class MainViewController: NSViewController {
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
     @IBOutlet weak var exportActivityView: ActivityView!
-    @IBOutlet weak var deployActivityView: ActivityView! {
+    @IBOutlet weak var publishActivityView: ActivityView! {
         didSet {
-            deployActivityView.isHidden = (try? Keychain.defaultKeychain().findWindmillUser()) == nil
+            publishActivityView.isHidden = (try? Keychain.defaultKeychain().findWindmillUser()) == nil
         }
     }
     
     weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
-        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .deploy: self.deployActivityView]
+        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .publish: self.publishActivityView]
     }()
     
     var artefactsViewController: ArtefactsViewController? {
@@ -131,6 +131,7 @@ class MainViewController: NSViewController {
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+            os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
             return
         }
                 
@@ -140,16 +141,18 @@ class MainViewController: NSViewController {
 
     @objc func activityError(_ aNotification: Notification) {
 
-        if let activity = aNotification.userInfo?["activity"] as? ActivityType {
-            self.activityViews[activity]?.imageView.alphaValue = 0.1
-            self.activityViews[activity]?.stopLightsAnimation()
-        } else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
+            return
         }
+
+        self.activityViews[activity]?.imageView.alphaValue = 0.1
+        self.activityViews[activity]?.stopLightsAnimation()
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+            os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
             return
         }
         
@@ -161,6 +164,6 @@ class MainViewController: NSViewController {
     }
     
     @discardableResult func cleanProjectFolder() -> Bool {
-        return windmill?.projectRepositoryDirectory.remove() ?? false
+        return windmill?.removeRepositoryDirectory() ?? false
     }
 }

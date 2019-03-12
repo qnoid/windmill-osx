@@ -18,10 +18,7 @@ class ProcessMonitorFailOnUnsuccessfulExit: ProcessMonitor {
     func didLaunch(manager: ProcessManager, process: Process, userInfo: [AnyHashable : Any]?) {
     }
     
-    func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
-        
-        if !isSuccess {
-            XCTFail("Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
-        }
+    func didTerminate(manager: ProcessManager, process: Process, status: Int32, userInfo: [AnyHashable : Any]?) {        
+        XCTFail("Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
     }
 }

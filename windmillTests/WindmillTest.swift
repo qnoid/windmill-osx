@@ -10,19 +10,29 @@ import XCTest
 
 @testable import Windmill
 
-class WindmillMock: Windmill {
-    
+class ActivityManagerMock: ActivityManager {
     let expectation: XCTestExpectation
     
-    init(expectation: XCTestExpectation, project: Project) {
+    init(expectation: XCTestExpectation, accountResource: AccountResource, processManager: ProcessManager) {
         self.expectation = expectation
-        super.init(processManager: ProcessManager(), project: project)
+        super.init(accountResource: accountResource, processManager: processManager)
     }
     
-    override func didExit(manager: ProcessManager, process: Process, isSuccess: Bool, canRecover: Bool, userInfo: [AnyHashable : Any]?) {
-        XCTAssertFalse(isSuccess)
-        XCTAssertEqual(process.terminationStatus, 128)
+    override func didTerminate(manager: ProcessManager, process: Process, status: Int32, userInfo: [AnyHashable : Any]?) {
+        XCTAssertEqual(status, 128)
         expectation.fulfill()
+    }
+}
+
+class WindmillMock: Windmill {
+    
+    init(expectation: XCTestExpectation, project: Project) {
+        super.init(configuration: Windmill.Configuration.make(project: project))
+        
+        let accountResource = AccountResource()
+        let processManager = ProcessManager()
+        
+        self.activityManager = ActivityManagerMock(expectation: expectation, accountResource: accountResource, processManager: processManager)
     }
 }
 
@@ -82,11 +92,13 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let project = Project(name: name, scheme: name, origin: "any")
-        let windmill = Windmill(project: project)
+        let windmill = Windmill.make(project: project)
         
-        windmill.buildChain(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful { _ in
+        let activities = Activities(project: project, windmill: windmill)
+        
+        activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
             expectation.fulfill()
-        }).launch()
+        })(["location":Project.Location(url: repositoryLocalURL)])
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -99,12 +111,13 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let project = Project(name: name, scheme: name, origin: "any")
-        let windmill = Windmill(project: project)
+        let windmill = Windmill.make(project: project)
         
-        
-        windmill.buildChain(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful { _ in
+        let activities = Activities(project: project, windmill: windmill)
+
+        activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
             expectation.fulfill()
-        }).launch()
+        })(["location":Project.Location(url: repositoryLocalURL)])
         
         
         wait(for: [expectation], timeout: 30.0)
@@ -118,7 +131,7 @@ class WindmillTest: XCTestCase {
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
         let project = Project(name: name, scheme: name, origin: "any")
-        let windmill = Windmill(project: project)
+        let windmill = Windmill.make(project: project)
         
         NotificationCenter.default.addObserver(forName: Windmill.Notifications.didError, object: windmill, queue: OperationQueue.main) { notification in
             let errorCount = notification.userInfo?["errorCount"] as? Int
@@ -129,49 +142,39 @@ class WindmillTest: XCTestCase {
             expectation.fulfill()
         }
         
-        windmill.buildChain(repositoryLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: windmill.applicationSupportDirectory.buildResultBundle(at: project.name), buildWasSuccesful: ProcessWasSuccesful.ok).launch()
+        let activities = Activities(project: project, windmill: windmill)
+
+        activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
+            })(["location":Project.Location(url: repositoryLocalURL)])
         
         wait(for: [expectation], timeout: 30.0)
     }
-    
     
     func testGivenProjectWithoutTestTargetAssertTestWasSuccesful() {
         
         let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
-        processManager.monitor = monitor
         
         let name = "helloword-no-test-target"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
         let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)).appendingPathComponent("\(name).bundle")
-        let buildResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        let testResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        
         defer {
-            try? FileManager.default.removeItem(at: buildResultBundle.url)
-            try? FileManager.default.removeItem(at: testResultBundle.url)
-            monitor = nil
+            monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
         let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
-        let windmill = Windmill(processManager: processManager, project: project)
+        let windmill = Windmill.make(project: project, processManager: processManager)
+        processManager.monitor = monitor
+
+        let activities = Activities(project: project, windmill: windmill)
         
-        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
-        let testSkip = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle)
-        
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.processChain(process: testSkip, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
-        })
-        
+        activities.activityTest(locationURL: repositoryLocalURL, buildSettings: buildSettings) { _ in
+            expectation.fulfill()
+            }(["buildSettings":buildSettings.for(project: project.name)])
+
         wait(for: [expectation], timeout: 30.0)
     }
     
@@ -180,38 +183,26 @@ class WindmillTest: XCTestCase {
         let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
-        processManager.monitor = monitor
         
         let name = "helloworld"
         
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16))
-        let buildResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("build").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        let testResultBundle = ResultBundle.make(at: resultBundleURL.appendingPathComponent("test").appendingPathComponent("\(name).bundle"), info: ResultBundle.Info.make(at: URL(string: "any")!))
-        
         defer {
-            try? FileManager.default.removeItem(at: buildResultBundle.url)
-            try? FileManager.default.removeItem(at: testResultBundle.url)
-            monitor = nil
+            monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
         let project = Project(name: name, scheme: "helloworld", origin: "any")
-        let windmill = Windmill(processManager: processManager, project: project)
-        
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
+        let windmill = Windmill.make(project: project, processManager: processManager)
+        processManager.monitor = monitor
+
         let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
-        let testWithoutBuilding = Process.makeTestWithoutBuilding(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: testResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)))
+        let activities = Activities(project: project, windmill: windmill)
         
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent(name), resultBundle: buildResultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters:CharacterSet.lowercaseLetters, length: 16)), wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.processChain(process: testWithoutBuilding, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
-        })
+        activities.activityTest(locationURL: repositoryLocalURL, buildSettings: buildSettings) { _ in
+                expectation.fulfill()
+            }(["buildSettings":buildSettings.for(project: project.name)])
         
         wait(for: [expectation], timeout: 60.0)
     }
@@ -221,36 +212,26 @@ class WindmillTest: XCTestCase {
         let expectation = XCTestExpectation(description: #function)
         let processManager = ProcessManager()
         var monitor: ProcessMonitor? = ProcessMonitorFailOnUnsuccessfulExit()
-        processManager.monitor = monitor
         
         let name = "no_simulator_available"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let resultBundleURL = FileManager.default.trashDirectoryURL.appendingPathComponent("ResultBundle").appendingPathComponent(name).appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)).appendingPathComponent("\(name).bundle")
-        let resultBundle = ResultBundle.make(at: resultBundleURL, info: ResultBundle.Info.make(at: URL(string: "any")!))
-        
         defer {
-            try? FileManager.default.removeItem(at: resultBundle.url)
-            monitor = nil
+            monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
         let project = Project(name: name, scheme: "no_simulator_available", origin: "any")
-        let windmill = Windmill(processManager: processManager, project: project)
-        
-        let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(name)/devices", withExtension: "json")!))
+        let windmill = Windmill.make(project: project, processManager: processManager)
+        processManager.monitor = monitor
+
         let buildSettings = BuildSettings(url: bundle.url(forResource: "/metadata/\(name)/build/settings", withExtension: "json")!)
         
-        let readTestMetadata = Process.makeList(devices: devices, for: buildSettings.for(project: project.name).deployment)
-        let test = Process.makeTestSkip(projectLocalURL: repositoryLocalURL, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle)
+        let activities = Activities(project: project, windmill: windmill)
         
-        windmill.build(project: project, scheme: project.scheme, destination: devices.destination!, repositoryLocalURL: repositoryLocalURL, projectLocalURL: repositoryLocalURL, derivedDataURL: FileManager.default.trashDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()), wasSuccesful: ProcessWasSuccesful { _ in
-            processManager.processChain(process: readTestMetadata, wasSuccesful: ProcessWasSuccesful { _ in
-                processManager.processChain(process: test, wasSuccesful: ProcessWasSuccesful { _ in
-                    expectation.fulfill()
-                }).launch()
-            }).launch()
-        })
-        
+        activities.activityTest(locationURL: repositoryLocalURL, buildSettings: buildSettings) { _ in
+            expectation.fulfill()
+            }(["buildSettings":buildSettings.for(project: project.name)])
+
         wait(for: [expectation], timeout: 30.0)
     }
     
@@ -259,20 +240,11 @@ class WindmillTest: XCTestCase {
         let repoName = "any"
         let project = Project(name: repoName, scheme: "any", origin: "invalid")
         
-        let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
-        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: project, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
-        
-        defer {
-            try? FileManager.default.removeItem(at: url)
-        }
-        
         let expectation = self.expectation(description: #function)
         
         let windmill = WindmillMock(expectation: expectation, project: project)
         
-        let repeatableDeploy = windmill.repeatableDeploy(user: "user")
-        windmill.run(process: repeatableDeploy)
+        windmill.run(project, skipCheckout: false, user: "user")
         
         wait(for: [expectation], timeout: 5.0)
     }
@@ -287,10 +259,10 @@ class WindmillTest: XCTestCase {
         let name = "helloword-no-test-target"
         let project = Project(name: name, scheme: "helloworld", origin: "git@github.com:qnoid/helloword-no-test-target.git")
         let timer = WindmillTimer(expectation: expectation)
-        let windmill = Windmill(project: project)
+        let windmill = Windmill.make(project: project)
         
         timer.observe(windmill: windmill)
-        windmill.run(process: windmill.repeatableExport(skipCheckout: true))
+        windmill.run(project, skipCheckout: false, user: "14810686-4690-4900-ada5-8b0b7338aa39")
         
         wait(for: [expectation], timeout: 90.0)
         XCTAssertLessThanOrEqual(timer.executionTime, 45.0)

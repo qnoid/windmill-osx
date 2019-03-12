@@ -46,13 +46,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var isSidePanelCollapsedObserver: NSKeyValueObservation?
     var isBottomPanelCollapsedObserver: NSKeyValueObservation?
 
-    var mainWindowViewController: MainWindowController? {
+    var mainWindowController: MainWindowController? {
         
-        willSet {
-            mainWindowViewController?.close()
-        }
         didSet {
-            guard let mainWindowViewController = mainWindowViewController else {
+            guard let mainWindowViewController = mainWindowController else {
                 return
             }
             mainViewController = mainWindowViewController.mainViewController
@@ -102,32 +99,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return true
     }
     
-    private func start(windmill: Windmill, chain: ProcessChain) {
+    private func start(windmill: Windmill, project: Project, skipCheckout: Bool = false) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
         
-        windmill.run(process: chain)
+        windmill.run(project, skipCheckout: skipCheckout)
     }
     
     private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
-        self.mainWindowViewController = mainWindowController
-        self.mainWindowViewController?.delegate = self
-        self.mainWindowViewController?.window?.makeKeyAndOrderFront(self)
+        self.mainWindowController = mainWindowController
+        self.mainWindowController?.delegate = self
+        self.mainWindowController?.window?.makeKeyAndOrderFront(self)
     }
     
-    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, chain: ProcessChain, project: Project) {
-        guard let mainWindowController = MainWindowController.make(windmill: windmill, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController), let window = mainWindowController.window else {
-            return
+    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, project: Project) {
+        if let mainWindowController = self.mainWindowController {
+            mainWindowController.windmill = windmill
+            mainWindowController.project = project
+            self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
+        } else if let mainWindowController = MainWindowController.make(windmill: windmill, project: project, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController) {
+            self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
         }
-
-        window.title = project.filename
-        self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
-        self.start(windmill: windmill, chain: chain)
+        
+        self.start(windmill: windmill, project: project)
     }
     
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
@@ -136,18 +135,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return false
         }
         
-        let pipeline = Windmill.make(project: project)
-        self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+        let windmill = Windmill.make(project: project)
+        self.makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
         
         return true
     }
     
     func applicationWillFinishLaunching(_ notification: Notification) {
-        self.mainWindowViewController?.window?.setIsVisible(false)
+        self.mainWindowController?.window?.setIsVisible(false)
     }
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
+        #if DEBUG
+        let isUnitTesting = ProcessInfo.processInfo.arguments.contains("-UNITTEST")
+        guard !isUnitTesting else {
+            return
+        }
+        #endif
+        
         let hasProjects = projects.count > 0
 
         if !hasProjects {
@@ -164,17 +170,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
 
         if let project = projects.last {
-            let pipeline = Windmill.make(project: project)
-            makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+            let windmill = Windmill.make(project: project)
+            makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
         }
         
-        mainWindowViewController?.window?.setIsVisible(hasProjects)
+        mainWindowController?.window?.setIsVisible(hasProjects)
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         
         if(!flag) {
-            self.mainWindowViewController?.window?.setIsVisible(true)
+            self.mainWindowController?.window?.setIsVisible(true)
         }
         
         return true
@@ -224,7 +230,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             
             return self.add(project) == true ? project : nil
         } catch let error as NSError {
-            guard let window = self.mainWindowViewController?.window else {
+            guard let window = self.mainWindowController?.window else {
                 return nil
             }
             alert(error, window: window)
@@ -250,8 +256,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return false
         }
         
-        let pipeline = Windmill.make(project: project)
-        makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+        let windmill = Windmill.make(project: project)
+        makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
 
         return true
     }
@@ -262,17 +268,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     */
     @objc func concludeDragOperation(_ sender: NSDraggingInfo?)
     {
-        self.mainWindowViewController?.window?.orderFrontRegardless()
+        self.mainWindowController?.window?.orderFrontRegardless()
     }
     
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.action == #selector(run(_:)) {
             return projects.last != nil
-        } else if menuItem.action == #selector(runSkipCheckout(_:)) {
-            let exists = commit?.repository
-            return exists != nil
+        } else if menuItem.action == #selector(runSkipCheckout(_:)), let windmill = mainWindowController?.windmill {
+            return windmill.isRepositoryDirectoryPresent()
         } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = mainViewController?.windmill {
-            return windmill.projectRepositoryDirectory.exists()
+            return windmill.isRepositoryDirectoryPresent()
         } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
             
             let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
@@ -325,8 +330,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 return
             }
 
-            let pipeline = Windmill.make(project: project)
-            self.makeMainWindowKeyAndOrderFront(windmill: pipeline.windmill, chain: pipeline.chain, project: project)
+            let windmill = Windmill.make(project: project)
+            self.makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
         }
     }
     
@@ -341,7 +346,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = []
     }
     
-    @objc func windmillMonitoringProject(_ aNotification: Notification) {
+    @objc func willMonitorProject(_ aNotification: Notification) {
+        os_log("will start monitoring", log: .default, type: .debug)
+
         self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
         self.activityMenuItem.title = NSLocalizedString("windmill.activity.monitor.description", comment: "")
     }
@@ -412,7 +419,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
 
     func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
-        self.mainWindowViewController?.toggleDebugArea(isCollapsed: isCollapsed)
+        self.mainWindowController?.toggleDebugArea(isCollapsed: isCollapsed)
     }
     
     @IBAction func toggleDebugArea(_ sender: Any) {
@@ -420,7 +427,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     func toggleSidePanel(sender: Any? = nil, isCollapsed: Bool? = nil) {
-        self.mainWindowViewController?.toggleSidePanel(isCollapsed: isCollapsed)
+        self.mainWindowController?.toggleSidePanel(isCollapsed: isCollapsed)
     }
 
     @IBAction func toggleSidePanel(_ sender: Any) {
@@ -439,18 +446,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
 
     func run(_ sender: Any, skipCheckout: Bool) {
-        guard let project = self.mainWindowViewController?.windmill.project else {
-            return
+        guard let project = self.mainWindowController?.project else {
+            preconditionFailure("MainWindowViewController should have its project property set. Have you set it?")
         }
         
-        let pipeline = Windmill.make(project: project, skipCheckout: skipCheckout)
-        self.mainWindowViewController?.windmill = pipeline.windmill
+        let windmill = Windmill.make(project: project)
+        self.mainWindowController?.windmill = windmill
         self.toggleDebugArea(sender: sender, isCollapsed: true)
         self.errorSummariesWindowController?.close()
         self.testFailureSummariesWindowController?.close()
         self.testSummariesWindowController?.close()
         
-        self.start(windmill: pipeline.windmill, chain: pipeline.chain)
+        self.start(windmill: windmill, project: project, skipCheckout: skipCheckout)
     }
 
     @IBAction func run(_ sender: Any) {
@@ -484,7 +491,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             alert.window.appearance = NSAppearance(named: .vibrantDark)
         }
 
-        guard let window = self.mainWindowViewController?.window else {
+        guard let window = self.mainWindowController?.window else {
             return
         }
         
@@ -505,7 +512,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return
         }
         
-        let projectSourceURL = windmill.projectRepositoryDirectory.URL
+        let projectSourceURL = windmill.configuration.projectRepositoryDirectory.URL
         
         NSWorkspace.shared.openFile(projectSourceURL.path, withApplication: "Terminal")
     }
@@ -521,7 +528,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     }
     
     @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
-        self.mainWindowViewController?.show(errorSummariesWindowController: self.errorSummariesWindowController, commit: commit)
+        self.mainWindowController?.show(errorSummariesWindowController: self.errorSummariesWindowController, commit: commit)
     }
 
     @IBAction func showTestFailureSummariesWindowController(_ sender: Any?) {
@@ -529,11 +536,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         switch sender {
         case let testReportButton as TestReportButton:
             if case .failure = testReportButton.testReport {
-                self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
+                self.mainWindowController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
             }
             return
         case is NSMenuItem:
-            self.mainWindowViewController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
+            self.mainWindowController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
         default:
             return
         }

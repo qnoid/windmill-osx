@@ -92,11 +92,9 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = self.expectation(description: #function)
         
-        let checkout = manager.processChain(process: process, wasSuccesful: ProcessWasSuccesful { _ in
+        manager.launch(process: process, wasSuccesful: { _ in
             expectation.fulfill()
         })
-        
-        checkout.launch()
         
         wait(for: [expectation], timeout: 5.0)
     }
@@ -115,10 +113,8 @@ class ProcessManagerTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         let monitor = WillExitWithErrorExpectation(expectation: expectation)
         manager.monitor = monitor
-        let sequence = manager.processChain(process: process)
+        manager.launch(process: process)
         
-        sequence.launch()
-
         wait(for: [expectation], timeout: 5.0)
     }
     
@@ -131,12 +127,10 @@ class ProcessManagerTest: XCTestCase {
         
         let expectation = XCTestExpectation()
         
-        let sequence = manager.processChain(process: process, wasSuccesful: ProcessWasSuccesful { _ in
-            expectation.fulfill()
-        })
-        
         DispatchQueue.main.async {
-            sequence.launch()
+            manager.launch(process: process, wasSuccesful: { _ in
+                expectation.fulfill()
+            })            
         }
         
         wait(for: [expectation], timeout: 5.0)
@@ -157,10 +151,8 @@ class ProcessManagerTest: XCTestCase {
         process.arguments = ["Hello World"]
         
         
-        let sequence = manager.processChain(process: process)
-        
         DispatchQueue.main.async {
-            sequence.launch()
+            manager.launch(process: process)
         }
         
         wait(for: [expectationWillLaunch, expectationDidLaunch], timeout: 5.0, enforceOrder: true)
@@ -178,14 +170,12 @@ class ProcessManagerTest: XCTestCase {
         process.launchPath = Bundle(for: ProcessManagerTest.self).url(forResource: "exit", withExtension: "sh")?.path
         process.arguments = ["66"]
 
-        let sequence = manager.processChain(process: process)
-        
         let route66 = RecoverableProcess.recover(terminationStatus: 66) { (_) in
             canRecover.fulfill()
         }
         
         DispatchQueue.main.async {
-            sequence.launch(recover: route66)
+            manager.launch(process: process, recover: route66)
         }
         
         wait(for: [canRecover], timeout: 5.0)
@@ -202,10 +192,8 @@ class ProcessManagerTest: XCTestCase {
         
         let process = Process.makeFind(project: project, repositoryLocalURL: repositoryLocalURL)
 
-        let processResult = manager.processResult(process: process)
-        
-        var actual: ProcessResult.StandardOutput?
-        processResult.launch { standardOutput in
+        var actual: ProcessManager.StandardOutput?
+        manager.launch(process: process) { standardOutput in
             actual = standardOutput
             expectation.fulfill()
         }

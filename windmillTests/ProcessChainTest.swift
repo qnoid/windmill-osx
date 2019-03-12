@@ -35,9 +35,9 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }
 
-        let build = Process.makeBuildForTesting(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let build = Process.makeBuildForTesting(location: Project.Location(url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
-        processManager.processChain(process: build).launch(recover: RecoverableProcess.recover(terminationStatus: 66) { process in
+        processManager.launch(process: build, recover: RecoverableProcess.recover(terminationStatus: 66) { process in
             XCTAssertEqual(66, process.terminationStatus, "Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
             expectation.fulfill()
         })
@@ -62,11 +62,11 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }        
         
-        let build = Process.makeBuild(projectLocalURL: repositoryLocalURL, project: project, scheme: project.scheme, destination: devices.destination!, derivedDataURL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let build = Process.makeBuild(location: Project.Location(url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
-        processManager.processChain(process: build, wasSuccesful: ProcessWasSuccesful { _ in
+        processManager.launch(process: build, wasSuccesful: { _ in
             expectation.fulfill()
-        }).launch()
+        })
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -88,20 +88,20 @@ class ProcessChainTest: XCTestCase {
         defer {
             try? FileManager.default.removeItem(at: resultBundleURL)
             try? FileManager.default.removeItem(at: exportDirectoryURL)
-            monitor = nil
+            monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
 
         let url = bundle.url(forResource: "HelloWindmill", withExtension: "xcarchive")!
         let info = Archive.Info.make(at: URL(string: "any")!)
         let archive = Archive(url: url, info: info)
         
-        let export = Process.makeExport(projectLocalURL: any, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let export = Process.makeExport(location: Project.Location(url: any), archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
-        processManager.processChain(process: export, wasSuccesful: ProcessWasSuccesful { _ in
+        processManager.launch(process: export, wasSuccesful: { _ in
             expectation.fulfill()
-        }).launch()
+        })
         
-        wait(for: [expectation], timeout: 30.0)
+        wait(for: [expectation], timeout: 45.0)
     }
 
 }

@@ -52,16 +52,16 @@ class ArtefactsViewController: NSViewController {
             exportArtefactView.leadingLabel.stringValue = ""
         }
     }
-    @IBOutlet weak var deployArtefactView: ArtefactView! {
+    @IBOutlet weak var publishArtefactView: ArtefactView! {
         didSet {
-            deployArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
-            deployArtefactView.leadingLabel.stringValue = "You need to:"
-            deployArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
+            publishArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
+            publishArtefactView.leadingLabel.stringValue = "You need to:"
+            publishArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
     
     lazy var artefactViews: [ArtefactType: ArtefactView] = { [unowned self] in
-        return [.appBundle: self.buildArtefactView, .testReport: self.testArtefactView, .archiveBundle: self.archiveArtefactView, .ipaFile: self.exportArtefactView, .otaDistribution: self.deployArtefactView]
+        return [.appBundle: self.buildArtefactView, .testReport: self.testArtefactView, .archiveBundle: self.archiveArtefactView, .ipaFile: self.exportArtefactView, .otaDistribution: self.publishArtefactView]
         }()
     
     @IBOutlet weak var appView: AppView! {
@@ -84,14 +84,14 @@ class ArtefactsViewController: NSViewController {
             exportView.toolTip = NSLocalizedString("windmill.artefacts.ipa.tooltip", comment: "")
         }
     }
-    @IBOutlet weak var deployView: DeployView! {
+    @IBOutlet weak var publishView: PublishView! {
         didSet {
-            deployView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
+            publishView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
     
     lazy var views: [ArtefactType: NSView] = { [unowned self] in
-        return [.appBundle: self.appView, .testReport: self.testReportView, .archiveBundle: self.archiveView, .ipaFile: self.exportView, .otaDistribution: self.deployView]
+        return [.appBundle: self.appView, .testReport: self.testReportView, .archiveBundle: self.archiveView, .ipaFile: self.exportView, .otaDistribution: self.publishView]
         }()
 
 
@@ -115,7 +115,7 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(didDeploySuccesfully(_:)), name: Windmill.Notifications.didDeployProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didPublishSuccesfully(_:)), name: Windmill.Notifications.didPublishProject, object: windmill)
         }
     }
 
@@ -239,16 +239,16 @@ class ArtefactsViewController: NSViewController {
         self.exportView.isHidden = false
     }
     
-    @objc func didDeploySuccesfully(_ aNotification: Notification) {
+    @objc func didPublishSuccesfully(_ aNotification: Notification) {
         
         if let export = aNotification.userInfo?["export"] as? Export {
-            self.deployView.export = export
+            self.publishView.export = export
         }
 
         if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
-            self.deployView.appBundle = appBundle
+            self.publishView.appBundle = appBundle
         }
         
-        self.deployView.isHidden = false
+        self.publishView.isHidden = false
     }
 }

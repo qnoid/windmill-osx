@@ -30,9 +30,11 @@ public protocol DirectoryType
     @discardableResult func create() -> Bool
     
     @discardableResult func create(withIntermediateDirectories: Bool) -> Bool
+    
+    func remove() -> Bool
 }
 
-public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillHomeDirectory, ProjectHomeDirectory, ProjectRepositoryDirectory
+public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillDirectory, ProjectDirectory, RepositoryDirectory, DerivedDataDirectory
 {
     public let URL : Foundation.URL
     public let fileManager : FileManager
@@ -91,5 +93,23 @@ public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSuppor
             os_log("%{public}@", log: log, type: .debug, error)
             return false
         }
+    }
+    
+    public func remove() -> Bool {
+        
+        do {
+            try fileManager.removeItem(at: self.URL)
+            return true
+        } catch let error as CocoaError {
+            guard let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? POSIXError, underlyingError.code == POSIXError.ENOTEMPTY else {
+                return false
+            }
+            
+            try? fileManager.removeItem(at: self.URL)
+            return true
+        } catch let error as NSError {
+            os_log("%{public}@", log:.default, type: .error, error)
+            return false
+        }        
     }
 }

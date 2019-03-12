@@ -16,7 +16,6 @@ public protocol UserLibraryDirectory : DirectoryType
 
 public protocol ApplicationSupportDirectory : DirectoryType
 {
-    func derivedDataURL(at pathComponent: String) -> URL
     func buildResultBundle(at pathComponent: String) -> ResultBundle
 }
 
@@ -80,8 +79,8 @@ extension ApplicationSupportDirectory {
 
 public protocol ApplicationCachesDirectory : DirectoryType
 {
-    func projectRepositoryDirectory(at pathComponent: String) -> ProjectRepositoryDirectory
-    func removeDerivedData(at pathComponent: String) -> Bool
+    func respositoryDirectory(at pathComponent: String) -> RepositoryDirectory
+    func derivedData(at pathComponent: String) -> DerivedDataDirectory
 }
 
 extension ApplicationCachesDirectory {
@@ -94,7 +93,7 @@ extension ApplicationCachesDirectory {
         return directory.URL
     }
     
-    public func projectRepositoryDirectory(at pathComponent: String) -> ProjectRepositoryDirectory {
+    public func respositoryDirectory(at pathComponent: String) -> RepositoryDirectory {
         
         let directory = self.fileManager.directory(self.sourcesURL().appendingPathComponent(pathComponent))
         
@@ -106,62 +105,35 @@ extension ApplicationCachesDirectory {
         return try? Repository.parse(localGitRepoURL: localGitRepoURL)
     }
 
-    public func derivedDataURL(at pathComponent: String) -> URL {
+    public func derivedData(at pathComponent: String) -> DerivedDataDirectory {
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("DerivedData").appendingPathComponent(pathComponent))
         
         directory.create(withIntermediateDirectories: true)
         
-        return directory.URL
-    }
-    
-    public func removeDerivedData(at pathComponent: String) -> Bool {
-        do {
-            try FileManager.default.removeItem(at: derivedDataURL(at: pathComponent))
-            return true
-        } catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-            return false
-        }
+        return directory
     }
 }
 
-public protocol ProjectRepositoryDirectory: DirectoryType {
+public protocol RepositoryDirectory: DirectoryType {
     
-    func remove() -> Bool
+    
 }
 
-extension ProjectRepositoryDirectory {
+public protocol DerivedDataDirectory: DirectoryType {
     
-    public func remove() -> Bool {
-        
-        do {
-            try FileManager.default.removeItem(at: self.URL)
-            return true
-        } catch let error as CocoaError {
-            guard let underlyingError = error.userInfo[NSUnderlyingErrorKey] as? POSIXError, underlyingError.code == POSIXError.ENOTEMPTY else {
-                return false
-            }
-            
-            try? FileManager.default.removeItem(at: self.URL)
-            return true
-        } catch let error as NSError {
-            os_log("%{public}@", log:.default, type: .error, error)
-            return false
-        }
-        
-    }
+    
 }
 
-public protocol WindmillHomeDirectory: DirectoryType {
+public protocol WindmillDirectory: DirectoryType {
     
-    func projectHomeDirectory(at pathComponent: String, create: Bool) -> ProjectHomeDirectory
+    func directory(for project: Project, create: Bool) -> ProjectDirectory
 }
 
-extension WindmillHomeDirectory {
+extension WindmillDirectory {
     
-    public func projectHomeDirectory(at pathComponent: String, create: Bool = true) -> ProjectHomeDirectory {
+    public func directory(for project: Project, create: Bool = true) -> ProjectDirectory {
         
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent(pathComponent))
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent(project.name))
         
         if create {
             directory.create()
@@ -171,7 +143,7 @@ extension WindmillHomeDirectory {
     }
 }
 
-public protocol ProjectHomeDirectory : DirectoryType
+public protocol ProjectDirectory : DirectoryType
 {
     
     func log(name: String) -> URL
@@ -179,7 +151,7 @@ public protocol ProjectHomeDirectory : DirectoryType
     func buildSettings() -> BuildSettings
     func devices() -> Devices
     func appBundle(name: String) -> AppBundle
-    func appBundle(derivedDataURL: URL, name: String) -> AppBundle
+    func appBundle(derivedData: DerivedDataDirectory, name: String) -> AppBundle
     func archive(name: String) -> Archive
     func appBundle(archive: Archive, name: String) -> AppBundle
     func distributionSummary() -> Export.DistributionSummary
@@ -187,7 +159,7 @@ public protocol ProjectHomeDirectory : DirectoryType
     func export(name: String) -> Export
 }
 
-extension ProjectHomeDirectory {
+extension ProjectDirectory {
 
     public func logDirectoryURL() -> URL {
 
@@ -275,9 +247,9 @@ extension ProjectHomeDirectory {
         return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
     }
 
-    public func appBundle(derivedDataURL: URL, name: String) -> AppBundle {
+    public func appBundle(derivedData: DerivedDataDirectory, name: String) -> AppBundle {
         
-        let appBundleURL = derivedDataURL.appendingPathComponent("Build/Products/Debug-iphonesimulator/\(name).app")
+        let appBundleURL = derivedData.URL.appendingPathComponent("Build/Products/Debug-iphonesimulator/\(name).app")
         let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
         
         return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))

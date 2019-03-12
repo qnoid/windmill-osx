@@ -42,7 +42,7 @@ class ProcessTest: XCTestCase {
 
         var actualAvailableString: String?
         var actualCount = 0
-        let read = process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { availableString, count in
+        let read = process.manager_waitForDataInBackground(standardOutputPipe, queue: queue) { availableString, count in
             actualAvailableString = availableString
             actualCount = count
             expectation.fulfill()
@@ -74,7 +74,7 @@ class ProcessTest: XCTestCase {
         
         var actualAvailableString: String?
         var actualCount = 0
-        let read = process.windmill_waitForDataInBackground(standardOutputPipe, queue: queue) { availableString, count in
+        let read = process.manager_waitForDataInBackground(standardOutputPipe, queue: queue) { availableString, count in
             actualAvailableString = availableString
             actualCount = count
             expectation.fulfill()

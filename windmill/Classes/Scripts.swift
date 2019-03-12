@@ -34,7 +34,6 @@ struct Scripts
         static let ARCHIVE_PROJECT : BashScript = "Scripts/xcodebuild/archive-project"
         static let ARCHIVE_WORKSPACE : BashScript = "Scripts/xcodebuild/archive-workspace"
         static let EXPORT : BashScript = "Scripts/xcodebuild/export"
-        static let DEPLOY : BashScript = "Scripts/xcodebuild/deploy"
     }
 
     struct Git {
