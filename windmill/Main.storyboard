@@ -962,7 +962,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="step">
                                                 <string key="value">* Have an active Windmill subscription.
-* Use Windmill on the iPhone.</string>
+* Sign in under System Preferences &gt; iCloud.</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </customView>

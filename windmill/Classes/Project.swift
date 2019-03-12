@@ -94,18 +94,11 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     
     static let toDictionary : (Project) -> Dictionary<String, Any> = { project in
         
-        if let isWorkspace = project.isWorkspace {
-            return [
-                "isWorkspace": isWorkspace,
-                "name": project.name,
-                "scheme": project.scheme,
-                "origin": project.origin ]
-        } else {
-            return [
-                "name": project.name,
-                "scheme": project.scheme,
-                "origin": project.origin ]
-        }
+        return [
+            "isWorkspace": project.isWorkspace,
+            "name": project.name,
+            "scheme": project.scheme,
+            "origin": project.origin ]
     }
 
     static let fromDictionary : (_ object : Any) -> Project = { (object : Any) -> Project in
@@ -118,18 +111,14 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     
     lazy var filename: String = {
         switch self.isWorkspace {
-        case true?:
+        case true:
             return "\(self.name).xcworkspace"
-        case false?:
-            return "\(self.name).xcodeproj"
-        default:
+        case false:
             return "\(self.name).xcodeproj"
         }
     }()
     
-    //nil means unknown
-    //false means project
-    var isWorkspace: Bool?
+    var isWorkspace: Bool
     let name: String
     
     let scheme : String
@@ -137,7 +126,7 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     /// the origin of the git repo as returned by 'git remote -v', i.e. git@bitbucket.org:qnoid/balance.git
     let origin : String
     
-    public required init(isWorkspace: Bool? = nil, name: String, scheme: String, origin: String)
+    public required init(isWorkspace: Bool, name: String, scheme: String, origin: String)
     {
         self.isWorkspace = isWorkspace
         self.name = name
@@ -145,9 +134,14 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         self.origin = origin
     }
     
+    convenience required init(name: String, scheme: String, origin: String)
+    {
+        self.init(isWorkspace: false, name: name, scheme: scheme, origin: origin)
+    }
+
     convenience public init(dictionary aDictionary: Dictionary<String, AnyObject>)
     {
-        let isWorkspace = aDictionary["isWorkspace"] as? Bool
+        let isWorkspace = aDictionary["isWorkspace"] as! Bool
         let name = aDictionary["name"] as! String
         let scheme = aDictionary["scheme"] as! String
         let origin = aDictionary["origin"] as! String

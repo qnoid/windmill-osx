@@ -80,11 +80,11 @@ public struct Repository: CustomDebugStringConvertible {
 
 extension Project {
     
-    static func make(isWorkspace: Bool? = nil, repository: Repository) -> Project {
+    static func make(isWorkspace: Bool, repository: Repository) -> Project {
         return make(isWorkspace: isWorkspace, name: repository.name, repository: repository)
     }
     
-    static func make(isWorkspace: Bool? = nil, name: String, repository: Repository) -> Project {
+    static func make(isWorkspace: Bool, name: String, repository: Repository) -> Project {
         return Project(isWorkspace: isWorkspace, name: name, scheme: name, origin: repository.origin)
     }    
 }
