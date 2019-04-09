@@ -153,45 +153,6 @@ class RegularExpressionMatchesFormatterTest: XCTestCase {
         XCTAssertEqual("Run custom shell script \'Run\\ Script\'", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
     }
     
-    func testPBXCP0900() {
-        let output = """
-        PBXCp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/IDEBundleInjection.framework /Users/qnoid/.Trash/DerivedData/helloworld/Build/Products/Debug-iphonesimulator/helloworld.app/Frameworks/IDEBundleInjection.framework
-        cd /Users/qnoid/Library/Developer/Xcode/DerivedData/windmill-fezcvdrmroaraabfbnktjikmxgvk/Build/Products/Debug/Windmill.app/Contents/PlugIns/windmillTests.xctest/Contents/Resources/helloworld
-        export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude *.tbd -resolve-src-symlinks /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/IDEBundleInjection.framework /Users/qnoid/.Trash/DerivedData/helloworld/Build/Products/Debug-iphonesimulator/helloworld.app/Frameworks
-        """
-        
-        let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP0900(descender: 0.0)
-        
-        XCTAssertEqual("Copy IDEBundleInjection.framework ...at /Users/qnoid/.Trash/DerivedData/helloworld/Build/Products/Debug-iphonesimulator/helloworld.app/Frameworks/IDEBundleInjection.framework", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
-    }
-    
-    func testTouch0900() {
-        let output = """
-        Touch /Users/qnoid/Library/Developer/Xcode/DerivedData/windmill-dkymippxvovcscbprykkdhmpyysy/Build/Products/Release-iphonesimulator/windmill.app
-        cd /Users/qnoid/Developer/workspace/swift/windmill-ios
-        export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        /usr/bin/touch -c /Users/qnoid/Library/Developer/Xcode/DerivedData/windmill-dkymippxvovcscbprykkdhmpyysy/Build/Products/Release-iphonesimulator/windmill.app
-        """
-        
-        let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: 0.0)
-        
-        XCTAssertEqual("Touch windmill.app", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
-    }
-    
-    func testTouchInTarget0900() {
-        let output = """
-        Touch /Users/qnoid/Library/Caches/io.windmill.windmill/DerivedData/Charts/Build/Products/Debug-iphonesimulator/ChartsDemo-iOS-Swift.app (in target: ChartsDemo-iOS-Swift)
-        cd /Users/qnoid/Library/Caches/io.windmill.windmill/Sources/Charts/ChartsDemo-iOS
-        /usr/bin/touch -c /Users/qnoid/Library/Caches/io.windmill.windmill/DerivedData/Charts/Build/Products/Debug-iphonesimulator/ChartsDemo-iOS-Swift.app
-        """
-        
-        let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: 0.0)
-        
-        XCTAssertEqual("Touch ChartsDemo-iOS-Swift.app (in target: ChartsDemo-iOS-Swift)", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
-    }
-
-    
     func testWriteAuxiliaryfiles() {
         let output = "Write auxiliary files"
         
@@ -369,31 +330,6 @@ class RegularExpressionMatchesFormatterTest: XCTestCase {
         XCTAssertEqual("Merge helloworld.swiftmodule ...in /Users/qnoid/Library/Developer/Xcode/DerivedData/helloworld-aapmrrhhegvcwgestrsyqfjctwdk/Build/Intermediates.noindex/helloworld.build/Debug-iphonesimulator/helloworld.build/Objects-normal/x86_64/helloworld.swiftmodule", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
     }
     
-    func testStrip0900() {
-        let output = """
-        Strip /Users/qnoid/Library/Developer/Xcode/DerivedData/Charts-bsfuaegntwehlaacthatbzsarmee/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Charts.framework/Charts
-        cd /Users/qnoid/Library/Caches/io.windmill.windmill/Sources/Charts
-        export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-        /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -S -T /Users/qnoid/Library/Developer/Xcode/DerivedData/Charts-bsfuaegntwehlaacthatbzsarmee/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Charts.framework/Charts
-        """
-        
-        let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: 0.0)
-        
-        XCTAssertEqual("Strip Charts ...in /DerivedData/Charts-bsfuaegntwehlaacthatbzsarmee/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/Charts.framework/Charts", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
-    }
-    
-    func testStripInTarget0900() {
-        let output = """
-        Strip /Users/qnoid/Library/Caches/io.windmill.windmill/DerivedData/Charts/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/InstallationBuildProductsLocation/Applications/ChartsDemo-iOS-Swift.app/ChartsDemo-iOS-Swift (in target: ChartsDemo-iOS-Swift)
-        cd /Users/qnoid/Library/Caches/io.windmill.windmill/Sources/Charts/ChartsDemo-iOS
-        /Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip /Users/qnoid/Library/Caches/io.windmill.windmill/DerivedData/Charts/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/InstallationBuildProductsLocation/Applications/ChartsDemo-iOS-Swift.app/ChartsDemo-iOS-Swift
-        """
-        
-        let formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: 0.0)
-        
-        XCTAssertEqual("Strip ChartsDemo-iOS-Swift (in target: ChartsDemo-iOS-Swift) ...in /DerivedData/Charts/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/InstallationBuildProductsLocation/Applications/ChartsDemo-iOS-Swift.app/ChartsDemo-iOS-Swift (in target: ChartsDemo-iOS-Swift)", formatter.format(for: output)?.string.trimmingCharacters(in: padding))
-    }
-
     func testSetOwnerAndGroup() {
         let output = """
         SetOwnerAndGroup qnoid:staff /Users/qnoid/Library/Developer/Xcode/DerivedData/Charts-bsfuaegntwehlaacthatbzsarmee/Build/Intermediates.noindex/ArchiveIntermediates/ChartsDemo-iOS-Swift/InstallationBuildProductsLocation/Applications/ChartsDemo-iOS-Swift.app

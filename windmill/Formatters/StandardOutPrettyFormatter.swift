@@ -36,9 +36,7 @@ class StandardOutPrettyFormatter: Formatter {
     let compileStoryboardFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileAssetCatalogFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processInfoPlistFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
-    let pbxcp0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let pbxcpFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
-    let strip0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let stripFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let setOwnerAndGroupFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let setModeFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -48,7 +46,6 @@ class StandardOutPrettyFormatter: Formatter {
     let linkStoryboardsFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let phaseScriptExecutionFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let copyStandardLibrariesFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
-    let touch0900Formatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let touchFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let processProductPackagingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let linkingFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -93,9 +90,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
         self.createBuildDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateBuildDirectory(descender: descender)
         self.createAppDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateAppDirectory(descender: descender)
-        self.pbxcp0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP0900(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
-        self.strip0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: descender)
         self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
         self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
         self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
@@ -105,7 +100,6 @@ class StandardOutPrettyFormatter: Formatter {
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
         self.copyStandardLibrariesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyStandardLibraries(descender: descender)
-        self.touch0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: descender)
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
@@ -147,9 +141,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.createUniversalBinaryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateUniversalBinary(descender: descender)
         self.createBuildDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateBuildDirectory(descender: descender)
         self.createAppDirectoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateAppDirectory(descender: descender)
-        self.pbxcp0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP0900(descender: descender)
         self.pbxcpFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePBXCP(descender: descender)
-        self.strip0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip0900(descender: descender)
         self.stripFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeStrip(descender: descender)
         self.setOwnerAndGroupFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetOwnerAndGroup(descender: descender)
         self.setModeFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeSetMode(descender: descender)
@@ -159,7 +151,6 @@ class StandardOutPrettyFormatter: Formatter {
         self.linkStoryboardsFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinkStoryboards(descender: descender)
         self.phaseScriptExecutionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makePhaseScriptExecution(descender: descender)
         self.copyStandardLibrariesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCopyStandardLibraries(descender: descender)
-        self.touch0900Formatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch0900(descender: descender)
         self.touchFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTouch(descender: descender)
         self.processProductPackagingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeProcessProductPackaging(descender: descender)
         self.linkingFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLinking(descender: descender)
@@ -243,20 +234,14 @@ class StandardOutPrettyFormatter: Formatter {
             return compileStoryboard
         } else if let pbxcp = self.pbxcpFormatter.format(for: obj) {
             return pbxcp
-        } else if let pbxcp0900 = self.pbxcp0900Formatter.format(for: obj) {
-            return pbxcp0900
         } else if let strip = self.stripFormatter.format(for: obj) {
             return strip
-        } else if let strip0900 = self.strip0900Formatter.format(for: obj) {
-            return strip0900
         } else if let setOwnerAndGroup = self.setOwnerAndGroupFormatter.format(for: obj) {
             return setOwnerAndGroup
         } else if let setMode = self.setModeFormatter.format(for: obj) {
             return setMode
         } else if let touch = self.touchFormatter.format(for: obj) {
             return touch
-        } else if let touch0900 = self.touch0900Formatter.format(for: obj) {
-            return touch0900
         } else if let codeSign = self.codeSignFormatter.format(for: obj) {
             return codeSign
         } else if let generateDSYM = self.generateDSYMFormatter.format(for: obj) {

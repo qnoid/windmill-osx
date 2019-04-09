@@ -249,17 +249,6 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makePBXCP0900(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PBXCP_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
-        return double(match: regularExpression) { filename, path in
-            let attributedString = buildInProgressStatus(descender: descender)
-            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: filename, attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string:  " ...at \(path.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n", attributes: [.foregroundColor : NSColor.systemGray]))
-            return attributedString
-        }
-    }
-
     static func makePBXCP(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.PBXCP_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return triple(match: regularExpression) { path, filename, target in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -399,16 +388,6 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeTouch0900(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TOUCH_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
-        return double(match: regularExpression) { path, filename in
-            let attributedString = buildInProgressStatus(descender: descender)
-            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: "Touch ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: filename, attributes: [.foregroundColor : NSColor.textColor]))
-            return attributedString
-        }
-    }
-    
     static func makeTouch(descender: CGFloat, cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.TOUCH_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return triple(match: regularExpression) { path, filename, target in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -489,17 +468,6 @@ extension RegularExpressionMatchesFormatter {
     static func makeCompileNote(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.COMPILE_NOTE_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return single(match: regularExpression) { note in
             return NSAttributedString(string: "\t\t\t\(note)\n", attributes: [.foregroundColor : NSColor.textColor])
-        }
-    }
-    
-    static func makeStrip0900(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.STRIP_REGULAR_EXPRESSION_XCODE_0900) -> RegularExpressionMatchesFormatter<NSAttributedString> {
-        return double(match: regularExpression) { path, name in
-            let attributedString = buildInProgressStatus(descender: descender)
-            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: "Strip ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: name, attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string:  " ...in \(path)\n", attributes: [.foregroundColor : NSColor.systemGray]))
-            return attributedString
         }
     }
     

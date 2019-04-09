@@ -27,9 +27,9 @@ class ActivityManagerMock: ActivityManager {
 class WindmillMock: Windmill {
     
     init(expectation: XCTestExpectation, project: Project) {
-        super.init(configuration: Windmill.Configuration.make(project: project))
-        
         let subscriptionManager = SubscriptionManager()
+        super.init(configuration: Windmill.Configuration.make(project: project), subscriptionManager: subscriptionManager)
+        
         let processManager = ProcessManager()
         
         self.activityManager = ActivityManagerMock(expectation: expectation, subscriptionManager: subscriptionManager, processManager: processManager)

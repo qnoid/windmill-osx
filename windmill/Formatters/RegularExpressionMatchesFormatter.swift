@@ -123,8 +123,6 @@ extension NSRegularExpression {
         // $1 path
         // $2 filename
         // $3 target
-        static let PBXCP_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^PBXCp\\s.*\\/(.*.framework) (.*)()")
-        
         static let PBXCP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^PBXCp\\s(.*)\\/(.*.framework)\\s\\(in target: (.*)\\)")
         
         // capture groups
@@ -136,8 +134,6 @@ extension NSRegularExpression {
         // $1 path
         // $2 filename
         // $3 target
-        static let STRIP_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*\\/(.*)\\s))()")
-        
         static let STRIP_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Strip (?:.*(/DerivedData/.*/(.*))\\s\\(in target: (.*)\\))")
         
         // capture groups
@@ -196,8 +192,6 @@ extension NSRegularExpression {
         // $1 path
         // $2 filename
         // $3 target
-        static let TOUCH_REGULAR_EXPRESSION_XCODE_0900 = try! NSRegularExpression(pattern: "^Touch\\s(.*\\/(.+))")
-        
         static let TOUCH_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^Touch\\s(?:(.*\\/(.*)))\\s\\(in target:\\s(.*)\\)")
         
         // capture groups
