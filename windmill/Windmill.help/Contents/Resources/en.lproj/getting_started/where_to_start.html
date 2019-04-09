@@ -11,9 +11,21 @@
 		<h1 class="Name">Where to start</h1>
 		<p>Drag and drop an Xcode project/workspace in the dock icon from a folder cloned by a remote repository. Windmill will checkout the remote repository and <a href="#topic-getting_started-start">start running.</a></p>	
 
+		<div class="Task">
+		<h2 class="Name">Windmill uses SSH to connect to a git repository</h2>
+		<div class="TaskBody">
+			<p>
+			You must ensure that you have the correct access before Windmill can clone the remote repository. Windmill does not support password authentication.
+		</p>
+		</div>
+		</div>
+
+
 		<figure><img alt="" class="full" src="img/getting_started/where_to_start.png" /></figure>
 
 		<p>
 			Once Windmill had a <a href="#topic-windmill_basics-error_highlighting">succesful run</a>, it will continue monitoring the repository for changes and automatically run again making sure your project is always free of errors and test failures so that your app can be <a href="#topic-xcode_integration-install_the_app_on_a_device">installed on registered devices</a> and <a href="#topic-xcode_integration-upload_an_app_to_itunes_connect">be deployed to TestFlight or the App Store</a>.
 	</p>
+
+		<b>Tip:</b> For GitHub, see <a href="https://help.github.com/en/articles/testing-your-ssh-connection">Testing your SSH connection</a>.
 </body></html>
