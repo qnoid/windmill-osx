@@ -12,7 +12,7 @@ import XCTest
 
 class RegularExpressionMatchesFormatterTest: XCTestCase {
     
-    let attachmentCharacter = UnicodeScalar(NSAttachmentCharacter)!
+    let attachmentCharacter = UnicodeScalar(NSTextAttachment.character)!
     lazy var padding = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: attachmentCharacter...attachmentCharacter))
     
     func testBuildTarget() {

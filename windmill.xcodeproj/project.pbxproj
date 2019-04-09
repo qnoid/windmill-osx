@@ -72,6 +72,8 @@
 		BD52F965225CBDBD00F7623C /* DistributionSummary.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */; };
 		BD52F97A225CE6BE00F7623C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD52F979225CE6BE00F7623C /* Alamofire.framework */; };
 		BD52F97B225CE6BE00F7623C /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD52F979225CE6BE00F7623C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BD52F981225CF40500F7623C /* Alamofire.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD52F97F225CF3A100F7623C /* Alamofire.framework.dSYM */; };
+		BD52F982225CF40500F7623C /* ObjectiveGit.framework.dSYM in CopyFiles */ = {isa = PBXBuildFile; fileRef = BD52F97D225CF39200F7623C /* ObjectiveGit.framework.dSYM */; };
 		BD571AE722575DA0009B3848 /* UserMessageToolbarItemTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AE622575D9F009B3848 /* UserMessageToolbarItemTest.swift */; };
 		BD571AE922579A12009B3848 /* DispatchSourceWriteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */; };
 		BD571AEB2258994B009B3848 /* StandardOutFormattedWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AEA2258994B009B3848 /* StandardOutFormattedWriter.swift */; };
@@ -216,6 +218,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		BD52F97C225CF37300F7623C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				BD52F981225CF40500F7623C /* Alamofire.framework.dSYM in CopyFiles */,
+				BD52F982225CF40500F7623C /* ObjectiveGit.framework.dSYM in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BDD1E95D1CDA920800976074 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -294,6 +307,8 @@
 		BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTitlebarAccessoryViewController.xib; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
 		BD52F979225CE6BE00F7623C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
+		BD52F97D225CF39200F7623C /* ObjectiveGit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = ObjectiveGit.framework.dSYM; path = Carthage/Build/Mac/ObjectiveGit.framework.dSYM; sourceTree = "<group>"; };
+		BD52F97F225CF3A100F7623C /* Alamofire.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Alamofire.framework.dSYM; path = Carthage/Build/Mac/Alamofire.framework.dSYM; sourceTree = "<group>"; };
 		BD571AE622575D9F009B3848 /* UserMessageToolbarItemTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageToolbarItemTest.swift; sourceTree = "<group>"; };
 		BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSourceWriteProvider.swift; sourceTree = "<group>"; };
 		BD571AEA2258994B009B3848 /* StandardOutFormattedWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutFormattedWriter.swift; sourceTree = "<group>"; };
@@ -460,6 +475,8 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BD52F97F225CF3A100F7623C /* Alamofire.framework.dSYM */,
+				BD52F97D225CF39200F7623C /* ObjectiveGit.framework.dSYM */,
 				BD52F979225CE6BE00F7623C /* Alamofire.framework */,
 				BDA7E431223A86BA0022459E /* CloudKit.framework */,
 				BDCA749C222FFC05006E35F9 /* AVKit.framework */,
@@ -961,6 +978,7 @@
 				BDB6D53819440392001340B4 /* Frameworks */,
 				BDB6D53919440392001340B4 /* Resources */,
 				BDD1E95D1CDA920800976074 /* Embed Frameworks */,
+				BD52F97C225CF37300F7623C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -1009,7 +1027,7 @@
 					BDB6D53A19440392001340B4 = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = AQ2US2UQQ7;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
@@ -1025,7 +1043,7 @@
 					};
 					BDB6D54C19440392001340B4 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 						TestTargetID = BDB6D53A19440392001340B4;
 					};
@@ -1498,6 +1516,7 @@
 				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1524,6 +1543,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.windmill.windmill.macos;
 				PRODUCT_NAME = Windmill;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1550,7 +1570,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.qnoid.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -1574,7 +1594,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.qnoid.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;

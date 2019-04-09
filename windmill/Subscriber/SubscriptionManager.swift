@@ -32,7 +32,7 @@ class SubscriptionManager: NSObject {
         
         let notification = CKNotification(fromRemoteNotificationDictionary: userInfo)
         
-        guard notification.notificationType == .query, let queryNotification = notification as? CKQueryNotification else {
+        guard notification?.notificationType == .query, let queryNotification = notification as? CKQueryNotification else {
             preconditionFailure("Can only handle query notifications. If you have since created a new notification, you must update this code.")
         }// check on the subscriptionID to confirm the notification fired rather than assume its the subscription one.
         
