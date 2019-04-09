@@ -8,48 +8,85 @@
 
 import Foundation
 
-struct KeychainAccount
+struct Keychain
 {
-    let serviceName : String
-    let name : String
-}
+    struct Account
+    {
+        let service : String
+        let name : String
+    }
+    
 
-final public class Keychain
-{
     var keychain:SecKeychain?
     
-    public class func defaultKeychain() -> Keychain {
+    static let `default`: Keychain = {
         return Keychain()
-    }
+    }()
     
-    @discardableResult func addGenericPassword(_ account:KeychainAccount, password:String) -> OSStatus
+    @discardableResult func add(_ account:Keychain.Account, value:String) -> OSStatus
     {
-        
-        let attributes: [AnyHashable: Any] = [
-            kSecClass: kSecClassGenericPassword as String,
-            kSecAttrService: account.serviceName,
-            kSecAttrAccount: account.name,
-            kSecValueData: password.data(using: String.Encoding.utf8)!
-        ]
+        guard let data = value.data(using: .utf8) else {
+            return OSStatus(errSecDecode)
+        }
+
+        func attributes() -> [AnyHashable: Any] {
+            #if DEBUG
+            return [
+                kSecClass: kSecClassGenericPassword as String,
+                kSecAttrService: account.service,
+                kSecAttrAccount: account.name,
+                kSecValueData: data
+                ]
+            #else
+            return [
+                kSecClass: kSecClassGenericPassword as String,
+                kSecAttrService: account.service,
+                kSecAttrAccount: account.name,
+                kSecValueData: data,
+                kSecAttrIsInvisible: true
+            ]
+            #endif
+        }
                 
-        return SecItemAdd(attributes as CFDictionary, nil)
+        return SecItemAdd(attributes() as CFDictionary, nil)
     }
-    
-    func findGenericPassword(_ account:KeychainAccount) -> (status:OSStatus, password:String?) {
+
+    @discardableResult func update(_ account:Keychain.Account, value:String) -> OSStatus
+    {
+        guard let data = value.data(using: .utf8) else {
+            return OSStatus(errSecDecode)
+        }
+
+        let query: [AnyHashable: Any] = [
+            kSecAttrAccount: account.name,
+            kSecClass: kSecClassGenericPassword as String,
+            kSecAttrService: account.service
+        ]
+        
+        let attributes: [AnyHashable: Any] = [kSecValueData: data]
+        
+        return SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
+    }
+
+    func find(_ account:Keychain.Account) -> (status:OSStatus, value:String?) {
 
         var password: AnyObject? = nil
         
-        let attributes: [AnyHashable: Any] = [
+        let query: [AnyHashable: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrService: account.serviceName,
+            kSecAttrService: account.service,
             kSecAttrAccount: account.name,
             kSecReturnData: true
         ]
 
-        let status = SecItemCopyMatching(attributes as CFDictionary, &password)
+        let status = SecItemCopyMatching(query as CFDictionary, &password)
+        
+        guard let data = password as? Data else {
+            return (OSStatus(errSecDecode), nil)
+        }
         
         if status == OSStatus(errSecSuccess) {
-        return (status, String(data: password as! Data, encoding: String.Encoding.utf8))
+        return (status, String(data: data, encoding: .utf8))
         }
         return (status, nil)
     }

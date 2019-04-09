@@ -13,33 +13,31 @@ class ActivityBuiler {
     let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
     let applicationSupportDirectory = Directory.Windmill.ApplicationSupportDirectory()
 
-    static func make(configuration: Windmill.Configuration, project: Project, accountResource: AccountResource, processManager: ProcessManager) -> ActivityBuiler {
-        return ActivityBuiler(configuration: configuration, project: project, accountResource: accountResource, processManager: processManager)
+    static func make(configuration: Windmill.Configuration, subscriptionManager: SubscriptionManager, processManager: ProcessManager) -> ActivityBuiler {
+        return ActivityBuiler(configuration: configuration, subscriptionManager: subscriptionManager, processManager: processManager)
     }
 
     let configuration: Windmill.Configuration
-    let project: Project
     
-    unowned var accountResource: AccountResource
+    
+    unowned var subscriptionManager: SubscriptionManager
     unowned var processManager: ProcessManager
 
+    lazy var project: Project = configuration.project
     lazy var projectDirectory = configuration.projectDirectory
     lazy var projectLogURL = configuration.projectLogURL
     lazy var projectRepositoryDirectory = configuration.projectRepositoryDirectory
 
-    init(configuration: Windmill.Configuration, project: Project, accountResource: AccountResource, processManager: ProcessManager) {
+    init(configuration: Windmill.Configuration, subscriptionManager: SubscriptionManager, processManager: ProcessManager) {
         self.configuration = configuration
-        self.project = project
-        self.accountResource = accountResource
+        self.subscriptionManager = subscriptionManager
         self.processManager = processManager
     }
     
     public func exportActivity(activityManager: ActivityManager, skipCheckout: Bool = false, next: @escaping Activity) -> Activity {
         
         try? FileManager.default.removeItem(at: projectLogURL)
-        
-        activityManager.post(notification: Windmill.Notifications.willStartProject, userInfo: ["project":project])
-        
+                
         let activityCheckout: ActivitySuccess
         
         let repositoryLocalURL = self.projectRepositoryDirectory
@@ -51,32 +49,32 @@ class ActivityBuiler {
         } else {
             activityCheckout =
                 ActivityCheckout(processManager: processManager, activityManager: activityManager, projectLogURL: projectLogURL)
-                    .make(repositoryLocalURL: repositoryLocalURL, project: project)
+                    .success(repositoryLocalURL: repositoryLocalURL, project: project)
         }
         
         let location = Project.Location(url: self.projectRepositoryDirectory.URL)
         
         let activityFindProject =
             ActivityFindProject(applicationCachesDirectory: applicationCachesDirectory, processManager: processManager, activityManager: activityManager)
-                .make(project: project, location: location)
+                .success(project: project, location: location)
         
         let configuration = self.projectDirectory.configuration()
         
         let activityReadProjectConfiguration =
             ActivityReadProjectConfiguration(processManager: processManager, activityManager: activityManager)
-                .make(project: project, configuration: configuration)
+                .success(project: project, configuration: configuration)
         
         let scheme = configuration.detectScheme(name: project.scheme)
         
         let activityShowBuildSettings =
             ActivityShowBuildSettings(processManager: processManager, activityManager: activityManager)
-                .make(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
+                .success(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
         
         let devices = self.projectDirectory.devices()
         
         let activityListDevices =
             ActivityListDevices(processManager: processManager, activityManager: activityManager)
-                .make(devices: devices)
+                .success(devices: devices)
         
         let buildSettings = self.projectDirectory.buildSettings().for(project: self.project.name)
         
@@ -88,54 +86,33 @@ class ActivityBuiler {
         
         let activityTest =
             ActivityTest(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: projectLogURL)
-                .make(location: location, project: project, devices: devices, scheme: scheme)
+                .success(location: location, project: project, devices: devices, scheme: scheme)
         
         let archive = self.projectDirectory.archive(name: scheme)
         
         let activityArchive =
             ActivityArchive(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: projectLogURL)
-                .make(location: location, project: project, scheme: scheme, archive: archive)
+                .success(location: location, project: project, scheme: scheme, archive: archive)
         
         let export = self.projectDirectory.export(name: scheme)
         
         let activityExport =
             ActivityExport(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: projectLogURL)
-                .make(location: location, project: project, projectDirectory: self.projectDirectory, appBundle: appBundle, export: export, exportDirectoryURL: self.projectDirectory.exportDirectoryURL())
+                .success(location: location, project: project, projectDirectory: self.projectDirectory, appBundle: appBundle, export: export, exportDirectoryURL: self.projectDirectory.exportDirectoryURL())
         
         return activityCheckout(activityFindProject(activityReadProjectConfiguration(activityShowBuildSettings(
             activityListDevices(activityBuild(activityTest(activityArchive(activityExport(next))))
         )))))
     }
     
-    public func repeatablePublish(activityManager: ActivityManager, user: String, skipCheckout: Bool = false) -> Activity {
-        
-        let activityPoll =
-            ActivityPoll(processManager: self.processManager, activityManager: activityManager)
-                .make(project: self.project, repositoryDirectory: self.projectRepositoryDirectory, pollDirectoryURL: self.projectDirectory.pollURL(), do: DispatchWorkItem { [weak self, weak activityManager] in
-                    guard let activityManager = activityManager else {
-                        return
-                    }
-                    self?.repeatablePublish(activityManager: activityManager, user: user)([:])
-                })
-        
-        let activityPublish =
-            ActivityPublish(accountResource: self.accountResource, activityManager: activityManager, log: self.projectLogURL)
-                .make(project: self.project, user: user)
-        
-        return self.exportActivity(activityManager: activityManager, skipCheckout: skipCheckout, next: activityPublish(activityPoll))
+    public func pollActivity(activityManager: ActivityManager, then: DispatchWorkItem) -> Activity {        
+        return ActivityPoll(processManager: self.processManager, activityManager: activityManager)
+                .make(project: project, repositoryDirectory: self.projectRepositoryDirectory, pollDirectoryURL: self.projectDirectory.pollURL(), do: then)
     }
     
-    public func repeatableExport(activityManager: ActivityManager, skipCheckout: Bool = false) -> Activity {
-        
-        let activityPoll =
-            ActivityPoll(processManager: processManager, activityManager: activityManager)
-                .make(project: project, repositoryDirectory: self.projectRepositoryDirectory, pollDirectoryURL: self.projectDirectory.pollURL(), do: DispatchWorkItem { [weak self, weak activityManager] in
-                    guard let activityManager = activityManager else {
-                        return
-                    }
-                    self?.repeatableExport(activityManager: activityManager)([:])
-                })
-        
-        return self.exportActivity(activityManager: activityManager, skipCheckout: skipCheckout, next: activityPoll)
+    
+    public func distributeActivity(account: Account, authorizationToken: SubscriptionAuthorizationToken, activityManager: ActivityManager, standardOutFormattedWriter: StandardOutFormattedWriter, queue: DispatchQueue? = nil) -> Activity {        
+        return ActivityDistribute(subscriptionManager: subscriptionManager, activityManager: activityManager, standardOutFormattedWriter: standardOutFormattedWriter)
+            .make(queue: queue, account: account, authorizationToken: authorizationToken)
     }
 }

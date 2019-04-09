@@ -101,16 +101,12 @@ public struct ResultBundle {
             "Dependency Analysis Error"
  
         */
-        var issueType: String {
-            let issueType = values["IssueType"] as? String
-            
-            return issueType ?? ""
+        var issueType: String? {
+            return values["IssueType"] as? String
         }
         
-        var message: String {
-            let message = values["Message"] as? String
-            
-            return message ?? ""
+        var message: String? {
+            return values["Message"] as? String
         }
         
         var target: String? {

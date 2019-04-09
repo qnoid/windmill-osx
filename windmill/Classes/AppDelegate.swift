@@ -75,7 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     var testSummariesWindowController: TestSummariesWindowController?
     var commit: Repository.Commit?
     
-    lazy var keychain: Keychain = Keychain.defaultKeychain()
+    lazy var keychain: Keychain = Keychain.default
     
     var projects : Array<Project> = InputStream.inputStreamOnProjects().read() {
         didSet {
@@ -99,16 +99,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return true
     }
     
-    private func start(windmill: Windmill, project: Project, skipCheckout: Bool = false) {
+    private func run(windmill: Windmill, skipCheckout: Bool = false) {
         
         NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(isMonitoring(_:)), name: Windmill.Notifications.isMonitoring, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(sourceCodeChanged(_:)), name: Windmill.Notifications.SourceCodeChanged, object: windmill)
         
-        windmill.run(project, skipCheckout: skipCheckout)
+        windmill.run(skipCheckout: skipCheckout)
     }
     
     private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
@@ -126,7 +127,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
         }
         
-        self.start(windmill: windmill, project: project)
+        self.run(windmill: windmill)
     }
     
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
@@ -141,12 +142,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return true
     }
     
+    func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String : Any]) {
+        SubscriptionManager.shared.subscriptionNotification(userInfo: userInfo)
+    }
+    
+    func application(_ application: NSApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        os_log("%{public}@", log: .default, type: .debug, #function)
+    }
+    
+    func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        os_log("%{public}@", log: .default, type: .debug, #function)
+    }
+    
     func applicationWillFinishLaunching(_ notification: Notification) {
         self.mainWindowController?.window?.setIsVisible(false)
     }
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
+        SubscriptionManager.shared.registerForSubscriptionNotifications()
+        
         #if DEBUG
         let isUnitTesting = ProcessInfo.processInfo.arguments.contains("-UNITTEST")
         guard !isUnitTesting else {
@@ -296,7 +311,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return self.canCleanDerivedData
         } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
             return self.canRemoveCheckoutFolder
+        } else if menuItem.action == #selector(self.mainWindowController?.refreshSubscription(_:)) {            
+            let account = try? Keychain.default.read(key: .account)
+            
+            switch account {
+            case .some: return true
+            case .none: return false
+            }
         }
+
+            
+
 
         return true
     }
@@ -337,8 +362,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @objc func willStartProject(_ aNotification: Notification) {
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
-        self.statusItem.button?.toolTip = ""
-        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
+        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.activityMenuItem.toolTip = ""
         self.canCleanDerivedData = false
         self.canRemoveCheckoutFolder = false
@@ -346,20 +370,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = []
     }
     
-    @objc func willMonitorProject(_ aNotification: Notification) {
-        os_log("will start monitoring", log: .default, type: .debug)
+    @objc func sourceCodeChanged(_ aNotification: Notification) {
+        self.run(aNotification.object ?? self)
+    }
+    
+    @objc func isMonitoring(_ aNotification: Notification) {
+        os_log("is monitoring", log: .default, type: .debug)
 
-        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
+        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
         self.activityMenuItem.title = NSLocalizedString("windmill.activity.monitor.description", comment: "")
     }
     
+    
+    
     @objc func activityDidLaunch(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, activity != .distribute else {
             return
         }
 
-        self.statusItem.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
+        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
         self.activityMenuItem.title = activity.description
     }
     
@@ -457,7 +487,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         self.testFailureSummariesWindowController?.close()
         self.testSummariesWindowController?.close()
         
-        self.start(windmill: windmill, project: project, skipCheckout: skipCheckout)
+        self.run(windmill: windmill, skipCheckout: skipCheckout)
     }
 
     @IBAction func run(_ sender: Any) {
@@ -582,5 +612,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     @IBAction func showTestSummariesWindowController(_ sender: Any?) {
         testSummariesWindowController?.showWindow(self)
-    }
+    }    
 }

@@ -37,3 +37,4 @@
 
 * The user can click the test failure icon, including failed count to see the list of test failures
 * The user can also navigate using the 'Jump to Next/Previous Issue' menu item
+

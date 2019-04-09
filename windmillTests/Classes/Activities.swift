@@ -33,19 +33,19 @@ class Activities {
         
         let activityReadProjectConfiguration =
             ActivityReadProjectConfiguration(processManager: processManager, activityManager: activityManager)
-                .make(project: project, configuration: configuration)
+                .success(project: project, configuration: configuration)
         
         let scheme = configuration.detectScheme(name: project.scheme)
         
         let activityShowBuildSettings =
             ActivityShowBuildSettings(processManager: processManager, activityManager: activityManager)
-                .make(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
+                .success(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
         
         let devices = self.projectDirectory.devices()
         
         let activityListDevices =
             ActivityListDevices(processManager: processManager, activityManager: activityManager)
-                .make(devices: devices)
+                .success(devices: devices)
         
         let buildSettings = self.projectDirectory.buildSettings().for(project: self.project.name)
         
@@ -66,13 +66,13 @@ class Activities {
 
         let activityListDevices =
             ActivityListDevices(processManager: processManager, activityManager: activityManager)
-                .make(devices: devices)
+                .success(devices: devices)
         
         let activityBuild = ActivityBuild(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random())).make(location: location, project: project, appBundle: AppBundle.make(), scheme: project.scheme, projectDirectory: projectDirectory, buildSettings: buildSettings)
         
         let activityTest =
             ActivityTest(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
-                .make(location: location, project: project, devices: devices, scheme: project.scheme)
+                .success(location: location, project: project, devices: devices, scheme: project.scheme)
 
         return activityListDevices(activityBuild(activityTest(next)))
     }

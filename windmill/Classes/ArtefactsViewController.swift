@@ -52,16 +52,16 @@ class ArtefactsViewController: NSViewController {
             exportArtefactView.leadingLabel.stringValue = ""
         }
     }
-    @IBOutlet weak var publishArtefactView: ArtefactView! {
+    @IBOutlet weak var distributeArtefactView: ArtefactView! {
         didSet {
-            publishArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
-            publishArtefactView.leadingLabel.stringValue = "You need to:"
-            publishArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
+            distributeArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
+            distributeArtefactView.leadingLabel.stringValue = "You need to:"
+            distributeArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
     
     lazy var artefactViews: [ArtefactType: ArtefactView] = { [unowned self] in
-        return [.appBundle: self.buildArtefactView, .testReport: self.testArtefactView, .archiveBundle: self.archiveArtefactView, .ipaFile: self.exportArtefactView, .otaDistribution: self.publishArtefactView]
+        return [.appBundle: self.buildArtefactView, .testReport: self.testArtefactView, .archiveBundle: self.archiveArtefactView, .ipaFile: self.exportArtefactView, .otaDistribution: self.distributeArtefactView]
         }()
     
     @IBOutlet weak var appView: AppView! {
@@ -84,14 +84,14 @@ class ArtefactsViewController: NSViewController {
             exportView.toolTip = NSLocalizedString("windmill.artefacts.ipa.tooltip", comment: "")
         }
     }
-    @IBOutlet weak var publishView: PublishView! {
+    @IBOutlet weak var distributeView: DistributeView! {
         didSet {
-            publishView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
+            distributeView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
         }
     }
     
     lazy var views: [ArtefactType: NSView] = { [unowned self] in
-        return [.appBundle: self.appView, .testReport: self.testReportView, .archiveBundle: self.archiveView, .ipaFile: self.exportView, .otaDistribution: self.publishView]
+        return [.appBundle: self.appView, .testReport: self.testReportView, .archiveBundle: self.archiveView, .ipaFile: self.exportView, .otaDistribution: self.distributeView]
         }()
 
 
@@ -115,7 +115,7 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(didPublishSuccesfully(_:)), name: Windmill.Notifications.didPublishProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didDistributeSuccesfully(_:)), name: Windmill.Notifications.didDistributeProject, object: windmill)
         }
     }
 
@@ -239,16 +239,16 @@ class ArtefactsViewController: NSViewController {
         self.exportView.isHidden = false
     }
     
-    @objc func didPublishSuccesfully(_ aNotification: Notification) {
+    @objc func didDistributeSuccesfully(_ aNotification: Notification) {
         
         if let export = aNotification.userInfo?["export"] as? Export {
-            self.publishView.export = export
+            self.distributeView.export = export
         }
 
         if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
-            self.publishView.appBundle = appBundle
+            self.distributeView.appBundle = appBundle
         }
         
-        self.publishView.isHidden = false
+        self.distributeView.isHidden = false
     }
 }

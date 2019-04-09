@@ -71,22 +71,19 @@ class MainViewController: NSViewController {
     @IBOutlet weak var testActivityView: ActivityView!
     @IBOutlet weak var archiveActivityView: ActivityView!
     @IBOutlet weak var exportActivityView: ActivityView!
-    @IBOutlet weak var publishActivityView: ActivityView! {
-        didSet {
-            publishActivityView.isHidden = (try? Keychain.defaultKeychain().findWindmillUser()) == nil
-        }
-    }
+    @IBOutlet weak var distributeActivityView: ActivityView!
     
     weak var topConstraint: NSLayoutConstraint!
     
     lazy var activityViews: [ActivityType: ActivityView] = { [unowned self] in
-        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .publish: self.publishActivityView]
+        return [.checkout: self.checkoutActivityView, .build: self.buildActivityView, .test: self.testActivityView, .archive: self.archiveActivityView, .export: self.exportActivityView, .distribute: self.distributeActivityView]
     }()
     
     var artefactsViewController: ArtefactsViewController? {
         return self.children[0] as? ArtefactsViewController
     }
     
+    var subscriptionStatus = SubscriptionStatus.default
     let defaultCenter = NotificationCenter.default
     
     weak var windmill: Windmill? {
@@ -124,6 +121,7 @@ class MainViewController: NSViewController {
     
     @objc func willStartProject(_ aNotification: Notification) {
         for activityView in self.activityViews.values {
+            activityView.toolTip = nil
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
         }        
@@ -134,20 +132,26 @@ class MainViewController: NSViewController {
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
             return
         }
-                
-        self.activityViews[activity]?.imageView.alphaValue = 1.0
-        self.activityViews[activity]?.startLightsAnimation(activityType: activity)
+        let activityView = self.activityViews[activity]
+        activityView?.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
+        activityView?.imageView.alphaValue = 1.0
+        activityView?.startLightsAnimation(activityType: activity)
     }
 
     @objc func activityError(_ aNotification: Notification) {
 
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
-            os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
-            return
+        let error = aNotification.userInfo?["error"] as? NSError
+        let activity = aNotification.userInfo?["activity"] as? ActivityType
+        
+        switch (error, activity) {
+        case (let error?, let activity?):
+            let activityView = self.activityViews[activity]
+            activityView?.toolTip = error.localizedDescription
+            activityView?.imageView.alphaValue = 0.1
+            activityView?.stopLightsAnimation()
+        default:
+            os_log("Warning: neither `error` nor `activity` were set for the `didError` notification.", log:.default, type: .debug)
         }
-
-        self.activityViews[activity]?.imageView.alphaValue = 0.1
-        self.activityViews[activity]?.stopLightsAnimation()
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
@@ -155,8 +159,10 @@ class MainViewController: NSViewController {
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
             return
         }
-        
-        self.activityViews[activity]?.stopLightsAnimation()
+        let activityView = self.activityViews[activity]
+
+        activityView?.toolTip = NSLocalizedString("windmill.toolTip.success.\(activity.rawValue)", comment: "")
+        activityView?.stopLightsAnimation()
     }
     
     @discardableResult func cleanDerivedData() -> Bool {
@@ -165,5 +171,5 @@ class MainViewController: NSViewController {
     
     @discardableResult func cleanProjectFolder() -> Bool {
         return windmill?.removeRepositoryDirectory() ?? false
-    }
+    }    
 }

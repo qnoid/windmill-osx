@@ -13,7 +13,7 @@ struct ActivityShowBuildSettings {
     weak var processManager: ProcessManager?
     weak var activityManager: ActivityManager?
     
-    func make(project: Project, location: Project.Location, scheme: String, buildSettings: BuildSettings) -> ActivitySuccess {
+    func success(project: Project, location: Project.Location, scheme: String, buildSettings: BuildSettings) -> ActivitySuccess {
         
         return { next in
 
@@ -21,15 +21,16 @@ struct ActivityShowBuildSettings {
 
                 let readBuildSettings = Process.makeShowBuildSettings(project: project, scheme: scheme, buildSettings: buildSettings, location: location)
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.showBuildSettings]
+                self.activityManager?.willLaunch(activity: .showBuildSettings, userInfo: userInfo)
                 self.processManager?.launch(process: readBuildSettings, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: ActivityType.showBuildSettings, userInfo: userInfo)
+                    self.activityManager?.didExitSuccesfully(activity: .showBuildSettings, userInfo: userInfo)
                     
                     let buildSettings = buildSettings.for(project: project.name)
                     
                     next?(["buildSettings": buildSettings])
                 })
-                self.activityManager?.didLaunch(activity: ActivityType.showBuildSettings, userInfo: userInfo)
+                self.activityManager?.didLaunch(activity: .showBuildSettings, userInfo: userInfo)
             }
         }
     }

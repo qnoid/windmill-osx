@@ -13,9 +13,9 @@ import XCTest
 class ActivityManagerMock: ActivityManager {
     let expectation: XCTestExpectation
     
-    init(expectation: XCTestExpectation, accountResource: AccountResource, processManager: ProcessManager) {
+    init(expectation: XCTestExpectation, subscriptionManager: SubscriptionManager, processManager: ProcessManager) {
         self.expectation = expectation
-        super.init(accountResource: accountResource, processManager: processManager)
+        super.init(subscriptionManager: subscriptionManager, processManager: processManager)
     }
     
     override func didTerminate(manager: ProcessManager, process: Process, status: Int32, userInfo: [AnyHashable : Any]?) {
@@ -29,46 +29,12 @@ class WindmillMock: Windmill {
     init(expectation: XCTestExpectation, project: Project) {
         super.init(configuration: Windmill.Configuration.make(project: project))
         
-        let accountResource = AccountResource()
+        let subscriptionManager = SubscriptionManager()
         let processManager = ProcessManager()
         
-        self.activityManager = ActivityManagerMock(expectation: expectation, accountResource: accountResource, processManager: processManager)
+        self.activityManager = ActivityManagerMock(expectation: expectation, subscriptionManager: subscriptionManager, processManager: processManager)
     }
 }
-
-class WindmillTimer {
-    
-    let expectation: XCTestExpectation
-    var startDate: Date?
-    var executionTime = 0.0
-    
-    init(expectation: XCTestExpectation) {
-        self.expectation = expectation
-    }
-    
-    func observe(windmill: Windmill) {
-        NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(willMonitorProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
-    }
-    
-    @objc func willStartProject(_ aNotification: Notification) {
-        self.startDate = Date()
-    }
-    
-    @objc func willMonitorProject(_ aNotification: Notification) {
-        
-        let methodFinish = Date()
-        self.executionTime = methodFinish.timeIntervalSince(self.startDate!)
-        
-        expectation.fulfill()
-    }
-    
-    @objc func activityError(_ aNotification: Notification) {
-        XCTFail()
-    }
-}
-
 
 struct MetadataMock: Metadata {
     var url: URL
@@ -244,27 +210,9 @@ class WindmillTest: XCTestCase {
         
         let windmill = WindmillMock(expectation: expectation, project: project)
         
-        windmill.run(project, skipCheckout: false, user: "user")
+        windmill.run()
         
         wait(for: [expectation], timeout: 5.0)
     }
     
-    /**
-     - Precondition: requires internet connection
-     */
-    func testGivenWindmillRunAssertTimeTaken() {
-        
-        let expectation = self.expectation(description: #function)
-        
-        let name = "helloword-no-test-target"
-        let project = Project(name: name, scheme: "helloworld", origin: "git@github.com:qnoid/helloword-no-test-target.git")
-        let timer = WindmillTimer(expectation: expectation)
-        let windmill = Windmill.make(project: project)
-        
-        timer.observe(windmill: windmill)
-        windmill.run(project, skipCheckout: false, user: "14810686-4690-4900-ada5-8b0b7338aa39")
-        
-        wait(for: [expectation], timeout: 90.0)
-        XCTAssertLessThanOrEqual(timer.executionTime, 45.0)
-    }
 }

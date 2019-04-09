@@ -16,10 +16,8 @@ protocol StandardOutFormattedReaderDelegate: class {
 
 class StandardOutFormattedReader: DispatchSourceReadProvider {
     
-    static let dispatch_queue_serial = DispatchQueue(label: "io.windmil.StandardOutFormattedReader", qos: .utility, attributes: [])
-    
-    static func make(standardOutFormatter: StandardOutPrettyFormatter, fileURL: URL?) -> StandardOutFormattedReader {
-        return StandardOutFormattedReader(queue: dispatch_queue_serial, standardOutFormatter: standardOutFormatter, fileURL: fileURL)
+    static func make(standardOutFormatter: StandardOutPrettyFormatter, queue: DispatchQueue, fileURL: URL?) -> StandardOutFormattedReader {
+        return StandardOutFormattedReader(queue: queue, standardOutFormatter: standardOutFormatter, fileURL: fileURL)
     }
     
     let standardOutFormatter: StandardOutPrettyFormatter
@@ -46,7 +44,7 @@ class StandardOutFormattedReader: DispatchSourceReadProvider {
     func activate() -> DispatchSourceRead? {
         self.standardOutput = ""
         
-        let dispatchSourceRead = self.get()
+        let dispatchSourceRead = self.read()
         dispatchSourceRead?.activate()
         
         return dispatchSourceRead

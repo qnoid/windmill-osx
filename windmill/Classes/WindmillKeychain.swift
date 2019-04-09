@@ -10,46 +10,42 @@ import Foundation
 
 typealias KeychainFindUser = () throws -> String
 
-let KeychainWindmillAccount = KeychainAccount(serviceName: "io.windmill", name: "io.windmill.account")
-
-enum KeychainError: Error
-{
-    case instance(OSStatus)
+extension Keychain.Account {
+    static func make(service: String = "io.windmill.windmill", key: Keychain.Key) -> Keychain.Account {
+        return Keychain.Account(service: service, name: key.stringValue)
+    }
 }
 
 extension Keychain
 {
-    var findWindmillUser : KeychainFindUser
+    public enum Error: Swift.Error
     {
-        func findUser() throws -> String
-        {
-            let account = self.findGenericPassword(KeychainWindmillAccount)
-            
-            guard let user = account.password else {
-                throw KeychainError.instance(account.status)
-            }
-            
-        return user
-        }
-
-    return findUser
+        case instance(OSStatus)
     }
     
-    /**
-    Creates a new user under the KeychainAccountIOWindmillUsers if one doesn't already exist.
+    public enum Key: String, CodingKey {
+        case account = "account_identifier"
+        case subscriptionClaim = "subscription_claim"
+        case subscriptionAuthorizationToken = "subscription_authorization_token"
+    }
     
-    As a result of calling this method, a subsequent call to #findWindmillUser is guaranteed to return a user.
+    public func read(key: Keychain.Key) throws -> String {
 
-    @param user the user to create
-    @return true if created, false otherwise
-    */
-    @discardableResult func createUser(_ user:String) -> Bool
-    {
-        guard let _ = try? self.findWindmillUser() else {
-            self.addGenericPassword(KeychainWindmillAccount, password:user)
-            return true
+        let result = self.find(Keychain.Account.make(key: key))
+        
+        guard let value = result.value else {
+            throw Keychain.Error.instance(result.status)
         }
         
-    return false
+        return value
+    }
+    
+    @discardableResult func write(value: String, key: Keychain.Key) -> Bool
+    {
+        guard case .none = try? self.read(key: key) else {
+            return self.update(Keychain.Account.make(key: key), value:value) == errSecSuccess
+        }
+        
+        return self.add(Keychain.Account.make(key: key), value:value) == errSecSuccess
     }
 }

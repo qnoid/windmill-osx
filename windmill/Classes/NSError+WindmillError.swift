@@ -32,7 +32,7 @@ extension NSError
     
     class func domain(type: ActivityType) -> String {
         switch type {
-        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .publish:
+        case .showBuildSettings, .devices, .readProjectConfiguration, .checkout, .distribute:
             return WindmillErrorDomain
         case .build, .test, .archive, .export:
             return NSPOSIXErrorDomain

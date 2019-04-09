@@ -173,12 +173,12 @@ class ProcessManager {
         let standardOutputPipe = Pipe()
         process.standardOutput = standardOutputPipe
         
-        return process.manager_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] availableString, count in
+        return process.manager_waitForDataInBackground(standardOutputPipe, queue: queue) { [weak process, weak self] standardOutput, count in
             guard let process = process else {
                 return
             }
             
-            self?.didReceive(process: process, standardOutput: availableString, count: count)
+            self?.didReceive(process: process, standardOutput: standardOutput, count: count)
         }
     }
     
@@ -186,12 +186,12 @@ class ProcessManager {
         let standardErrorPipe = Pipe()
         process.standardError = standardErrorPipe
         
-        return process.manager_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] availableString, count in
+        return process.manager_waitForDataInBackground(standardErrorPipe, queue: queue){ [weak process, weak self] standardError, count in
             guard let process = process else {
                 return
             }
             
-            self?.didReceive(process: process, standardError: availableString, count: count)
+            self?.didReceive(process: process, standardError: standardError, count: count)
         }
     }
 

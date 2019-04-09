@@ -47,7 +47,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
 
-    lazy var keychain: Keychain = Keychain.defaultKeychain()
     var project: Project? {
         didSet {
             self.window?.title = project?.filename ?? ""
@@ -245,5 +244,11 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     
     func toggleSidePanel(isCollapsed: Bool? = nil) {
         self.sidePanelSplitViewController?.toggleSidePanel(isCollapsed: isCollapsed)
+    }
+    
+    @IBAction func refreshSubscription(_ sender: Any) {
+        self.windmill?.refreshSubscription() { error in
+            self.toggleDebugArea(isCollapsed: false)
+        }
     }
 }

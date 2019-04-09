@@ -61,6 +61,10 @@ class StandardOutPrettyFormatter: Formatter {
     let testSuiteStartedFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let testCasePassedFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let testCaseFailedFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let errorFailureReasonFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorFailureReason()
+    let errorRecoverySuggestionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorRecoverySuggestion()
+    let errorTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    
 
     let descender: CGFloat
     
@@ -114,6 +118,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.testSuiteStartedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestSuiteStarted(descender: descender)
         self.testCasePassedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCasePassed(descender: descender)
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
+        self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
         super.init()
     }
     
@@ -167,6 +172,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.testSuiteStartedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestSuiteStarted(descender: descender)
         self.testCasePassedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCasePassed(descender: descender)
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
+        self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
         super.init(coder: aDecoder)
     }
     
@@ -279,6 +285,12 @@ class StandardOutPrettyFormatter: Formatter {
             return testCasePassed
         } else if let testCaseFailed = self.testCaseFailedFormatter.format(for: obj) {
             return testCaseFailed
+        } else if let errorFailureReason = self.errorFailureReasonFormatter.format(for: obj) {
+            return errorFailureReason
+        } else if let errorRecoverySuggestion = self.errorRecoverySuggestionFormatter.format(for: obj) {
+            return errorRecoverySuggestion
+        } else if let errorTitle = self.errorTitleFormatter.format(for: obj) {
+            return errorTitle
         } else {
             return nil
         }

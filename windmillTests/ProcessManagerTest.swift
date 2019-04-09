@@ -73,31 +73,6 @@ class WillExitWithErrorExpectation: ProcessMonitor {
 class ProcessManagerTest: XCTestCase {
 
     let bundle: Bundle = Bundle(for: ProcessManagerTest.self)
-
-    /**
-     - Precondition: requires internet connection
-    */
-    func testGivenNameWithWhitespacesAssertSuccess() {
-        let manager = ProcessManager()
-        let repoName = "with white space"
-        let validOrigin = "git@github.com:windmill-io/blank.git"
-        let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)))
-        
-        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(name: repoName, scheme: "foo", origin: validOrigin), log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
-        
-        defer {
-            var trashDirectory = FileManager.default.trashDirectoryURL
-            try? FileManager.default.removeItem(at: trashDirectory.appendingPathComponent(repoName))
-        }
-        
-        let expectation = self.expectation(description: #function)
-        
-        manager.launch(process: process, wasSuccesful: { _ in
-            expectation.fulfill()
-        })
-        
-        wait(for: [expectation], timeout: 5.0)
-    }
     
     func testGivenInvalidOriginAssertError() {
         let manager = ProcessManager()

@@ -13,14 +13,14 @@ protocol DispatchSourceReadProvider {
     var queue: DispatchQueue { get }
     var fileHandleForReading: FileHandle? { get }
     
-    func get(completion: DispatchQueue?) -> DispatchSourceRead?
+    func read(completion: DispatchQueue?) -> DispatchSourceRead?
     
     func output(part: String, count: Int)
 }
 
 extension DispatchSourceReadProvider {
     
-    func get(completion: DispatchQueue? = nil) -> DispatchSourceRead? {
+    func read(completion: DispatchQueue? = nil) -> DispatchSourceRead? {
         
         guard let fileHandleForReading = fileHandleForReading else {
             return nil
@@ -37,7 +37,7 @@ extension DispatchSourceReadProvider {
             let estimatedBytesAvailableToRead = Int(data)
             
             var buffer = [UInt8](repeating: 0, count: estimatedBytesAvailableToRead)
-            let bytesRead = read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
+            let bytesRead = Darwin.read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
             
             guard bytesRead > 0, let availableString = String(bytes: buffer, encoding: .utf8) else {
                 return

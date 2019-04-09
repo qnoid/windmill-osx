@@ -38,6 +38,16 @@
                ReferencedContainer = "container:windmill.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BDA7E413223815A20022459E"
+               BuildableName = "IntegrationTests.xctest"
+               BlueprintName = "IntegrationTests"
+               ReferencedContainer = "container:windmill.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

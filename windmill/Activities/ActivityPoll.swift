@@ -23,11 +23,10 @@ struct ActivityPoll {
             let delayInSeconds:Int = 30
             #endif
             
-            self.activityManager?.post(notification: Windmill.Notifications.willMonitorProject, userInfo: ["project":project])
-            
-            self.processManager?.repeat(process: { return Process.makePoll(repositoryLocalURL: repositoryDirectory.URL, pollDirectoryURL: pollDirectoryURL) } , every: .seconds(delayInSeconds), untilTerminationStatus: 1, then: DispatchWorkItem {                
+            self.processManager?.repeat(process: { return Process.makePoll(repositoryLocalURL: repositoryDirectory.URL, pollDirectoryURL: pollDirectoryURL) } , every: .seconds(delayInSeconds), untilTerminationStatus: 1, then: DispatchWorkItem {
                 `do`.perform()
             })
+            self.activityManager?.notify(notification: Windmill.Notifications.isMonitoring, userInfo: ["project":project])            
         }
     }
 }

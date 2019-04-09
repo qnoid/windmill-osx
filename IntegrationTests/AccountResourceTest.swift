@@ -29,7 +29,7 @@ class AccountResourceTest: XCTestCase {
      *
      - Precondition: requires server
      */
-    func testGivenExportAssertPublish() {
+    func testGivenExportAssertExport() {
         let accountResource = AccountResource()
         let claim = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMlZqY21WMCIsInN1YiI6IjU1ZmQyYWMzLTdkZTItNGM2Ny1iMGY4LTc5ZTdjZmEwMjBjMiIsImV4cCI6MzMxMDgxODg1NzQsInR5cCI6ImF0IiwidiI6MX0.yxmDN4QLq0eJeJ1D42ZoIb9HO67o8bRvYXFjDy9bLcs"
         
@@ -39,7 +39,7 @@ class AccountResourceTest: XCTestCase {
         var actual: String = ""
         
         let expectation = XCTestExpectation(description: #function)
-        accountResource.requestExport(export: export, forAccount: "14810686-4690-4900-ada5-8b0b7338aa39", authorizationToken: SubscriptionAuthorizationToken(value: claim)){ itms, error in
+        accountResource.requestExport(export: export, forAccount: Account(identifier: "14810686-4690-4900-ada5-8b0b7338aa39"), authorizationToken: SubscriptionAuthorizationToken(value: claim)){ itms, error in
             
             guard let itms = itms else {
                 XCTFail(error!.localizedDescription)

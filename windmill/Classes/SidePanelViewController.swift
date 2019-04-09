@@ -221,23 +221,23 @@ class SidePanelViewController: NSViewController {
     }()
     
     // MARK: Deploy views
-    lazy var publish: NSTextField = {
-        let deploy = NSTextField(labelWithString: "publish")
-        deploy.isHidden = true
-        return deploy
+    lazy var distribute: NSTextField = {
+        let distribute = NSTextField(labelWithString: "distribute")
+        distribute.isHidden = true
+        return distribute
     }()
     
-    lazy var publishURL: NSTextField = {
-        let publishURL = NSTextField(labelWithString: "URL:")
-        publishURL.isHidden = true
-        return publishURL
+    lazy var distributeURL: NSTextField = {
+        let distributeURL = NSTextField(labelWithString: "URL:")
+        distributeURL.isHidden = true
+        return distributeURL
     }()
     
-    lazy var publishURLValue: NSTextField = {
-        let publishURLValue = NSTextField(labelWithString: "")
-        publishURLValue.isHidden = true
-        publishURLValue.isSelectable = true
-        return publishURLValue
+    lazy var distributeURLValue: NSTextField = {
+        let distributeURLValue = NSTextField(labelWithString: "")
+        distributeURLValue.isHidden = true
+        distributeURLValue.isSelectable = true
+        return distributeURLValue
     }()
     
     weak var topConstraint: NSLayoutConstraint!
@@ -303,8 +303,8 @@ class SidePanelViewController: NSViewController {
             [certificate, certificateValue],
             [certificateExpiryDate, certificateExpiryDateValue],
             [provisioning, provisioningValue],
-            [publish, empty],
-            [publishURL, publishURLValue]
+            [distribute, empty],
+            [distributeURL, distributeURLValue]
             ])
         
         self.view.wml_addSubview(view: gridView, layout: .equalWidth)
@@ -318,7 +318,7 @@ class SidePanelViewController: NSViewController {
         headerCell(for: test, cell:gridView.cell(for:test)!)
         headerCell(for: archive, cell:gridView.cell(for:archive)!)
         headerCell(for: export, cell:gridView.cell(for:export)!)
-        headerCell(for: publish, cell:gridView.cell(for:publish)!)
+        headerCell(for: distribute, cell:gridView.cell(for:distribute)!)
     }
     
     func headerCell(for view: NSTextField, cell: NSGridCell) {

@@ -1,5 +1,5 @@
 //
-//  PublishView.swift
+//  DistributeView.swift
 //  windmill
 //
 //  Created by Markos Charatzas on 24/1/18.
@@ -12,11 +12,11 @@ import AppKit
 import os
 
 @IBDesignable
-class PublishView: NSView {
+class DistributeView: NSView {
     
     @IBOutlet weak var stageIndicatorView: StageIndicatorView! {
         didSet  {
-            self.stageIndicatorView.color = NSColor(named:"publish")
+            self.stageIndicatorView.color = NSColor(named:"distribute")
         }
     }
     
@@ -49,12 +49,12 @@ class PublishView: NSView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        wml_addSubview(view: wml_load(view: PublishView.self)!, layout: .centered)
+        wml_addSubview(view: wml_load(view: DistributeView.self)!, layout: .centered)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        wml_addSubview(view: wml_load(view: PublishView.self)!, layout: .centered)
+        wml_addSubview(view: wml_load(view: DistributeView.self)!, layout: .centered)
     }    
 }
 

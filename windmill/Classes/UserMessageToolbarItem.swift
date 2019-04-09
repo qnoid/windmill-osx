@@ -114,7 +114,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     
     func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
         notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
-        notificationCenter.addObserver(self, selector: #selector(windmillMonitoringProject(_:)), name: Windmill.Notifications.willMonitorProject, object: windmill)
+        notificationCenter.addObserver(self, selector: #selector(isMonitoring(_:)), name: Windmill.Notifications.isMonitoring, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
     }
@@ -128,14 +128,14 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         self.errorButton.isHidden = true
     }
 
-    @objc func windmillMonitoringProject(_ aNotification: Notification) {
+    @objc func isMonitoring(_ aNotification: Notification) {
         self.windmillImageView.contents = NSImage(named: "windmill-activity-indicator")
         self.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
         self.activityTextfield.stringValue = NSLocalizedString("windmill.activity.monitor.description", comment: "")
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, activity != .distribute else {
             return
         }
         
@@ -146,23 +146,26 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     
     @objc func activityError(_ aNotification: Notification) {
         
+        let error = aNotification.userInfo?["error"] as? NSError
+        let activity = aNotification.userInfo?["activity"] as? ActivityType
+        
+        switch (error, activity) {
+        case (let error as WindmillError, _) where error.isRecoverable:
+            return
+        case (let error?, let activity?):
+            self.toolTip = error.localizedFailureReason ?? error.localizedRecoverySuggestion
+            self.prettyLogTextField.stringValue = error.localizedDescription
+            self.windmillImageView.contents = NSImage(named: activity.imageName)
+        default:
+            os_log("Warning: neither `error` nor `activity` were set for the `didError` notification.", log:.default, type: .debug)
+        }
+        
         self.windmillImageView.stopAnimation()
         self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
 
         if let errorCount = aNotification.userInfo?["errorCount"] as? Int, errorCount != 0 {
             self.errorButton.title = String(errorCount)
             self.errorButton.isHidden = false
-        }
-
-        if let error = aNotification.userInfo?["error"] as? NSError {
-            self.toolTip = error.localizedFailureReason ?? error.localizedRecoverySuggestion
-            self.prettyLogTextField.stringValue = error.localizedDescription
-        }
-        
-        if let activity = aNotification.userInfo?["activity"] as? ActivityType {
-            self.windmillImageView.contents = NSImage(named: activity.imageName)
-        } else {
-            os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
         }
     }
 }

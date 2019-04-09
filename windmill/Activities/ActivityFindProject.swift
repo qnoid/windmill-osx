@@ -17,7 +17,7 @@ struct ActivityFindProject {
     weak var processManager: ProcessManager?
     weak var activityManager: ActivityManager?
 
-    func make(project: Project, location: Project.Location) -> ActivitySuccess {
+    func success(project: Project, location: Project.Location) -> ActivitySuccess {
      
         return { next in
             
@@ -43,7 +43,7 @@ struct ActivityFindProject {
 
                     
                     DispatchQueue.main.async {
-                        self.activityManager?.post(notification: Windmill.Notifications.didCheckoutProject, userInfo: ["commit": commit])
+                        self.activityManager?.notify(notification: Windmill.Notifications.didCheckoutProject, userInfo: ["commit": commit])
                     }
 
                     next?(["location":location])

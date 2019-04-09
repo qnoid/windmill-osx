@@ -14,6 +14,7 @@ final class Preferences {
     
     struct Key {
         static let recordVideo = "recordVideo"
+        static let registerForSubscriptionNotifications = "registerForSubscriptionNotifications"
     }
     
     var recordVideo: Bool {
@@ -22,6 +23,15 @@ final class Preferences {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Key.recordVideo)
+        }
+    }
+
+    var registerForSubscriptionNotifications: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: Key.registerForSubscriptionNotifications)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.registerForSubscriptionNotifications)
         }
     }
 }

@@ -28,7 +28,6 @@ public enum SubscriptionError : Error {
     
     case unauthorised(reason: UnauthorisationReason?)
     case outdated
-    case expired
 }
 
 extension SubscriptionError : CustomNSError, LocalizedError {
@@ -54,8 +53,6 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             default:
                 return "Subscription Access"
             }
-        case .expired:
-            return "Subscription Expired"
         default:
             return ""
         }
@@ -78,8 +75,6 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             else {
                 return "Your Windmill subscription is no longer active.\n"
             }
-        case .expired:
-            return NSLocalizedString("\(SubscriptionError.errorDomain).\(UnauthorisationReason.expired.key)", comment: "Your subscription has expired or may have not renewed just yet.\n")
         default:
             return nil
         }
@@ -96,8 +91,6 @@ extension SubscriptionError : CustomNSError, LocalizedError {
         case .restoreConnectionError:
             return "Restoring your subscription failed because of a network error."
         case .unauthorised:
-            return nil
-        case .expired:
             return nil
         default:
             return nil
@@ -121,8 +114,6 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             default:
                 return "You can purchase a new subscription or contact qnoid@windmill.io"
             }
-        case .expired:
-            return "In the latter case, Windmill will try again sometime later. Optionally, under your Account, you can choose to Refresh now."
         default:
             return nil
         }
@@ -141,8 +132,6 @@ extension SubscriptionError : CustomNSError, LocalizedError {
         switch self {
         case .unauthorised(let reason?):
             return reason == .expired
-        case .expired:
-            return true
         default:
             return false
         }

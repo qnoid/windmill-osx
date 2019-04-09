@@ -579,4 +579,27 @@ extension RegularExpressionMatchesFormatter {
             return attributedString
         }
     }
+    
+    static func makeErrorFailureReason(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.ERROR_FAILURE_REASON_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { failureReason in
+            return NSAttributedString(string: "\t\t\(failureReason)\n", attributes: [.foregroundColor : NSColor.textColor])
+        }
+    }
+
+    static func makeErrorRecoverySuggestion(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.ERROR_RECOVERY_SUGGESTION_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { recoverySuggestion in
+            return NSAttributedString(string: "\t\t\(recoverySuggestion)\n", attributes: [.foregroundColor : NSColor.textColor])
+        }
+    }
+
+    static func makeErrorTitle(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.ERROR_TITLE_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { primary, secondary in
+            let attributedString = failedBuildStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: primary.prefix(1).uppercased() + primary.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \(secondary)\n", attributes: [.foregroundColor : NSColor.textColor]))
+            return attributedString
+        }
+    }
+
 }

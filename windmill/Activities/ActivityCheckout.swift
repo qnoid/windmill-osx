@@ -18,7 +18,7 @@ struct ActivityCheckout {
     
     let projectLogURL: URL
     
-    func make(repositoryLocalURL: RepositoryDirectory, project: Project) -> ActivitySuccess {
+    func success(repositoryLocalURL: RepositoryDirectory, project: Project) -> ActivitySuccess {
         
         return { next in
             
@@ -27,15 +27,16 @@ struct ActivityCheckout {
                 let checkout = Process.makeCheckout(sourceDirectory: repositoryLocalURL, project: project, log: self.projectLogURL)
                 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.checkout]
+                self.activityManager?.willLaunch(activity: .checkout, userInfo: userInfo)
                 self.processManager?.launch(process:checkout, userInfo: userInfo, wasSuccesful: { userInfo in
-                    self.activityManager?.didExitSuccesfully(activity: ActivityType.checkout, userInfo: userInfo)
+                    self.activityManager?.didExitSuccesfully(activity: .checkout, userInfo: userInfo)
 
                     os_log("Checked out source under: '%{public}@'", log: self.log, type: .debug, repositoryLocalURL.URL.path)
                     
                     next?(["repositoryDirectory": repositoryLocalURL])
                 })
                 
-                self.activityManager?.didLaunch(activity: ActivityType.checkout, userInfo: userInfo)
+                self.activityManager?.didLaunch(activity: .checkout, userInfo: userInfo)
             }
         }
     }
