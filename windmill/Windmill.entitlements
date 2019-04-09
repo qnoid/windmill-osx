@@ -13,5 +13,7 @@
 	<array>
 		<string>CloudKit</string>
 	</array>
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
 </dict>
 </plist>

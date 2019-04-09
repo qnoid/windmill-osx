@@ -70,6 +70,8 @@
 		BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */; };
 		BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */; };
 		BD52F965225CBDBD00F7623C /* DistributionSummary.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD189BCA1FF9FD5900BBEBA4 /* DistributionSummary.plist */; };
+		BD52F97A225CE6BE00F7623C /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD52F979225CE6BE00F7623C /* Alamofire.framework */; };
+		BD52F97B225CE6BE00F7623C /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BD52F979225CE6BE00F7623C /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BD571AE722575DA0009B3848 /* UserMessageToolbarItemTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AE622575D9F009B3848 /* UserMessageToolbarItemTest.swift */; };
 		BD571AE922579A12009B3848 /* DispatchSourceWriteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */; };
 		BD571AEB2258994B009B3848 /* StandardOutFormattedWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD571AEA2258994B009B3848 /* StandardOutFormattedWriter.swift */; };
@@ -128,8 +130,6 @@
 		BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */; };
 		BDC9D4961C43164C00FA018E /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDC9D4951C43164C00FA018E /* MainWindowController.swift */; };
 		BDCA749D222FFC05006E35F9 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDCA749C222FFC05006E35F9 /* AVKit.framework */; };
-		BDCA749F22301E09006E35F9 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDCA749E22301E08006E35F9 /* Alamofire.framework */; };
-		BDCA74A022301E09006E35F9 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BDCA749E22301E08006E35F9 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BDCA74A222301E6F006E35F9 /* SubscriptionResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74A122301E6F006E35F9 /* SubscriptionResource.swift */; };
 		BDCA74A422301E94006E35F9 /* SubscriptionAuthorizationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74A322301E94006E35F9 /* SubscriptionAuthorizationToken.swift */; };
 		BDCA74A622301EBF006E35F9 /* SubscriptionClaim.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74A522301EBF006E35F9 /* SubscriptionClaim.swift */; };
@@ -223,7 +223,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				BD0C8EA41DBCC1680092C886 /* ObjectiveGit.framework in Embed Frameworks */,
-				BDCA74A022301E09006E35F9 /* Alamofire.framework in Embed Frameworks */,
+				BD52F97B225CE6BE00F7623C /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -293,6 +293,7 @@
 		BD4D04AB2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTitlebarAccessoryViewController.swift; sourceTree = "<group>"; };
 		BD4D04AD2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProjectTitlebarAccessoryViewController.xib; sourceTree = "<group>"; };
 		BD4D24311F52E1160047AF02 /* SidePanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelSplitViewController.swift; sourceTree = "<group>"; };
+		BD52F979225CE6BE00F7623C /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/Mac/Alamofire.framework; sourceTree = "<group>"; };
 		BD571AE622575D9F009B3848 /* UserMessageToolbarItemTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageToolbarItemTest.swift; sourceTree = "<group>"; };
 		BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchSourceWriteProvider.swift; sourceTree = "<group>"; };
 		BD571AEA2258994B009B3848 /* StandardOutFormattedWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutFormattedWriter.swift; sourceTree = "<group>"; };
@@ -354,7 +355,6 @@
 		BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindmillKeychain.swift; sourceTree = "<group>"; };
 		BDC9D4951C43164C00FA018E /* MainWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		BDCA749C222FFC05006E35F9 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
-		BDCA749E22301E08006E35F9 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		BDCA74A122301E6F006E35F9 /* SubscriptionResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionResource.swift; sourceTree = "<group>"; };
 		BDCA74A322301E94006E35F9 /* SubscriptionAuthorizationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionAuthorizationToken.swift; sourceTree = "<group>"; };
 		BDCA74A522301EBF006E35F9 /* SubscriptionClaim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionClaim.swift; sourceTree = "<group>"; };
@@ -441,8 +441,8 @@
 			files = (
 				BDCA749D222FFC05006E35F9 /* AVKit.framework in Frameworks */,
 				BDA7E432223A86BA0022459E /* CloudKit.framework in Frameworks */,
-				BDCA749F22301E09006E35F9 /* Alamofire.framework in Frameworks */,
 				BDD66B0F1DBCC192002EC340 /* ObjectiveGit.framework in Frameworks */,
+				BD52F97A225CE6BE00F7623C /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,8 +460,8 @@
 		BD081A181AB09AB000B8E948 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BD52F979225CE6BE00F7623C /* Alamofire.framework */,
 				BDA7E431223A86BA0022459E /* CloudKit.framework */,
-				BDCA749E22301E08006E35F9 /* Alamofire.framework */,
 				BDCA749C222FFC05006E35F9 /* AVKit.framework */,
 				BD0C8EA31DBCC1680092C886 /* ObjectiveGit.framework */,
 			);
@@ -1012,6 +1012,9 @@
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.HardenedRuntime = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -1482,6 +1485,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = AQ2US2UQQ7;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1507,6 +1511,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = AQ2US2UQQ7;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
