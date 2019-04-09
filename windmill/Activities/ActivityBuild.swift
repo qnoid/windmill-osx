@@ -21,17 +21,17 @@ struct ActivityBuild {
     private func wasSuccesful(userInfo: [AnyHashable : Any]?, appBundleBuilt: AppBundle, appBundle: AppBundle, project: Project, destination: Devices.Destination, next: Activity? = nil) -> ProcessSuccess {
         return { userInfo in
 
-            self.activityManager?.didExitSuccesfully(activity: ActivityType.build, userInfo: userInfo)
+            self.activityManager?.didExitSuccesfully(activity: .build, userInfo: userInfo)
             
             try? FileManager.default.copyItem(at: appBundleBuilt.url, to: appBundle.url)
             
-            self.activityManager?.post(notification: Windmill.Notifications.didBuildProject, userInfo: ["project":project, "appBundle": appBundle, "destination": destination])
+            self.activityManager?.notify(notification: Windmill.Notifications.didBuildProject, userInfo: ["project":project, "appBundle": appBundle, "destination": destination])
             
             next?(userInfo)
         }
     }
     
-    func make(location: Project.Location, project: Project, appBundle: AppBundle, scheme: String, projectDirectory: ProjectDirectory, buildSettings: BuildSettings, derivedData: DerivedDataDirectory, resultBundle: ResultBundle) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, appBundle: AppBundle, scheme: String, projectDirectory: ProjectDirectory, buildSettings: BuildSettings, derivedData: DerivedDataDirectory, resultBundle: ResultBundle) -> ActivitySuccess {
         
         try? FileManager.default.removeItem(at: appBundle.url)
         
@@ -55,13 +55,15 @@ struct ActivityBuild {
                     
                     let wasSuccesful = self.wasSuccesful(userInfo: [WindmillStringKey.test: WindmillStringKey.Test.nothing], appBundleBuilt: appBundleBuilt, appBundle: appBundle, project: project, destination: destination, next: next)
                     
+                    self.activityManager?.willLaunch(activity: .build, userInfo: userInfo)
                     self.processManager?.launch(process: build, userInfo: ["activity" : ActivityType.build, "resultBundle": resultBundle, "artefact": ArtefactType.appBundle, WindmillStringKey.test: WindmillStringKey.Test.nothing], wasSuccesful: wasSuccesful)
-                    self.activityManager?.didLaunch(activity: ActivityType.build, userInfo: userInfo)
+                    self.activityManager?.didLaunch(activity: .build, userInfo: userInfo)
                 }
                 
                 let wasSuccesful = self.wasSuccesful(userInfo: [:], appBundleBuilt: appBundleBuilt, appBundle: appBundle, project: project, destination: destination, next: next)
+                self.activityManager?.willLaunch(activity: .build, userInfo: userInfo)
                 self.processManager?.launch(process: buildForTesting, recover: recover, userInfo: userInfo, wasSuccesful: wasSuccesful)
-                self.activityManager?.didLaunch(activity: ActivityType.build, userInfo: userInfo)
+                self.activityManager?.didLaunch(activity: .build, userInfo: userInfo)
             }
         }
     }
@@ -71,6 +73,6 @@ struct ActivityBuild {
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.buildResultBundle(at: project.name)
 
-        return make(location: location, project: project, appBundle: appBundle, scheme: scheme, projectDirectory: projectDirectory, buildSettings: buildSettings, derivedData: derivedData, resultBundle: resultBundle)
+        return success(location: location, project: project, appBundle: appBundle, scheme: scheme, projectDirectory: projectDirectory, buildSettings: buildSettings, derivedData: derivedData, resultBundle: resultBundle)
     }
 }

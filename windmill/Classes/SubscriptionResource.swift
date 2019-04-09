@@ -9,11 +9,11 @@
 import Foundation
 import os
 import Alamofire
+import CloudKit
 
 class SubscriptionResource {
     
-    
-    typealias SubscriptionCompletion = (_ token: SubscriptionAuthorizationToken?, _ error: Error?) -> Void
+    typealias SubscriptionAuthorizationTokenCompletion = (_ token: SubscriptionAuthorizationToken?, _ error: Error?) -> Void
     
     let queue = DispatchQueue(label: "io.windmill.manager")
     
@@ -26,9 +26,9 @@ class SubscriptionResource {
     
     let sessionManager = SessionManager()
     
-    @discardableResult func requestSubscription(forAccount account: Account, claim: SubscriptionClaim, completion: @escaping SubscriptionCompletion) -> DataRequest {
+    @discardableResult func requestSubscriptionAuthorizationToken(forAccount account: Account, claim: SubscriptionClaim, completion: @escaping SubscriptionAuthorizationTokenCompletion) -> DataRequest {
         
-        var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/subscription\(account.identifier)", method: .post)
+        var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/subscription/\(account.identifier)", method: .post)
         
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.addValue("Bearer \(claim.value)", forHTTPHeaderField: "Authorization")

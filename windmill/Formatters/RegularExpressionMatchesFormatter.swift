@@ -242,6 +242,19 @@ extension NSRegularExpression {
         // capture groups
         // $1 reason
         static let REASON_EXPRESSION = try! NSRegularExpression(pattern: "Reason: (.*)")
+        
+        // capture groups
+        // $1 failure reason
+        static let ERROR_FAILURE_REASON_EXPRESSION = try! NSRegularExpression(pattern: "error: failureReason: (.*)")
+        
+        // capture groups
+        // $1 recovery suggestion
+        static let ERROR_RECOVERY_SUGGESTION_EXPRESSION = try! NSRegularExpression(pattern: "error: recoverySuggestion: (.*)")
+        
+        // capture groups
+        // $1 primary
+        // $2 secondary
+        static let ERROR_TITLE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^\\*\\*\\s(.*)\\s(.*)\\s\\*\\*")
     }
 }
 
@@ -250,7 +263,7 @@ class RegularExpressionMatchesFormatter<T>: Formatter {
     static func quadriple<T>(match regularExpression: NSRegularExpression, format: @escaping (String, String, String, String) -> T) -> RegularExpressionMatchesFormatter<T> {
         return RegularExpressionMatchesFormatter<T>( formatter: { output in
             
-            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.utf16.count))
+            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.count))
             
             let string = output as NSString
             
@@ -270,7 +283,7 @@ class RegularExpressionMatchesFormatter<T>: Formatter {
     static func triple<T>(match regularExpression: NSRegularExpression, format: @escaping (String, String, String) -> T) -> RegularExpressionMatchesFormatter<T> {
         return RegularExpressionMatchesFormatter<T>( formatter: { output in
             
-            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.utf16.count))
+            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.count))
             
             let string = output as NSString
             
@@ -289,7 +302,7 @@ class RegularExpressionMatchesFormatter<T>: Formatter {
     static func double<T>(match regularExpression: NSRegularExpression, format: @escaping (String, String) -> T) -> RegularExpressionMatchesFormatter<T> {
         return RegularExpressionMatchesFormatter<T>( formatter: { output in
             
-            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.utf16.count))
+            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.count))
             let string = output as NSString
             
             for match in matches {
@@ -305,7 +318,7 @@ class RegularExpressionMatchesFormatter<T>: Formatter {
     static func single<T>(match regularExpression: NSRegularExpression, format: @escaping (String) -> T) -> RegularExpressionMatchesFormatter<T> {
         return RegularExpressionMatchesFormatter<T>( formatter: { output in
             
-            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.utf16.count))
+            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.count))
             let string = output as NSString
             
             for match in matches {
@@ -319,7 +332,7 @@ class RegularExpressionMatchesFormatter<T>: Formatter {
     
     static func match<T>(_ regularExpression: NSRegularExpression, format: @escaping () -> T ) -> RegularExpressionMatchesFormatter<T> {
         return RegularExpressionMatchesFormatter<T>( formatter: { output in
-            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.utf16.count))
+            let matches = regularExpression.matches(in: output, options: NSRegularExpression.MatchingOptions(), range: NSRange(location: 0, length: output.count))
             return matches.count == 0 ? nil : format()
         })
     }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.68" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.68"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="PublishView" customModule="Windmill" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="DistributeView" customModule="Windmill" customModuleProvider="target">
             <connections>
                 <outlet property="deploymentTargetTextField" destination="vDq-pI-d6Z" id="XHy-H0-Yx0"/>
                 <outlet property="stageIndicatorView" destination="uWb-UZ-C5A" id="Wsn-Uh-tE6"/>
@@ -66,16 +65,6 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4iC-Fo-ok7">
-                    <rect key="frame" x="6" y="1" width="266" height="34"/>
-                    <textFieldCell key="cell" allowsUndo="NO" sendsActionOnEndEditing="YES" id="cfE-PY-oh0">
-                        <font key="font" metaFont="system"/>
-                        <string key="title">You have to use Windmill for iOS to 
-install this over the air distribution.</string>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="48X-Vb-oap">
                     <rect key="frame" x="94" y="43" width="94" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minimum iOS:" id="xlG-Pa-NjS">
@@ -95,11 +84,8 @@ install this over the air distribution.</string>
                 <constraint firstAttribute="trailing" secondItem="xA8-tx-WWc" secondAttribute="trailing" id="JE4-SJ-y6V"/>
                 <constraint firstItem="Mz5-rg-8TC" firstAttribute="leading" secondItem="xA8-tx-WWc" secondAttribute="leading" id="Kf3-6n-sQI"/>
                 <constraint firstItem="tBh-Wp-mlc" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" id="Q1n-fx-iaI"/>
-                <constraint firstItem="4iC-Fo-ok7" firstAttribute="top" secondItem="48X-Vb-oap" secondAttribute="bottom" constant="8" id="S1d-Ak-qeH"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="top" secondItem="tBh-Wp-mlc" secondAttribute="bottom" constant="8" symbolic="YES" id="cje-nz-l8h"/>
                 <constraint firstItem="xA8-tx-WWc" firstAttribute="top" secondItem="dGi-f0-szt" secondAttribute="top" id="euu-FR-nWz"/>
-                <constraint firstAttribute="trailing" secondItem="4iC-Fo-ok7" secondAttribute="trailing" id="h9w-Ur-KE1"/>
-                <constraint firstItem="4iC-Fo-ok7" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="8" id="nYZ-o6-lE2"/>
                 <constraint firstAttribute="trailing" secondItem="vDq-pI-d6Z" secondAttribute="trailing" id="oeB-MU-6Db"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" constant="4" id="qFE-ks-5t0"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="20" symbolic="YES" id="v2a-7A-CBn"/>

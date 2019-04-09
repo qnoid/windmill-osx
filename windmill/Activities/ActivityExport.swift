@@ -18,7 +18,7 @@ struct ActivityExport {
 
     let log: URL
     
-    func make(location: Project.Location, project: Project, projectDirectory: ProjectDirectory, appBundle: AppBundle, export: Export, exportDirectoryURL: URL) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, projectDirectory: ProjectDirectory, appBundle: AppBundle, export: Export, exportDirectoryURL: URL) -> ActivitySuccess {
         
         let resultBundle = self.applicationSupportDirectory.exportResultBundle(at: project.name)
 
@@ -33,9 +33,10 @@ struct ActivityExport {
                 let makeExport = Process.makeExport(location: location, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: self.log)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.export, "project":project, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": resultBundle]
+                self.activityManager?.willLaunch(activity: .export, userInfo: userInfo)
                 self.processManager?.launch(process: makeExport, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: ActivityType.export, userInfo: userInfo)
+                    self.activityManager?.didExitSuccesfully(activity: .export, userInfo: userInfo)
                     
                     let appBundle = projectDirectory.appBundle(archive: archive, name: export.distributionSummary.name)
                     
@@ -43,11 +44,11 @@ struct ActivityExport {
                         return new //shouldn't it be the new one? if not the appBundle doesn't make a difference.
                     })
                     
-                    self.activityManager?.post(notification: Windmill.Notifications.didExportProject, userInfo: userInfo)
+                    self.activityManager?.notify(notification: Windmill.Notifications.didExportProject, userInfo: userInfo)
                     
                     next?(userInfo)
                 })
-                self.activityManager?.didLaunch(activity: ActivityType.export, userInfo: userInfo)
+                self.activityManager?.didLaunch(activity: .export, userInfo: userInfo)
             }
         }
     }

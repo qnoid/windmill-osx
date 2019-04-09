@@ -15,7 +15,7 @@ public enum ActivityType: String, CustomStringConvertible
     case test
     case archive
     case export
-    case publish
+    case distribute
     
     case showBuildSettings
     case devices
@@ -33,8 +33,8 @@ public enum ActivityType: String, CustomStringConvertible
             return "windmill-activity-indicator-archive"
         case .export:
             return "windmill-activity-indicator-export"
-        case .publish:
-            return "windmill-activity-indicator-publish"
+        case .distribute:
+            return "windmill-activity-indicator-distribute"
         case .showBuildSettings, .devices, .readProjectConfiguration:
             return "windmill-activity-indicator"
         }

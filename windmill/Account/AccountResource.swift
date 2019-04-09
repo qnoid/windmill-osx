@@ -36,9 +36,9 @@ class AccountResource {
     
     let sessionManager = SessionManager()
     
-    func requestExport(export: Export, forAccount account: String, authorizationToken: SubscriptionAuthorizationToken, completion: @escaping ExportCompletion) {
+    func requestExport(export: Export, forAccount account: Account, authorizationToken: SubscriptionAuthorizationToken, completion: @escaping ExportCompletion) {
         
-        var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/account/\(account)/export", method: .post)
+        var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/account/\(account.identifier)/export", method: .post)
         urlRequest.addValue("Bearer \(authorizationToken.value)", forHTTPHeaderField: "Authorization")
         urlRequest.timeoutInterval = 10 * 60 //seconds
         

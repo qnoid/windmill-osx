@@ -78,8 +78,10 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
         }
     }
 
+    let queue = DispatchQueue(label: "io.windmil.console.distilled", qos: .utility, attributes: [])
+    
     lazy var standardOutFormattedReader: StandardOutFormattedReader = {
-        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), fileURL: self.configuration?.projectLogURL)
+        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), queue: self.queue, fileURL: self.configuration?.projectLogURL)
         standardOutFormattedReader.delegate = self
         return standardOutFormattedReader
     }()

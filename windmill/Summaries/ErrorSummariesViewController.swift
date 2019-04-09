@@ -70,6 +70,14 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         tableView.reloadData()
     }
     
+    private func updateOrHide(viewFor tableColumn: NSTableColumn?, tableCellView: NSTableCellView, value: String?) {
+        if let value = value {
+            tableCellView.textField?.stringValue = value
+        } else {
+            tableColumn?.isHidden = true
+        }
+    }
+    
     // MARK: NSTableViewDataSource
     func numberOfRows(in tableView: NSTableView) -> Int {
         return errorSummaries.count
@@ -85,22 +93,23 @@ class ErrorSummariesViewController: NSViewController, NSTableViewDataSource, NST
         }
         
         let tableCellView = tableView.makeView(withIdentifier: identifier, owner: self) as! NSTableCellView
-
+        tableColumn?.isHidden = false
+        
         let errorSummaryIdentifier = ErrorSummaryIdentifier(rawValue: identifier.rawValue)
         
         if case ErrorSummaryIdentifier.Branch? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = commit?.branch ?? ""
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: commit?.branch)
         } else if case ErrorSummaryIdentifier.Commit? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = commit?.shortSha ?? ""
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: commit?.shortSha)
         } else if case ErrorSummaryIdentifier.Target? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = errorSummaries[row].target ?? ""
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: errorSummaries[row].target)
         } else  if case ErrorSummaryIdentifier.IssueType? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = errorSummaries[row].issueType
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: errorSummaries[row].issueType)
         } else if case ErrorSummaryIdentifier.Message? = errorSummaryIdentifier {
-            tableCellView.textField?.stringValue = errorSummaries[row].message
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: errorSummaries[row].message)
         }
         
-        tableCellView.toolTip = errorSummaries[row].message
+        tableCellView.toolTip = errorSummaries[row].message ?? ""
 
         return tableCellView
     }

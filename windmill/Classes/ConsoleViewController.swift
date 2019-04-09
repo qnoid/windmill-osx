@@ -83,7 +83,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     override func viewWillAppear() {
         super.viewWillAppear()
         self.textView.string = ""
-        self.dispatchSourceRead = self.get()
+        self.dispatchSourceRead = self.read()
         self.dispatchSourceRead?.activate()
     }
     

@@ -18,7 +18,7 @@ struct ActivityTest {
     
     let log: URL
 
-    func make(location: Project.Location, project: Project, devices: Devices, scheme: String) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, devices: Devices, scheme: String) -> ActivitySuccess {
         
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.testResultBundle(at: project.name)
@@ -42,17 +42,18 @@ struct ActivityTest {
                     test = Process.makeTestWithoutBuilding(location: location, project: project, scheme: scheme, destination: destination, derivedData: derivedData, resultBundle: resultBundle, log: self.log)
                 }
                 
+                self.activityManager?.willLaunch(activity: .test, userInfo: userInfo)
                 self.processManager?.launch(process: test, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: ActivityType.test, userInfo: userInfo)
+                    self.activityManager?.didExitSuccesfully(activity: .test, userInfo: userInfo)
                     
                     if let testsCount = resultBundle.info.testsCount, testsCount >= 0 {
-                        self.activityManager?.post(notification: Windmill.Notifications.didTestProject, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []])
+                        self.activityManager?.notify(notification: Windmill.Notifications.didTestProject, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []])
                     }
 
                     next?([:])
                 })
-                self.activityManager?.didLaunch(activity: ActivityType.test, userInfo: userInfo)
+                self.activityManager?.didLaunch(activity: .test, userInfo: userInfo)
             }
         }
     }
