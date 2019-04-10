@@ -46,6 +46,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
             textView.usesFontPanel = false
             textView.usesFindPanel = false
             textView.usesRuler = false
+            textView.string.reserveCapacity(1_000_000)
         }
     }
     

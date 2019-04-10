@@ -81,7 +81,6 @@ class AccountResource {
                         }
                     case (.success, let data?):
                         let itms = String(data: data, encoding: .utf8) ?? ""
-                        os_log("See other", log: .default, type: .debug, itms)
                         DispatchQueue.main.async{
                             completion(itms, nil)
                         }
