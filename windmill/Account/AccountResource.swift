@@ -12,19 +12,11 @@ import Foundation
 import os
 import Alamofire
 
-let WINDMILL_BASE_URL_PRODUCTION = "https://api.windmill.io"
-let WINDMILL_BASE_URL_DEVELOPMENT = "http://192.168.1.2:8080"
-
-#if DEBUG
-let WINDMILL_BASE_URL = WINDMILL_BASE_URL_DEVELOPMENT
-#else
-let WINDMILL_BASE_URL = WINDMILL_BASE_URL_PRODUCTION
-#endif
-
 class AccountResource {
     
     typealias ExportCompletion = (_ itms: String?, _ error: Error?) -> Void
-    
+    typealias FailureCase = (_ error: Error, _ response: Alamofire.DataResponse<Data>) -> Swift.Void
+
     let queue = DispatchQueue(label: "io.windmill.manager")
     
     let session: URLSession = {
@@ -36,60 +28,60 @@ class AccountResource {
     
     let sessionManager = SessionManager()
     
+    func failureCase(completion: @escaping AccountResource.ExportCompletion) -> FailureCase {
+        return { error, response in
+            switch error {
+            case let error as AFError where error.isResponseSerializationError:
+                DispatchQueue.main.async{
+                    completion(nil, error.underlyingError)
+                }
+            case let error as AFError where error.isResponseValidationError:
+                switch (error.responseCode, response.data) {
+                case (401, let data?):
+                    if let response = String(data: data, encoding: .utf8), let reason = SubscriptionError.UnauthorisationReason(rawValue: response) {
+                        DispatchQueue.main.async{
+                            completion(nil, SubscriptionError.unauthorised(reason:reason))
+                        }
+                    } else {
+                        DispatchQueue.main.async{
+                            completion(nil, SubscriptionError.unauthorised(reason: nil))
+                        }
+                    }
+                default:
+                    DispatchQueue.main.async{
+                        completion(nil, error)
+                    }
+                }
+            default:
+                DispatchQueue.main.async{
+                    completion(nil, error)
+                }
+            }
+        }
+    }
+
     func requestExport(export: Export, forAccount account: Account, authorizationToken: SubscriptionAuthorizationToken, completion: @escaping ExportCompletion) {
         
         var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/account/\(account.identifier)/export", method: .post)
         urlRequest.addValue("Bearer \(authorizationToken.value)", forHTTPHeaderField: "Authorization")
-        urlRequest.timeoutInterval = 10 * 60 //seconds
+        urlRequest.timeoutInterval = 10 //seconds
         
         return sessionManager.upload(multipartFormData: { multipartFormData in
-            multipartFormData.append(export.url, withName: "ipa")
             multipartFormData.append(export.manifest.url, withName: "plist")
         }, with: urlRequest, queue: self.queue, encodingCompletion: { result in
-            
             switch result {
-            case .success(let upload, _, _):
-                upload.validate().responseData(queue: self.queue) { response in
-                    switch (response.result, response.result.value) {
-                    case (.failure(let error), _):
-                        switch error {
-                        case let error as AFError where error.isResponseSerializationError:
-                            DispatchQueue.main.async{
-                                completion(nil, nil)
-                            }
-                        case let error as AFError where error.isResponseValidationError:
-                            switch (error.responseCode, response.data) {
-                            case (401, let data?):
-                                if let response = String(data: data, encoding: .utf8), let reason = SubscriptionError.UnauthorisationReason(rawValue: response) {
-                                    DispatchQueue.main.async{
-                                        completion(nil, SubscriptionError.unauthorised(reason:reason))
-                                    }
-                                } else {
-                                    DispatchQueue.main.async{
-                                        completion(nil, SubscriptionError.unauthorised(reason: nil))
-                                    }
-                                }
-                            default:
-                                DispatchQueue.main.async{
-                                    completion(nil, error)
-                                }
-                            }
-                        default:
-                            DispatchQueue.main.async{
-                                completion(nil, error)
-                            }
-                        }
-                    case (.success, let data?):
-                        let itms = String(data: data, encoding: .utf8) ?? ""
-                        DispatchQueue.main.async{
-                            completion(itms, nil)
-                        }
-                    default:
-                        DispatchQueue.main.async{
-                            completion(nil, response.error)
-                        }
-                    }
-                }
+            case .success(let upload, _, _):                
+                let postManifest =
+                    AccountResourcePostManifest(queue: self.queue).success(request: upload, completion: completion, failureCase: self.failureCase(completion: completion))
+                let putExport =
+                    AccountResourcePutExport(sessionManager: self.sessionManager).success(export: export, completion: completion)
+                let patchExport =
+                    AccountResourcePatchExport(sessionManager: self.sessionManager)
+                        .make(account: account, authorizationToken: authorizationToken, completion: completion, failureCase: self.failureCase(completion: completion))
+
+                let uploadExport = postManifest(putExport(patchExport))
+                
+                uploadExport([:])
             case .failure(let error):
                 DispatchQueue.main.async{
                     completion(nil, error)

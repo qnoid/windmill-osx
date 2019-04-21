@@ -16,14 +16,6 @@ class AccountResourceTest: XCTestCase {
     let exportManifestURL = Bundle(for: AccountResourceTest.self).url(forResource: "manifest", withExtension: "plist")!
     let exportURL = Bundle(for: AccountResourceTest.self).url(forResource: "test", withExtension: "ipa")!
     
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     /**
      * Integration Test
      *
@@ -36,7 +28,7 @@ class AccountResourceTest: XCTestCase {
 
         let export = Export.make(at: exportURL, manifest: Export.Manifest.make(at: exportManifestURL), distributionSummary: Export.DistributionSummary.make(at: distributionSummaryURL))
         
-        var actual: String = ""
+        var actual: String?
         
         let expectation = XCTestExpectation(description: #function)
         accountResource.requestExport(export: export, forAccount: Account(identifier: "14810686-4690-4900-ada5-8b0b7338aa39"), authorizationToken: SubscriptionAuthorizationToken(value: claim)){ itms, error in
@@ -50,9 +42,54 @@ class AccountResourceTest: XCTestCase {
             expectation.fulfill()
         }
         
-        wait(for: [expectation], timeout: 30.0)
+        wait(for: [expectation], timeout: 60.0)
         
-        XCTAssertFalse(actual.isEmpty)
-        XCTAssertEqual("\"itms-services://?action=download-manifest&url=https://ota.windmill.io/14810686-4690-4900-ada5-8b0b7338aa39/io.windmill.windmill/1.0/windmill.plist\"", actual)
+        XCTAssertFalse(actual?.isEmpty ?? true)
+        XCTAssertNotNil(actual, actual ?? "")
     }
+    
+    func testGivenExpiredClaimAssertExpired() {
+        let accountResource = AccountResource()
+        let claim = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMlZqY21WMCIsInN1YiI6IjU1ZmQyYWMzLTdkZTItNGM2Ny1iMGY4LTc5ZTdjZmEwMjBjMiIsImV4cCI6MTU1NTg0Mjc4MiwidHlwIjoiYXQiLCJ2IjoxfQ.iDrhorQgvTotWKSgGIWmhVOaUkQBvP5f9wrXetqePro"
+        
+        
+        let export = Export.make(at: exportURL, manifest: Export.Manifest.make(at: exportManifestURL), distributionSummary: Export.DistributionSummary.make(at: distributionSummaryURL))
+        
+        var subscriptionError: SubscriptionError?
+        
+        let expectation = XCTestExpectation(description: #function)
+        accountResource.requestExport(export: export, forAccount: Account(identifier: "14810686-4690-4900-ada5-8b0b7338aa39"), authorizationToken: SubscriptionAuthorizationToken(value: claim)){ itms, error in
+            
+            subscriptionError = (error as? SubscriptionError)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 60.0)
+        
+        XCTAssertNotNil(subscriptionError)
+        XCTAssertTrue(subscriptionError?.isExpired ?? false)
+    }
+
+    func testGivenUnauthorisedClaimAssertUnauthorised() {
+        let accountResource = AccountResource()
+        let claim = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJjMlZqY21WMCIsInN1YiI6IjU1ZmQyYWMzLTdkZTItNGM2Ny1iMGY4LTc5ZTdjZmEwMjBjMiIsImV4cCI6MTU1NTg0Mjc4MiwidHlwIjoiYXQiLCJ2IjoxfQ.dXwpYAtOkcVgQXKfBKmzbawXDRCDPYyKjQi8L7S9Q7w"
+        
+        
+        let export = Export.make(at: exportURL, manifest: Export.Manifest.make(at: exportManifestURL), distributionSummary: Export.DistributionSummary.make(at: distributionSummaryURL))
+        
+        var subscriptionError: SubscriptionError?
+        
+        let expectation = XCTestExpectation(description: #function)
+        accountResource.requestExport(export: export, forAccount: Account(identifier: "14810686-4690-4900-ada5-8b0b7338aa39"), authorizationToken: SubscriptionAuthorizationToken(value: claim)){ itms, error in
+            
+            subscriptionError = (error as? SubscriptionError)
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 60.0)
+        
+        XCTAssertNotNil(subscriptionError)
+        XCTAssertTrue(subscriptionError?.isUnauthorised ?? false)
+    }
+
 }

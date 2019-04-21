@@ -174,6 +174,14 @@
 		BDDF10C2205FA73C0093E811 /* TextViewRuler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C1205FA73C0093E811 /* TextViewRuler.swift */; };
 		BDDF10C4205FA7800093E811 /* NSTextView+LineEnumerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C3205FA7800093E811 /* NSTextView+LineEnumerator.swift */; };
 		BDDF10C6205FAD390093E811 /* StringTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF10C5205FAD390093E811 /* StringTest.swift */; };
+		BDE52F3C2269A7BC003C968B /* CryptographicHashFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F3B2269A7BC003C968B /* CryptographicHashFunction.swift */; };
+		BDE52F3E2269A7CF003C968B /* SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F3D2269A7CF003C968B /* SHA256.swift */; };
+		BDE52F412269B028003C968B /* SHA256Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F402269B028003C968B /* SHA256Test.swift */; };
+		BDE52F472269C7A0003C968B /* test.ipa in Resources */ = {isa = PBXBuildFile; fileRef = BDCA74B4223030D2006E35F9 /* test.ipa */; };
+		BDE52F49226BAAE3003C968B /* AccountResourcePostManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F48226BAAE3003C968B /* AccountResourcePostManifest.swift */; };
+		BDE52F4B226BAB02003C968B /* AccountResourcePutExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F4A226BAB02003C968B /* AccountResourcePutExport.swift */; };
+		BDE52F4D226BAB14003C968B /* AccountResourcePatchExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F4C226BAB14003C968B /* AccountResourcePatchExport.swift */; };
+		BDE52F4F226BAB4F003C968B /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE52F4E226BAB4F003C968B /* Resource.swift */; };
 		BDEBAD70200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEBAD6F200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift */; };
 		BDEBAD72200D8FE300A7BBD0 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDEBAD71200D8FE300A7BBD0 /* ConsoleViewController.swift */; };
 		BDF00B641F47582300572D03 /* Archive.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF00B631F47582300572D03 /* Archive.swift */; };
@@ -416,6 +424,13 @@
 		BDDF10C3205FA7800093E811 /* NSTextView+LineEnumerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextView+LineEnumerator.swift"; sourceTree = "<group>"; };
 		BDDF10C5205FAD390093E811 /* StringTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTest.swift; sourceTree = "<group>"; };
 		BDDF10C9205FAD8A0093E811 /* 25Lines.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 25Lines.txt; sourceTree = "<group>"; };
+		BDE52F3B2269A7BC003C968B /* CryptographicHashFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptographicHashFunction.swift; sourceTree = "<group>"; };
+		BDE52F3D2269A7CF003C968B /* SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256.swift; sourceTree = "<group>"; };
+		BDE52F402269B028003C968B /* SHA256Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256Test.swift; sourceTree = "<group>"; };
+		BDE52F48226BAAE3003C968B /* AccountResourcePostManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountResourcePostManifest.swift; sourceTree = "<group>"; };
+		BDE52F4A226BAB02003C968B /* AccountResourcePutExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountResourcePutExport.swift; sourceTree = "<group>"; };
+		BDE52F4C226BAB14003C968B /* AccountResourcePatchExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountResourcePatchExport.swift; sourceTree = "<group>"; };
+		BDE52F4E226BAB4F003C968B /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		BDEBAD6F200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomPanelSplitViewController.swift; sourceTree = "<group>"; };
 		BDEBAD71200D8FE300A7BBD0 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		BDF00B631F47582300572D03 /* Archive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Archive.swift; sourceTree = "<group>"; };
@@ -709,6 +724,7 @@
 		BDB6D53D19440392001340B4 /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				BDE52F3A2269A7AC003C968B /* Crypto */,
 				BDA7E430223A86B70022459E /* Windmill.entitlements */,
 				BDA7E42B223822110022459E /* JWT */,
 				BDA7E426223818560022459E /* Subscriber */,
@@ -748,6 +764,7 @@
 		BDB6D55019440392001340B4 /* windmillTests */ = {
 			isa = PBXGroup;
 			children = (
+				BDE52F3F2269B019003C968B /* CryptoTest */,
 				BDF6DDEF207D0CB7003B454F /* Formatters */,
 				BD08327520635A510093F5EE /* TestSummariesTest */,
 				BDDF10C8205FAD830093E811 /* StringTest */,
@@ -838,6 +855,10 @@
 			children = (
 				BDCA74AA22301F06006E35F9 /* Account.swift */,
 				BDCA74AC22301FB0006E35F9 /* AccountResource.swift */,
+				BDE52F48226BAAE3003C968B /* AccountResourcePostManifest.swift */,
+				BDE52F4A226BAB02003C968B /* AccountResourcePutExport.swift */,
+				BDE52F4C226BAB14003C968B /* AccountResourcePatchExport.swift */,
+				BDE52F4E226BAB4F003C968B /* Resource.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -897,6 +918,23 @@
 				BDDF10C9205FAD8A0093E811 /* 25Lines.txt */,
 			);
 			path = StringTest;
+			sourceTree = "<group>";
+		};
+		BDE52F3A2269A7AC003C968B /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				BDE52F3B2269A7BC003C968B /* CryptographicHashFunction.swift */,
+				BDE52F3D2269A7CF003C968B /* SHA256.swift */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		BDE52F3F2269B019003C968B /* CryptoTest */ = {
+			isa = PBXGroup;
+			children = (
+				BDE52F402269B028003C968B /* SHA256Test.swift */,
+			);
+			path = CryptoTest;
 			sourceTree = "<group>";
 		};
 		BDF00B671F475ABC00572D03 /* ArchiveTest */ = {
@@ -1116,6 +1154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD663E76206D024000BBD478 /* TestSummariesProducedInRuntimeByFramework.plist in Resources */,
+				BDE52F472269C7A0003C968B /* test.ipa in Resources */,
 				BD14BC232051EEB00052AAA2 /* project-with-build-errors in Resources */,
 				BDF00B691F475B5100572D03 /* Info.plist in Resources */,
 				BD14BC242051EEB00052AAA2 /* project-with-unit-tests in Resources */,
@@ -1165,6 +1204,7 @@
 				BDCA74A622301EBF006E35F9 /* SubscriptionClaim.swift in Sources */,
 				BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */,
 				BDB9610A2049F06800E49258 /* UserMessageToolbarItem.swift in Sources */,
+				BDE52F3C2269A7BC003C968B /* CryptographicHashFunction.swift in Sources */,
 				BDD17510208A154100CDE787 /* TextView.swift in Sources */,
 				BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */,
 				BD25E37D207FA95F003C5782 /* StandardOutPrettyFormatter.swift in Sources */,
@@ -1208,6 +1248,7 @@
 				BDA7E42F223822450022459E /* Claims.swift in Sources */,
 				BDF96101223266D100153ADC /* ActivityManager.swift in Sources */,
 				BDD1750E208A152600CDE787 /* StandardOutFormattedReader.swift in Sources */,
+				BDE52F4D226BAB14003C968B /* AccountResourcePatchExport.swift in Sources */,
 				BD083272206357460093F5EE /* TestSummaries.swift in Sources */,
 				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
 				BDDF10C4205FA7800093E811 /* NSTextView+LineEnumerator.swift in Sources */,
@@ -1247,11 +1288,14 @@
 				BDB96138204A500100E49258 /* ResultBundle.swift in Sources */,
 				BDD6F0AB20185D2A00D63D74 /* ExportView.swift in Sources */,
 				BDDF1091205BDEAD0093E811 /* TestStatus.swift in Sources */,
+				BDE52F3E2269A7CF003C968B /* SHA256.swift in Sources */,
 				BDEBAD70200D8DFE00A7BBD0 /* BottomPanelSplitViewController.swift in Sources */,
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BD2CEE53203117EC0048969D /* AppBundle.swift in Sources */,
 				BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
+				BDE52F49226BAAE3003C968B /* AccountResourcePostManifest.swift in Sources */,
+				BDE52F4F226BAB4F003C968B /* Resource.swift in Sources */,
 				BD571AEB2258994B009B3848 /* StandardOutFormattedWriter.swift in Sources */,
 				BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */,
 				BDC1E93319BCCC90009A3E42 /* WindmillKeychain.swift in Sources */,
@@ -1265,6 +1309,7 @@
 				BD30160A19BCBCFD001134F8 /* Process+Windmill.swift in Sources */,
 				BD4762061F16496F00F5188C /* Project+ObjectiveGit.swift in Sources */,
 				BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */,
+				BDE52F4B226BAB02003C968B /* AccountResourcePutExport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1280,6 +1325,7 @@
 				BD68054A202C120200F38D3B /* ProcessChainTest.swift in Sources */,
 				BD1D18011F44BE520015C13C /* ProcessManagerTest.swift in Sources */,
 				BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */,
+				BDE52F412269B028003C968B /* SHA256Test.swift in Sources */,
 				BD8364092039314200D1D381 /* CharacterSetTest.swift in Sources */,
 				BDF961172234190800153ADC /* AppBundles.swift in Sources */,
 				BDF6DDF1207D0CC1003B454F /* RegularExpressionMatchesFormatterTest.swift in Sources */,
