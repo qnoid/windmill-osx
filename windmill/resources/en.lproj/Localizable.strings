@@ -82,7 +82,7 @@
 "windmill.artefacts.ipa.header"="IPA file";
 "windmill.artefacts.ipa.tooltip"="Enables in-house testing with registered devices.";
 "windmill.aspects.ota.header"="Over-the-air distribution";
-"windmill.aspects.ota.tooltip"="Keep your customers, partners and collaborators in the loop, the latest build is available to install on your registered devices using Windmill on the iPhone.";
+"windmill.aspects.ota.tooltip"="Keep your team in the loop, the latest build is available to install on your registered devices using Windmill on the iPhone.";
 "notification.gettingstarted"="Drag and drop your Xcode project/workspace in the dock icon.";
 "notification.gettingstarted.action"="Show me";
 "io.windmill.windmill.subscription.expired" = "Your subscription has expired or may have not renewed just yet.\n";
