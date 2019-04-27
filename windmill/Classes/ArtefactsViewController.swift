@@ -245,6 +245,10 @@ class ArtefactsViewController: NSViewController {
             self.distributeView.export = export
         }
 
+        if let metadata = aNotification.userInfo?["metadata"] as? Export.Metadata {
+            self.distributeView.metadata = metadata
+        }
+
         if let appBundle = aNotification.userInfo?["appBundle"] as? AppBundle {
             self.distributeView.appBundle = appBundle
         }

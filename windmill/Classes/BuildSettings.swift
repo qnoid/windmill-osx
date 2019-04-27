@@ -9,7 +9,11 @@
 
 import Foundation
 
-public class BuildSettings {
+public class BuildSettings: Encodable {
+    
+    enum CodingKeys: CodingKey {
+        case target
+    }
     
     static func make(at url: URL) -> BuildSettings {
         return BuildSettings(url: url)
@@ -28,9 +32,9 @@ public class BuildSettings {
     }
     
     public struct Deployment {
-        let value: [String: Double]?
+        let value: [String: String]?
         
-        var target: Double? {
+        var target: String? {
             return value?["target"]
         }
     }
@@ -63,6 +67,10 @@ public class BuildSettings {
         self.values = values
     }
     
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.deployment?.target , forKey: .target)
+    }
     var projectName: String? {
         guard let project = values["project"] as? [String: String]?, let name = project?["name"] as String? else {
             return nil
@@ -80,7 +88,7 @@ public class BuildSettings {
     }
     
     var deployment: Deployment? {
-        guard let value = values["deployment"] as? [String: Double]? else {
+        guard let value = values["deployment"] as? [String: String]? else {
             return nil
         }
         

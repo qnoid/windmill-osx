@@ -44,7 +44,7 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 }
 
 extension AppBundle {
-    static func make(configuration: Windmill.Configuration, archive: Archive, distributionSummary: Export.DistributionSummary) -> AppBundle {
+    static func make(configuration: Windmill.Configuration, archive: Archive, distributionSummary: DistributionSummary) -> AppBundle {
         return configuration.projectDirectory.appBundle(archive: archive, name: distributionSummary.name)
     }
 }
@@ -62,6 +62,13 @@ extension Export {
     static func make(configuration: Windmill.Configuration) -> Export {
         let scheme = configuration.projectDirectory.configuration().detectScheme(name: configuration.project.scheme)
         return configuration.projectDirectory.export(name: scheme)
+    }
+}
+
+extension Export.Metadata {
+    
+    static func make(configuration: Windmill.Configuration) -> Export.Metadata {
+        return configuration.projectDirectory.metadata(project: configuration.project, location: configuration.location, configuration: .release)
     }
 }
 /**
@@ -110,7 +117,7 @@ class Windmill: ActivityManagerDelegate
         lazy var projectDirectory = self.windmillDirectory.directory(for: project)
         lazy var projectLogURL = self.projectDirectory.log(name: "raw")
         lazy var projectRepositoryDirectory = self.applicationCachesDirectory.respositoryDirectory(at: project.name)
-        
+        lazy var location = self.projectRepositoryDirectory.location(project: project)
         lazy var derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
     }
     
@@ -261,9 +268,10 @@ class Windmill: ActivityManagerDelegate
 
         let archive = Archive.make(configuration: self.configuration)
         let export = Export.make(configuration: self.configuration)
+        let metadata = Export.Metadata.make(configuration: self.configuration)
         let appBundle = AppBundle.make(configuration: self.configuration, archive: archive, distributionSummary: export.distributionSummary)
         
-        activityDistribute(ActivityDistribute.make(export: export, appBundle: appBundle))
+        activityDistribute(ActivityDistribute.make(export: export, metadata: metadata, appBundle: appBundle))
     }
     
     func exportAndMonitor(activityManager: ActivityManager, skipCheckout: Bool = false) -> Activity {

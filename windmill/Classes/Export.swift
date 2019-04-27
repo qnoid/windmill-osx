@@ -10,122 +10,35 @@ import Foundation
 
 public struct Export {
     
-    public struct DistributionSummary {
+    public struct Metadata: Encodable {
         
-        public static func make(at url: URL) -> DistributionSummary {
-            return DistributionSummary(metadata: MetadataPlistEncoded(url: url))
+        enum CodingKeys: CodingKey {
+            case commit
+            case deployment
+            case configuration
+            case distributionSummary
         }
         
-        private let metadata: Metadata
-        let url: URL
-        
-        init(metadata: Metadata) {
-            self.metadata = metadata
-            self.url = metadata.url
-        }
-
-        let dateFormatter: DateFormatter = {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/yy"
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
             
-            return dateFormatter
-        }()
+            try container.encode(self.commit, forKey: .commit)
+            try container.encode(self.buildSettings , forKey: .deployment)
+            try container.encode(self.configuration, forKey: .configuration)
+            try container.encode(self.distributionSummary, forKey: .distributionSummary)
+        }
+        
+        let project: Project
+        let buildSettings: BuildSettings
+        let location: Project.Location
+        let distributionSummary: DistributionSummary
+        let configuration: Configuration
+        
+        var commit: Repository.Commit? {
+            return location.commit
+        }
+    }    
 
-        var dictionary:[String:Any]? {
-            
-            guard let key = self.key else {
-                return nil
-            }
-            
-            let array:[[String:Any]]? = metadata[key]
-            
-            return array?[0]
-        }
-        
-        var key: String? {
-            return metadata.dictionary?.keys.first
-        }
-
-        var name: String {
-            return dictionary?["name"] as? String ?? ""
-        }
-
-        var team: [String: String]? {
-            return dictionary?["team"] as? [String: String]
-        }
-        
-        var certificate: [String: String]? {
-            return dictionary?["certificate"] as? [String: String]
-        }
-        
-        var profile: [String: String]? {
-            return dictionary?["profile"] as? [String: String]
-        }
-        
-        var teamId: String {
-            return team?["id"] ?? ""
-        }
-        
-        var teamName: String {
-            return team?["name"] ?? ""
-        }
-        
-        var certificateType: String? {
-            return certificate?["type"]
-        }
-        
-        var certificateExpiryDate: Date? {
-            guard let dateExpires = certificate?["dateExpires"] else {
-                return nil
-            }
-            
-            return dateFormatter.date(from: dateExpires)
-        }
-        
-        var profileName: String? {
-            return profile?["name"]
-        }
-    }
-
-    public struct Manifest {
-
-        public static func make(at url: URL) -> Manifest {
-            return Manifest(metadata: MetadataPlistEncoded(url: url))
-        }
-        
-        private let metadata: Metadata
-        let url: URL
-
-        init(metadata: Metadata) {
-            self.metadata = metadata
-            self.url = metadata.url
-        }
-
-        var items:[String:Any]? {
-            let items:[[String:Any]]? = metadata["items"]
-            
-            return items?[0]
-        }
-
-        var bundleIdentifier: String {
-            let metadata = items?["metadata"] as? [String: String]
-            
-            return metadata?["bundle-identifier"] ?? ""
-        }
-        
-        var bundleVersion: String {
-            let metadata = items?["metadata"] as? [String: String]
-            
-            return metadata?["bundle-version"] ?? ""
-        }
-        
-        var title: String {
-            let metadata = items?["metadata"] as? [String: String]
-            
-            return metadata?["title"] ?? ""
-        }
-    }
-    
     static func make(at url: URL, manifest: Manifest, distributionSummary: DistributionSummary) -> Export {
         return Export(url: url, manifest: manifest, distributionSummary: distributionSummary)
     }

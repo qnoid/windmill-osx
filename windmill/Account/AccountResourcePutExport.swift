@@ -36,7 +36,7 @@ class AccountResourcePutExport: NSObject {
                 "x-amz-content-sha256": "\(sha256.map { String(format: "%02x", $0) }.joined())"
             ]
             
-            self.sessionManager?.upload(upload, to: location, method: .put, headers: headers).responseData{ response in
+            self.sessionManager?.upload(upload, to: location, method: .put, headers: headers).validate().responseData{ response in
                 switch response.result {
                 case .failure(let error):
                     DispatchQueue.main.async{

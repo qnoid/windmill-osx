@@ -1,6 +1,6 @@
 [{
  "deployment": {
- "target": 11.2
+ "target": "11.2"
  },
  "product": {
  "name": "windmill",

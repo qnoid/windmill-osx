@@ -52,7 +52,7 @@ class ActivityBuiler {
                     .success(repositoryLocalURL: repositoryLocalURL, project: project)
         }
         
-        let location = Project.Location(url: self.projectRepositoryDirectory.URL)
+        let location = configuration.location
         
         let activityFindProject =
             ActivityFindProject(applicationCachesDirectory: applicationCachesDirectory, processManager: processManager, activityManager: activityManager)
@@ -92,13 +92,13 @@ class ActivityBuiler {
         
         let activityArchive =
             ActivityArchive(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: projectLogURL)
-                .success(location: location, project: project, scheme: scheme, archive: archive)
+                .success(location: location, project: project, scheme: scheme, archive: archive, configuration: .release)
         
         let export = self.projectDirectory.export(name: scheme)
         
         let activityExport =
             ActivityExport(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: projectLogURL)
-                .success(location: location, project: project, projectDirectory: self.projectDirectory, appBundle: appBundle, export: export, exportDirectoryURL: self.projectDirectory.exportDirectoryURL())
+                .success(location: location, project: project, projectDirectory: self.projectDirectory, appBundle: appBundle, export: export, configuration: .release, exportDirectoryURL: self.projectDirectory.exportDirectoryURL())
         
         return activityCheckout(activityFindProject(activityReadProjectConfiguration(activityShowBuildSettings(
             activityListDevices(activityBuild(activityTest(activityArchive(activityExport(next))))
