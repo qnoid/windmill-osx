@@ -46,6 +46,8 @@
 		BD25E37D207FA95F003C5782 /* StandardOutPrettyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25E37C207FA95F003C5782 /* StandardOutPrettyFormatter.swift */; };
 		BD25E37F207FAD01003C5782 /* BottomTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25E37E207FAD01003C5782 /* BottomTabViewController.swift */; };
 		BD25E381207FAD56003C5782 /* PrettyConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD25E380207FAD56003C5782 /* PrettyConsoleViewController.swift */; };
+		BD2BAF742274D08F00BB12B2 /* DistributionSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2BAF732274D08F00BB12B2 /* DistributionSummary.swift */; };
+		BD2BAF762274D0B100BB12B2 /* Manifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2BAF752274D0B100BB12B2 /* Manifest.swift */; };
 		BD2CEE53203117EC0048969D /* AppBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2CEE52203117EC0048969D /* AppBundle.swift */; };
 		BD2CEE5520316DB10048969D /* BuildSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2CEE5420316DB10048969D /* BuildSettings.swift */; };
 		BD2CEE57203175900048969D /* Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2CEE56203175900048969D /* Devices.swift */; };
@@ -59,6 +61,7 @@
 		BD36CAAD205B411E000B0A2B /* TestFailureSummariesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD36CAAC205B411E000B0A2B /* TestFailureSummariesWindowController.swift */; };
 		BD36CAAF205B4180000B0A2B /* TestFailureSummariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD36CAAE205B4180000B0A2B /* TestFailureSummariesViewController.swift */; };
 		BD3C0B65206CBDDC00B760DA /* TestSummariesWithPerformanceFailures.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD3C0B64206CBDDC00B760DA /* TestSummariesWithPerformanceFailures.plist */; };
+		BD42AF5422732C6800F3E9CA /* settings.json in Resources */ = {isa = PBXBuildFile; fileRef = BD42AF5322732C6800F3E9CA /* settings.json */; };
 		BD4762061F16496F00F5188C /* Project+ObjectiveGit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */; };
 		BD48F4A022366D5E00BA05EF /* ActivityBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD48F49F22366D5E00BA05EF /* ActivityBuilder.swift */; };
 		BD48F4A22236735000BA05EF /* WindmillError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD48F4A12236735000BA05EF /* WindmillError.swift */; };
@@ -142,7 +145,6 @@
 		BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCEFE481CD6B58D004D2890 /* Windmill.swift */; };
 		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
 		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
-		BDD002071AB3244600F8E34A /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002061AB3244600F8E34A /* Operators.swift */; };
 		BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */; };
 		BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */; };
 		BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */; };
@@ -291,6 +293,8 @@
 		BD25E37C207FA95F003C5782 /* StandardOutPrettyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutPrettyFormatter.swift; sourceTree = "<group>"; };
 		BD25E37E207FAD01003C5782 /* BottomTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomTabViewController.swift; sourceTree = "<group>"; };
 		BD25E380207FAD56003C5782 /* PrettyConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrettyConsoleViewController.swift; sourceTree = "<group>"; };
+		BD2BAF732274D08F00BB12B2 /* DistributionSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistributionSummary.swift; sourceTree = "<group>"; };
+		BD2BAF752274D0B100BB12B2 /* Manifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manifest.swift; sourceTree = "<group>"; };
 		BD2CEE52203117EC0048969D /* AppBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBundle.swift; sourceTree = "<group>"; };
 		BD2CEE5420316DB10048969D /* BuildSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildSettings.swift; sourceTree = "<group>"; };
 		BD2CEE56203175900048969D /* Devices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Devices.swift; sourceTree = "<group>"; };
@@ -304,6 +308,7 @@
 		BD36CAAC205B411E000B0A2B /* TestFailureSummariesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFailureSummariesWindowController.swift; sourceTree = "<group>"; };
 		BD36CAAE205B4180000B0A2B /* TestFailureSummariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFailureSummariesViewController.swift; sourceTree = "<group>"; };
 		BD3C0B64206CBDDC00B760DA /* TestSummariesWithPerformanceFailures.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TestSummariesWithPerformanceFailures.plist; sourceTree = "<group>"; };
+		BD42AF5322732C6800F3E9CA /* settings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = settings.json; sourceTree = "<group>"; };
 		BD4762051F16496F00F5188C /* Project+ObjectiveGit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+ObjectiveGit.swift"; sourceTree = "<group>"; };
 		BD48F49F22366D5E00BA05EF /* ActivityBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityBuilder.swift; sourceTree = "<group>"; };
 		BD48F4A12236735000BA05EF /* WindmillError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindmillError.swift; sourceTree = "<group>"; };
@@ -392,7 +397,6 @@
 		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		BDD002021AB2F26400F8E34A /* PathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathComponent.swift; sourceTree = "<group>"; };
 		BDD002041AB3060B00F8E34A /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
-		BDD002061AB3244600F8E34A /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFileManagerTest.swift; sourceTree = "<group>"; };
 		BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+WindmillArray.swift"; sourceTree = "<group>"; };
 		BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+WindmillError.swift"; sourceTree = "<group>"; };
@@ -559,7 +563,6 @@
 				BD30160919BCBCFD001134F8 /* Process+Windmill.swift */,
 				BDC1E93219BCCC90009A3E42 /* WindmillKeychain.swift */,
 				BD081A111AB05EFA00B8E948 /* Project.swift */,
-				BDD002061AB3244600F8E34A /* Operators.swift */,
 				BD243A851C42AB570015A13A /* Main.storyboard */,
 				BDC9D4951C43164C00FA018E /* MainWindowController.swift */,
 				BD25DB781C9ED2700001FEDF /* MainViewController.swift */,
@@ -597,6 +600,14 @@
 				BD48F4A12236735000BA05EF /* WindmillError.swift */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		BD42AF5522732C8200F3E9CA /* build */ = {
+			isa = PBXGroup;
+			children = (
+				BD42AF5322732C6800F3E9CA /* settings.json */,
+			);
+			path = build;
 			sourceTree = "<group>";
 		};
 		BD49F78C204B64A300F64687 /* Summaries */ = {
@@ -845,6 +856,8 @@
 				BDD1750F208A154100CDE787 /* TextView.swift */,
 				BDD17511208A156F00CDE787 /* DispatchSourceReadProvider.swift */,
 				BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */,
+				BD2BAF732274D08F00BB12B2 /* DistributionSummary.swift */,
+				BD2BAF752274D0B100BB12B2 /* Manifest.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -868,6 +881,7 @@
 			children = (
 				BDCA74B5223030D2006E35F9 /* manifest.plist */,
 				BDCA74B4223030D2006E35F9 /* test.ipa */,
+				BD42AF5522732C8200F3E9CA /* build */,
 			);
 			path = AccountResourceTest;
 			sourceTree = "<group>";
@@ -1114,6 +1128,7 @@
 			files = (
 				BD52F965225CBDBD00F7623C /* DistributionSummary.plist in Resources */,
 				BDA7E424223816470022459E /* test.ipa in Resources */,
+				BD42AF5422732C6800F3E9CA /* settings.json in Resources */,
 				BDA7E4252238164A0022459E /* manifest.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1199,6 +1214,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD2BAF762274D0B100BB12B2 /* Manifest.swift in Sources */,
 				BDF961132232C79400153ADC /* ActivityPoll.swift in Sources */,
 				BDBD52091CD5ED4B0023F460 /* CAAnimation+Windmill.swift in Sources */,
 				BDCA74A622301EBF006E35F9 /* SubscriptionClaim.swift in Sources */,
@@ -1253,12 +1269,12 @@
 				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
 				BDDF10C4205FA7800093E811 /* NSTextView+LineEnumerator.swift in Sources */,
 				BD25E37F207FAD01003C5782 /* BottomTabViewController.swift in Sources */,
+				BD2BAF742274D08F00BB12B2 /* DistributionSummary.swift in Sources */,
 				BDDF108B205B59680093E811 /* SummariesViewController.swift in Sources */,
 				BD12E11F1F521A19001B4A80 /* SidePanelViewController.swift in Sources */,
 				BDDF10C0205FA7020093E811 /* LineEnumerator.swift in Sources */,
 				BDA7E42A22381CD80022459E /* SubscriptionStatus.swift in Sources */,
 				BD08328E2064A0200093F5EE /* TestSummariesWindowController.swift in Sources */,
-				BDD002071AB3244600F8E34A /* Operators.swift in Sources */,
 				BD4D24321F52E1160047AF02 /* SidePanelSplitViewController.swift in Sources */,
 				BD24DBF6205248E20080A09F /* Xcode.swift in Sources */,
 				BD4D04AC2053D02E00C5D8CE /* ProjectTitlebarAccessoryViewController.swift in Sources */,

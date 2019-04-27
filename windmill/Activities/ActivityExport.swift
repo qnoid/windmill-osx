@@ -18,7 +18,7 @@ struct ActivityExport {
 
     let log: URL
     
-    func success(location: Project.Location, project: Project, projectDirectory: ProjectDirectory, appBundle: AppBundle, export: Export, exportDirectoryURL: URL) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, projectDirectory: ProjectDirectory, appBundle: AppBundle, export: Export, configuration: Configuration, exportDirectoryURL: URL) -> ActivitySuccess {
         
         let resultBundle = self.applicationSupportDirectory.exportResultBundle(at: project.name)
 
@@ -29,7 +29,6 @@ struct ActivityExport {
                 guard let archive = context["archive"] as? Archive else {
                     preconditionFailure("ActivityExport expects a `Archive` under the context[\"archive\"] for a succesful callback")
                 }
-
                 let makeExport = Process.makeExport(location: location, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: self.log)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.export, "project":project, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": resultBundle]
@@ -39,8 +38,10 @@ struct ActivityExport {
                     self.activityManager?.didExitSuccesfully(activity: .export, userInfo: userInfo)
                     
                     let appBundle = projectDirectory.appBundle(archive: archive, name: export.distributionSummary.name)
+
+                    let metadata = projectDirectory.metadata(project: project, location: location, configuration: configuration)
                     
-                    let userInfo = userInfo.merging(["export": export, "appBundle": appBundle], uniquingKeysWith: { (_, new) -> Any in
+                    let userInfo = userInfo.merging(["export": export, "metadata": metadata, "appBundle": appBundle], uniquingKeysWith: { (_, new) -> Any in
                         return new //shouldn't it be the new one? if not the appBundle doesn't make a difference.
                     })
                     

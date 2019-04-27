@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.68" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.68"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="DistributeView" customModule="Windmill" customModuleProvider="target">
             <connections>
+                <outlet property="commitTextField" destination="Jgl-yG-5Bj" id="W4f-OY-9i6"/>
                 <outlet property="deploymentTargetTextField" destination="vDq-pI-d6Z" id="XHy-H0-Yx0"/>
                 <outlet property="stageIndicatorView" destination="uWb-UZ-C5A" id="Wsn-Uh-tE6"/>
                 <outlet property="titleTextField" destination="xA8-tx-WWc" id="3gU-As-rSl"/>
@@ -33,7 +34,7 @@
                         <constraint firstAttribute="width" constant="5" id="WQq-3q-teI"/>
                     </constraints>
                 </customView>
-                <imageView horizontalHuggingPriority="252" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dGi-f0-szt">
+                <imageView translatesAutoresizingMaskIntoConstraints="NO" id="dGi-f0-szt">
                     <rect key="frame" x="24" y="46" width="64" height="64"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="64" id="TWj-Qh-dwb"/>
@@ -49,9 +50,17 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Mz5-rg-8TC">
-                    <rect key="frame" x="94" y="68" width="178" height="17"/>
+                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Mz5-rg-8TC">
+                    <rect key="frame" x="94" y="68" width="22" height="17"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="1.0" id="ooG-IB-pJl">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jgl-yG-5Bj" userLabel="Commit Text Field">
+                    <rect key="frame" x="120" y="68" width="132" height="17"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="(95a9b91)" id="eZN-XE-gRQ">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -79,6 +88,7 @@
                 <constraint firstItem="vDq-pI-d6Z" firstAttribute="leading" secondItem="48X-Vb-oap" secondAttribute="trailing" constant="8" id="2M0-2L-sws"/>
                 <constraint firstItem="48X-Vb-oap" firstAttribute="baseline" secondItem="vDq-pI-d6Z" secondAttribute="baseline" id="62E-h1-mFs"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="top" secondItem="dGi-f0-szt" secondAttribute="top" id="7hu-GF-4Jr"/>
+                <constraint firstItem="Jgl-yG-5Bj" firstAttribute="centerY" secondItem="Mz5-rg-8TC" secondAttribute="centerY" id="8hh-st-1es"/>
                 <constraint firstItem="48X-Vb-oap" firstAttribute="top" secondItem="Mz5-rg-8TC" secondAttribute="bottom" constant="8" id="A94-le-Y7M"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="bottom" secondItem="dGi-f0-szt" secondAttribute="bottom" id="DF2-7a-EDz"/>
                 <constraint firstAttribute="trailing" secondItem="xA8-tx-WWc" secondAttribute="trailing" id="JE4-SJ-y6V"/>
@@ -86,15 +96,16 @@
                 <constraint firstItem="tBh-Wp-mlc" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" id="Q1n-fx-iaI"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="top" secondItem="tBh-Wp-mlc" secondAttribute="bottom" constant="8" symbolic="YES" id="cje-nz-l8h"/>
                 <constraint firstItem="xA8-tx-WWc" firstAttribute="top" secondItem="dGi-f0-szt" secondAttribute="top" id="euu-FR-nWz"/>
+                <constraint firstItem="Jgl-yG-5Bj" firstAttribute="leading" secondItem="Mz5-rg-8TC" secondAttribute="trailing" constant="8" symbolic="YES" id="lxv-qT-dkV"/>
                 <constraint firstAttribute="trailing" secondItem="vDq-pI-d6Z" secondAttribute="trailing" id="oeB-MU-6Db"/>
                 <constraint firstItem="dGi-f0-szt" firstAttribute="leading" secondItem="uWb-UZ-C5A" secondAttribute="leading" constant="4" id="qFE-ks-5t0"/>
+                <constraint firstAttribute="trailing" secondItem="Jgl-yG-5Bj" secondAttribute="trailing" constant="20" symbolic="YES" id="sxa-8g-WzC"/>
                 <constraint firstItem="uWb-UZ-C5A" firstAttribute="leading" secondItem="81Z-61-umx" secondAttribute="leading" constant="20" symbolic="YES" id="v2a-7A-CBn"/>
                 <constraint firstItem="Mz5-rg-8TC" firstAttribute="top" secondItem="xA8-tx-WWc" secondAttribute="bottom" constant="8" symbolic="YES" id="w1e-Jg-BaB"/>
                 <constraint firstItem="tBh-Wp-mlc" firstAttribute="top" secondItem="81Z-61-umx" secondAttribute="top" constant="8" id="yhr-R5-aSD"/>
                 <constraint firstItem="xA8-tx-WWc" firstAttribute="leading" secondItem="dGi-f0-szt" secondAttribute="trailing" constant="8" id="zh9-U2-9SB"/>
-                <constraint firstAttribute="trailing" secondItem="Mz5-rg-8TC" secondAttribute="trailing" id="zpK-0N-lDS"/>
             </constraints>
-            <point key="canvasLocation" x="105" y="522"/>
+            <point key="canvasLocation" x="-330" y="239"/>
         </customView>
     </objects>
     <resources>

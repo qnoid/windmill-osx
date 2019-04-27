@@ -166,9 +166,9 @@ class SubscriptionManager: NSObject {
         })
     }
     
-    func distribute(export: Export, authorizationToken: SubscriptionAuthorizationToken, forAccount account: Account, completion: @escaping AccountResource.ExportCompletion) {
+    func distribute(export: Export, metadata: Export.Metadata, authorizationToken: SubscriptionAuthorizationToken, forAccount account: Account, completion: @escaping AccountResource.ExportCompletion) {
         
-        self.accountResource.requestExport(export: export, forAccount: account, authorizationToken: authorizationToken, completion: { itms, error in
+        self.accountResource.requestExport(export: export, metadata: metadata, forAccount: account, authorizationToken: authorizationToken, completion: { itms, error in
             
             if case let error as SubscriptionError = error, error.isExpired {
                 NotificationCenter.default.post(name: SubscriptionManager.SubscriptionExpired, object: self, userInfo: ["error": error])

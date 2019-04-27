@@ -60,7 +60,7 @@ class AccountResource {
         }
     }
 
-    func requestExport(export: Export, forAccount account: Account, authorizationToken: SubscriptionAuthorizationToken, completion: @escaping ExportCompletion) {
+    func requestExport(export: Export, metadata: Export.Metadata, forAccount account: Account, authorizationToken: SubscriptionAuthorizationToken, completion: @escaping ExportCompletion) {
         
         var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/account/\(account.identifier)/export", method: .post)
         urlRequest.addValue("Bearer \(authorizationToken.value)", forHTTPHeaderField: "Authorization")
@@ -77,7 +77,7 @@ class AccountResource {
                     AccountResourcePutExport(sessionManager: self.sessionManager).success(export: export, completion: completion)
                 let patchExport =
                     AccountResourcePatchExport(sessionManager: self.sessionManager)
-                        .make(account: account, authorizationToken: authorizationToken, completion: completion, failureCase: self.failureCase(completion: completion))
+                        .make(account: account, metadata: metadata, authorizationToken: authorizationToken, completion: completion, failureCase: self.failureCase(completion: completion))
 
                 let uploadExport = postManifest(putExport(patchExport))
                 

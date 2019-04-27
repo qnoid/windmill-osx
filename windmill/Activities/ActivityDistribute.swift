@@ -10,8 +10,8 @@ import Foundation
 import os
 
 class ActivityDistribute: NSObject {
-    static func make(export: Export, appBundle: AppBundle) -> ActivityContext {
-        return ["export": export, "appBundle": appBundle]
+    static func make(export: Export, metadata: Export.Metadata, appBundle: AppBundle) -> ActivityContext {
+        return ["export": export, "metadata": metadata, "appBundle": appBundle]
     }
     
     weak var subscriptionManager: SubscriptionManager?
@@ -41,7 +41,11 @@ class ActivityDistribute: NSObject {
             guard let export = context["export"] as? Export else {
                 preconditionFailure("ActivityDistribute expects a `Export` under the context[\"export\"] for a succesful callback")
             }
-            
+
+            guard let metadata = context["metadata"] as? Export.Metadata else {
+                preconditionFailure("ActivityExport expects a `Export.Metadata` under the context[\"metadata\"] for a succesful callback")
+            }
+
             guard let appBundle = context["appBundle"] as? AppBundle else {
                 preconditionFailure("ActivityDistribute expects a `AppBundle` under the context[\"appBundle\"] for a succesful callback")
             }
@@ -52,7 +56,7 @@ class ActivityDistribute: NSObject {
                 
                 self.activityManager?.willLaunch(activity: .distribute, userInfo: userInfo)
                 
-                self.subscriptionManager?.distribute(export: export, authorizationToken: authorizationToken, forAccount: account, completion: { itms, error in
+                self.subscriptionManager?.distribute(export: export, metadata: metadata, authorizationToken: authorizationToken, forAccount: account, completion: { itms, error in
                     
                     switch (itms, error) {
                     case (_, let error?):
@@ -62,17 +66,15 @@ class ActivityDistribute: NSObject {
                         self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
 
                         self.activityManager?.did(terminate: .distribute, error: WindmillError.recoverable(activityType: .distribute, error: error), userInfo: ["activity": ActivityType.distribute, "artefact": ArtefactType.otaDistribution, "error": WindmillError.recoverable(activityType: .distribute, error: error)])
-                    case (let itms?, _):
+                    case (_, .none):
                         self.standardOutFormattedWriter.success(message: "DISTRIBUTE")
                         self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
                         
                         self.activityManager?.didExitSuccesfully(activity: .distribute, userInfo: userInfo)
                         
-                        self.activityManager?.notify(notification: Windmill.Notifications.didDistributeProject, userInfo: ["export": export, "appBundle":appBundle, "itms": itms])
+                        self.activityManager?.notify(notification: Windmill.Notifications.didDistributeProject, userInfo: ["export": export, "metadata": metadata, "appBundle":appBundle])
                         
                         next?([:])
-                    case (.none, .none):
-                        preconditionFailure("Must have either itms returned or an error")
                     }
                 })
                 self.activityManager?.didLaunch(activity: .distribute, userInfo: userInfo)

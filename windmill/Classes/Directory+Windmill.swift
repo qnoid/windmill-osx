@@ -79,13 +79,14 @@ extension ApplicationSupportDirectory {
 
 public protocol ApplicationCachesDirectory : DirectoryType
 {
+    func sourcesURL() -> URL
     func respositoryDirectory(at pathComponent: String) -> RepositoryDirectory
     func derivedData(at pathComponent: String) -> DerivedDataDirectory
 }
 
 extension ApplicationCachesDirectory {
     
-    func sourcesURL() -> URL {
+    public func sourcesURL() -> URL {
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("Sources"))
         
         directory.create()
@@ -100,11 +101,6 @@ extension ApplicationCachesDirectory {
         return directory
     }
     
-    func commit(baseURL projectURL: Project.LocalURL, project: Project) -> Repository.Commit? {
-        let localGitRepoURL = projectURL.appendingPathComponent(project.filename)
-        return try? Repository.parse(localGitRepoURL: localGitRepoURL)
-    }
-
     public func derivedData(at pathComponent: String) -> DerivedDataDirectory {
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("DerivedData").appendingPathComponent(pathComponent))
         
@@ -115,8 +111,14 @@ extension ApplicationCachesDirectory {
 }
 
 public protocol RepositoryDirectory: DirectoryType {
+    func location(project: Project) -> Project.Location
+}
+
+extension RepositoryDirectory {
     
-    
+    public func location(project: Project) -> Project.Location {
+        return Project.Location(project: project, url: self.URL)
+    }
 }
 
 public protocol DerivedDataDirectory: DirectoryType {
@@ -154,8 +156,9 @@ public protocol ProjectDirectory : DirectoryType
     func appBundle(derivedData: DerivedDataDirectory, name: String) -> AppBundle
     func archive(name: String) -> Archive
     func appBundle(archive: Archive, name: String) -> AppBundle
-    func distributionSummary() -> Export.DistributionSummary
-    func manifest() -> Export.Manifest
+    func distributionSummary() -> DistributionSummary
+    func manifest() -> Manifest
+    func metadata(project: Project, location: Project.Location, configuration: Configuration) -> Export.Metadata
     func export(name: String) -> Export
 }
 
@@ -263,16 +266,23 @@ extension ProjectDirectory {
         return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
     }
 
-    public func distributionSummary() -> Export.DistributionSummary {
+    public func distributionSummary() -> DistributionSummary {
         let url = self.exportDirectoryURL().appendingPathComponent("DistributionSummary.plist")
         
-        return Export.DistributionSummary.make(at: url)
+        return DistributionSummary.make(at: url)
     }
     
-    public func manifest() -> Export.Manifest {
+    public func manifest() -> Manifest {
         let url = self.exportDirectoryURL().appendingPathComponent("manifest.plist")
         
-        return Export.Manifest.make(at: url)
+        return Manifest.make(at: url)
+    }
+    
+    public func metadata(project: Project, location: Project.Location, configuration: Configuration) -> Export.Metadata {
+        let buildSettings = self.buildSettings()
+        let distributionSummary = self.distributionSummary()
+
+        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), location: location, distributionSummary: distributionSummary, configuration: configuration)
     }
     
     public func export(name: String) -> Export {

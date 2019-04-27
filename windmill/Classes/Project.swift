@@ -8,7 +8,11 @@
 
 import Foundation
 
-final public class Project : Hashable, Equatable, CustomStringConvertible
+public func == (lhs: Project, rhs: Project) -> Bool {
+    return lhs.filename == rhs.filename
+}
+
+final public class Project : Codable, Hashable, Equatable, CustomStringConvertible
 {
     /*
         The URL under which the Xcode project is located
@@ -18,10 +22,17 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
     public typealias LocalURL = URL
     
     public class Location {
+        var project: Project
         var url: LocalURL
-        
-        init(url: LocalURL) {
+
+        init(project: Project, url: LocalURL) {
+            self.project = project
             self.url = url
+        }
+
+        var commit: Repository.Commit? {
+            let repository = self.url.appendingPathComponent(self.project.filename)
+            return try? Repository.parse(localGitRepoURL: URL(fileURLWithPath: repository.path))
         }
     }
     
@@ -118,6 +129,13 @@ final public class Project : Hashable, Equatable, CustomStringConvertible
         }
     }()
     
+    enum CodingKeys: CodingKey {
+        case isWorkspace
+        case name
+        case scheme
+        case origin
+    }
+
     var isWorkspace: Bool
     let name: String
     

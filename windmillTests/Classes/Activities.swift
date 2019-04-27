@@ -28,7 +28,7 @@ class Activities {
     
     func activityBuild(locationURL: URL, next: @escaping Activity) -> Activity {
         
-        let location = Project.Location(url: locationURL)
+        let location = Project.Location(project: self.project, url: locationURL)
         let configuration = self.projectDirectory.configuration()
         
         let activityReadProjectConfiguration =
@@ -60,7 +60,7 @@ class Activities {
     
     func activityTest(locationURL: URL, buildSettings: BuildSettings, next: @escaping Activity) -> Activity {
         
-        let location = Project.Location(url: locationURL)
+        let location = Project.Location(project: self.project, url: locationURL)
 
         let devices = self.projectDirectory.devices()
 

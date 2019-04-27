@@ -137,7 +137,7 @@ extension Process
         return process
     }
         
-    public static func makeArchive(location: Project.Location, project:Project, scheme: String, configuration: Configuration = .release, derivedData: DerivedDataDirectory, archive: Archive, resultBundle: ResultBundle, log: URL) -> Process {
+    public static func makeArchive(location: Project.Location, project:Project, scheme: String, derivedData: DerivedDataDirectory, archive: Archive, configuration: Configuration, resultBundle: ResultBundle, log: URL) -> Process {
         
         let archiveScript = project.isWorkspace ? Scripts.Xcodebuild.ARCHIVE_WORKSPACE : Scripts.Xcodebuild.ARCHIVE_PROJECT
 

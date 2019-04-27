@@ -18,7 +18,7 @@ struct ActivityArchive {
     
     let log: URL
     
-    func success(location: Project.Location, project: Project, scheme: String, archive: Archive) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, scheme: String, archive: Archive, configuration: Configuration) -> ActivitySuccess {
         
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.archiveResultBundle(at: project.name)
@@ -27,7 +27,7 @@ struct ActivityArchive {
             
             return { context in
                 
-                let makeArchive = Process.makeArchive(location: location, project: project, scheme: scheme, derivedData: derivedData, archive: archive, resultBundle: resultBundle, log: self.log)
+                let makeArchive = Process.makeArchive(location: location, project: project, scheme: scheme, derivedData: derivedData, archive: archive, configuration: configuration, resultBundle: resultBundle, log: self.log)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": resultBundle]
                 self.activityManager?.willLaunch(activity: .archive, userInfo: userInfo)

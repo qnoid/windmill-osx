@@ -33,7 +33,7 @@ class MetadataPlistEncodedTest: XCTestCase {
         let url = Bundle(for: MetadataPlistEncodedTest.self).url(forResource: "DistributionSummary", withExtension: "plist")!
 
         let metadata = MetadataPlistEncoded(url: url)
-        let distributionOptions = Export.DistributionSummary(metadata: metadata)
+        let distributionOptions = DistributionSummary(metadata: metadata)
         
         XCTAssertEqual(distributionOptions.key, "windmill.ipa")
         XCTAssertEqual(distributionOptions.teamId, "AQ2US2UQQ7")

@@ -8,7 +8,7 @@ BEGIN {
 
 $1 == "IPHONEOS_DEPLOYMENT_TARGET" {
 	if (counter != 1) print ","
-	print "{\"deployment\":{\"target\":"$3"}," 
+	print "{\"deployment\":{\"target\":\""$3"\"}," 
 }
 
 $1 =="PRODUCT_NAME" { 

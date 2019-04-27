@@ -103,9 +103,9 @@ class SidePanelViewController: NSViewController {
     }()
     
     lazy var platformVersion: NSTextField = {
-        let deploymentTarget = NSTextField(labelWithString: "Version:")
-        deploymentTarget.isHidden = true
-        return deploymentTarget
+        let platformVersion = NSTextField(labelWithString: "Version:")
+        platformVersion.isHidden = true
+        return platformVersion
     }()
     
     lazy var platformVersionValue: NSTextField = {

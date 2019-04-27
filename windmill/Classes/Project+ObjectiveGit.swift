@@ -60,12 +60,24 @@ public struct Repository: CustomDebugStringConvertible {
         return try parse(localGitRepoURL: URL(fileURLWithPath: localGitRepo, isDirectory: true))
     }
 
-    struct Commit: CustomDebugStringConvertible {
+    public struct Commit: CustomDebugStringConvertible, Encodable {
+        
+        enum CodingKeys: CodingKey {
+            case branch
+            case shortSha
+        }
+        
         let repository: Repository
         let branch: String
         let shortSha: String
         
-        var debugDescription: String {
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.branch, forKey: .branch)
+            try container.encode(self.shortSha , forKey: .shortSha)
+        }
+        
+        public var debugDescription: String {
             return "\(repository) \(branch):\(shortSha)"
         }
     }

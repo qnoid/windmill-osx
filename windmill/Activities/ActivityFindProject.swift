@@ -37,7 +37,7 @@ struct ActivityFindProject {
                     
                     os_log("Project found under: '%{public}@'", log: self.log, type: .debug, location.url.path)
 
-                    guard let commit = self.applicationCachesDirectory.commit(baseURL: location.url, project: project) else {
+                    guard let commit = location.commit else {
                         preconditionFailure("ActivityFindProject expects the project to be located in a git repo")
                     }
 

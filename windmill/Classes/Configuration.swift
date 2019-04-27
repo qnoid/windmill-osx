@@ -8,9 +8,9 @@
 
 import Foundation
 
-public enum Configuration {
-    case debug
-    case release
+public enum Configuration: String, Codable {
+    case debug = "DEBUG"
+    case release = "RELEASE"
     
     var name: String {
         switch self {
@@ -18,6 +18,6 @@ public enum Configuration {
             return "Debug"
         case .release:
             return "Release"
-        }        
+        }
     }
 }

@@ -22,6 +22,7 @@ class DistributeView: NSView {
     
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var versionTextField: NSTextField!
+    @IBOutlet weak var commitTextField: NSTextField!
     @IBOutlet weak var deploymentTargetTextField: NSTextField!
 
     @IBOutlet weak var infoImageView: NSImageView! {
@@ -44,6 +45,16 @@ class DistributeView: NSView {
             
             self.versionTextField.stringValue = export.manifest.bundleVersion
             self.titleTextField.stringValue = export.manifest.title
+        }
+    }
+
+    var metadata: Export.Metadata? {
+        didSet {
+            guard let commit = metadata?.commit else {
+                return
+            }
+            
+            self.commitTextField.stringValue = "(\(commit.shortSha))"
         }
     }
 
