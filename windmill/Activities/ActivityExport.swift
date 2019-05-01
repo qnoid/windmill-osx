@@ -38,8 +38,8 @@ struct ActivityExport {
                     self.activityManager?.didExitSuccesfully(activity: .export, userInfo: userInfo)
                     
                     let appBundle = projectDirectory.appBundle(archive: archive, name: export.distributionSummary.name)
-
-                    let metadata = projectDirectory.metadata(project: project, location: location, configuration: configuration)
+                    
+                    let metadata = projectDirectory.metadata(project: project, location: location, configuration: configuration, applicationProperties: appBundle.info)
                     
                     let userInfo = userInfo.merging(["export": export, "metadata": metadata, "appBundle": appBundle], uniquingKeysWith: { (_, new) -> Any in
                         return new //shouldn't it be the new one? if not the appBundle doesn't make a difference.

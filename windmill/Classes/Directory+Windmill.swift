@@ -158,7 +158,7 @@ public protocol ProjectDirectory : DirectoryType
     func appBundle(archive: Archive, name: String) -> AppBundle
     func distributionSummary() -> DistributionSummary
     func manifest() -> Manifest
-    func metadata(project: Project, location: Project.Location, configuration: Configuration) -> Export.Metadata
+    func metadata(project: Project, location: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata
     func export(name: String) -> Export
 }
 
@@ -278,11 +278,11 @@ extension ProjectDirectory {
         return Manifest.make(at: url)
     }
     
-    public func metadata(project: Project, location: Project.Location, configuration: Configuration) -> Export.Metadata {
+    public func metadata(project: Project, location: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
         let buildSettings = self.buildSettings()
         let distributionSummary = self.distributionSummary()
 
-        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), location: location, distributionSummary: distributionSummary, configuration: configuration)
+        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), location: location, distributionSummary: distributionSummary, configuration: configuration, applicationProperties: applicationProperties)
     }
     
     public func export(name: String) -> Export {

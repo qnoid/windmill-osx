@@ -17,6 +17,7 @@ public struct Export {
             case deployment
             case configuration
             case distributionSummary
+            case applicationProperties
         }
         
         public func encode(to encoder: Encoder) throws {
@@ -26,6 +27,7 @@ public struct Export {
             try container.encode(self.buildSettings , forKey: .deployment)
             try container.encode(self.configuration, forKey: .configuration)
             try container.encode(self.distributionSummary, forKey: .distributionSummary)
+            try container.encode(self.applicationProperties, forKey: .applicationProperties)
         }
         
         let project: Project
@@ -33,6 +35,7 @@ public struct Export {
         let location: Project.Location
         let distributionSummary: DistributionSummary
         let configuration: Configuration
+        let applicationProperties: AppBundle.Info
         
         var commit: Repository.Commit? {
             return location.commit

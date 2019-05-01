@@ -68,7 +68,7 @@ class Activities {
             ActivityListDevices(processManager: processManager, activityManager: activityManager)
                 .success(devices: devices)
         
-        let activityBuild = ActivityBuild(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random())).make(location: location, project: project, appBundle: AppBundle.make(), scheme: project.scheme, projectDirectory: projectDirectory, buildSettings: buildSettings)
+        let activityBuild = ActivityBuild(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random())).make(location: location, project: project, appBundle: AppBundles.make(), scheme: project.scheme, projectDirectory: projectDirectory, buildSettings: buildSettings)
         
         let activityTest =
             ActivityTest(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))

@@ -67,8 +67,8 @@ extension Export {
 
 extension Export.Metadata {
     
-    static func make(configuration: Windmill.Configuration) -> Export.Metadata {
-        return configuration.projectDirectory.metadata(project: configuration.project, location: configuration.location, configuration: .release)
+    static func make(configuration: Windmill.Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
+        return configuration.projectDirectory.metadata(project: configuration.project, location: configuration.location, configuration: .release, applicationProperties: applicationProperties)
     }
 }
 /**
@@ -268,9 +268,9 @@ class Windmill: ActivityManagerDelegate
 
         let archive = Archive.make(configuration: self.configuration)
         let export = Export.make(configuration: self.configuration)
-        let metadata = Export.Metadata.make(configuration: self.configuration)
         let appBundle = AppBundle.make(configuration: self.configuration, archive: archive, distributionSummary: export.distributionSummary)
-        
+        let metadata = Export.Metadata.make(configuration: self.configuration, applicationProperties: appBundle.info)
+
         activityDistribute(ActivityDistribute.make(export: export, metadata: metadata, appBundle: appBundle))
     }
     

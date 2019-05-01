@@ -30,7 +30,8 @@ class AccountResourceTest: XCTestCase {
         let project = Project(name: "windmill", scheme: "any", origin: "any")
         let url = URL(string: "/Users/qnoid/Library/Caches/io.windmill.windmill.macos/Sources/windmill")!
         let location: Project.Location = Project.Location(project: project, url: url)
-        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL).for(project: project.name), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release)
+        
+        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL).for(project: project.name), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release, applicationProperties: AppBundles.make().info)
         let export = Export.make(at: exportURL, manifest: Manifest.make(at: exportManifestURL), distributionSummary: DistributionSummary.make(at: distributionSummaryURL))
 
         var actual: String?
@@ -60,7 +61,7 @@ class AccountResourceTest: XCTestCase {
         let project = Project(name: "windmill", scheme: "any", origin: "any")
         let url = URL(string: "/Users/qnoid/Library/Caches/io.windmill.windmill.macos/Sources/windmill")!
         let location: Project.Location = Project.Location(project: project, url: url)
-        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release)
+        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release, applicationProperties: AppBundles.make().info)
         let export = Export.make(at: exportURL, manifest: Manifest.make(at: exportManifestURL), distributionSummary: DistributionSummary.make(at: distributionSummaryURL))
         
         var subscriptionError: SubscriptionError?
@@ -85,7 +86,7 @@ class AccountResourceTest: XCTestCase {
         let project = Project(name: "windmill", scheme: "any", origin: "any")
         let url = URL(string: "/Users/qnoid/Library/Caches/io.windmill.windmill.macos/Sources/windmill")!
         let location: Project.Location = Project.Location(project: project, url: url)
-        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release)
+        let metadata = Export.Metadata(project: project, buildSettings: BuildSettings(url: buildSettingsURL), location: location, distributionSummary: DistributionSummary.make(at: distributionSummaryURL), configuration: .release, applicationProperties: AppBundles.make().info)
         let export = Export.make(at: exportURL, manifest: Manifest.make(at: exportManifestURL), distributionSummary: DistributionSummary.make(at: distributionSummaryURL))
         
         var subscriptionError: SubscriptionError?

@@ -108,6 +108,10 @@
 		BD91A7141F420665004CA64B /* NSView+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7131F420665004CA64B /* NSView+Windmill.swift */; };
 		BD91A7171F42E9B8004CA64B /* Process+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */; };
 		BD91EB5C19491C40002D8C1C /* Scripts in Resources */ = {isa = PBXBuildFile; fileRef = BD91EB5B19491C40002D8C1C /* Scripts */; };
+		BD93EC1E2279956300E8A573 /* AppBundleTest in Resources */ = {isa = PBXBuildFile; fileRef = BD021863203187A50039BCCD /* AppBundleTest */; };
+		BD93EC232279982500E8A573 /* ExportTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD93EC222279982500E8A573 /* ExportTest.swift */; };
+		BD93EC25227999D300E8A573 /* AppBundles.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF961162234190800153ADC /* AppBundles.swift */; };
+		BD93EC2922799AB700E8A573 /* ExportTest in Resources */ = {isa = PBXBuildFile; fileRef = BD93EC2822799AB700E8A573 /* ExportTest */; };
 		BD947845205395DA00878731 /* AppView.xib in Resources */ = {isa = PBXBuildFile; fileRef = BD947844205395DA00878731 /* AppView.xib */; };
 		BD947847205395FD00878731 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD947846205395FD00878731 /* AppView.swift */; };
 		BDA7E41E223815B60022459E /* AccountResourceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74B122302F97006E35F9 /* AccountResourceTest.swift */; };
@@ -353,6 +357,8 @@
 		BD91A7131F420665004CA64B /* NSView+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Windmill.swift"; sourceTree = "<group>"; };
 		BD91A7161F42E9B8004CA64B /* Process+Windmill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Process+Windmill.swift"; sourceTree = "<group>"; };
 		BD91EB5B19491C40002D8C1C /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Scripts; sourceTree = "<group>"; };
+		BD93EC222279982500E8A573 /* ExportTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTest.swift; sourceTree = "<group>"; };
+		BD93EC2822799AB700E8A573 /* ExportTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ExportTest; sourceTree = "<group>"; };
 		BD947844205395DA00878731 /* AppView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppView.xib; sourceTree = "<group>"; };
 		BD947846205395FD00878731 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		BDA7E40E2238124E0022459E /* SubscriptionResourceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionResourceTest.swift; sourceTree = "<group>"; };
@@ -680,9 +686,17 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		BD93EC1F2279958800E8A573 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		BDA7E415223815A20022459E /* IntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
+				BD93EC1F2279958800E8A573 /* Classes */,
 				BDCA74B3223030AD006E35F9 /* AccountResourceTest */,
 				BDCA74B122302F97006E35F9 /* AccountResourceTest.swift */,
 				BDA7E40E2238124E0022459E /* SubscriptionResourceTest.swift */,
@@ -788,6 +802,7 @@
 				BD68054B202C127300F38D3B /* Resources */,
 				BD189BC91FF9FD4900BBEBA4 /* MetadataPlistEncodedTest */,
 				BDF00B671F475ABC00572D03 /* ArchiveTest */,
+				BD93EC2822799AB700E8A573 /* ExportTest */,
 				BD91A7151F42E9AE004CA64B /* Classes */,
 				BDB6D55119440392001340B4 /* Supporting Files */,
 				BD081A5F1AB1BB6000B8E948 /* ProjectTest.swift */,
@@ -807,6 +822,7 @@
 				BDDF10C5205FAD390093E811 /* StringTest.swift */,
 				BDD17518208CD50600CDE787 /* RepositoryTest.swift */,
 				BD571AE622575D9F009B3848 /* UserMessageToolbarItemTest.swift */,
+				BD93EC222279982500E8A573 /* ExportTest.swift */,
 			);
 			path = windmillTests;
 			sourceTree = "<group>";
@@ -1126,6 +1142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD93EC1E2279956300E8A573 /* AppBundleTest in Resources */,
 				BD52F965225CBDBD00F7623C /* DistributionSummary.plist in Resources */,
 				BDA7E424223816470022459E /* test.ipa in Resources */,
 				BD42AF5422732C6800F3E9CA /* settings.json in Resources */,
@@ -1190,6 +1207,7 @@
 				BD7DDBFC204A5A57003541E8 /* InfoWithManyErrorCount.plist in Resources */,
 				BD14BC202051E5CF0052AAA2 /* exit.sh in Resources */,
 				BDB9613D204A581D00E49258 /* InfoWithZeroErrorCount.plist in Resources */,
+				BD93EC2922799AB700E8A573 /* ExportTest in Resources */,
 				BD74665C2044DE3E009262DD /* InfoWithOneErrorCount.plist in Resources */,
 				BD1F0CDB2050CB2F004913B3 /* InfoWithUnsupportedDocumentLocationData.plist in Resources */,
 				BD680580202C147D00F38D3B /* helloword-no-test-target in Resources */,
@@ -1204,6 +1222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BDA7E41F223815B60022459E /* SubscriptionResourceTest.swift in Sources */,
+				BD93EC25227999D300E8A573 /* AppBundles.swift in Sources */,
 				BDA7E423223816270022459E /* WindmillTest.swift in Sources */,
 				BDA7E421223816070022459E /* ProcessManagerTest.swift in Sources */,
 				BDA7E41E223815B60022459E /* AccountResourceTest.swift in Sources */,
@@ -1354,6 +1373,7 @@
 				BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */,
 				BDF00B661F475A5C00572D03 /* ArchiveTest.swift in Sources */,
 				BD081A601AB1BB6000B8E948 /* ProjectTest.swift in Sources */,
+				BD93EC232279982500E8A573 /* ExportTest.swift in Sources */,
 				BDF9611922341C7800153ADC /* Activities.swift in Sources */,
 				BD105047203A84530051F0D5 /* ConfigurationTest.swift in Sources */,
 			);

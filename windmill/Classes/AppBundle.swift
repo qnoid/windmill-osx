@@ -14,14 +14,29 @@ public struct AppBundle {
         return AppBundle(url: url, info: info)
     }
     
-    public struct Info {
+    public struct Info: Encodable {
         
+        enum CodingKeys: String, CodingKey {
+            case bundleDisplayName
+            case bundleVersion
+        }
+
         static func make(at url: URL) -> Info {
             return Info(metadata: MetadataPlistEncoded(url: url))
         }
 
         let metadata: Metadata
         
+        init(metadata: Metadata) {
+            self.metadata = metadata
+        }
+        
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(self.bundleDisplayName, forKey: .bundleDisplayName)
+            try container.encode(self.bundleVersion, forKey: .bundleVersion)
+        }
+
         var icons: [String: Any]? {
             let icons: [String: Any]? = metadata["CFBundleIcons"]
             
@@ -51,7 +66,19 @@ public struct AppBundle {
             
             return identifier ?? ""
         }
-        
+
+        var bundleDisplayName: String {
+            let bundleDisplayName: String? = metadata["CFBundleDisplayName"]
+            
+            return bundleDisplayName ?? ""
+        }
+
+        var bundleVersion: String {
+            let bundleVersion: String? = metadata["CFBundleVersion"]
+            
+            return bundleVersion ?? ""
+        }
+
         var minimumOSVersion: String {
             let minimumOSVersion: String? = metadata["MinimumOSVersion"]
             
