@@ -272,19 +272,24 @@ class ProcessManager {
         
         process.terminationHandler = { [weak self] process in
             let canRecover = recover?.canRecover(process.terminationStatus) ?? false
+            let isSuccess = process.terminationStatus == 0
             
-            DispatchQueue.main.async { [isSuccess = (process.terminationStatus == 0)] in
+            DispatchQueue.main.async {
                 waitForStandardOutputInBackground?.cancel()
                 waitForStandardErrorInBackground?.cancel()
-                
-                self?.didExit(process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
+
+                guard let self = self else {
+                    return
+                }
+
+                self.didExit(process: process, isSuccess: isSuccess, canRecover: canRecover, userInfo: userInfo)
                 guard isSuccess else {
                     
                     if canRecover {
                         os_log("will attempt to recover process '%{public}@'", log: .default, type: .debug, process.executableURL?.lastPathComponent ?? "")
                         recover?.perform(process: process)
                     } else {
-                        self?.didTerminate(process: process, status: process.terminationStatus, userInfo: userInfo)
+                        self.didTerminate(process: process, status: process.terminationStatus, userInfo: userInfo)
                     }
                     
                     return
@@ -309,7 +314,10 @@ class ProcessManager {
         
         let process = provider()
         
-        process.terminationHandler = { process in
+        process.terminationHandler = { [weak self] process in
+            guard let self = self else {
+                return
+            }
             
             if process.terminationStatus == terminationStatus {
                 DispatchQueue.main.async {
@@ -318,8 +326,8 @@ class ProcessManager {
                 return
             }
 
-            DispatchQueue.main.async { [weak self] in 
-                self?.repeat(process: provider, every: timeInterval, untilTerminationStatus: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
+            DispatchQueue.main.async { 
+                self.repeat(process: provider, every: timeInterval, untilTerminationStatus: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
             }
         }
         

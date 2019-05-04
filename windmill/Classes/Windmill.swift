@@ -305,7 +305,10 @@ class Windmill: ActivityManagerDelegate
     }
     
     public func refreshSubscription(failure: @escaping (_ error: Error) -> Void) {
-        self.subscriptionManager.refreshSubscription  { token, error in
+        self.subscriptionManager.refreshSubscription { [weak self] token, error in
+            guard let self = self else {
+                return
+            }
             
             switch(token, error) {
             case(_, let error as SubscriptionError):

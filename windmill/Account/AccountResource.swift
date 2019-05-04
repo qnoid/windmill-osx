@@ -17,7 +17,7 @@ class AccountResource {
     typealias ExportCompletion = (_ itms: String?, _ error: Error?) -> Void
     typealias FailureCase = (_ error: Error, _ response: Alamofire.DataResponse<Data>) -> Swift.Void
 
-    let queue = DispatchQueue(label: "io.windmill.manager")
+    let queue = DispatchQueue(label: "io.windmill.windmill.manager")
     
     let session: URLSession = {
         let configuration = URLSessionConfiguration.default
