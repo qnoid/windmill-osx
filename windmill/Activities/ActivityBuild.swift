@@ -68,7 +68,7 @@ struct ActivityBuild {
         }
     }
     
-    func make(location: Project.Location, project: Project, appBundle: AppBundle, scheme: String, projectDirectory: ProjectDirectory, buildSettings: BuildSettings) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, appBundle: AppBundle, scheme: String, projectDirectory: ProjectDirectory, buildSettings: BuildSettings) -> ActivitySuccess {
         
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.buildResultBundle(at: project.name)

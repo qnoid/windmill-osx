@@ -220,20 +220,20 @@ class SidePanelViewController: NSViewController {
         return provisioningValue
     }()
     
-    // MARK: Deploy views
+    // MARK: Distribute views
     lazy var distribute: NSTextField = {
         let distribute = NSTextField(labelWithString: "distribute")
         distribute.isHidden = true
         return distribute
     }()
     
-    lazy var distributeURL: NSTextField = {
-        let distributeURL = NSTextField(labelWithString: "URL:")
+    lazy var distributeDate: NSTextField = {
+        let distributeURL = NSTextField(labelWithString: "Updated at:")
         distributeURL.isHidden = true
         return distributeURL
     }()
     
-    lazy var distributeURLValue: NSTextField = {
+    lazy var distributeDateValue: NSTextField = {
         let distributeURLValue = NSTextField(labelWithString: "")
         distributeURLValue.isHidden = true
         distributeURLValue.isSelectable = true
@@ -258,6 +258,7 @@ class SidePanelViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didDistributeSuccesfully(_:)), name: Windmill.Notifications.didDistributeProject, object: windmill)
         }
     }
     
@@ -267,6 +268,14 @@ class SidePanelViewController: NSViewController {
         
         return dateFormatter
     }()
+    
+    let dateFormatterDistributeDate: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.setLocalizedDateFormatFromTemplate("EEE, d MMM y HH:mm")
+        
+        return dateFormatter
+    }()
+
 
     override func updateViewConstraints() {
         
@@ -304,7 +313,7 @@ class SidePanelViewController: NSViewController {
             [certificateExpiryDate, certificateExpiryDateValue],
             [provisioning, provisioningValue],
             [distribute, empty],
-            [distributeURL, distributeURLValue]
+            [distributeDate, distributeDateValue]
             ])
         
         self.view.wml_addSubview(view: gridView, layout: .equalWidth)
@@ -442,6 +451,13 @@ class SidePanelViewController: NSViewController {
         self.commit.isHidden = false
         self.commitValue.stringValue = commit.shortSha
         self.commitValue.isHidden = false    
+    }
+    
+    @objc func didDistributeSuccesfully(_ aNotification: Notification) {
+        self.distribute.isHidden = false
+        self.distributeDate.isHidden = false
+        self.distributeDateValue.isHidden = false
+        self.distributeDateValue.stringValue = self.dateFormatterDistributeDate.string(from: Date())
     }
     
     func toggle(isHidden: Bool) {
