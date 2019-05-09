@@ -58,6 +58,33 @@ class SidePanelViewController: NSViewController {
         commitValue.isSelectable = true
         return commitValue
     }()
+    
+    lazy var author: NSTextField = {
+        let author = NSTextField(labelWithString: "Author:")
+        author.isHidden = true
+        return author
+    }()
+    
+    lazy var authorValue: NSTextField = {
+        let authorValue = NSTextField(labelWithString: "")
+        authorValue.isHidden = true
+        authorValue.isSelectable = true
+        return authorValue
+    }()
+
+    lazy var date: NSTextField = {
+        let date = NSTextField(labelWithString: "Date:")
+        date.isHidden = true
+        return date
+    }()
+    
+    lazy var dateValue: NSTextField = {
+        let dateValue = NSTextField(labelWithString: "")
+        dateValue.isHidden = true
+        dateValue.isSelectable = true
+        return dateValue
+    }()
+
 
     // MARK: Build views
     
@@ -298,6 +325,8 @@ class SidePanelViewController: NSViewController {
             [origin, originValue],
             [branch, branchValue],
             [commit, commitValue],
+            [author, authorValue],
+            [date, dateValue],
             [build, empty],
             [buildConfiguration, buildConfigurationValue],
             [test, empty],
@@ -451,6 +480,12 @@ class SidePanelViewController: NSViewController {
         self.commit.isHidden = false
         self.commitValue.stringValue = commit.shortSha
         self.commitValue.isHidden = false    
+        self.author.isHidden = false
+        self.authorValue.stringValue = commit.author ?? ""
+        self.authorValue.isHidden = false
+        self.date.isHidden = false
+        self.dateValue.stringValue = self.dateFormatterDistributeDate.string(from: commit.date)
+        self.dateValue.isHidden = false
     }
     
     @objc func didDistributeSuccesfully(_ aNotification: Notification) {

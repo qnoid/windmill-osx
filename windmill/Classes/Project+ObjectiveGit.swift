@@ -31,6 +31,12 @@ public struct Repository: CustomDebugStringConvertible {
                 os_log("%{public}@", log: log, type: .error, "Could not fetch head")
                 throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
             }
+
+            guard let commit = try? repo.lookUpObject(bySHA: head.sha) as? GTCommit, let author = commit.author, let time = author.time else {
+                os_log("%{public}@", log: log, type: .error, "Could not look up commit")
+                throw NSError.errorRepo(localGitRepoURL.path, underlyingError:nil)
+            }
+            
             
             let name = localGitRepoURL.lastPathComponent
             let remote = try repo.configuration().remotes?.filter { remote in
@@ -45,9 +51,8 @@ public struct Repository: CustomDebugStringConvertible {
             os_log("%{public}@", log: log, type: .debug, "Found remote repo at: \(String(describing: origin))")
             
             let repository = Repository(name: name, origin: origin)
-            let commit = Repository.Commit(repository: repository, branch: branch, shortSha: shortSha)
-            
-            return commit
+
+            return Repository.Commit(repository: repository, branch: branch, shortSha: shortSha, author: author.name, date: time)
             
         }
         catch let error as NSError {
@@ -65,16 +70,20 @@ public struct Repository: CustomDebugStringConvertible {
         enum CodingKeys: CodingKey {
             case branch
             case shortSha
+            case date
         }
         
         let repository: Repository
         let branch: String
         let shortSha: String
-        
+        let author: String?
+        let date: Date
+
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(self.branch, forKey: .branch)
             try container.encode(self.shortSha , forKey: .shortSha)
+            try container.encode(self.date , forKey: .date)
         }
         
         public var debugDescription: String {
