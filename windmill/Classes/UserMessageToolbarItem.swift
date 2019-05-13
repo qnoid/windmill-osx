@@ -135,6 +135,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
+        
         guard let activity = aNotification.userInfo?["activity"] as? ActivityType, activity != .distribute else {
             return
         }
