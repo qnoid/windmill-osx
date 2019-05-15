@@ -82,7 +82,7 @@ extension Export.Metadata {
  - SeeAlso: ActivityType
  - SeeAlso: NSError+WindmillError
  */
-class Windmill: ActivityManagerDelegate
+class Windmill: ActivityManagerDelegate, ActivityDelegate
 /* final */
 {
     class func make(project: Project, subscriptionManager: SubscriptionManager = SubscriptionManager(), processManager: ProcessManager = ProcessManager()) -> Windmill {
@@ -122,7 +122,7 @@ class Windmill: ActivityManagerDelegate
     }
     
     struct Notifications {
-        static let willStartProject = Notification.Name("will.start")
+        static let willRun = Notification.Name("io.windmill.windmill.will.run")
         static let didCheckoutProject = Notification.Name("io.windmill.windmill.activity.did.checkout")
         static let didBuildProject = Notification.Name("io.windmill.windmill.activity.did.build")
         static let didTestProject = Notification.Name("io.windmill.windmill.activity.did.test")
@@ -144,7 +144,7 @@ class Windmill: ActivityManagerDelegate
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     
-    let queue = DispatchQueue(label: "io.windmill.windmill")
+    let queue = DispatchQueue(label: "io.windmill.log.queue")
     
     let configuration: Configuration
     let subscriptionManager: SubscriptionManager
@@ -155,11 +155,10 @@ class Windmill: ActivityManagerDelegate
         }
     }
 
-    let activitiesGroup = DispatchGroup()
     var subscriptionStatus: SubscriptionStatus? {
         didSet {
             if oldValue == nil, case .active(let account, let authorizationToken)? = subscriptionStatus {
-                self.distribute(account: account, authorizationToken: authorizationToken)
+                self.activityManager?.distribute(configuration: self.configuration, standardOutFormattedWriter: self.standardOutFormattedWriter, account: account, authorizationToken: authorizationToken)
             }
         }
     }
@@ -183,14 +182,38 @@ class Windmill: ActivityManagerDelegate
         self.standardOutFormattedWriter = StandardOutFormattedWriter.make(queue: self.queue, fileURL: configuration.projectLogURL)
         self.subscriptionManager = subscriptionManager
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(devicesListed(_:)), name: Windmill.Notifications.DevicesListed, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: self)
+    }
+    
+    private func error(_ error: Error) {
+        switch error {
+        case let error as SubscriptionError:
+            self.standardOutFormattedWriter.error(error: error)
+            self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
+        case let error:
+            self.standardOutFormattedWriter.failed(title: "Subscription Access", error: (error as NSError))
+            self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
+        }
+    }
+    
+    private func warn(_ error: SubscriptionError) {
+        self.standardOutFormattedWriter.warn(error: error)
+        self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
     }
     
     @objc func subscriptionActive(notification: NSNotification) {
         self.subscriptionStatus(SubscriptionStatus.default)
     }
 
+    @objc func subscriptionFailed(notification: NSNotification) {
+        guard let error = notification.userInfo?["error"] as? SubscriptionError else {
+            return
+        }
+        
+        self.warn(error)
+    }
+    
     func subscriptionStatus(_ subscriptionStatus: SubscriptionStatus) {
         guard subscriptionStatus.isActive else {
             return
@@ -218,72 +241,66 @@ class Windmill: ActivityManagerDelegate
         return self.configuration.projectRepositoryDirectory.remove()
     }
     
-    @objc func didExportSuccesfully(_ aNotification: Notification) {
-        activitiesGroup.leave()
+    func willLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
+        
     }
     
     func will(_ manager: ActivityManager, launch activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
-        
-        if activity == .distribute {
-            activitiesGroup.wait()
-        }
+        self.willLaunch(activity: activity, userInfo: userInfo)
     }
-    
-    func did(_ manager: ActivityManager, launch activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
-        self.activitiesGroup.enter()
 
+    func didLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Windmill.Notifications.activityDidLaunch, object: self, userInfo: userInfo)
         }
     }
     
-    func did(_ manager: ActivityManager, exitSuccesfully activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
-        self.activitiesGroup.leave()
+    func did(_ manager: ActivityManager, launch activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
+        self.didLaunch(activity: activity, userInfo: userInfo)
+    }
 
+    func didExitSuccesfully(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Windmill.Notifications.activityDidExitSuccesfully, object: self, userInfo: userInfo)
         }
     }
+
+    func did(_ manager: ActivityManager, exitSuccesfully activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
+        self.didExitSuccesfully(activity: activity, userInfo: userInfo)
+    }
     
-    func did(_ manager: ActivityManager, terminate activity: ActivityType, error: Error, userInfo: [AnyHashable : Any]?) {
+    func did(terminate activity: ActivityType, error: Error, userInfo: [AnyHashable : Any]?) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Windmill.Notifications.didError, object: self, userInfo: userInfo)
         }
     }
     
+    func did(_ manager: ActivityManager, terminate activity: ActivityType, error: Error, userInfo: [AnyHashable : Any]?) {
+        self.did(terminate: activity, error: error, userInfo: userInfo)
+    }
+    
     func notify(notification name: Notification.Name, userInfo: [AnyHashable : Any]? = nil) {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: name, object: self, userInfo: userInfo)
-        }
+        NotificationCenter.default.post(name: name, object: self, userInfo: userInfo)
     }
     
     func distribute(account: Account, authorizationToken: SubscriptionAuthorizationToken) {
+        let activityDistribute = ActivityDistribute(subscriptionManager: self.subscriptionManager, standardOutFormattedWriter: self.standardOutFormattedWriter)
+        activityDistribute.delegate = self
         
-        guard let activityManager = self.activityManager else {
-            preconditionFailure("ActivityManager hasn't been set on Windmill. Did you call the setter?")
-        }
-
-        let activityBuiler = activityManager.builder(configuration: self.configuration)
-        let activityDistribute = activityBuiler.distributeActivity(account: account, authorizationToken: authorizationToken, activityManager: activityManager, standardOutFormattedWriter: self.standardOutFormattedWriter, queue: self.queue)
-
-        let archive = Archive.make(configuration: self.configuration)
-        let export = Export.make(configuration: self.configuration)
-        let appBundle = AppBundle.make(configuration: self.configuration, archive: archive, distributionSummary: export.distributionSummary)
-        let metadata = Export.Metadata.make(configuration: self.configuration, applicationProperties: appBundle.info)
-
-        activityDistribute(ActivityDistribute.make(export: export, metadata: metadata, appBundle: appBundle))
+        let distribute = activityDistribute.make(account: account, authorizationToken: authorizationToken)
+        distribute(ActivityDistribute.Context.make(configuration: self.configuration))
     }
     
     func exportAndMonitor(activityManager: ActivityManager, skipCheckout: Bool = false) -> Activity {
         
         let activityBuiler = activityManager.builder(configuration: self.configuration)
         
-        let activityPoll =
+        let pollActivity =
             activityBuiler.pollActivity(activityManager: activityManager, then: DispatchWorkItem { [weak self] in
                 self?.notify(notification: Windmill.Notifications.SourceCodeChanged)
             })
         
-        return activityBuiler.exportActivity(activityManager: activityManager, skipCheckout: skipCheckout, next: activityPoll)
+        return activityBuiler.exportSeries(activityManager: activityManager, skipCheckout: skipCheckout, next: pollActivity)
     }
 
     /**
@@ -295,35 +312,49 @@ class Windmill: ActivityManagerDelegate
         guard let activityManager = self.activityManager else {
             preconditionFailure("ActivityManager hasn't been set on Windmill. Did you call the setter?")
         }
-        self.activitiesGroup.enter()
+        
+        self.notify(notification: Windmill.Notifications.willRun, userInfo: ["project":self.configuration.project])
+        
         self.subscriptionStatus(SubscriptionStatus.default)
         
-        self.notify(notification: Windmill.Notifications.willStartProject, userInfo: ["project":self.configuration.project])
-
         let exportAndMonitor = self.exportAndMonitor(activityManager: activityManager, skipCheckout: skipCheckout)
         exportAndMonitor([:])
     }
     
+    func distribute(failure: @escaping (_ error: Error) -> Void) {
+
+        self.subscriptionManager.fetchSubscription { result in
+            switch result {
+            case .failure(let error):
+                self.standardOutFormattedWriter.failed(title: "Distribute Error", error: (error as NSError))
+                self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
+                failure(error)
+            case .success:
+                switch SubscriptionStatus.default {
+                case .active(let account, let authorizationToken):
+                    self.distribute(account: account, authorizationToken: authorizationToken)
+                case .expired(let account, _):
+                    if let token = try? Keychain.default.read(key: .subscriptionAuthorizationToken) {
+                        self.distribute(account: account, authorizationToken: SubscriptionAuthorizationToken(value: token))
+                    }
+                default:
+                    return
+                }
+            }
+        }
+    }
+    
     public func refreshSubscription(failure: @escaping (_ error: Error) -> Void) {
-        self.subscriptionManager.refreshSubscription { [weak self] token, error in
-            guard let self = self else {
-                return
+        switch SubscriptionStatus.default {
+        case .expired(let account, let claim):
+            self.subscriptionManager.requestSubscription(account: account, claim: claim) { [weak self] token, error in
+                if let error = error {
+                    self?.error(error)
+                    failure(error)
+                }
             }
-            
-            switch(token, error) {
-            case(_, let error as SubscriptionError):
-                os_log("The subscription authorization token failed to refresh '%{public}@'.", log: .default, type: .error, error.localizedDescription)
-                self.standardOutFormattedWriter.error(error: error)
-                self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
-                failure(error)
-            case(_, let error?):
-                os_log("The subscription authorization token failed to refresh '%{public}@'.", log: .default, type: .error, error.localizedDescription)
-                self.standardOutFormattedWriter.failed(title: "Subscription Access", error: (error as NSError))
-                self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
-                failure(error)
-            case(_, _):
-                os_log("Success: subscription authorization token refreshed.", log: .default, type: .debug)
-            }
+        default:
+            return
         }
     }
 }

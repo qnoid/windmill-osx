@@ -97,6 +97,11 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     }
     @IBOutlet weak var targetNameTextField: NSTextField!
     @IBOutlet weak var prettyLogTextField: NSTextField!
+    @IBOutlet weak var warningButton: NSButton! {
+        didSet{
+            warningButton.isHidden = true
+        }
+    }
     @IBOutlet weak var errorButton: NSButton! {
         didSet{
             errorButton.attributedTitle = NSAttributedString(string: errorButton.stringValue, attributes: [ .foregroundColor : NSColor.textColor])
@@ -110,22 +115,26 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         let view = UserMessageView(frame: NSRect.zero)
         view.wml_addSubview(view: wml_load(name: String(describing: UserMessageToolbarItem.self))!, layout: .centered)
         self.view = view
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
     }
     
     func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
-        notificationCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+        notificationCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(isMonitoring(_:)), name: Windmill.Notifications.isMonitoring, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
         notificationCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         self.windmillImageView.startAnimation()
         self.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         
         self.prettyLogTextField.stringValue = ""
         self.errorButton.title = String(0)
         self.errorButton.isHidden = true
+        self.warningButton.isHidden = true
     }
 
     @objc func isMonitoring(_ aNotification: Notification) {
@@ -136,13 +145,19 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
         
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, activity != .distribute else {
-            return
-        }
+        let type = aNotification.userInfo?["activity"] as? ActivityType
         
-        self.windmillImageView.contents = NSImage(named: activity.imageName)
-        self.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
-        self.activityTextfield.stringValue = activity.description
+        switch type {
+        case .none:
+            return
+        case .distribute?:
+            self.warningButton.isHidden = true
+            return
+        case let activity?:
+            self.windmillImageView.contents = NSImage(named: activity.imageName)
+            self.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
+            self.activityTextfield.stringValue = activity.description
+        }
     }
     
     @objc func activityError(_ aNotification: Notification) {
@@ -168,5 +183,13 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
             self.errorButton.title = String(errorCount)
             self.errorButton.isHidden = false
         }
+    }
+    
+    @objc func subscriptionActive(notification: NSNotification) {
+        self.warningButton.isHidden = true
+    }
+    
+    @objc func subscriptionFailed(notification: NSNotification) {
+        self.warningButton.isHidden = false
     }
 }

@@ -10,15 +10,29 @@ import Foundation
 import os
 
 class ActivityDistribute: NSObject {
-    static func make(export: Export, metadata: Export.Metadata, appBundle: AppBundle) -> ActivityContext {
-        return ["export": export, "metadata": metadata, "appBundle": appBundle]
+    
+    struct Context {
+        
+        static func make(configuration: Windmill.Configuration) -> ActivityContext {
+            
+            let archive = Archive.make(configuration: configuration)
+            let export = Export.make(configuration: configuration)
+            let appBundle = AppBundle.make(configuration: configuration, archive: archive, distributionSummary: export.distributionSummary)
+            let metadata = Export.Metadata.make(configuration: configuration, applicationProperties: appBundle.info)
+
+            return make(export: export, metadata: metadata, appBundle: appBundle)
+        }
+        
+        static func make(export: Export, metadata: Export.Metadata, appBundle: AppBundle) -> ActivityContext {
+            return ["export": export, "metadata": metadata, "appBundle": appBundle]
+        }
     }
     
     weak var subscriptionManager: SubscriptionManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
     
     var standardOutFormattedWriter: StandardOutFormattedWriter
-    
+
     var dispatchSourceWrite: DispatchSourceWrite? {
         didSet {
             oldValue?.cancel()
@@ -29,9 +43,8 @@ class ActivityDistribute: NSObject {
         dispatchSourceWrite?.cancel()
     }
 
-    init(subscriptionManager: SubscriptionManager, activityManager: ActivityManager, standardOutFormattedWriter: StandardOutFormattedWriter) {
+    init(subscriptionManager: SubscriptionManager, standardOutFormattedWriter: StandardOutFormattedWriter) {
         self.subscriptionManager = subscriptionManager
-        self.activityManager = activityManager
         self.standardOutFormattedWriter = standardOutFormattedWriter
     }
     
@@ -54,7 +67,7 @@ class ActivityDistribute: NSObject {
             
             (queue ?? DispatchQueue.main).async {
                 
-                self.activityManager?.willLaunch(activity: .distribute, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .distribute, userInfo: userInfo)
                 
                 self.subscriptionManager?.distribute(export: export, metadata: metadata, authorizationToken: authorizationToken, forAccount: account, completion: { itms, error in
                     
@@ -65,26 +78,26 @@ class ActivityDistribute: NSObject {
                         self.standardOutFormattedWriter.failed(title: "DISTRIBUTE", error: error)
                         self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
 
-                        self.activityManager?.did(terminate: .distribute, error: WindmillError.recoverable(activityType: .distribute, error: error), userInfo: ["activity": ActivityType.distribute, "artefact": ArtefactType.otaDistribution, "error": WindmillError.recoverable(activityType: .distribute, error: error)])
+                        self.delegate?.did(terminate: .distribute, error: WindmillError.recoverable(activityType: .distribute, error: error), userInfo: ["activity": ActivityType.distribute, "artefact": ArtefactType.otaDistribution, "error": WindmillError.recoverable(activityType: .distribute, error: error)])
                     case (_, .none):
                         self.standardOutFormattedWriter.success(message: "DISTRIBUTE")
                         self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
                         
-                        self.activityManager?.didExitSuccesfully(activity: .distribute, userInfo: userInfo)
+                        self.delegate?.didExitSuccesfully(activity: .distribute, userInfo: userInfo)
                         
-                        self.activityManager?.notify(notification: Windmill.Notifications.didDistributeProject, userInfo: ["export": export, "metadata": metadata, "appBundle":appBundle])
+                        self.delegate?.notify(notification: Windmill.Notifications.didDistributeProject, userInfo: ["export": export, "metadata": metadata, "appBundle":appBundle])
                         
                         next?([:])
                     }
                 })
-                self.activityManager?.didLaunch(activity: .distribute, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .distribute, userInfo: userInfo)
             }
             //log progress of upload
         }
     }
     
-    func success(account: Account, authorizationToken: SubscriptionAuthorizationToken) -> ActivitySuccess {
-        return { next in
+    func success(account: Account, authorizationToken: SubscriptionAuthorizationToken) -> SuccessfulActivity {
+        return SuccessfulActivity { next in
             return self.make(next: next, account: account, authorizationToken: authorizationToken)
         }
     }

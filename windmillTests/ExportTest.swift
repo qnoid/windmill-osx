@@ -32,7 +32,7 @@ class ExportTest: XCTestCase {
 
         XCTAssertNotNil(data)
         let expected: String = #"""
-        {"configuration":"RELEASE","commit":{"shortSha":"e8fb1cf","branch":"master"},"applicationProperties":{"bundleDisplayName":"Windmill","bundleVersion":"1.2"},"deployment":{"target":"12.2"},"distributionSummary":{"certificateExpiryDate":1540414800}}
+        {"configuration":"RELEASE","commit":{"shortSha":"0ec3a81","date":1557663637,"branch":"master"},"applicationProperties":{"bundleDisplayName":"Windmill","bundleVersion":"1.2"},"deployment":{"target":"12.2"},"distributionSummary":{"certificateExpiryDate":1540414800}}
         """#
         
         XCTAssertEqual(expected, String(data: data!, encoding: .utf8)!)

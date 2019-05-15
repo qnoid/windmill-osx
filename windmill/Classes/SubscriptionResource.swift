@@ -13,8 +13,12 @@ import CloudKit
 
 class SubscriptionResource {
     
-    typealias SubscriptionAuthorizationTokenCompletion = (_ token: SubscriptionAuthorizationToken?, _ error: Error?) -> Void
+    typealias SubscriptionCompletion = (_ token: SubscriptionAuthorizationToken?, _ error: Error?) -> Void
+    public static let SubscriptionCompletionIgnore: SubscriptionCompletion = { token, error in
+        
+    }
     
+
     let queue = DispatchQueue(label: "io.windmill.manager")
     
     let session: URLSession = {
@@ -26,7 +30,7 @@ class SubscriptionResource {
     
     let sessionManager = SessionManager()
     
-    @discardableResult func requestSubscriptionAuthorizationToken(forAccount account: Account, claim: SubscriptionClaim, completion: @escaping SubscriptionAuthorizationTokenCompletion) -> DataRequest {
+    @discardableResult func requestIsSubscriber(forAccount account: Account, claim: SubscriptionClaim, completion: @escaping SubscriptionCompletion = SubscriptionCompletionIgnore) -> DataRequest {
         
         var urlRequest = try! URLRequest(url: "\(WINDMILL_BASE_URL)/subscription/\(account.identifier)", method: .post)
         

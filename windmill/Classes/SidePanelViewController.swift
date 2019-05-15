@@ -281,7 +281,7 @@ class SidePanelViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet {
-            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
@@ -369,7 +369,7 @@ class SidePanelViewController: NSViewController {
         self.layout()
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         for activityView in self.gridView.subviews {
             activityView.isHidden = true
         }

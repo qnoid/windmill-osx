@@ -53,9 +53,13 @@ class Activities {
         
         let activityBuild =
             ActivityBuild(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
-                .make(location: location, project: project, appBundle: appBundle, scheme: scheme, projectDirectory: self.projectDirectory, buildSettings: buildSettings)
+                .success(location: location, project: project, appBundle: appBundle, scheme: scheme, projectDirectory: self.projectDirectory, buildSettings: buildSettings)
         
-        return activityReadProjectConfiguration(activityShowBuildSettings(activityListDevices(activityBuild(next))))
+        return activityReadProjectConfiguration -->
+            activityShowBuildSettings -->
+            activityListDevices -->
+            activityBuild -->
+            next
     }
     
     func activityTest(locationURL: URL, buildSettings: BuildSettings, next: @escaping Activity) -> Activity {
@@ -68,12 +72,12 @@ class Activities {
             ActivityListDevices(processManager: processManager, activityManager: activityManager)
                 .success(devices: devices)
         
-        let activityBuild = ActivityBuild(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random())).make(location: location, project: project, appBundle: AppBundles.make(), scheme: project.scheme, projectDirectory: projectDirectory, buildSettings: buildSettings)
+        let activityBuild = ActivityBuild(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random())).success(location: location, project: project, appBundle: AppBundles.make(), scheme: project.scheme, projectDirectory: projectDirectory, buildSettings: buildSettings)
         
         let activityTest =
             ActivityTest(applicationCachesDirectory: applicationCachesDirectory, applicationSupportDirectory: applicationSupportDirectory, processManager: processManager, activityManager: activityManager, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
                 .success(location: location, project: project, devices: devices, scheme: project.scheme)
 
-        return activityListDevices(activityBuild(activityTest(next)))
+        return activityListDevices --> activityBuild --> activityTest --> next
     }
 }

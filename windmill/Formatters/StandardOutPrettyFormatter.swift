@@ -22,8 +22,10 @@ class StandardOutPrettyFormatter: Formatter {
     let compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileNoteFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileNote()
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let compileWarningFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let clangErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let globalErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let globalWarningFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let xcodeBuildErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let libraryNotFoundFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let noteFormatter = RegularExpressionMatchesFormatter<String>.makeNote()
@@ -61,6 +63,7 @@ class StandardOutPrettyFormatter: Formatter {
     let errorFailureReasonFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorFailureReason()
     let errorRecoverySuggestionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorRecoverySuggestion()
     let errorTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let warnTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     
 
     let descender: CGFloat
@@ -75,8 +78,10 @@ class StandardOutPrettyFormatter: Formatter {
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = compileFormatter
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
+        self.compileWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileWarning(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
+        self.globalWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalWarning(descender: descender)
         self.xcodeBuildErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeXcodeBuildError(descender: descender)
         self.libraryNotFoundFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLibraryNotFound(descender: descender)
         self.compileSwiftSourcesFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileSwiftSources(descender: descender)
@@ -113,6 +118,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.testCasePassedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCasePassed(descender: descender)
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
         self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
+        self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
         super.init()
     }
     
@@ -126,8 +132,10 @@ class StandardOutPrettyFormatter: Formatter {
         self.createProductStructureFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCreateProductStructure(descender: descender)
         self.compileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
+        self.compileWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileWarning(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
+        self.globalWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalWarning(descender: descender)
         self.xcodeBuildErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeXcodeBuildError(descender: descender)
         self.libraryNotFoundFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeLibraryNotFound(descender: descender)
         self.compileXIBFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileXIB(descender: descender)
@@ -164,6 +172,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.testCasePassedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCasePassed(descender: descender)
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
         self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
+        self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
         super.init(coder: aDecoder)
     }
     
@@ -218,10 +227,14 @@ class StandardOutPrettyFormatter: Formatter {
             return phaseSuccess
         } else if let compileError = self.compileErrorFormatter.format(for: obj) {
             return compileError
+        } else if let compileWarning = self.compileWarningFormatter.format(for: obj) {
+            return compileWarning
         } else if let clangError = self.clangErrorFormatter.format(for: obj) {
             return clangError
         } else if let globalError = self.globalErrorFormatter.format(for: obj) {
             return globalError
+        } else if let globalWarning = self.globalWarningFormatter.format(for: obj) {
+            return globalWarning
         } else if let xcodeBuildError = self.xcodeBuildErrorFormatter.format(for: obj) {
             return xcodeBuildError
         } else if let libraryNotFound = self.libraryNotFoundFormatter.format(for: obj) {
@@ -276,6 +289,8 @@ class StandardOutPrettyFormatter: Formatter {
             return errorRecoverySuggestion
         } else if let errorTitle = self.errorTitleFormatter.format(for: obj) {
             return errorTitle
+        } else if let warnTitle = self.warnTitleFormatter.format(for: obj) {
+            return warnTitle
         } else {
             return nil
         }

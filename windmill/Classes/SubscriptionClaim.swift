@@ -14,5 +14,5 @@ struct SubscriptionClaim: Codable {
         case value = "claim"
     }
     
-    let value: String;
+    let value: String
 }

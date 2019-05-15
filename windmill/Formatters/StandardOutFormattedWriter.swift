@@ -91,6 +91,27 @@ class StandardOutFormattedWriter: DispatchSourceWriteProvider, StandardOut, Stan
         self.recoverySuggestion(string: &standardOutput, message: error.recoverySuggestion)
     }
     
+    func warn(title: String, error: NSError) {
+        self.standardOutput = ""
+        
+        standardOutput.append("global: warn: \(error.localizedDescription)\n")
+        self.failureReason(string: &standardOutput, message: error.localizedFailureReason)
+        self.recoverySuggestion(string: &standardOutput, message: error.localizedRecoverySuggestion)
+    }
+    
+    func warn(error: SubscriptionError) {
+        self.standardOutput = ""
+        
+        if let title = error.errorTitle {
+            standardOutput.append("* \(title) *\n")
+        }
+        
+        self.out(string: &standardOutput, type: "global: warn:", message: error.errorDescription)
+        self.failureReason(string: &standardOutput, message: error.failureReason)
+        self.recoverySuggestion(string: &standardOutput, message: error.recoverySuggestion)
+    }
+
+    
     func activate() -> DispatchSourceWrite? {
         let dispatchSourceWrite = self.write(standardOutput: self.standardOutput)
         dispatchSourceWrite?.activate()

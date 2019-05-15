@@ -35,11 +35,35 @@ extension ActivityManagerDelegate {
     }
 }
 
-typealias ActivityContext = [AnyHashable : Any]
-typealias ActivitySuccess = (_ next: Activity?) -> Activity
-typealias Activity = (_ context:ActivityContext) -> Swift.Void 
+infix operator -->: AssignmentPrecedence
 
-class ActivityManager: ProcessMonitor {
+typealias ActivityContext = [AnyHashable : Any]
+typealias Activity = (_ context:ActivityContext) -> Swift.Void
+
+struct SuccessfulActivity {
+    let success: (_ next: Activity?) -> Activity
+    
+    func call(_ next: Activity?) -> Activity {
+        return success(next)
+    }
+}
+
+extension SuccessfulActivity {
+    static func --> (success: SuccessfulActivity, next: @escaping Activity) -> Activity {
+        return success.call(next)
+    }
+}
+
+protocol ActivityDelegate: class {
+    
+    func willLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?)
+    func didLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?)
+    func didExitSuccesfully(activity: ActivityType, userInfo: [AnyHashable : Any]?)
+    func did(terminate activity: ActivityType, error: Error, userInfo: [AnyHashable : Any]?)
+    func notify(notification name: Notification.Name, userInfo: [AnyHashable : Any]?)
+}
+
+class ActivityManager: ProcessMonitor, ActivityDelegate {
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "activity")
     let notificationCenter = NotificationCenter.default
@@ -47,29 +71,53 @@ class ActivityManager: ProcessMonitor {
     let processManager: ProcessManager
     unowned var subscriptionManager: SubscriptionManager
 
-    weak var windmill: Windmill?
+    let queue = DispatchQueue(label: "io.windmill.activity.queue")
+    let activitiesGroup = DispatchGroup()
+    
+    weak var windmill: Windmill? {
+        didSet {
+            NotificationCenter.default.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
+            NotificationCenter.default.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
+        }
+    }
+    
     weak var delegate: ActivityManagerDelegate?
 
-    init(subscriptionManager: SubscriptionManager, processManager: ProcessManager) {
+    init(subscriptionManager: SubscriptionManager, processManager: ProcessManager = ProcessManager()) {
         self.subscriptionManager = subscriptionManager
         self.processManager = processManager
         self.processManager.monitor = self
     }
     
-    func willLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
+    @objc func willRun(_ aNotification: Notification) {
+        self.activitiesGroup.enter()
+    }
+    
+    @objc func didExportSuccesfully(_ aNotification: Notification) {
+        activitiesGroup.leave()
+    }
+    
+    func willLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
+        if activity == .distribute {
+            self.activitiesGroup.wait()
+        }
+
         os_log("activity will launch `%{public}@`", log: log, type: .debug, activity.rawValue)
+        
         self.delegate?.will(self, launch: activity, userInfo: userInfo)
     }
     
-    func didLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
+    func didLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
         os_log("activity did launch `%{public}@`", log: log, type: .debug, activity.rawValue)
-    
+        self.activitiesGroup.enter()
+
         self.delegate?.did(self, launch: activity, userInfo: userInfo)
     }
 
-    func didExitSuccesfully(activity: ActivityType, userInfo: [AnyHashable : Any]? = nil) {
+    func didExitSuccesfully(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
         os_log("activity did exit success `%{public}@`", log: log, type: .debug, activity.rawValue)
-
+        self.activitiesGroup.leave()
+        
         self.delegate?.did(self, exitSuccesfully: activity, userInfo: userInfo)
     }
 
@@ -127,5 +175,14 @@ class ActivityManager: ProcessMonitor {
     // MARK: public
     func builder(configuration: Windmill.Configuration) -> ActivityBuiler {
         return ActivityBuiler(configuration: configuration, subscriptionManager: self.subscriptionManager, processManager: self.processManager)
+    }
+    
+    func distribute(configuration: Windmill.Configuration, standardOutFormattedWriter: StandardOutFormattedWriter, account: Account, authorizationToken: SubscriptionAuthorizationToken) {
+        let activityBuiler = self.builder(configuration: configuration)
+        let activityDistribute = activityBuiler.distributeActivity(standardOutFormattedWriter: standardOutFormattedWriter)
+        activityDistribute.delegate = self
+        
+        let distribute = activityDistribute.make(queue: self.queue, account: account, authorizationToken: authorizationToken)
+        distribute(ActivityDistribute.Context.make(configuration: configuration))
     }
 }

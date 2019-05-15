@@ -13,8 +13,8 @@ struct ActivityAlwaysSuccess {
     weak var activityManager: ActivityManager?
     let type: ActivityType
     
-    func make(userInfo: [AnyHashable : Any]) -> ActivitySuccess {
-        return { next in
+    func make(userInfo: [AnyHashable : Any]) -> SuccessfulActivity {
+        return SuccessfulActivity { next in
             
             return { context in
                 

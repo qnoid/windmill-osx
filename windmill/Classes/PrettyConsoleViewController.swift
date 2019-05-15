@@ -49,7 +49,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
         }
     }
 
@@ -90,7 +90,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
         dispatchSourceRead?.cancel()
     }
 
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         
         if let textView = textView {
             textView.string = ""

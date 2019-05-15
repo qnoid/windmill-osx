@@ -105,7 +105,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         NotificationCenter.default.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+        NotificationCenter.default.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(isMonitoring(_:)), name: Windmill.Notifications.isMonitoring, object: windmill)
         NotificationCenter.default.addObserver(self, selector: #selector(sourceCodeChanged(_:)), name: Windmill.Notifications.SourceCodeChanged, object: windmill)
         
@@ -160,6 +160,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     
     func applicationDidFinishLaunching(_ notification: Notification)
     {
+        SubscriptionManager.shared.fetchSubscription()
         SubscriptionManager.shared.registerForSubscriptionNotifications()
         
         #if DEBUG
@@ -311,17 +312,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             return self.canCleanDerivedData
         } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
             return self.canRemoveCheckoutFolder
-        } else if menuItem.action == #selector(self.mainWindowController?.refreshSubscription(_:)) {            
-            let account = try? Keychain.default.read(key: .account)
-            
-            switch account {
-            case .some: return true
-            case .none: return false
-            }
         }
-
-            
-
 
         return true
     }
@@ -360,7 +351,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
         self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
         self.activityMenuItem.toolTip = ""

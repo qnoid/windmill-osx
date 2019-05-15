@@ -42,6 +42,15 @@ extension RegularExpressionMatchesFormatter {
         return failedTestStatus
     }
     
+    static func warningStatus(descender: CGFloat) -> NSMutableAttributedString {
+        let warningStatus = NSAttributedString(attachment: NSTextAttachment.Windmill.make(image: NSImage(imageLiteralResourceName: "WarningTriangle"))) as! NSMutableAttributedString
+        
+        warningStatus.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, warningStatus.length))
+        
+        return warningStatus
+    }
+
+    
     static func makeCloning(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CLONING_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { path, name in
             let attributedString = buildInProgressStatus(descender: descender)
@@ -198,7 +207,17 @@ extension RegularExpressionMatchesFormatter {
             return attributedString
         }
     }
-    
+
+    static func makeCompileWarning(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.COMPILE_WARNING_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return triple(match: regularExpression) { path, file, error in
+            let attributedString = NSMutableAttributedString(string: "\t", attributes: [.foregroundColor : NSColor.textColor])
+            attributedString.append(warningStatus(descender: descender))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemRed]))
+            return attributedString
+        }
+    }
+
     static func makeClangError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.CLANG_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return single(match: regularExpression) { error in
             let attributedString = NSMutableAttributedString(string: "\t", attributes: [.foregroundColor : NSColor.textColor])
@@ -218,7 +237,17 @@ extension RegularExpressionMatchesFormatter {
             return attributedString
         }
     }
-    
+
+    static func makeGlobalWarning(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.GLOBAL_WARNING_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return single(match: regularExpression) { error in
+            let attributedString = NSMutableAttributedString(string: "\t", attributes: [.foregroundColor : NSColor.textColor])
+            attributedString.append(warningStatus(descender: descender))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemOrange]))
+            return attributedString
+        }
+    }
+
     static func makeXcodeBuildError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.XCODEBUILD_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return single(match: regularExpression) { error in
             let attributedString = failedBuildStatus(descender: descender)
@@ -563,6 +592,16 @@ extension RegularExpressionMatchesFormatter {
     static func makeErrorTitle(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.ERROR_TITLE_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
         return double(match: regularExpression) { primary, secondary in
             let attributedString = failedBuildStatus(descender: descender)
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: primary.prefix(1).uppercased() + primary.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " \(secondary)\n", attributes: [.foregroundColor : NSColor.textColor]))
+            return attributedString
+        }
+    }
+
+    static func makeWarnTitle(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.WARN_TITLE_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        return double(match: regularExpression) { primary, secondary in
+            let attributedString = warningStatus(descender: descender)
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: primary.prefix(1).uppercased() + primary.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: " \(secondary)\n", attributes: [.foregroundColor : NSColor.textColor]))

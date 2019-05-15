@@ -88,7 +88,7 @@ class MainViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
@@ -119,11 +119,12 @@ class MainViewController: NSViewController {
         super.viewDidLoad()
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         for activityView in self.activityViews.values {
             activityView.toolTip = nil
             activityView.imageView.alphaValue = 0.1
             activityView.stopLightsAnimation()
+            activityView.removeTrackingArea()
         }        
     }
     
@@ -145,6 +146,10 @@ class MainViewController: NSViewController {
         
         switch (error, activity) {
         case (let error?, let activity?):
+            if case .distribute = activity {
+                self.distributeActivityView.addTrackingArea(action: "distribute:")
+            }
+            
             let activityView = self.activityViews[activity]
             activityView?.toolTip = error.localizedDescription
             activityView?.imageView.alphaValue = 0.1
@@ -155,14 +160,20 @@ class MainViewController: NSViewController {
     }
 
     @objc func activityDidExitSuccesfully(_ aNotification: Notification) {
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType else {
+        let activity = aNotification.userInfo?["activity"] as? ActivityType
+        
+        switch activity {
+        case (let activity?):
+            if case .distribute = activity {
+                self.distributeActivityView.removeTrackingArea()
+            }
+            
+            let activityView = self.activityViews[activity]
+            activityView?.toolTip = NSLocalizedString("windmill.toolTip.success.\(activity.rawValue)", comment: "")
+            activityView?.stopLightsAnimation()
+        default:
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
-            return
         }
-        let activityView = self.activityViews[activity]
-
-        activityView?.toolTip = NSLocalizedString("windmill.toolTip.success.\(activity.rawValue)", comment: "")
-        activityView?.stopLightsAnimation()
     }
     
     @discardableResult func cleanDerivedData() -> Bool {
