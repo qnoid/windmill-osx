@@ -106,7 +106,7 @@ class ArtefactsViewController: NSViewController {
     
     weak var windmill: Windmill? {
         didSet{
-            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
@@ -123,7 +123,7 @@ class ArtefactsViewController: NSViewController {
         super.viewDidLoad()
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         for artefactView in self.artefactViews.values {
             artefactView.isHidden = false
             artefactView.stopStageAnimation()

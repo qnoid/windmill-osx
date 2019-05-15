@@ -24,6 +24,10 @@ extension NSStoryboard
             return NSStoryboard(name: "ErrorSummaries", bundle: Bundle.main)
         }
 
+        static func warnSummariesStoryboard() -> NSStoryboard {
+            return NSStoryboard(name: "WarnSummaries", bundle: Bundle.main)
+        }
+
         static func testFailureSummariesStoryboard() -> NSStoryboard {
             return NSStoryboard(name: "TestFailureSummaries", bundle: Bundle.main)
         }

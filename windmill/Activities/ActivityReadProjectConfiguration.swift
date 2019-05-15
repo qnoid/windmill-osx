@@ -11,11 +11,15 @@ import Foundation
 struct ActivityReadProjectConfiguration {
     
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
 
-    func success(project: Project, configuration: Project.Configuration) -> ActivitySuccess {
+    init(processManager: ProcessManager) {
+        self.processManager = processManager
+    }
+    
+    func success(project: Project, configuration: Project.Configuration) -> SuccessfulActivity {
      
-        return { next in
+        return SuccessfulActivity { next in
 
             return { context in
 
@@ -26,16 +30,16 @@ struct ActivityReadProjectConfiguration {
                 let readProjectConfiguration = Process.makeListConfiguration(project: project, configuration: configuration, location: location)
                 
                 let userInfo: [AnyHashable : Any] = ["activity": ActivityType.readProjectConfiguration, "configuration": configuration]
-                self.activityManager?.willLaunch(activity: .readProjectConfiguration, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .readProjectConfiguration, userInfo: userInfo)
                 self.processManager?.launch(process: readProjectConfiguration, userInfo: userInfo, wasSuccesful: { userInfo in
                     
                     let scheme = configuration.detectScheme(name: project.scheme)
                     
-                    self.activityManager?.didExitSuccesfully(activity: .readProjectConfiguration, userInfo: userInfo.merging(["scheme" : scheme], uniquingKeysWith: { (_, new) in new } ))
+                    self.delegate?.didExitSuccesfully(activity: .readProjectConfiguration, userInfo: userInfo.merging(["scheme" : scheme], uniquingKeysWith: { (_, new) in new } ))
                     next?([:])
                 })
                 
-                self.activityManager?.didLaunch(activity: .readProjectConfiguration, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .readProjectConfiguration, userInfo: userInfo)
             }
         }
     }

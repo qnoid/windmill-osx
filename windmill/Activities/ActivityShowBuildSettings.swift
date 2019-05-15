@@ -11,26 +11,30 @@ import Foundation
 struct ActivityShowBuildSettings {
     
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
     
-    func success(project: Project, location: Project.Location, scheme: String, buildSettings: BuildSettings) -> ActivitySuccess {
+    init(processManager: ProcessManager) {
+        self.processManager = processManager
+    }
+    
+    func success(project: Project, location: Project.Location, scheme: String, buildSettings: BuildSettings) -> SuccessfulActivity {
         
-        return { next in
+        return SuccessfulActivity { next in
 
             return { context in
 
                 let readBuildSettings = Process.makeShowBuildSettings(project: project, scheme: scheme, buildSettings: buildSettings, location: location)
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.showBuildSettings]
-                self.activityManager?.willLaunch(activity: .showBuildSettings, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .showBuildSettings, userInfo: userInfo)
                 self.processManager?.launch(process: readBuildSettings, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: .showBuildSettings, userInfo: userInfo)
+                    self.delegate?.didExitSuccesfully(activity: .showBuildSettings, userInfo: userInfo)
                     
                     let buildSettings = buildSettings.for(project: project.name)
                     
                     next?(["buildSettings": buildSettings])
                 })
-                self.activityManager?.didLaunch(activity: .showBuildSettings, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .showBuildSettings, userInfo: userInfo)
             }
         }
     }

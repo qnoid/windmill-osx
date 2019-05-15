@@ -38,3 +38,15 @@
 * The user can click the test failure icon, including failed count to see the list of test failures
 * The user can also navigate using the 'Jump to Next/Previous Issue' menu item
 
+# Subscribers
+
+# Distribute app
+
+## Given an active subscription, Windmill should distribute the export
+
+* The distribute stage starts only after every checkout, build, test, archive, export succeeds
+
+## The user must be able to retry the distribute stage in case it fails
+
+* In case of an error in the distribute stage 
+	* Give the user the option to retry

@@ -11,27 +11,31 @@ import Foundation
 struct ActivityListDevices {
  
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
     
+    init(processManager: ProcessManager) {
+        self.processManager = processManager
+    }
+
     private func wasSuccesful(devices: Devices, next: Activity? = nil) -> ProcessSuccess {
         return { userInfo in
             
-            self.activityManager?.didExitSuccesfully(activity: ActivityType.devices, userInfo: userInfo)
+            self.delegate?.didExitSuccesfully(activity: ActivityType.devices, userInfo: userInfo)
             
             guard let destination = devices.destination else {
-                self.activityManager?.notify(notification: Windmill.Notifications.didError, userInfo: ["error": WindmillError.fatal(activityType: ActivityType.devices), "activity": ActivityType.devices])
+                self.delegate?.notify(notification: Windmill.Notifications.didError, userInfo: ["error": WindmillError.fatal(activityType: ActivityType.devices), "activity": ActivityType.devices])
                 
                 return
             }
             
-            self.activityManager?.notify(notification: Windmill.Notifications.DevicesListed, userInfo: ["destination" : destination])
+            self.delegate?.notify(notification: Windmill.Notifications.DevicesListed, userInfo: ["destination" : destination])
             next?(["destination" : destination])
         }
     }
 
-    func success(devices: Devices) -> ActivitySuccess {
+    func success(devices: Devices) -> SuccessfulActivity {
 
-        return { next in
+        return SuccessfulActivity { next in
 
             return { context in
         
@@ -45,14 +49,14 @@ struct ActivityListDevices {
                 let wasSuccesful = self.wasSuccesful(devices: devices, next: next)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.devices, "devices": devices]
-                self.activityManager?.willLaunch(activity: .devices, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .devices, userInfo: userInfo)
                 self.processManager?.launch(process: readDevices, recover: RecoverableProcess.recover(terminationStatus: 1, recover: { process in
                     
                     let readDevices = Process.makeList(devices: devices, for: deployment, xcode: .XCODE_10_1)
                     self.processManager?.launch(process: readDevices, userInfo: userInfo, wasSuccesful: wasSuccesful)
-                    self.activityManager?.didLaunch(activity: .devices, userInfo: userInfo)
+                    self.delegate?.didLaunch(activity: .devices, userInfo: userInfo)
                 }), userInfo: userInfo, wasSuccesful: wasSuccesful)
-                self.activityManager?.didLaunch(activity: .devices, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .devices, userInfo: userInfo)
             }
         }
     }

@@ -14,16 +14,23 @@ struct ActivityTest {
     let applicationSupportDirectory: ApplicationSupportDirectory
 
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
     
-    let log: URL
+    let projectLogURL: URL
+    
+    init(applicationCachesDirectory: ApplicationCachesDirectory, applicationSupportDirectory: ApplicationSupportDirectory, processManager: ProcessManager, projectLogURL: URL) {
+        self.applicationCachesDirectory = applicationCachesDirectory
+        self.applicationSupportDirectory = applicationSupportDirectory
+        self.processManager = processManager
+        self.projectLogURL = projectLogURL
+    }
 
-    func success(location: Project.Location, project: Project, devices: Devices, scheme: String) -> ActivitySuccess {
+    func success(location: Project.Location, project: Project, devices: Devices, scheme: String) -> SuccessfulActivity {
         
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.testResultBundle(at: project.name)
 
-        return { next in
+        return SuccessfulActivity { next in
             
             return { context in
              
@@ -39,21 +46,21 @@ struct ActivityTest {
                     userInfo = ["activity" : ActivityType.test, "resultBundle": resultBundle]
                 } else {
                     userInfo = ["activity" : ActivityType.test, "artefact": ArtefactType.testReport, "devices": devices, "destination": destination, "resultBundle": resultBundle]
-                    test = Process.makeTestWithoutBuilding(location: location, project: project, scheme: scheme, destination: destination, derivedData: derivedData, resultBundle: resultBundle, log: self.log)
+                    test = Process.makeTestWithoutBuilding(location: location, project: project, scheme: scheme, destination: destination, derivedData: derivedData, resultBundle: resultBundle, log: self.projectLogURL)
                 }
                 
-                self.activityManager?.willLaunch(activity: .test, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .test, userInfo: userInfo)
                 self.processManager?.launch(process: test, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: .test, userInfo: userInfo)
+                    self.delegate?.didExitSuccesfully(activity: .test, userInfo: userInfo)
                     
                     if let testsCount = resultBundle.info.testsCount, testsCount >= 0 {
-                        self.activityManager?.notify(notification: Windmill.Notifications.didTestProject, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []])
+                        self.delegate?.notify(notification: Windmill.Notifications.didTestProject, userInfo: ["project":project, "devices": devices, "destination": destination, "testsCount": testsCount, "testableSummaries": resultBundle.testSummaries?.testableSummaries ?? []])
                     }
 
                     next?([:])
                 })
-                self.activityManager?.didLaunch(activity: .test, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .test, userInfo: userInfo)
             }
         }
     }

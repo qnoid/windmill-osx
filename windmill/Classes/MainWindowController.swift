@@ -13,7 +13,7 @@ protocol MainWindowControllerDelegate {
     func didSelectScheme(mainWindowController:MainWindowController, project: Project, scheme: String)
 }
 
-class MainWindowController: NSWindowController, NSToolbarDelegate {
+class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemValidation {
     
     @discardableResult static func make(windmill: Windmill, project: Project, projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController) -> MainWindowController? {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: Bundle(for: self))
@@ -64,7 +64,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
             mainViewController?.windmill = windmill
             sidePanelSplitViewController?.sidePanelViewController?.windmill = windmill
             
-            self.defaultCenter.addObserver(self, selector: #selector(willStartProject(_:)), name: Windmill.Notifications.willStartProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
@@ -115,12 +115,26 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     
+    var warnSummariesWindowController: NSWindowController?
+    
     var isSidePanelCollapsedObserver: NSKeyValueObservation?
     var isBottomPanelCollapsedObserver: NSKeyValueObservation?
     
     deinit {
         isSidePanelCollapsedObserver?.invalidate()
         isBottomPanelCollapsedObserver?.invalidate()
+    }
+    
+    override init(window: NSWindow?) {
+        super.init(window: window)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
     }
     
     override func windowDidLoad() {
@@ -140,6 +154,19 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         }
     }
     
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(refreshSubscription(_:)) {
+            let account = try? Keychain.default.read(key: .account)
+    
+            switch account {
+            case .some: return true
+            case .none: return false
+            }
+        }
+        
+        return true
+    }
+    
     fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {
         titles.forEach { (title) in
             self.schemeButton.addItem(withTitle: title)
@@ -150,8 +177,9 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         self.didSelectScheme(self.schemeButton)
     }
     
-    @objc func willStartProject(_ aNotification: Notification) {
+    @objc func willRun(_ aNotification: Notification) {
         self.schemeButton.removeAllItems()
+        self.warnSummariesWindowController?.close()
     }
     
     @objc func activityError(_ aNotification: Notification) {
@@ -229,6 +257,10 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
         testFailureSummariesWindowController?.testFailureSummariesViewController?.commit = commit
         testFailureSummariesWindowController?.showWindow(self)
     }
+    
+    @IBAction func showWarnSummariesWindowController(_ sender: Any?) {
+        self.warnSummariesWindowController?.showWindow(self)
+    }
 
     func setBottomPanel(isOpen selected: Bool) {
         self.panels.setSelected(selected, forSegment: 0)
@@ -247,8 +279,26 @@ class MainWindowController: NSWindowController, NSToolbarDelegate {
     }
     
     @IBAction func refreshSubscription(_ sender: Any) {
-        self.windmill?.refreshSubscription() { error in
-            self.toggleDebugArea(isCollapsed: false)
+        self.windmill?.refreshSubscription { [weak self] error in
+            self?.toggleDebugArea(isCollapsed: false)
         }
+    }
+    
+    @objc func distribute(_ sender: Any) {
+        self.windmill?.distribute { [weak self] error in
+            self?.toggleDebugArea(isCollapsed: false)
+        }
+    }
+    
+    @objc func subscriptionFailed(notification: NSNotification) {
+        guard let error = notification.userInfo?["error"] as? Error else {
+            return
+        }
+        
+        let warnSummariesWindowController = NSStoryboard.Windmill.warnSummariesStoryboard().instantiateInitialController() as? NSWindowController
+        let warnSummariesViewController = warnSummariesWindowController?.contentViewController as? WarnSummariesViewController
+        warnSummariesViewController?.warnSummaries = [WarnSummary(error: error)]
+        
+        self.warnSummariesWindowController = warnSummariesWindowController
     }
 }

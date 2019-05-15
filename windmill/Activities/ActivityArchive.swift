@@ -14,32 +14,39 @@ struct ActivityArchive {
     let applicationSupportDirectory: ApplicationSupportDirectory
 
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
     
-    let log: URL
+    let projectLogURL: URL
     
-    func success(location: Project.Location, project: Project, scheme: String, archive: Archive, configuration: Configuration) -> ActivitySuccess {
+    init(applicationCachesDirectory: ApplicationCachesDirectory, applicationSupportDirectory: ApplicationSupportDirectory, processManager: ProcessManager, projectLogURL: URL) {
+        self.applicationCachesDirectory = applicationCachesDirectory
+        self.applicationSupportDirectory = applicationSupportDirectory
+        self.processManager = processManager
+        self.projectLogURL = projectLogURL
+    }
+    
+    func success(location: Project.Location, project: Project, scheme: String, archive: Archive, configuration: Configuration) -> SuccessfulActivity {
         
         let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
         let resultBundle = self.applicationSupportDirectory.archiveResultBundle(at: project.name)
 
-        return { next in
+        return SuccessfulActivity { next in
             
             return { context in
                 
-                let makeArchive = Process.makeArchive(location: location, project: project, scheme: scheme, derivedData: derivedData, archive: archive, configuration: configuration, resultBundle: resultBundle, log: self.log)
+                let makeArchive = Process.makeArchive(location: location, project: project, scheme: scheme, derivedData: derivedData, archive: archive, configuration: configuration, resultBundle: resultBundle, log: self.projectLogURL)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": resultBundle]
-                self.activityManager?.willLaunch(activity: .archive, userInfo: userInfo)
+                self.delegate?.willLaunch(activity: .archive, userInfo: userInfo)
                 self.processManager?.launch(process: makeArchive, userInfo: userInfo, wasSuccesful: { userInfo in
                     
-                    self.activityManager?.didExitSuccesfully(activity: .archive, userInfo: userInfo)
+                    self.delegate?.didExitSuccesfully(activity: .archive, userInfo: userInfo)
                     
-                    self.activityManager?.notify(notification: Windmill.Notifications.didArchiveProject, userInfo: ["project":project, "archive": archive])
+                    self.delegate?.notify(notification: Windmill.Notifications.didArchiveProject, userInfo: ["project":project, "archive": archive])
                     
                     next?(["archive":archive])
                 })
-                self.activityManager?.didLaunch(activity: .archive, userInfo: userInfo)
+                self.delegate?.didLaunch(activity: .archive, userInfo: userInfo)
             }
         }
     }

@@ -127,6 +127,9 @@
 		BDA7E432223A86BA0022459E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA7E431223A86BA0022459E /* CloudKit.framework */; };
 		BDAA0581205FAEC600B295AF /* 25Lines.txt in Resources */ = {isa = PBXBuildFile; fileRef = BDDF10C9205FAD8A0093E811 /* 25Lines.txt */; };
 		BDAA0583205FAF0C00B295AF /* Empty.txt in Resources */ = {isa = PBXBuildFile; fileRef = BDAA0582205FAF0B00B295AF /* Empty.txt */; };
+		BDB001BC228AAE2B005AA4AA /* WarnSummaries.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDB001BB228AAE2B005AA4AA /* WarnSummaries.storyboard */; };
+		BDB001BE228AAE78005AA4AA /* WarnSummariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB001BD228AAE78005AA4AA /* WarnSummariesViewController.swift */; };
+		BDB001C0228AB13E005AA4AA /* WarnSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB001BF228AB13E005AA4AA /* WarnSummary.swift */; };
 		BDB6D54519440392001340B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDB6D54419440392001340B4 /* Images.xcassets */; };
 		BDB961082049F00500E49258 /* UserMessageToolbarItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = BDB961072049F00500E49258 /* UserMessageToolbarItem.xib */; };
 		BDB9610A2049F06800E49258 /* UserMessageToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDB961092049F06800E49258 /* UserMessageToolbarItem.swift */; };
@@ -146,6 +149,7 @@
 		BDCA74AB22301F06006E35F9 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74AA22301F06006E35F9 /* Account.swift */; };
 		BDCA74AD22301FB0006E35F9 /* AccountResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCA74AC22301FB0006E35F9 /* AccountResource.swift */; };
 		BDCB38291F06B9BA000825C1 /* WindmillTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCB38281F06B9BA000825C1 /* WindmillTest.swift */; };
+		BDCE8F602289C41C00E1E23F /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCE8F5F2289C41C00E1E23F /* CloudKitManager.swift */; };
 		BDCEFE491CD6B58D004D2890 /* Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCEFE481CD6B58D004D2890 /* Windmill.swift */; };
 		BDD002011AB2F24F00F8E34A /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002001AB2F24F00F8E34A /* Directory.swift */; };
 		BDD002031AB2F26400F8E34A /* PathComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002021AB2F26400F8E34A /* PathComponent.swift */; };
@@ -373,6 +377,9 @@
 		BDA7E430223A86B70022459E /* Windmill.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Windmill.entitlements; sourceTree = "<group>"; };
 		BDA7E431223A86BA0022459E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		BDAA0582205FAF0B00B295AF /* Empty.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Empty.txt; sourceTree = "<group>"; };
+		BDB001BB228AAE2B005AA4AA /* WarnSummaries.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WarnSummaries.storyboard; sourceTree = "<group>"; };
+		BDB001BD228AAE78005AA4AA /* WarnSummariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarnSummariesViewController.swift; sourceTree = "<group>"; };
+		BDB001BF228AB13E005AA4AA /* WarnSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarnSummary.swift; sourceTree = "<group>"; };
 		BDB6D53B19440392001340B4 /* Windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDB6D53F19440392001340B4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDB6D54419440392001340B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -399,6 +406,7 @@
 		BDCA74B4223030D2006E35F9 /* test.ipa */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.ipa; sourceTree = "<group>"; };
 		BDCA74B5223030D2006E35F9 /* manifest.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = manifest.plist; sourceTree = "<group>"; };
 		BDCB38281F06B9BA000825C1 /* WindmillTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindmillTest.swift; sourceTree = "<group>"; };
+		BDCE8F5F2289C41C00E1E23F /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		BDCEFE481CD6B58D004D2890 /* Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windmill.swift; sourceTree = "<group>"; };
 		BDD002001AB2F24F00F8E34A /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		BDD002021AB2F26400F8E34A /* PathComponent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathComponent.swift; sourceTree = "<group>"; };
@@ -619,6 +627,7 @@
 		BD49F78C204B64A300F64687 /* Summaries */ = {
 			isa = PBXGroup;
 			children = (
+				BDB001BD228AAE78005AA4AA /* WarnSummariesViewController.swift */,
 				BD49F793204B9DCA00F64687 /* SummaryViewController.swift */,
 				BDDF108A205B59680093E811 /* SummariesViewController.swift */,
 				BD49F78D204B64C700F64687 /* ErrorSummaries.storyboard */,
@@ -633,6 +642,8 @@
 				BD083271206357460093F5EE /* TestSummaries.swift */,
 				BD08327A2063FF360093F5EE /* TestSummaryCellView.swift */,
 				BD08328D2064A0200093F5EE /* TestSummariesWindowController.swift */,
+				BDB001BB228AAE2B005AA4AA /* WarnSummaries.storyboard */,
+				BDB001BF228AB13E005AA4AA /* WarnSummary.swift */,
 			);
 			path = Summaries;
 			sourceTree = "<group>";
@@ -712,6 +723,7 @@
 			children = (
 				BDA7E427223818640022459E /* SubscriptionManager.swift */,
 				BDA7E42922381CD80022459E /* SubscriptionStatus.swift */,
+				BDCE8F5F2289C41C00E1E23F /* CloudKitManager.swift */,
 			);
 			path = Subscriber;
 			sourceTree = "<group>";
@@ -1162,6 +1174,7 @@
 				BD91A7121F41F022004CA64B /* ArchiveView.xib in Resources */,
 				BD36CA4F205A40A2000B0A2B /* TestReportView.xib in Resources */,
 				BD20C29A204D14CF00805F37 /* Localizable.stringsdict in Resources */,
+				BDB001BC228AAE2B005AA4AA /* WarnSummaries.storyboard in Resources */,
 				BD4D04AE2053D0FB00C5D8CE /* ProjectTitlebarAccessoryViewController.xib in Resources */,
 				BD36CAAB205B40F0000B0A2B /* TestFailureSummaries.storyboard in Resources */,
 				BD915E742020715A006551A5 /* getting-started.mp4 in Resources */,
@@ -1242,6 +1255,7 @@
 				BDE52F3C2269A7BC003C968B /* CryptographicHashFunction.swift in Sources */,
 				BDD17510208A154100CDE787 /* TextView.swift in Sources */,
 				BD915E71202036B8006551A5 /* GettingStartedWindowController.swift in Sources */,
+				BDB001BE228AAE78005AA4AA /* WarnSummariesViewController.swift in Sources */,
 				BD25E37D207FA95F003C5782 /* StandardOutPrettyFormatter.swift in Sources */,
 				BDCA74AD22301FB0006E35F9 /* AccountResource.swift in Sources */,
 				BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */,
@@ -1287,6 +1301,7 @@
 				BD083272206357460093F5EE /* TestSummaries.swift in Sources */,
 				BD1D17FF1F44BC670015C13C /* ProcessManager.swift in Sources */,
 				BDDF10C4205FA7800093E811 /* NSTextView+LineEnumerator.swift in Sources */,
+				BDB001C0228AB13E005AA4AA /* WarnSummary.swift in Sources */,
 				BD25E37F207FAD01003C5782 /* BottomTabViewController.swift in Sources */,
 				BD2BAF742274D08F00BB12B2 /* DistributionSummary.swift in Sources */,
 				BDDF108B205B59680093E811 /* SummariesViewController.swift in Sources */,
@@ -1328,6 +1343,7 @@
 				BD081A121AB05EFA00B8E948 /* Project.swift in Sources */,
 				BD2CEE53203117EC0048969D /* AppBundle.swift in Sources */,
 				BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */,
+				BDCE8F602289C41C00E1E23F /* CloudKitManager.swift in Sources */,
 				BD30160319BB0F79001134F8 /* AppDelegate.swift in Sources */,
 				BDE52F49226BAAE3003C968B /* AccountResourcePostManifest.swift in Sources */,
 				BDE52F4F226BAB4F003C968B /* Resource.swift in Sources */,

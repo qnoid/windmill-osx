@@ -15,11 +15,16 @@ struct ActivityFindProject {
     let applicationCachesDirectory: ApplicationCachesDirectory
 
     weak var processManager: ProcessManager?
-    weak var activityManager: ActivityManager?
+    weak var delegate: ActivityDelegate?
 
-    func success(project: Project, location: Project.Location) -> ActivitySuccess {
+    init(applicationCachesDirectory: ApplicationCachesDirectory, processManager: ProcessManager) {
+        self.applicationCachesDirectory = applicationCachesDirectory
+        self.processManager = processManager
+    }
+
+    func success(project: Project, location: Project.Location) -> SuccessfulActivity {
      
-        return { next in
+        return SuccessfulActivity { next in
             
             return { context in
                 
@@ -43,7 +48,7 @@ struct ActivityFindProject {
 
                     
                     DispatchQueue.main.async {
-                        self.activityManager?.notify(notification: Windmill.Notifications.didCheckoutProject, userInfo: ["commit": commit])
+                        self.delegate?.notify(notification: Windmill.Notifications.didCheckoutProject, userInfo: ["commit": commit])
                     }
 
                     next?(["location":location])

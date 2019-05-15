@@ -207,7 +207,13 @@ extension NSRegularExpression {
         // $1 path
         // $2 file
         // $3 error
-        static let COMPILE_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:warning|error):\\s(.*)")
+        static let COMPILE_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:error):\\s(.*)")
+        
+        // capture groups
+        // $1 path
+        // $2 file
+        // $3 error
+        static let COMPILE_WARNING_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:warning):\\s(.*)")
         
         // capture groups
         // $1 error
@@ -216,6 +222,10 @@ extension NSRegularExpression {
         // capture groups
         // $1 error
         static let GLOBAL_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "global: error: (.*)")
+
+        // capture groups
+        // $1 warning
+        static let GLOBAL_WARNING_EXPRESSION = try! NSRegularExpression(pattern: "global: warn: (.*)")
 
         // capture groups
         // $1 error
@@ -249,6 +259,11 @@ extension NSRegularExpression {
         // $1 primary
         // $2 secondary
         static let ERROR_TITLE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^\\*\\*\\s(.*)\\s(.*)\\s\\*\\*")
+        
+        // capture groups
+        // $1 primary
+        // $2 secondary
+        static let WARN_TITLE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^\\*\\s(.*)\\s(.*)\\s\\*")
     }
 }
 

@@ -33,7 +33,14 @@ class ActivityView: NSView {
     override var intrinsicContentSize: NSSize {
         return NSSize(width: 120, height: 80)
     }
+
+    override var acceptsFirstResponder: Bool {
+        return trackingArea != nil
+    }
     
+    weak var trackingArea: NSTrackingArea?
+    var action: String?
+
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         wml_addSubview(view: wml_load(view: ActivityView.self)!, layout: .centered)
@@ -62,5 +69,60 @@ class ActivityView: NSView {
     
     func stopLightsAnimation() {
         self.imageView.layer?.sublayers?[0].removeAnimation(forKey: "lights")
+    }
+    
+    func addTrackingArea(action: String) {
+        let trackingArea = NSTrackingArea(rect: self.imageView.bounds, options: [.mouseEnteredAndExited, .mouseMoved, .activeInKeyWindow, .cursorUpdate], owner: self, userInfo: nil)
+        self.trackingArea = trackingArea
+        self.addTrackingArea(trackingArea)
+        self.action = action
+    }
+    
+    func removeTrackingArea() {
+        if let trackingArea = trackingArea {
+            self.removeTrackingArea(trackingArea)
+        }
+    }
+
+    override func cursorUpdate(with event: NSEvent) {
+        guard trackingArea != nil else {
+            super.cursorUpdate(with: event)
+            return
+        }
+        
+        NSCursor.pointingHand.set()
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        guard trackingArea != nil else {
+            return
+        }
+
+        self.imageView.alphaValue = 1.0
+    }
+    
+    override func mouseMoved(with event: NSEvent) {
+        guard trackingArea != nil else {
+            return
+        }
+
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        guard trackingArea != nil else {
+            return
+        }
+
+        self.imageView.alphaValue = 0.1
+    }
+    
+    override func mouseDown(with event: NSEvent) {        
+        guard trackingArea != nil else {
+            return
+        }
+
+        if let action = action {
+            NSApplication.shared.sendAction(Selector((action)), to: nil, from: self)
+        }
     }
 }
