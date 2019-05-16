@@ -43,7 +43,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="24" usesAutomaticRowHeights="YES" headerView="7ut-Gy-U7h" viewBased="YES" id="OZf-qy-FfJ">
-                                            <rect key="frame" x="0.0" y="0.0" width="839" height="214"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="981" height="214"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -107,8 +107,8 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="Message" width="572" maxWidth="3.4028234663852886e+38" id="yu7-3Y-NSP">
-                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Message">
+                                                <tableColumn identifier="Description" width="717" maxWidth="3.4028234663852886e+38" id="yu7-3Y-NSP">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Description">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -120,12 +120,12 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="Message" id="lll-ny-HJn">
-                                                            <rect key="frame" x="264" y="0.0" width="572" height="40"/>
+                                                        <tableCellView identifier="Description" id="lll-ny-HJn">
+                                                            <rect key="frame" x="264" y="0.0" width="717" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Isp-J5-rNz">
-                                                                    <rect key="frame" x="0.0" y="23" width="715" height="17"/>
+                                                                    <rect key="frame" x="0.0" y="23" width="860" height="17"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Your subscription has expired or may have not renewed just yet." id="Com-cg-jog">
                                                                         <font key="font" metaFont="system"/>
@@ -148,7 +148,7 @@
                                         </tableView>
                                     </subviews>
                                 </clipView>
-                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="CbB-Jr-Plb">
+                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="CbB-Jr-Plb">
                                     <rect key="frame" x="1" y="223" width="839" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -157,7 +157,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="7ut-Gy-U7h">
-                                    <rect key="frame" x="0.0" y="0.0" width="839" height="25"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="981" height="25"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>

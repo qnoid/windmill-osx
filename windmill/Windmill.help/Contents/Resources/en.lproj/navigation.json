@@ -50,6 +50,28 @@
                 "topic-xcode_integration-install_the_app_on_a_device",
                 "topic-xcode_integration-upload_an_app_to_itunes_connect"
             ]            
+        },
+        "section-distribution-index": {
+            "name": "Distribution",
+            "children": [
+                "topic-distribution-distribute-build",                
+                "topic-distribution-lights_up",
+                "topic-distribution-register_device"
+            ]            
+        },
+        "section-subscription-index": {
+            "name": "Subscription",
+            "children": [
+                "topic-how_to_purchase-subscription",
+                "topic-refresh_subscription-subscription"
+            ]            
+        },
+        "section-security-index": {
+            "name": "Security",
+            "children": [
+                "topic-security-access_applications",
+                "topic-security-revoke-build"
+            ]            
         }
     },
     "show_previous_next": false,
@@ -61,6 +83,9 @@
         "section-windmill_basics-index",
         "section-xcode_integration-index",
         "section-working_with_external_dependencies-index",
+        "section-distribution-index",
+        "section-security-index",
+        "section-subscription-index",
         "topic-contact"
     ],
     "topics": {
@@ -161,11 +186,52 @@
             "categories": [
             ]
         },
+        "topic-distribution-distribute-build": {
+            "name": "Distribute a build",
+            "href": "distribution/distribute_build.html",
+            "categories": [
+            ]
+        },
+        "topic-distribution-lights_up": {
+            "name": "Lights up",
+            "href": "distribution/lights_up.html",
+            "categories": [
+            ]
+        },
+        "topic-distribution-register_device": {
+            "name": "Register a device",
+            "href": "distribution/register_device.html",
+            "categories": [
+            ]
+        },
+        "topic-security-access_applications": {
+            "name": "Access to your applications",
+            "href": "security/access_applications.html",
+            "categories": [
+            ]
+        },
+        "topic-security-revoke-build": {
+            "name": "Revoke a build",
+            "href": "security/revoke_build.html",
+            "categories": [
+            ]
+        },
+        "topic-how_to_purchase-subscription": {
+            "name": "How to purchase",
+            "href": "subscription/how_to_purchase.html",
+            "categories": [
+            ]
+        },
+        "topic-refresh_subscription-subscription": {
+            "name": "Refresh Subscription",
+            "href": "subscription/refresh_subscription.html",
+            "categories": [
+            ]
+        },        
         "topic-contact": {
             "name": "Get in touch",
             "href": "contact.html",
             "categories": [
-              "landing"
             ]
         }
     },

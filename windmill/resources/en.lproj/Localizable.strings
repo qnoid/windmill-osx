@@ -55,11 +55,11 @@
 "windmill.toolTip.active.devices"="Here's to the crazy ones.";
 "windmill.toolTip.active.readProjectConfiguration"="reticulating splines";
 "windmill.toolTip.active"="There is a light breeze.";
-"windmill.toolTip.success.checkout"="The app is using up to date code.";
-"windmill.toolTip.success.build"="Both your app's and test's code has been successfully built. No build errors found.";
-"windmill.toolTip.success.test"="Any available tests in your app have passed. No regressions.";
-"windmill.toolTip.success.archive"="You can now publish your app to TestFlight or the App Store.";
-"windmill.toolTip.success.export"="You can now install your app to registered devices.";
+"windmill.toolTip.success.checkout"="You have access to the source code.";
+"windmill.toolTip.success.build"="You can build the app from its source code and run it on the Simulator.";
+"windmill.toolTip.success.test"="You can run the available tests against a simulated device and be confident that none fail.";
+"windmill.toolTip.success.archive"="You can publish your app to TestFlight or the App Store.";
+"windmill.toolTip.success.export"="You can install your app to registered devices.";
 "windmill.toolTip.success.distribute"="Your app has been distributed to Windmill on the iPhone.";
 "windmill.repo.error.description"="No git repository under %@";
 "windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\n* `git init` to create a new git.\n* `git remote add origin <url>` to add a remote origin.\n* `git push -u origin master` to push the folder to the repo.";

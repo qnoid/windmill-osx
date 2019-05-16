@@ -20,11 +20,11 @@ public struct WarnSummary {
      
      */
     var issueType: String? {
-        return error.localizedDescription
+        return (error as? SubscriptionError)?.errorTitle
     }
     
-    var message: String? {
-        return (error as NSError).localizedFailureReason
+    var description: String? {
+        return (error as NSError).localizedDescription
     }
     
     var recoverySuggestion: String? {

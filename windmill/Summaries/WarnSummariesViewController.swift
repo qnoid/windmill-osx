@@ -22,10 +22,10 @@ class WarnSummariesViewController: NSViewController, NSTableViewDataSource, NSTa
     
     enum WarnSummaryIdentifier: String {
         
-        static var allValues: [WarnSummaryIdentifier] = [.IssueType, .Message, .RecoverySuggestion]
+        static var allValues: [WarnSummaryIdentifier] = [.IssueType, .Description, .RecoverySuggestion]
         
         case IssueType
-        case Message
+        case Description
         case RecoverySuggestion
     }
     
@@ -40,7 +40,7 @@ class WarnSummariesViewController: NSViewController, NSTableViewDataSource, NSTa
         didSet{
             WarnSummaryIdentifier.allValues.forEach { (warnSummaryIdentifier) in
                 
-                guard warnSummaryIdentifier != .Message else {
+                guard warnSummaryIdentifier != .Description else {
                     return
                 }
                 
@@ -94,8 +94,8 @@ class WarnSummariesViewController: NSViewController, NSTableViewDataSource, NSTa
         
         if case WarnSummaryIdentifier.IssueType? = warnSummaryIdentifier {
             self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: warnSummaries[row].issueType)
-        } else if case WarnSummaryIdentifier.Message? = warnSummaryIdentifier {
-            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: warnSummaries[row].message)
+        } else if case WarnSummaryIdentifier.Description? = warnSummaryIdentifier {
+            self.updateOrHide(viewFor: tableColumn, tableCellView: tableCellView, value: warnSummaries[row].description)
         }
 
         tableCellView.toolTip = warnSummaries[row].recoverySuggestion ?? ""

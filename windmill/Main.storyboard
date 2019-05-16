@@ -717,7 +717,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                                             <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Run (Use the Checkout Folder)" alternate="YES" keyEquivalent="r" toolTip="Use the existing cloned repo; e.g. to keep any local changes you have made for the next Run." id="Sv9-RK-ZqQ">
+                                                    <menuItem title="Run (Use existing source code)" alternate="YES" keyEquivalent="r" toolTip="Use the existing cloned repo; e.g. to keep any local changes you have made for the next Run." id="Sv9-RK-ZqQ">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
                                                             <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
