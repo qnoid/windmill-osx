@@ -39,13 +39,16 @@ extension DispatchSourceReadProvider {
             var buffer = [CChar](repeating: 0, count: estimatedBytesAvailableToRead)
             let bytesRead = Darwin.read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
             
-            //https://twitter.com/Catfish_Man/status/1128934439096971264
-            guard bytesRead > 0, let availableString = String(validatingUTF8: UnsafePointer<CChar>(buffer)) else {
-                return
-            }
+            buffer.withUnsafeBufferPointer{ ptr in
+                
+                //https://twitter.com/Catfish_Man/status/1128934439096971264
+                guard bytesRead > 0, let availableString = String(validatingUTF8: ptr.baseAddress! ) else {
+                    return
+                }
             
             (completion ?? DispatchQueue.main).async {
                 self.output(part: availableString, count: availableString.utf8.count)
+                }
             }
         }
         
