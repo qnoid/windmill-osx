@@ -46,7 +46,6 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
             textView.usesFontPanel = false
             textView.usesFindPanel = false
             textView.usesRuler = false
-            textView.string.reserveCapacity(1_000_000)
         }
     }
     
@@ -90,7 +89,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     @objc func willRun(_ aNotification: Notification) {
         if let textView = textView {
-            textView.string = ""
+            self.textView.string = ""
             textView.isSelectable = false
         }
     }
@@ -98,8 +97,8 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     /**
      - Precondition: the textview holds any of the existing log
      */
-    func append(_ textView: TextView?, output: String, count: Int) {
-        textView?.string.append(output)
+    func append(_ textView: TextView?, output: NSAttributedString, count: Int) {
+        textView?.textStorage?.append(output)
         textView?.scrollToEndOfDocumentPlease()
     }
     
@@ -108,7 +107,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
             return
         }
 
-        self.append(self.textView, output: part, count: count)
+        self.append(self.textView, output: NSAttributedString(string: part), count: count)
     }
     
     func toggle(isHidden: Bool) {
