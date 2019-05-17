@@ -41,10 +41,10 @@ class StandardOutFormattedReader: DispatchSourceReadProvider {
         self.fileURL = fileURL
     }
     
-    func activate() -> DispatchSourceRead? {
+    func activate(completion: DispatchQueue? = nil) -> DispatchSourceRead? {
         self.standardOutput = ""
         
-        let dispatchSourceRead = self.read()
+        let dispatchSourceRead = self.read(completion: completion)
         dispatchSourceRead?.activate()
         
         return dispatchSourceRead
@@ -65,9 +65,7 @@ class StandardOutFormattedReader: DispatchSourceReadProvider {
             }
             
             if let delegate = self.delegate {
-                DispatchQueue.main.async {
-                    delegate.standardOut(line: formatted)
-                }
+                delegate.standardOut(line: formatted)
             }
         }
         

@@ -11,7 +11,13 @@ import AppKit
 extension NSTextAttachment {
     
     struct Windmill {
-        
+
+        static let buildInProgressImageAttachment = make(image: NSImage(imageLiteralResourceName: "Status-BuildInProgress"))
+        static let failedTestImageAttachment = make(image: NSImage(imageLiteralResourceName: "test-failure"))
+        static let failureImageAttachment = make(image: NSImage(imageLiteralResourceName: "error"))
+        static let successImageAttachment = make(image: NSImage(imageLiteralResourceName: "Success"))
+        static let warningImageAttachment = make(image: NSImage(imageLiteralResourceName: "WarningTriangle"))
+
         static func make(image: NSImage) -> NSTextAttachment {
             let textAttachmentCell = NSTextAttachmentCell(imageCell: image)
             let textAttachment = NSTextAttachment(data: image.tiffRepresentation, ofType: kUTTypeTIFF as String)

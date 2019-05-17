@@ -102,7 +102,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     override func viewWillAppear() {
         super.viewWillAppear()
         self.textView.string = ""
-        self.dispatchSourceRead = self.standardOutFormattedReader.activate()
+        self.dispatchSourceRead = self.standardOutFormattedReader.activate(completion: self.queue)
     }
     
     func append(_ textView: TextView?, line: NSAttributedString) {
@@ -114,8 +114,10 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
         guard isViewLoaded else {
             return
         }
-        
-        self.append(self.textView, line: line)
+
+        DispatchQueue.main.async {
+            self.append(self.textView, line: line)
+        }
     }
 
     
