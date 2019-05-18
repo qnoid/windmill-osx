@@ -28,6 +28,7 @@ public enum SubscriptionError : Error {
     
     case unauthorised(reason: UnauthorisationReason?)
     case outdated
+    case notFound
 }
 
 extension SubscriptionError : CustomNSError, LocalizedError {
@@ -53,6 +54,8 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             default:
                 return "Subscription Access"
             }
+        case .notFound:
+            return "Subscription Not Found"
         default:
             return ""
         }
@@ -75,6 +78,8 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             else {
                 return "Your Windmill subscription is no longer active.\n"
             }
+        case .notFound:
+            return "No Windmill subscription is available for your Apple account.\n"
         default:
             return nil
         }
@@ -114,6 +119,8 @@ extension SubscriptionError : CustomNSError, LocalizedError {
             default:
                 return "You can purchase a new subscription or contact qnoid@windmill.io"
             }
+        case .notFound:
+            return "You can purchase a new subscription using Windmill on the iPhone."
         default:
             return nil
         }

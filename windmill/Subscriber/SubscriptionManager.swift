@@ -65,6 +65,8 @@ class SubscriptionManager: NSObject {
     public func fetchSubscription(completion: @escaping ResultCompletion = FetchResultCompletionIgnore) {
         self.cloudKitManager.fetchSubscription { result in
             switch result {
+            case .failure(let error as CKError) where error.code == .zoneNotFound:
+                completion(.failure(SubscriptionError.notFound))
             case .failure(let error):
                 completion(.failure(error))
             case .success:
