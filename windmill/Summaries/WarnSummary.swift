@@ -20,7 +20,7 @@ public struct WarnSummary {
      
      */
     var issueType: String? {
-        return (error as? SubscriptionError)?.errorTitle
+        return (error as? SubscriptionError)?.errorTitle ?? "Warning"
     }
     
     var description: String? {

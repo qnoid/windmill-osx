@@ -6,9 +6,10 @@
 //  Copyright (c) 2015 qnoid.com. All rights reserved.
 //
 
-import Foundation
+import AppKit
 import ObjectiveGit
 import os
+import CloudKit
 
 
 typealias WindmillProvider = () -> Windmill
@@ -134,13 +135,13 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         static let SourceCodeChanged = Notification.Name("io.windmill.windmill.subscription.commit")
         
         static let DevicesListed = Notification.Name("io.windmill.windmill.activity.devices.listed")
-        
 
         static let didError = Notification.Name("io.windmill.windmill.activity.did.error")
         
         static let activityDidLaunch = Notification.Name("io.windmill.windmill.activity.did.launch")
         static let activityDidExitSuccesfully = Notification.Name("io.windmill.windmill.activity.did.exit.succesfully")
-        
+        static let NoUserAccount = Notification.Name("io.windmill.windmill.user.none")
+
     }
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
@@ -185,6 +186,7 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(devicesListed(_:)), name: Windmill.Notifications.DevicesListed, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSApplication.didBecomeActiveNotification, object: NSApplication.shared)
     }
     
     private func error(_ error: Error) {
@@ -203,8 +205,45 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
     }
     
+    func accountStatus(accountStatus: CKAccountStatus, error: Error?) {
+        
+        switch (accountStatus, error) {
+        case (.available, nil):
+            return
+        case (.noAccount, nil):
+            DispatchQueue.main.async {
+                self.notify(notification: Notifications.NoUserAccount)
+            }            
+        case (.couldNotDetermine, nil):
+            os_log("%{public}@", log: .default, type: .debug, "CKAccountStatus: Could not determine status.")
+        case (.restricted, nil):
+            os_log("%{public}@", log: .default, type: .debug, "CKAccountStatus: Access was denied due to Parental Controls or Mobile Device Management restrictions.")
+        case (_, let error?):
+            os_log("%{public}@", log: .default, type: .error, "CKAccountStatus error: \(error.localizedDescription)")
+        @unknown default:
+            return
+        }
+    }
+    
+    @objc func didBecomeActive(notification: Notification) {
+
+        if SubscriptionStatus.default.isActive {
+            CKContainer.default().accountStatus { accountStatus, error in
+                DispatchQueue.main.async {
+                    self.accountStatus(accountStatus: accountStatus, error: error)
+                }
+            }
+        }
+    }
+
     @objc func subscriptionActive(notification: NSNotification) {
         self.subscriptionStatus(SubscriptionStatus.default)
+        
+        CKContainer.default().accountStatus { accountStatus, error in
+            DispatchQueue.main.async {
+                self.accountStatus(accountStatus: accountStatus, error: error)
+            }
+        }
     }
 
     @objc func subscriptionFailed(notification: NSNotification) {

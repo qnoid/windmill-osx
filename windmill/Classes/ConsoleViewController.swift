@@ -111,7 +111,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
         self.group.wait()
         
         DispatchQueue.main.async {
-            self.append(self.textView, output: NSAttributedString(string: part), count: count)
+            self.append(self.textView, output: NSAttributedString(string: part, attributes: [.foregroundColor : NSColor.textColor]), count: count)
         }
     }
     

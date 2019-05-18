@@ -8,6 +8,7 @@
 
 import AppKit
 import os
+import CloudKit
 
 class UserMessageViewTextField: NSTextField {
     
@@ -118,6 +119,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(noUserAccount(notification:)), name: Windmill.Notifications.NoUserAccount, object: nil)
     }
     
     func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
@@ -186,10 +188,14 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     }
     
     @objc func subscriptionActive(notification: NSNotification) {
-        self.warningButton.isHidden = true
+        self.warningButton.isHidden = true        
     }
     
     @objc func subscriptionFailed(notification: NSNotification) {
+        self.warningButton.isHidden = false
+    }
+    
+    @objc func noUserAccount(notification: NSNotification) {
         self.warningButton.isHidden = false
     }
 }

@@ -64,6 +64,8 @@ class StandardOutPrettyFormatter: Formatter {
     let errorRecoverySuggestionFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorRecoverySuggestion()
     let errorTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let warnTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let fatalFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let fatalCouldNotReadRemoteRepositoryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     
 
     let descender: CGFloat
@@ -119,6 +121,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
         self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
         self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
+        self.fatalFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatal(descender: descender)
+        self.fatalCouldNotReadRemoteRepositoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatalCouldNotReadRemoteRepository(descender: descender)
         super.init()
     }
     
@@ -173,6 +177,8 @@ class StandardOutPrettyFormatter: Formatter {
         self.testCaseFailedFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeTestCaseFailed(descender: descender)
         self.errorTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeErrorTitle(descender: descender)
         self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
+        self.fatalFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatal(descender: descender)
+        self.fatalCouldNotReadRemoteRepositoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatalCouldNotReadRemoteRepository(descender: descender)
         super.init(coder: aDecoder)
     }
     
@@ -291,6 +297,10 @@ class StandardOutPrettyFormatter: Formatter {
             return errorTitle
         } else if let warnTitle = self.warnTitleFormatter.format(for: obj) {
             return warnTitle
+        } else if let fatalCouldNotReadRemoteRepository = self.fatalCouldNotReadRemoteRepositoryFormatter.format(for: obj) {
+            return fatalCouldNotReadRemoteRepository
+        } else if let fatal = self.fatalFormatter.format(for: obj) {
+            return fatal
         } else {
             return nil
         }

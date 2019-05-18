@@ -776,5 +776,37 @@ return single(match: regularExpression) { script in
             return attributedString
         }
     }
+    
+    static func makeFatal(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.FATAL_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        
+        let attachement = NSTextAttachment.Windmill.failureImageAttachment
+        
+        return single(match: regularExpression) { message in
+            let attributedString = NSMutableAttributedString(attachment: attachement)
+            attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(message)\n", attributes: [.foregroundColor : NSColor.textColor]))
+            return attributedString
+        }
+    }
+    
+    static func makeFatalCouldNotReadRemoteRepository(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.FATAL_COULD_NOT_READ_REMOTE_REPOSITORY_REGULAR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        
+        let attachment = NSTextAttachment.Windmill.failureImageAttachment
+        
+        return match(regularExpression) {
+            let attributedString = NSMutableAttributedString(attachment: attachment)
+            attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Checkout", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " failed\n\t", attributes: [.foregroundColor : NSColor.textColor]))
+            let failed = NSAttributedString(attachment: attachment)
+            attributedString.append(failed)
+            attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, failed.length))
+            attributedString.append(NSAttributedString(string: " Could not clone remote repository\n", attributes: [.foregroundColor : NSColor.systemRed]))
+            attributedString.append(NSAttributedString(string: "\t\tSee Windmill Help -> Getting Started -> Where to start.\n", attributes: [.foregroundColor : NSColor.textColor]))
+            return attributedString
+        }
+    }
 
 }

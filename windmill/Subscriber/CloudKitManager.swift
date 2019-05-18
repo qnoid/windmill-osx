@@ -93,26 +93,32 @@ class CloudKitManager {
         notificationInfo.shouldSendContentAvailable = true
         notificationInfo.desiredKeys = desiredKeys
         querySubscription.notificationInfo = notificationInfo
+        querySubscription.zoneID = zoneId
         
-        self.database.fetch(withRecordZoneID: zoneId) { (recordZone, error) in
+        let recordZone = CKRecordZone(zoneName: zoneId.zoneName)
+        let modifyRecordZonesOperation = CKModifyRecordZonesOperation(recordZonesToSave: [recordZone])
+        let modifySubscriptionsOperation = CKModifySubscriptionsOperation(subscriptionsToSave: [querySubscription])
+
+        modifySubscriptionsOperation.modifySubscriptionsCompletionBlock = { subscriptions, subscriptionID, error in
             
-            switch(recordZone, error){
-            case(let recordZone?, _):
-                querySubscription.zoneID = recordZone.zoneID
-                self.database.save(querySubscription) { (subscription, error) in
-                    DispatchQueue.main.async {
-                        completionHandler(subscription, error)
-                    }
-                }
+            switch(subscriptions, error) {
             case(_, let error?):
+                os_log("Error while creating query subscription in zone: '%{public}@'", log: .default, type: .debug, error.localizedDescription)
                 DispatchQueue.main.async {
                     completionHandler(nil, error)
                 }
+            case (let subscriptions?, _):
+                DispatchQueue.main.async {
+                    completionHandler(subscriptions.first, nil)
+                }
             case (.none, .none):
-                preconditionFailure("Must have either recordZone returned or an error")
+                preconditionFailure("Must have either subscriptions returned or an error")
             }
-            
         }
+        
+        modifySubscriptionsOperation.addDependency(modifyRecordZonesOperation)
+        self.database.add(modifyRecordZonesOperation)
+        self.database.add(modifySubscriptionsOperation)
     }
     
     //MARK: module

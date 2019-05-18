@@ -264,6 +264,13 @@ extension NSRegularExpression {
         // $1 primary
         // $2 secondary
         static let WARN_TITLE_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^\\*\\s(.*)\\s(.*)\\s\\*")
+        
+        // capture groups
+        // $1 message
+        static let FATAL_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^fatal: (.*)")
+        
+        // capture groups
+        static let FATAL_COULD_NOT_READ_REMOTE_REPOSITORY_REGULAR_EXPRESSION = try! NSRegularExpression(pattern: "^fatal: (Could not read from remote repository.)")
     }
 }
 

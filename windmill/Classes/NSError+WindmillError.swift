@@ -27,7 +27,10 @@ extension NSError
         case commitError
 
         /// Error loading commit
-        case listDevicesError        
+        case listDevicesError
+        
+        /// CKContainer.default().accountStatus returned .noAccount
+        case noAccountError
     }
     
     class func domain(type: ActivityType) -> String {
@@ -81,6 +84,13 @@ extension NSError
              NSLocalizedFailureReasonErrorKey: NSLocalizedString("windmill.latestCommit.error.failureReason", comment:""),
              NSUnderlyingErrorKey: underlyingError])
     }
+    
+    class func errorNoAccount() -> Error {
+        return NSError(domain: WindmillErrorDomain, code: WindmillErrorCode.noAccountError.rawValue, userInfo:
+            [NSLocalizedDescriptionKey: "Windmill requires you to be logged in using your Apple ID to start distributing your apps.",
+             NSLocalizedRecoverySuggestionErrorKey: "Go to Apple menu > System Preferences.\nSelect iCloud\nYou may need to authenticate. Enter your Apple ID and password. Click Sign In.\nSelect iCloud Drive\nSelect 'Options...'\nUnder 'Documents', make sure the check box for 'Windmill' is on"])
+    }
+
     
     class func errorTermination(process: Process, for activityType: ActivityType, status code: Int32) -> NSError
     {

@@ -115,7 +115,8 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
     }
     
-    var warnSummariesWindowController: NSWindowController?
+    weak var warnSummariesWindowController: NSWindowController?
+    var warnings = [Error]()
     
     var isSidePanelCollapsedObserver: NSKeyValueObservation?
     var isBottomPanelCollapsedObserver: NSKeyValueObservation?
@@ -129,12 +130,14 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         super.init(window: window)
         
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(noUserAccount(notification:)), name: Windmill.Notifications.NoUserAccount, object: nil)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(noUserAccount(notification:)), name: Windmill.Notifications.NoUserAccount, object: nil)
     }
     
     override func windowDidLoad() {
@@ -147,11 +150,6 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
 
         window.title = project?.filename ?? ""
         window.titleVisibility = .hidden
-        if #available(OSX 10.14, *) {
-            
-        } else {
-            window.appearance = NSAppearance(named: .vibrantDark)
-        }
     }
     
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -188,6 +186,7 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
     
     @objc func willRun(_ aNotification: Notification) {
         self.schemeButton.removeAllItems()
+        self.warnings = []
         self.warnSummariesWindowController?.close()
     }
     
@@ -268,6 +267,12 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
     }
     
     @IBAction func showWarnSummariesWindowController(_ sender: Any?) {
+        
+        let warnSummariesWindowController = NSStoryboard.Windmill.warnSummariesStoryboard().instantiateInitialController() as? NSWindowController
+        let warnSummariesViewController = warnSummariesWindowController?.contentViewController as? WarnSummariesViewController
+        warnSummariesViewController?.warnSummaries = self.warnings.map { WarnSummary(error: $0) }
+        
+        self.warnSummariesWindowController = warnSummariesWindowController
         self.warnSummariesWindowController?.showWindow(self)
     }
 
@@ -310,10 +315,10 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
             return
         }
         
-        let warnSummariesWindowController = NSStoryboard.Windmill.warnSummariesStoryboard().instantiateInitialController() as? NSWindowController
-        let warnSummariesViewController = warnSummariesWindowController?.contentViewController as? WarnSummariesViewController
-        warnSummariesViewController?.warnSummaries = [WarnSummary(error: error)]
-        
-        self.warnSummariesWindowController = warnSummariesWindowController
+        self.warnings.append(error)
+    }
+    
+    @objc func noUserAccount(notification: NSNotification) {
+        self.warnings.append(NSError.errorNoAccount())
     }
 }
