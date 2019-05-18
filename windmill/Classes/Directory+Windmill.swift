@@ -174,7 +174,11 @@ extension ProjectDirectory {
     }
     
     public func log(name: String) -> URL {
-        return logDirectoryURL().appendingPathComponent("\(name).log")
+        let log = logDirectoryURL().appendingPathComponent("\(name).log")
+        
+        self.fileManager.createFile(atPath: log.path, contents: nil, attributes: nil)
+        
+        return log
     }
     
     public func buildDirectoryURL() -> URL {

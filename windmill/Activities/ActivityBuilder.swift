@@ -36,8 +36,6 @@ class ActivityBuiler {
     
     public func exportSeries(activityManager: ActivityManager, skipCheckout: Bool = false, next nextActivity: @escaping Activity) -> Activity {
         
-        try? FileManager.default.removeItem(at: projectLogURL)
-                
         let checkoutActivity: SuccessfulActivity
         
         let repositoryLocalURL = self.projectRepositoryDirectory

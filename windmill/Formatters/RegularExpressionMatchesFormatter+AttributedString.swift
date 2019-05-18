@@ -238,7 +238,7 @@ return single(match: regularExpression) { script in
             attributedString.append(warningStatus)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, warningStatus.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
-            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemRed]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemOrange]))
             return attributedString
         }
     }

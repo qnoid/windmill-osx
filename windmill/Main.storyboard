@@ -324,7 +324,7 @@
         <!--Bottom Tab View Controller-->
         <scene sceneID="vh4-np-aGm">
             <objects>
-                <tabViewController selectedTabViewItemIndex="0" tabStyle="bottom" id="rYT-dj-KwR" customClass="BottomTabViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <tabViewController selectedTabViewItemIndex="1" tabStyle="bottom" id="rYT-dj-KwR" customClass="BottomTabViewController" customModule="Windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem identifier="" id="Dtc-AU-Q8S"/>
                         <tabViewItem identifier="" id="bJV-i6-RyP"/>

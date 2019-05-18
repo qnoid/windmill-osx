@@ -123,6 +123,7 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     
     struct Notifications {
         static let willRun = Notification.Name("io.windmill.windmill.will.run")
+        static let didRun = Notification.Name("io.windmill.windmill.did.run")
         static let didCheckoutProject = Notification.Name("io.windmill.windmill.activity.did.checkout")
         static let didBuildProject = Notification.Name("io.windmill.windmill.activity.did.build")
         static let didTestProject = Notification.Name("io.windmill.windmill.activity.did.test")
@@ -319,6 +320,8 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         
         let exportAndMonitor = self.exportAndMonitor(activityManager: activityManager, skipCheckout: skipCheckout)
         exportAndMonitor([:])
+        
+        self.notify(notification: Windmill.Notifications.didRun, userInfo: ["project":self.configuration.project])
     }
     
     func distribute(failure: @escaping (_ error: Error) -> Void) {

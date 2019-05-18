@@ -11,6 +11,7 @@ import Cocoa
 class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.console.raw", qos: .utility, attributes: [])
+    var group = DispatchGroup()
 
     var queue: DispatchQueue {
         return self.dispatch_queue_serial
@@ -58,6 +59,7 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didRun(_:)), name: Windmill.Notifications.didRun, object: windmill)
         }
     }
     
@@ -77,23 +79,26 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
         dispatchSourceRead?.cancel()
     }
     
-    /**
-     - Postcondition: the textview will have its string set to the any existing standardOutput
-     */
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        self.textView.string = ""
-        self.dispatchSourceRead = self.read()
+    override func viewDidLoad() {
+        self.group.leave()
+    }
+
+    @objc func willRun(_ aNotification: Notification) {
+        textView?.string = ""
+        textView?.isSelectable = false
+        textView?.allowScrollToEndOfDocument = true
+    }
+    
+    @objc func didRun(_ aNotification: Notification) {
+        
+        if !isViewLoaded {
+            self.group.enter()
+        }
+        
+        self.dispatchSourceRead = self.read(completion: self.queue)
         self.dispatchSourceRead?.activate()
     }
-    
-    @objc func willRun(_ aNotification: Notification) {
-        if let textView = textView {
-            self.textView.string = ""
-            textView.isSelectable = false
-        }
-    }
-    
+
     /**
      - Precondition: the textview holds any of the existing log
      */
@@ -103,20 +108,16 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     }
     
     func output(part: String, count: Int) {
-        guard isViewLoaded else {
-            return
+        self.group.wait()
+        
+        DispatchQueue.main.async {
+            self.append(self.textView, output: NSAttributedString(string: part), count: count)
         }
-
-        self.append(self.textView, output: NSAttributedString(string: part), count: count)
     }
     
     func toggle(isHidden: Bool) {
-        guard isViewLoaded else {
-            return
-        }
-        
-        self.textView.isHidden = isHidden
+        self.textView?.isHidden = isHidden
         self.textView?.scrollToEndOfDocumentPlease()
-        self.textView.isSelectable = true
+        self.textView?.isSelectable = true
     }
 }

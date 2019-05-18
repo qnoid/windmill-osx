@@ -50,6 +50,7 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     weak var windmill: Windmill? {
         didSet{
             self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didRun(_:)), name: Windmill.Notifications.didRun, object: windmill)
         }
     }
 
@@ -79,29 +80,34 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
 
     let queue = DispatchQueue(label: "io.windmil.console.distilled", qos: .utility, attributes: [])
+    var group = DispatchGroup()
     
-    lazy var standardOutFormattedReader: StandardOutFormattedReader = {
+    var standardOutFormattedReader: StandardOutFormattedReader {
         let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), queue: self.queue, fileURL: self.configuration?.projectLogURL)
         standardOutFormattedReader.delegate = self
         return standardOutFormattedReader
-    }()
+    }
     
     deinit {
         dispatchSourceRead?.cancel()
     }
-
-    @objc func willRun(_ aNotification: Notification) {
-        
-        if let textView = textView {
-            textView.string = ""
-            textView.isSelectable = false
-            textView.allowScrollToEndOfDocument = true
-        }
+    
+    override func viewDidLoad() {
+        self.group.leave()
     }
 
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        self.textView.string = ""
+    @objc func willRun(_ aNotification: Notification) {
+        textView?.string = ""
+        textView?.isSelectable = false
+        textView?.allowScrollToEndOfDocument = true
+    }
+    
+    @objc func didRun(_ aNotification: Notification) {
+        
+        if !isViewLoaded {
+            self.group.enter()
+        }
+        
         self.dispatchSourceRead = self.standardOutFormattedReader.activate(completion: self.queue)
     }
     
@@ -111,23 +117,16 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
     
     func standardOut(line: NSAttributedString) {
-        guard isViewLoaded else {
-            return
-        }
+        self.group.wait()
 
         DispatchQueue.main.async {
             self.append(self.textView, line: line)
         }
     }
-
     
     func toggle(isHidden: Bool) {
-        guard isViewLoaded else {
-            return
-        }
-        
-        self.textView.isHidden = isHidden
+        self.textView?.isHidden = isHidden
         self.textView?.scrollToEndOfDocumentPlease()
-        self.textView.isSelectable = true
+        self.textView?.isSelectable = true
     }
 }

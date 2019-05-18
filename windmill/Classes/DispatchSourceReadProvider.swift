@@ -37,7 +37,8 @@ extension DispatchSourceReadProvider {
             let estimatedBytesAvailableToRead = Int(data)
             
             var buffer = [CChar](repeating: 0, count: estimatedBytesAvailableToRead)
-            let bytesRead = Darwin.read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)
+            let bytesRead = Darwin.read(fileDescriptor, &buffer, estimatedBytesAvailableToRead)            
+            buffer.append(0)
             
             //https://twitter.com/Catfish_Man/status/1128934439096971264
             guard bytesRead > 0, let availableString = String(validatingUTF8: buffer) else {
