@@ -717,7 +717,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                                             <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Run (Use existing source code)" alternate="YES" keyEquivalent="r" toolTip="Use the existing cloned repo; e.g. to keep any local changes you have made for the next Run." id="Sv9-RK-ZqQ">
+                                                    <menuItem title="Run (Use existing source code)" alternate="YES" keyEquivalent="r" toolTip="Use existing source code; e.g. to keep any local changes you have made for the next Run." id="Sv9-RK-ZqQ">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
                                                             <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
@@ -769,12 +769,18 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <items>
                                         <menuItem title="Subscription" id="DUs-1Y-VPi">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" id="QNz-yb-EbE">
+                                            <menu key="submenu" title="Subscription" id="QNz-yb-EbE">
                                                 <items>
                                                     <menuItem title="Refresh Subscription" id="llR-19-2er" userLabel="Refresh">
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="refreshSubscription:" target="aS9-1w-R0E" id="dQ2-cW-QJx"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Restore Subscription" alternate="YES" id="g7e-ol-ncQ" userLabel="Restore">
+                                                        <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                                        <connections>
+                                                            <action selector="restoreSubscription:" target="aS9-1w-R0E" id="7zw-gW-Zt5"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>

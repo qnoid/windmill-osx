@@ -76,7 +76,7 @@
 "windmill.artefacts.build.header"="Application bundle";
 "windmill.artefacts.build.tooltip"="Enables you to run your app on the Simulator without the need to have the source code.";
 "windmill.reports.test.header"="Test Summary";
-"windmill.reports.test.tooltip"="A test summary gives you the confidence that your app still works after any code changes.";
+"windmill.reports.test.tooltip"="A test summary increases the likelihood that your app still works after any code changes.";
 "windmill.artefacts.archive.header"="Archive bundle";
 "windmill.artefacts.archive.tooltip"="Enables you to distribute to TestFlight or the App Store via iTunes Connect.";
 "windmill.artefacts.ipa.header"="IPA file";

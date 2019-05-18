@@ -163,7 +163,16 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
             case .none: return false
             }
         }
-        
+
+        if menuItem.action == #selector(restoreSubscription(_:)) {
+            let account = try? Keychain.default.read(key: .account)
+            
+            switch account {
+            case .some: return false
+            case .none: return true
+            }
+        }
+
         return true
     }
     
@@ -278,6 +287,12 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         self.sidePanelSplitViewController?.toggleSidePanel(isCollapsed: isCollapsed)
     }
     
+    @IBAction func restoreSubscription(_ sender: Any) {
+        self.windmill?.restoreSubscription { [weak self] error in
+            self?.toggleDebugArea(isCollapsed: false)
+        }
+    }
+
     @IBAction func refreshSubscription(_ sender: Any) {
         self.windmill?.refreshSubscription { [weak self] error in
             self?.toggleDebugArea(isCollapsed: false)

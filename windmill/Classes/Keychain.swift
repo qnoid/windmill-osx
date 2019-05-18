@@ -32,14 +32,14 @@ struct Keychain
         func attributes() -> [AnyHashable: Any] {
             #if DEBUG
             return [
-                kSecClass: kSecClassGenericPassword as String,
+                kSecClass: kSecClassGenericPassword,
                 kSecAttrService: account.service,
                 kSecAttrAccount: account.name,
                 kSecValueData: data
                 ]
             #else
             return [
-                kSecClass: kSecClassGenericPassword as String,
+                kSecClass: kSecClassGenericPassword,
                 kSecAttrService: account.service,
                 kSecAttrAccount: account.name,
                 kSecValueData: data,
@@ -59,7 +59,7 @@ struct Keychain
 
         let query: [AnyHashable: Any] = [
             kSecAttrAccount: account.name,
-            kSecClass: kSecClassGenericPassword as String,
+            kSecClass: kSecClassGenericPassword,
             kSecAttrService: account.service
         ]
         
@@ -89,6 +89,17 @@ struct Keychain
         return (status, String(data: data, encoding: .utf8))
         }
         return (status, nil)
+    }
+
+    @discardableResult func delete(_ account:Keychain.Account) -> OSStatus
+    {
+        let query: [AnyHashable: Any] = [
+            kSecClass: kSecClassGenericPassword,
+            kSecAttrService: account.service,
+            kSecAttrAccount: account.name,
+        ]
+        
+        return SecItemDelete(query as CFDictionary)
     }
 
 }

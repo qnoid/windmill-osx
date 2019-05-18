@@ -347,6 +347,17 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         }
     }
     
+    public func restoreSubscription(failure: @escaping (_ error: Error) -> Void) {
+        self.subscriptionManager.fetchSubscription { result in
+            if case .failure(let error) = result {
+                self.standardOutFormattedWriter.failed(title: "Restore Subscription", error: (error as NSError))
+                self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
+                self.error(error)
+                failure(error)
+            }
+        }
+    }
+
     public func refreshSubscription(failure: @escaping (_ error: Error) -> Void) {
         switch SubscriptionStatus.default {
         case .expired(let account, let claim):
