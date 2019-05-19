@@ -324,7 +324,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         
         NSWorkspace.shared.open(url)
     }
-    
+
+    @IBAction func openPrivacy(_ sender: Any) {
+        guard let url = URL(string: "https://windmill.io/privacy/") else {
+            return
+        }
+        
+        NSWorkspace.shared.open(url)
+    }
+
     @IBAction func openDocument(_ sender: Any) {
         let openPanel = NSOpenPanel()
         openPanel.canChooseDirectories = false

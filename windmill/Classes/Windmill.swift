@@ -186,7 +186,6 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(devicesListed(_:)), name: Windmill.Notifications.DevicesListed, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive(notification:)), name: NSApplication.didBecomeActiveNotification, object: NSApplication.shared)
     }
     
     private func error(_ error: Error) {
@@ -213,7 +212,7 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         case (.noAccount, nil):
             DispatchQueue.main.async {
                 self.notify(notification: Notifications.NoUserAccount)
-            }            
+            }
         case (.couldNotDetermine, nil):
             os_log("%{public}@", log: .default, type: .debug, "CKAccountStatus: Could not determine status.")
         case (.restricted, nil):
@@ -225,25 +224,8 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         }
     }
     
-    @objc func didBecomeActive(notification: Notification) {
-
-        if SubscriptionStatus.default.isActive {
-            CKContainer.default().accountStatus { accountStatus, error in
-                DispatchQueue.main.async {
-                    self.accountStatus(accountStatus: accountStatus, error: error)
-                }
-            }
-        }
-    }
-
     @objc func subscriptionActive(notification: NSNotification) {
         self.subscriptionStatus(SubscriptionStatus.default)
-        
-        CKContainer.default().accountStatus { accountStatus, error in
-            DispatchQueue.main.async {
-                self.accountStatus(accountStatus: accountStatus, error: error)
-            }
-        }
     }
 
     @objc func subscriptionFailed(notification: NSNotification) {
@@ -387,6 +369,13 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     }
     
     public func restoreSubscription(failure: @escaping (_ error: Error) -> Void) {
+        
+        CKContainer.default().accountStatus { accountStatus, error in
+            DispatchQueue.main.async {
+                self.accountStatus(accountStatus: accountStatus, error: error)
+            }
+        }
+        
         self.subscriptionManager.fetchSubscription { result in
             if case .failure(let error) = result {
                 self.standardOutFormattedWriter.failed(title: "Restore Subscription", error: (error as NSError))

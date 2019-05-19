@@ -444,6 +444,12 @@
                                                 <action selector="orderFrontStandardAboutPanel:" target="aS9-1w-R0E" id="7wj-11-Gj7"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Privacy Policy..." id="j4V-Ml-p7p">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openPrivacy:" target="aS9-1w-R0E" id="cXe-vO-Rwo"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Acknowledgements..." id="isq-23-u5g" userLabel="Acknowledgements...">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
