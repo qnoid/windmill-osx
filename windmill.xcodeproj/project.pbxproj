@@ -88,6 +88,7 @@
 		BD680582202C15C000F38D3B /* metadata in Resources */ = {isa = PBXBuildFile; fileRef = BD680581202C15C000F38D3B /* metadata */; };
 		BD680586202C1AC700F38D3B /* helloworld in Resources */ = {isa = PBXBuildFile; fileRef = BD680585202C1AC700F38D3B /* helloworld */; };
 		BD680588202C222300F38D3B /* no_simulator_available in Resources */ = {isa = PBXBuildFile; fileRef = BD680587202C222200F38D3B /* no_simulator_available */; };
+		BD6DA36D229E62EA00493EB9 /* ShowTabOverviewToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD6DA36C229E62EA00493EB9 /* ShowTabOverviewToolbarItem.swift */; };
 		BD74665C2044DE3E009262DD /* InfoWithOneErrorCount.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */; };
 		BD74665E2044E2DC009262DD /* TextDocumentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */; };
 		BD79D70F1AB210CD00596928 /* NSFileManager+Windmill.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */; };
@@ -156,7 +157,6 @@
 		BDD002091AB6D61900F8E34A /* NSFileManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */; };
 		BDD002121AB870FF00F8E34A /* Array+WindmillArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */; };
 		BDD002141AB87B5B00F8E34A /* NSError+WindmillError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */; };
-		BDD002181AB8807A00F8E34A /* Projects.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002171AB8807A00F8E34A /* Projects.swift */; };
 		BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002191AB8B5AD00F8E34A /* Alerts.swift */; };
 		BDD002211ABA3ECD00F8E34A /* Scripts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD002201ABA3ECD00F8E34A /* Scripts.swift */; };
 		BDD1750E208A152600CDE787 /* StandardOutFormattedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */; };
@@ -341,6 +341,7 @@
 		BD680581202C15C000F38D3B /* metadata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = metadata; sourceTree = "<group>"; };
 		BD680585202C1AC700F38D3B /* helloworld */ = {isa = PBXFileReference; lastKnownFileType = folder; path = helloworld; sourceTree = "<group>"; };
 		BD680587202C222200F38D3B /* no_simulator_available */ = {isa = PBXFileReference; lastKnownFileType = folder; path = no_simulator_available; sourceTree = "<group>"; };
+		BD6DA36C229E62EA00493EB9 /* ShowTabOverviewToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowTabOverviewToolbarItem.swift; sourceTree = "<group>"; };
 		BD74665B2044DE3E009262DD /* InfoWithOneErrorCount.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = InfoWithOneErrorCount.plist; sourceTree = "<group>"; };
 		BD74665D2044E2DC009262DD /* TextDocumentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDocumentLocation.swift; sourceTree = "<group>"; };
 		BD79D70E1AB210CD00596928 /* NSFileManager+Windmill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Windmill.swift"; sourceTree = "<group>"; };
@@ -414,7 +415,6 @@
 		BDD002081AB6D61900F8E34A /* NSFileManagerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFileManagerTest.swift; sourceTree = "<group>"; };
 		BDD002111AB870FF00F8E34A /* Array+WindmillArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+WindmillArray.swift"; sourceTree = "<group>"; };
 		BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+WindmillError.swift"; sourceTree = "<group>"; };
-		BDD002171AB8807A00F8E34A /* Projects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projects.swift; sourceTree = "<group>"; };
 		BDD002191AB8B5AD00F8E34A /* Alerts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		BDD002201ABA3ECD00F8E34A /* Scripts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scripts.swift; path = Classes/Scripts.swift; sourceTree = "<group>"; };
 		BDD1750D208A152600CDE787 /* StandardOutFormattedReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardOutFormattedReader.swift; sourceTree = "<group>"; };
@@ -886,6 +886,7 @@
 				BD571AE822579A12009B3848 /* DispatchSourceWriteProvider.swift */,
 				BD2BAF732274D08F00BB12B2 /* DistributionSummary.swift */,
 				BD2BAF752274D0B100BB12B2 /* Manifest.swift */,
+				BD6DA36C229E62EA00493EB9 /* ShowTabOverviewToolbarItem.swift */,
 			);
 			name = Common;
 			path = Classes;
@@ -919,7 +920,6 @@
 			children = (
 				BDD002041AB3060B00F8E34A /* Windmill.swift */,
 				BDD002131AB87B5B00F8E34A /* NSError+WindmillError.swift */,
-				BDD002171AB8807A00F8E34A /* Projects.swift */,
 			);
 			name = Windmill;
 			path = Classes;
@@ -1263,7 +1263,6 @@
 				BDF9610F2232ABD300153ADC /* ActivityArchive.swift in Sources */,
 				BD36CAAD205B411E000B0A2B /* TestFailureSummariesWindowController.swift in Sources */,
 				BDF961152232CBE800153ADC /* ActivityDistribute.swift in Sources */,
-				BDD002181AB8807A00F8E34A /* Projects.swift in Sources */,
 				BDDF108F205B6D0D0093E811 /* TextDocumentLocation+Windmill.swift in Sources */,
 				BD1601C721BEC3550075078A /* RegularExpressionMatchesFormatter+String.swift in Sources */,
 				BD571AE922579A12009B3848 /* DispatchSourceWriteProvider.swift in Sources */,
@@ -1326,6 +1325,7 @@
 				BDF00B641F47582300572D03 /* Archive.swift in Sources */,
 				BD48F4A022366D5E00BA05EF /* ActivityBuilder.swift in Sources */,
 				BD49F792204B766B00F64687 /* ErrorSummariesWindowController.swift in Sources */,
+				BD6DA36D229E62EA00493EB9 /* ShowTabOverviewToolbarItem.swift in Sources */,
 				BDD0021A1AB8B5AD00F8E34A /* Alerts.swift in Sources */,
 				BD49F794204B9DCA00F64687 /* SummaryViewController.swift in Sources */,
 				BD83640720392AC200D1D381 /* CharacterSet+Windmill.swift in Sources */,

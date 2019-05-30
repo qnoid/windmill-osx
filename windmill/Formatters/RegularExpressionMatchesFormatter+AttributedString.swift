@@ -15,7 +15,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
 
         return double(match: regularExpression) { path, name in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Cloning into ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -29,7 +29,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.successImageAttachment
         
         return double(match: regularExpression) { commit, log in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " Checkout", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: " succeeded\n\tNo issues", attributes: [.foregroundColor : NSColor.textColor]))
@@ -47,7 +47,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
 
         return triple(match: regularExpression) { target, project, configuration in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Build target", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -61,7 +61,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -75,7 +75,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Write", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -89,7 +89,7 @@ extension RegularExpressionMatchesFormatter {
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { path, file, target in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Write", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -103,8 +103,8 @@ extension RegularExpressionMatchesFormatter {
         
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
-return single(match: regularExpression) { script in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+        return single(match: regularExpression) { script in
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Run custom shell script ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -118,7 +118,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Create", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -132,7 +132,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -146,7 +146,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return single(match: regularExpression) { path in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Create", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -160,7 +160,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { path, filename, target in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "CreateBuildDirectory", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -175,7 +175,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return single(match: regularExpression) { filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Create Directory", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -189,7 +189,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { source, destination, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -204,7 +204,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.successImageAttachment
         
         return single(match: regularExpression) { phase in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: phase.prefix(1).uppercased() + phase.lowercased().dropFirst(), attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -239,6 +239,42 @@ return single(match: regularExpression) { script in
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, warningStatus.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemOrange]))
+            return attributedString
+        }
+    }
+    
+    static func makeNoProvisioningProfilesError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.NO_PROVISIONING_PROFILES_ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        
+        let attachment = NSTextAttachment.Windmill.failureImageAttachment
+        
+        return double(match: regularExpression) { bundle, target in
+            let attributedString = NSMutableAttributedString(attachment: attachment)
+            attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Signing", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: " failed\n", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "Team "))
+            attributedString.append(NSAttributedString(string: "Unknown Name\n", attributes: [.foregroundColor : NSColor.systemRed]))
+            attributedString.append(NSAttributedString(string: "\tMake sure 'Automatically manage signing' is enabled in Xcode and a Team is selected in target '\(target)'.\n"))
+            attributedString.append(NSAttributedString(string: "\t\tNote: "))
+            if let url = NSURL(string: "https://help.apple.com/xcode/mac/current/#/dev80cc24546") {
+                attributedString.append(NSAttributedString(string: "Automatic Signing\n", attributes: [.link:url]))
+            }
+            return attributedString
+        }
+    }
+    
+    static func makeError(descender: CGFloat, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.ERROR_EXPRESSION) -> RegularExpressionMatchesFormatter<NSAttributedString> {
+        
+        let attachment = NSTextAttachment.Windmill.failureImageAttachment
+        
+        return single(match: regularExpression) { error in
+            let attributedString = NSMutableAttributedString(string: "\t", attributes: [.foregroundColor : NSColor.textColor])
+            let failedBuildStatus = NSAttributedString(attachment: attachment)
+            attributedString.append(failedBuildStatus)
+            attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, failedBuildStatus.length))
+            attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
+            attributedString.append(NSAttributedString(string: "\(error)\n", attributes: [.foregroundColor : NSColor.systemRed]))
             return attributedString
         }
     }
@@ -316,7 +352,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Merge ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -331,7 +367,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { path, filename, target in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -345,7 +381,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return single(match: regularExpression) { dsym in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Generate ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -359,7 +395,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy Swift standard libraries ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -388,7 +424,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " Run test suite", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: " All Tests\n", attributes: [.foregroundColor : NSColor.textColor]))
@@ -467,7 +503,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Sign ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -482,7 +518,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return quadriple(match: regularExpression) { path, filename, variant, architecture in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -497,7 +533,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return quadriple(match: regularExpression) { path, filename, variant, architecture in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Link", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -512,7 +548,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Process", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -526,7 +562,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { path, filename, target in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Touch ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -541,7 +577,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Process", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -557,7 +593,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return match(regularExpression) {
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -571,7 +607,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile XIB file ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -586,7 +622,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile Storyboard file ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -601,7 +637,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -616,7 +652,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Compile ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -637,7 +673,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return triple(match: regularExpression) { path, filename, target in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Strip ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -652,7 +688,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Set owner and group of ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -667,7 +703,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Set mode of ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -682,7 +718,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Make symlink ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -697,7 +733,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { filename, path in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -712,7 +748,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Copy ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))
@@ -727,7 +763,7 @@ return single(match: regularExpression) { script in
         let attachment = NSTextAttachment.Windmill.buildInProgressImageAttachment
         
         return double(match: regularExpression) { path, filename in
-            let attributedString = NSAttributedString(attachment: attachment) as! NSMutableAttributedString
+            let attributedString = NSMutableAttributedString(attachment: attachment)
             attributedString.addAttribute(.baselineOffset, value: descender, range: NSMakeRange(0, attributedString.length))
             attributedString.append(NSAttributedString(string: " ", attributes: [.foregroundColor : NSColor.textColor]))
             attributedString.append(NSAttributedString(string: "Code Generation ", attributes: [.font: NSFont.boldSystemFont(ofSize: 13), .foregroundColor : NSColor.textColor]))

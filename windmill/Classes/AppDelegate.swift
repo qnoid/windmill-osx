@@ -11,25 +11,47 @@ import Foundation
 import os
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate, NSMenuItemValidation, MainWindowControllerDelegate
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNotificationCenterDelegate, MainWindowControllerDelegate
 {
     @IBOutlet weak var menu: NSMenu! {
         didSet {
             statusItem.menu = self.menu
         }
     }
-    @IBOutlet weak var debugAreaMenuItem: NSMenuItem!
-    @IBOutlet weak var sidePanelMenuItem: NSMenuItem!
-
-    @IBOutlet var projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController!
+    @IBOutlet weak var launchMenuItem: NSMenuItem! {
+        didSet{
+            self.isLaunchMenuItemEnabledObserver = launchMenuItem.observe(\.isEnabled, options: [.initial, .new]) { (menuItem, change) in
+                if let isEnabled = change.newValue {
+                    if isEnabled {
+                        menuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.enabled.toolTip", comment: "")
+                    } else {
+                        menuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.disabled.toolTip", comment: "")
+                    }
+                }
+            }
+            self.launchMenuItem.isEnabled = false
+        }
+    }
     
-    var canCleanDerivedData = false
-    var canRemoveCheckoutFolder = false
+    @IBOutlet weak var recordVideoMenuItem: NSMenuItem! {
+        didSet {
+            self.isRecordVideoMenuItemEnabledObserver = recordVideoMenuItem.observe(\.isEnabled, options: [.initial, .new]) { (menuItem, change) in
+                if let isEnabled = change.newValue {
+                    if isEnabled {
+                        menuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.enabled.toolTip", comment: "")
+                    } else {
+                        menuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.disabled.toolTip", comment: "")
+                    }
+                }
+            }
+            self.recordVideoMenuItem.isEnabled = false
+        }
+    }
 
     lazy var statusItem: NSStatusItem = { [unowned self] in
         
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
+        statusItem.button?.image = NSImage(imageLiteralResourceName: "statusItem")
         statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
         statusItem.button?.window?.registerForDraggedTypes([.fileURL])
         statusItem.button?.window?.delegate = self
@@ -37,107 +59,98 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         return statusItem
     }()
 
-    @IBOutlet weak var activityMenuItem: NSMenuItem! {
-        didSet{
-            activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.idle", comment: "")
-        }
-    }
+    var isLaunchMenuItemEnabledObserver: NSKeyValueObservation?
+    var isRecordVideoMenuItemEnabledObserver: NSKeyValueObservation?
 
-    var isSidePanelCollapsedObserver: NSKeyValueObservation?
-    var isBottomPanelCollapsedObserver: NSKeyValueObservation?
-
-    var mainWindowController: MainWindowController? {
-        
-        didSet {
-            guard let mainWindowViewController = mainWindowController else {
-                return
-            }
-            mainViewController = mainWindowViewController.mainViewController
-            
-            self.isSidePanelCollapsedObserver = mainWindowViewController.sidePanelSplitViewController?.onCollapsed { [weak self = self](splitviewitem, change) in
-                if let isCollapsed = change.newValue {
-                    self?.sidePanelMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showSidePanel", comment: ""): NSLocalizedString("windmill.ui.toolbar.view.hideSidePanel", comment: "")
-                }
-            }
-
-            self.isBottomPanelCollapsedObserver = mainWindowViewController.bottomPanelSplitViewController?.onCollapsed { [weak self = self](splitviewitem, change) in
-                if let isCollapsed = change.newValue {
-                    self?.debugAreaMenuItem.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "")
-                }
-            }
-        }
-    }
-    
-    var errorSummariesWindowController: ErrorSummariesWindowController?
-    var testFailureSummariesWindowController: TestFailureSummariesWindowController?
-    var mainViewController: MainViewController?
-    
-    var testSummariesWindowController: TestSummariesWindowController?
-    var commit: Repository.Commit?
+    var windows: [NSWindow:MainWindowController] = [:]
     
     lazy var keychain: Keychain = Keychain.default
     
-    var projects : Array<Project> = InputStream.inputStreamOnProjects().read() {
-        didSet {
-            OutputStream.outputStreamOnProjects().write(self.projects)
-        }
-    }
-
     deinit {
-        isSidePanelCollapsedObserver?.invalidate()
-        isBottomPanelCollapsedObserver?.invalidate()
+        isLaunchMenuItemEnabledObserver?.invalidate()
+        isRecordVideoMenuItemEnabledObserver?.invalidate()
     }
-
-    @discardableResult private func add(_ project: Project) -> Bool
-    {
-        guard !self.projects.contains(project) else {
-            return false
+    
+    func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow {
+            self.windows[window]?.windowWillClose(notification)
+            self.windows[window] = nil
         }
         
-        self.projects = []
-        self.projects.append(project)
-        return true
+        if self.windows.isEmpty {
+            self.statusItem.button?.image = NSImage(imageLiteralResourceName: "statusItem")
+            self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip", comment: "")
+        }
+    }
+    
+    func windowDidBecomeKey(_ notification: Notification) {
+        guard let window = notification.object as? NSWindow, let mainWindowController = self.windows[window] else {
+            return
+        }
+        
+        let sidePanelMenuItem = window.menu?.item(withTitle: "View")?.submenu?.item(withTitle: "Side Panel")?.submenu?.item(withTag: 0)
+        sidePanelMenuItem?.title = mainWindowController.sidePanelSplitViewController?.sideViewSplitViewItem?.isCollapsed ?? false ? NSLocalizedString("windmill.ui.toolbar.view.showSidePanel", comment: ""): NSLocalizedString("windmill.ui.toolbar.view.hideSidePanel", comment: "")
+        let debugAreaMenuItem = window.menu?.item(withTitle: "View")?.submenu?.item(withTitle: "Debug Area")?.submenu?.item(withTag: 0)
+        debugAreaMenuItem?.title = mainWindowController.bottomPanelSplitViewController?.bottomViewSplitViewItem?.isCollapsed ?? false ? NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "")
     }
     
     private func run(windmill: Windmill, skipCheckout: Bool = false) {
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(activityDidLaunch(_:)), name: Windmill.Notifications.activityDidLaunch, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
+
         NotificationCenter.default.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(isMonitoring(_:)), name: Windmill.Notifications.isMonitoring, object: windmill)
-        NotificationCenter.default.addObserver(self, selector: #selector(sourceCodeChanged(_:)), name: Windmill.Notifications.SourceCodeChanged, object: windmill)
-        
+
         windmill.run(skipCheckout: skipCheckout)
     }
     
     private func makeKeyAndOrderFront(mainWindowController: MainWindowController) {
-        self.mainWindowController = mainWindowController
-        self.mainWindowController?.delegate = self
-        self.mainWindowController?.window?.makeKeyAndOrderFront(self)
+        if let window = mainWindowController.window {
+            self.windows[window] = mainWindowController
+        }
+
+        mainWindowController.window?.delegate = self
+        mainWindowController.window?.menu = NSApplication.shared.mainMenu
+        mainWindowController.delegate = self
+        mainWindowController.window?.makeKeyAndOrderFront(self)
+        self.statusItem.button?.image = NSImage(imageLiteralResourceName: "statusItem-active")
+        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
     }
     
-    private func makeMainWindowKeyAndOrderFront(windmill: Windmill, project: Project) {
-        if let mainWindowController = self.mainWindowController {
-            mainWindowController.windmill = windmill
-            mainWindowController.project = project
-            self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
-        } else if let mainWindowController = MainWindowController.make(windmill: windmill, project: project, projectTitlebarAccessoryViewController: projectTitlebarAccessoryViewController) {
+    private func makeMainWindowKeyAndOrderFront(windmill: Windmill) {
+        if let keyWindowController = NSApplication.shared.keyWindow?.windowController as? MainWindowController {
+            keyWindowController.windmill = windmill
+            self.makeKeyAndOrderFront(mainWindowController: keyWindowController)
+        } else if let mainWindowController = MainWindowController.make(windmill: windmill) {
             self.makeKeyAndOrderFront(mainWindowController: mainWindowController)
         }
         
-        self.run(windmill: windmill)
+        run(windmill: windmill)
     }
-    
+
+    private func makeMainTabbedWindow(windmill: Windmill) {
+        switch NSApplication.shared.keyWindow?.windowController as? MainWindowController {
+        case .none:
+            makeMainWindowKeyAndOrderFront(windmill: windmill)
+        case .some(let keyWindowController):
+            guard let mainWindowController = MainWindowController.make(windmill: windmill), let window = mainWindowController.window else {
+                return
+            }
+            window.delegate = self
+            window.menu = NSApplication.shared.mainMenu
+            mainWindowController.delegate = self
+            keyWindowController.addTabbedWindow(mainWindowController: mainWindowController)
+            self.windows[window] = mainWindowController
+            run(windmill: windmill)
+        }
+    }
+
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
-        guard let project = self.add(url: URL(fileURLWithPath: filename)) else {
-            os_log("Did you add the project in the array?", log: .default, type: .error)
+        guard let project = self.addProject(url: URL(fileURLWithPath: filename)) else {
+            os_log("Have you saved the configuration for that project?", log: .default, type: .error)
             return false
         }
         
         let windmill = Windmill.make(project: project)
-        self.makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
+        Windmill.Configuration.shared.write(windmill.configuration)
+        self.makeMainTabbedWindow(windmill: windmill)
         
         return true
     }
@@ -154,8 +167,34 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         os_log("%{public}@", log: .default, type: .debug, #function)
     }
     
+    func migrate() {
+        let url = Directory.Windmill.ApplicationSupportDirectory().file("projects.json").URL
+
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return
+        }
+        
+        do {
+            let decoder = JSONDecoder()
+            let data = try Data(contentsOf: url)
+            let projects = try decoder.decode([Project].self, from: data)
+            
+            if let project = projects.first {
+                let configuration = Windmill.Configuration.make(project: project)
+                Windmill.Configuration.shared.write(configuration)
+            }
+            
+            try FileManager.default.removeItem(at: url)
+        } catch {
+            os_log("%{public}@", log: .default, type: .error, error.localizedDescription)
+        }
+    }
+    
     func applicationWillFinishLaunching(_ notification: Notification) {
-        self.mainWindowController?.window?.setIsVisible(false)
+        
+        self.migrate()
+        
+        NSApplication.shared.keyWindow?.setIsVisible(false)
     }
     
     func applicationDidFinishLaunching(_ notification: Notification)
@@ -170,9 +209,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
         }
         #endif
         
-        let hasProjects = projects.count > 0
+        let anyConfigurations = Windmill.Configuration.shared.count > 0
 
-        if !hasProjects {
+        if !anyConfigurations {
             let notification = NSUserNotification()
             notification.title = "Getting started."
             notification.informativeText = NSLocalizedString("notification.gettingstarted", comment: "")
@@ -183,20 +222,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             let center = NSUserNotificationCenter.default
             center.delegate = self
             center.deliver(notification)
-        }
-
-        if let project = projects.last {
-            let windmill = Windmill.make(project: project)
-            makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
+        } else if let configuration = Windmill.Configuration.shared.first {
+            let windmill = Windmill.make(configuration: configuration)
+            makeMainWindowKeyAndOrderFront(windmill: windmill)
         }
         
-        mainWindowController?.window?.setIsVisible(hasProjects)
+        NSApplication.shared.keyWindow?.setIsVisible(anyConfigurations)
+        
+        Windmill.Configuration.shared.dropFirst().forEach { configuration in
+            let windmill = Windmill.make(configuration: configuration)
+            makeMainTabbedWindow(windmill: windmill)
+        }
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         
         if(!flag) {
-            self.mainWindowController?.window?.setIsVisible(true)
+            NSApplication.shared.keyWindow?.setIsVisible(true)
         }
         
         return true
@@ -228,8 +270,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     {
     }
     
-    
-    func add(url: URL) -> Project? {
+    func addProject(url: URL) -> Project? {
+        return self.add(url: url, branch: "master")?.project
+    }
+
+    func add(url: URL, branch: String? = nil) -> (project: Project, branch: String)? {
         let lastPathComponent = url.lastPathComponent
         let isWorkspace = lastPathComponent.hasSuffix(".xcworkspace")
         let isProject = lastPathComponent.hasSuffix(".xcodeproj")
@@ -244,9 +289,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             let commit = try Repository.parse(localGitRepoURL: url)
             let project = Project.make(isWorkspace: isWorkspace, name: name, repository: commit.repository)
             
-            return self.add(project) == true ? project : nil
+            return Windmill.Configuration.shared.contains(project, branch: branch ?? commit.branch) == true ? nil : (project, branch ?? commit.branch)
         } catch let error as NSError {
-            guard let window = self.mainWindowController?.window else {
+            guard let window = NSApplication.shared.keyWindow else {
                 return nil
             }
             alert(error, window: window)
@@ -262,18 +307,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
         os_log("%{public}@", log: .default, type: .debug, url.path)
 
-        return self.add(url: url) == nil ? false : true
+        if let project = self.addProject(url: url) {
+            let configuration = Windmill.Configuration.make(project: project)
+            Windmill.Configuration.shared.write(configuration)
+            return true
+        }
+        
+        return false
     }
     
     @objc func performDragOperation(_ info: NSDraggingInfo) -> Bool {
 
-        guard let project = projects.last else {
-            os_log("Did you add the project in the array when `prepareForDragOperation` was called?", log: .default, type: .error)
+        guard let configuration = Windmill.Configuration.shared.reversed().first else {
+            os_log("Did you add the configuration when `prepareForDragOperation` was called?", log: .default, type: .error)
             return false
         }
         
-        let windmill = Windmill.make(project: project)
-        makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
+        let windmill = Windmill.make(configuration: configuration)
+        makeMainTabbedWindow(windmill: windmill)
 
         return true
     }
@@ -284,37 +335,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     */
     @objc func concludeDragOperation(_ sender: NSDraggingInfo?)
     {
-        self.mainWindowController?.window?.orderFrontRegardless()
-    }
-    
-    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == #selector(run(_:)) {
-            return projects.last != nil
-        } else if menuItem.action == #selector(runSkipCheckout(_:)), let windmill = mainWindowController?.windmill {
-            return windmill.isRepositoryDirectoryPresent()
-        } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = mainViewController?.windmill {
-            return windmill.isRepositoryDirectoryPresent()
-        } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
-            
-            let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
-            let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
-            
-            switch (errorSummaries?.count, testFailureSummaries?.count) {
-            case (let errorSummaries?, _) where errorSummaries > 0:
-            return true
-            case (_, let testFailureSummaries?) where testFailureSummaries > 0:
-                return true
-            default:
-                return false
-            }
-            
-        } else if menuItem.action == #selector(cleanDerivedData(_:)) {
-            return self.canCleanDerivedData
-        } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
-            return self.canRemoveCheckoutFolder
-        }
-
-        return true
+        NSApplication.shared.keyWindow?.orderFrontRegardless()
     }
     
     @IBAction func openAcknowledgements(_ sender: Any) {
@@ -349,206 +370,52 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
                 return
             }
             
-            guard let project = self.add(url: url) else {
-                os_log("Did you add the project in the array?", log: .default, type: .error)
+            if let project = self.addProject(url: url) {
+                let windmill = Windmill.make(project: project)
+                Windmill.Configuration.shared.write(windmill.configuration)
+                self.makeMainTabbedWindow(windmill: windmill)
+            }
+        }
+    }
+    
+    @IBAction func openProjectAtBranch(_ sender: Any) {
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseDirectories = false
+        openPanel.canChooseFiles = true
+        openPanel.allowedFileTypes = ["com.apple.dt.document.workspace","com.apple.xcode.project"]
+        
+        openPanel.begin { response in
+            
+            guard response == NSApplication.ModalResponse.OK else {
                 return
             }
-
-            let windmill = Windmill.make(project: project)
-            self.makeMainWindowKeyAndOrderFront(windmill: windmill, project: project)
-        }
-    }
-    
-    @objc func willRun(_ aNotification: Notification) {
-        self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem-active")
-        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active", comment: "")
-        self.activityMenuItem.toolTip = ""
-        self.canCleanDerivedData = false
-        self.canRemoveCheckoutFolder = false
-        self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = []
-        self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = []
-    }
-    
-    @objc func sourceCodeChanged(_ aNotification: Notification) {
-        self.run(aNotification.object ?? self)
-    }
-    
-    @objc func isMonitoring(_ aNotification: Notification) {
-        os_log("is monitoring", log: .default, type: .debug)
-
-        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
-        self.activityMenuItem.title = NSLocalizedString("windmill.activity.monitor.description", comment: "")
-    }
-    
-    
-    
-    @objc func activityDidLaunch(_ aNotification: Notification) {
-        
-        guard let activity = aNotification.userInfo?["activity"] as? ActivityType, activity != .distribute else {
-            return
-        }
-
-        self.statusItem.button?.toolTip = NSLocalizedString("windmill.toolTip.active.\(activity.rawValue)", comment: "")
-        self.activityMenuItem.title = activity.description
-    }
-    
-    @objc func didCheckoutProject(_ aNotification: Notification) {
-        
-        guard let commit = aNotification.userInfo?["commit"] as? Repository.Commit else {
-            os_log("Commit for project not found.", log: .default, type: .debug)
-            return
-        }
-        
-        self.commit = commit
-    }
-    
-    @objc func didTestProject(_ aNotification: Notification) {
-        
-        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
             
-            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+            guard let url = openPanel.urls.first else {
+                return
+            }
             
-            self.testSummariesWindowController = testSummariesWindowController
-        }        
+            if let add: (project: Project, branch: String) = self.add(url: url) {
+                let configuration = Windmill.Configuration.make(project: add.project, branch: add.branch, activities: [.checkout, .build, .test])
+                let windmill = Windmill.make(configuration: configuration)
+                Windmill.Configuration.shared.write(configuration)
+                self.makeMainTabbedWindow(windmill: windmill)
+            }
+        }
     }
-
-
+    
     @objc func activityError(_ aNotification: Notification) {
         
         NSApplication.shared.requestUserAttention(.criticalRequest)
-
-        let error = aNotification.userInfo?["error"] as? Error
-
-        switch error {
-        case let error as WindmillError where error.isRecoverable:
-            return
-        case let error as NSError:
-            self.statusItem.button?.toolTip = error.localizedDescription
-            self.activityMenuItem.toolTip = error.localizedFailureReason
-        default:
-            self.statusItem.button?.toolTip = ""
-            self.activityMenuItem.toolTip = ""
-        }
-
-        self.statusItem.button?.image = #imageLiteral(resourceName: "statusItem")
-        self.activityMenuItem.title = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
-        self.canCleanDerivedData = true
-        self.canRemoveCheckoutFolder = true
-        
-        if let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] {
-            self.errorSummariesWindowController = ErrorSummariesWindowController.make()
-            self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = errorSummaries
-        }
-        
-        if let testFailureSummaries = aNotification.userInfo?["testFailureSummaries"] as? [ResultBundle.TestFailureSummary] {
-            self.testFailureSummariesWindowController = TestFailureSummariesWindowController.make()
-            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = testFailureSummaries
-        }
-        
-        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
-            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
-        
-            self.testSummariesWindowController = testSummariesWindowController
-        }
-    }
-
-    func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
-        self.mainWindowController?.toggleDebugArea(isCollapsed: isCollapsed)
     }
     
-    @IBAction func toggleDebugArea(_ sender: Any) {
-        self.toggleDebugArea(sender: sender)
+    func sidePanelSplitViewController(mainWindowController: MainWindowController, isCollapsed: Bool) {
+        let sidePanelMenuItem = mainWindowController.window?.menu?.item(withTitle: "View")?.submenu?.item(withTitle: "Side Panel")?.submenu?.item(withTag: 0)
+        sidePanelMenuItem?.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showSidePanel", comment: ""): NSLocalizedString("windmill.ui.toolbar.view.hideSidePanel", comment: "")
     }
     
-    func toggleSidePanel(sender: Any? = nil, isCollapsed: Bool? = nil) {
-        self.mainWindowController?.toggleSidePanel(isCollapsed: isCollapsed)
-    }
-
-    @IBAction func toggleSidePanel(_ sender: Any) {
-        self.toggleSidePanel(sender: sender)
-    }
-
-    @IBAction func performSegmentedControlAction(_ segmentedControl: NSSegmentedControl) {
-        switch segmentedControl.selectedSegment {
-        case 0:
-            self.toggleDebugArea(sender: segmentedControl)
-        case 1:
-            self.toggleSidePanel(sender: segmentedControl)
-        default:
-            os_log("Index of selected segment for NSSegmentedControl does not have a corresponding action associated.", log: .default, type: .debug)
-        }
-    }
-
-    func run(_ sender: Any, skipCheckout: Bool) {
-        guard let project = self.mainWindowController?.project else {
-            preconditionFailure("MainWindowViewController should have its project property set. Have you set it?")
-        }
-        
-        let windmill = Windmill.make(project: project)
-        self.mainWindowController?.windmill = windmill
-        self.toggleDebugArea(sender: sender, isCollapsed: true)
-        self.errorSummariesWindowController?.close()
-        self.testFailureSummariesWindowController?.close()
-        self.testSummariesWindowController?.close()
-        
-        self.run(windmill: windmill, skipCheckout: skipCheckout)
-    }
-
-    @IBAction func run(_ sender: Any) {
-        self.run(sender, skipCheckout: false)
-    }
-
-    @IBAction func runSkipCheckout(_ sender: Any) {
-        self.run(sender, skipCheckout: true)
-    }
-
-    func didSelectScheme(mainWindowController: MainWindowController, project: Project, scheme: String) {
-        self.projects = [project]
-    }
-    
-    @IBAction func cleanDerivedData(_ sender: Any) {
-        self.mainViewController?.cleanDerivedData()
-    }
-    
-    @IBAction func cleanProjectFolder(_ sender: Any) {
-
-        let alert = NSAlert()
-        alert.addButton(withTitle: "Remove")
-        alert.addButton(withTitle: "Cancel")
-        alert.messageText = "Remove the Checkout Folder?"
-        alert.informativeText = "Windmill will clone the repo on the next `Run`."
-        alert.alertStyle = .warning
-        
-        if #available(OSX 10.14, *) {
-
-        } else {
-            alert.window.appearance = NSAppearance(named: .vibrantDark)
-        }
-
-        guard let window = self.mainWindowController?.window else {
-            return
-        }
-        
-        alert.beginSheetModal(for: window) { response in
-            
-            guard response == .alertFirstButtonReturn else {
-                return
-            }
-            
-            if self.mainViewController?.cleanProjectFolder() == true {
-                self.run(self)
-            }
-        }
-    }
-    
-    @IBAction func showProjectFolder(_ sender: Any) {
-        guard let windmill = self.mainViewController?.windmill else {
-            return
-        }
-        
-        let projectSourceURL = windmill.configuration.projectRepositoryDirectory.URL
-        
-        NSWorkspace.shared.openFile(projectSourceURL.path, withApplication: "Terminal")
+    func bottomPanelSplitViewController(mainWindowController: MainWindowController, isCollapsed: Bool) {
+        let debugAreaMenuItem = mainWindowController.window?.menu?.item(withTitle: "View")?.submenu?.item(withTitle: "Debug Area")?.submenu?.item(withTag: 0)
+        debugAreaMenuItem?.title = isCollapsed ? NSLocalizedString("windmill.ui.toolbar.view.showDebugArea", comment: "") : NSLocalizedString("windmill.ui.toolbar.view.hideDebugArea", comment: "")
     }
     
     @IBAction func openFrequentlyAskedQuestions(_ sender: Any) {
@@ -559,62 +426,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
     @IBAction func openVersionHistory(_ sender: Any) {
         let changelogURL = URL(string: "https://windmill.io/changelog/")!
         NSWorkspace.shared.open(changelogURL)
-    }
-    
-    @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
-        self.mainWindowController?.show(errorSummariesWindowController: self.errorSummariesWindowController, commit: commit)
-    }
-
-    @IBAction func showTestFailureSummariesWindowController(_ sender: Any?) {
-        
-        switch sender {
-        case let testReportButton as TestReportButton:
-            if case .failure = testReportButton.testReport {
-                self.mainWindowController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
-            }
-            return
-        case is NSMenuItem:
-            self.mainWindowController?.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
-        default:
-            return
-        }
-    }
-
-    @IBAction func jumpToNextIssue(_ sender: Any) {
-        
-        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
-        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
-        
-        switch (errorSummaries?.count, testFailureSummaries?.count) {
-        case (let errorSummaries?, _) where errorSummaries > 0:
-            self.showErrorSummariesWindowController(sender)
-            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToNextIssue()
-        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
-            self.showTestFailureSummariesWindowController(sender)
-            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToNextIssue()
-        default:
-            return
-        }
-    }
-    
-    @IBAction func jumpToPreviousIssue(_ sender: Any) {
-        
-        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
-        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
-        
-        switch (errorSummaries?.count, testFailureSummaries?.count) {
-        case (let errorSummaries?, _) where errorSummaries > 0:
-            self.showErrorSummariesWindowController(sender)
-            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToPreviousIssue()
-        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
-            self.showTestFailureSummariesWindowController(sender)
-            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToPreviousIssue()
-        default:
-            return
-        }
-    }
-    
-    @IBAction func showTestSummariesWindowController(_ sender: Any?) {
-        testSummariesWindowController?.showWindow(self)
     }    
 }

@@ -41,6 +41,12 @@ class ErrorSummariesWindowController: NSWindowController, ErrorSummariesViewCont
         return splitViewController.children[1] as? SummaryViewController
     }()
     
+    var locations: Windmill.Locations? {
+        didSet {
+            summaryViewController?.locations = self.locations
+        }
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
         
@@ -49,7 +55,6 @@ class ErrorSummariesWindowController: NSWindowController, ErrorSummariesViewCont
         }
 
         window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
-        
         window.titleVisibility = .hidden
     }
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ActivityType: String, CustomStringConvertible
+public enum ActivityType: String, Codable, CustomStringConvertible
 {
     case checkout
     case build

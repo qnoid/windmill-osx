@@ -34,11 +34,19 @@ class BottomPanelSplitViewController: NSSplitViewController {
     }
     
     func toggleBottomPanel(isCollapsed: Bool? = nil, completionHandler: @escaping (_ isHidden: Bool) -> Void = {_ in }) {
-        NSAnimationContext.runAnimationGroup({ _ in
+        NSAnimationContext.runAnimationGroup({ [weak self] _ in
+            guard let self = self else {
+                return
+            }
+            
             self.bottomViewSplitViewItem.animator().isCollapsed = isCollapsed ?? !self.isBottomPanelCollapsed
             self.bottomViewController?.consoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
             self.bottomViewController?.prettyConsoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
-        }, completionHandler: {
+        }, completionHandler: { [weak self] in
+            guard let self = self else {
+                return
+            }
+
             self.bottomViewController?.consoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
             self.bottomViewController?.prettyConsoleViewController?.toggle(isHidden: self.isBottomPanelCollapsed)
             completionHandler(self.isBottomPanelCollapsed)
@@ -46,6 +54,6 @@ class BottomPanelSplitViewController: NSSplitViewController {
     }
     
     func onCollapsed(changeHandler: @escaping (NSSplitViewItem, NSKeyValueObservedChange<Bool>) -> Void) -> NSKeyValueObservation {
-        return bottomViewSplitViewItem.observe(\.isCollapsed, options: [.new], changeHandler: changeHandler)
+        return bottomViewSplitViewItem.observe(\.isCollapsed, options: [.initial, .new], changeHandler: changeHandler)
     }
 }

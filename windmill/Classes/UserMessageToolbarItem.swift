@@ -140,9 +140,16 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
     }
 
     @objc func isMonitoring(_ aNotification: Notification) {
+        
+        
         self.windmillImageView.contents = NSImage(named: "windmill-activity-indicator")
         self.toolTip = NSLocalizedString("windmill.toolTip.active.monitor", comment: "")
-        self.activityTextfield.stringValue = NSLocalizedString("windmill.activity.monitor.description", comment: "")
+        let description = NSLocalizedString("windmill.activity.monitor.description", comment: "")
+        if let branch = aNotification.userInfo?["branch"] as? String {
+            self.activityTextfield.stringValue = String(format: "\(description) '%@' branch", branch)
+        } else {
+            self.activityTextfield.stringValue = description
+        }
     }
     
     @objc func activityDidLaunch(_ aNotification: Notification) {
@@ -179,7 +186,7 @@ class UserMessageToolbarItem: NSToolbarItem, CALayerDelegate {
         }
         
         self.windmillImageView.stopAnimation()
-        self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.activityTextfield.stopped", comment: "")
+        self.activityTextfield.stringValue = NSLocalizedString("windmill.ui.message.view.stopped", comment: "")
 
         if let errorCount = aNotification.userInfo?["errorCount"] as? Int, errorCount != 0 {
             self.errorButton.title = String(errorCount)

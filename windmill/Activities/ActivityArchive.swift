@@ -10,31 +10,32 @@ import Foundation
 
 struct ActivityArchive {
     
-    let applicationCachesDirectory: ApplicationCachesDirectory
-    let applicationSupportDirectory: ApplicationSupportDirectory
+    let locations: Windmill.Locations
 
     weak var processManager: ProcessManager?
     weak var delegate: ActivityDelegate?
     
-    let projectLogURL: URL
+    let logfile: URL
     
-    init(applicationCachesDirectory: ApplicationCachesDirectory, applicationSupportDirectory: ApplicationSupportDirectory, processManager: ProcessManager, projectLogURL: URL) {
-        self.applicationCachesDirectory = applicationCachesDirectory
-        self.applicationSupportDirectory = applicationSupportDirectory
+    init(locations: Windmill.Locations, processManager: ProcessManager, logfile: URL) {
+        self.locations = locations
         self.processManager = processManager
-        self.projectLogURL = projectLogURL
+        self.logfile = logfile
     }
     
-    func success(location: Project.Location, project: Project, scheme: String, archive: Archive, configuration: Configuration) -> SuccessfulActivity {
+    func success(projectAt: Project.Location, project: Project, configuration: Project.Configuration, build: Configuration) -> SuccessfulActivity {
         
-        let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
-        let resultBundle = self.applicationSupportDirectory.archiveResultBundle(at: project.name)
-
         return SuccessfulActivity { next in
             
             return { context in
                 
-                let makeArchive = Process.makeArchive(location: location, project: project, scheme: scheme, derivedData: derivedData, archive: archive, configuration: configuration, resultBundle: resultBundle, log: self.projectLogURL)
+                let derivedData = self.locations.derivedData
+                let resultBundle = self.locations.archiveResultBundle
+                
+                let scheme = configuration.detectScheme(name: project.scheme)
+                let archive = self.locations.home.archive(name: scheme)
+                
+                let makeArchive = Process.makeArchive(projectAt: projectAt, project: project, scheme: scheme, derivedData: derivedData, archive: archive, configuration: build, resultBundle: resultBundle, log: self.logfile)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.archive, "artefact": ArtefactType.archiveBundle, "archive": archive, "resultBundle": resultBundle]
                 self.delegate?.willLaunch(activity: .archive, userInfo: userInfo)

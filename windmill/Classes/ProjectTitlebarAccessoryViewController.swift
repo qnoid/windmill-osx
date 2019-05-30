@@ -9,19 +9,16 @@
 import AppKit
 import os
 
-class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController, NSMenuItemValidation, NSToolbarItemValidation {
+class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController, NSToolbarItemValidation {
     
-    @IBOutlet weak var launchMenuItem: NSMenuItem!
     @IBOutlet weak var launchButton: NSButton! {
         didSet{
-            self.isLaunchButtonEnabledObserver = launchButton.observe(\.isEnabled, options: [.initial, .new]) { [weak self] (button, change) in
+            self.isLaunchButtonEnabledObserver = launchButton.observe(\.isEnabled, options: [.initial, .new]) { (button, change) in
                 if let isEnabled = change.newValue {
                     if isEnabled {
                         button.toolTip = NSLocalizedString("windmill.launchsimulator.button.enabled.toolTip", comment: "")
-                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.enabled.toolTip", comment: "")
                     } else {
                         button.toolTip = NSLocalizedString("windmill.launchsimulator.button.disabled.toolTip", comment: "")
-                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.launchsimulator.button.disabled.toolTip", comment: "")
                     }
                 }
             }
@@ -29,27 +26,9 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController,
         }
     }
     
-    @IBOutlet weak var recordVideoButton: NSMenuItem! {
-        didSet {
-            self.isRecordVideoButtonEnabledObserver = recordVideoButton.observe(\.isEnabled, options: [.initial, .new]) { [weak self] (button, change) in
-                if let isEnabled = change.newValue {
-                    if isEnabled {
-                        button.toolTip = NSLocalizedString("windmill.recordVideo.button.enabled.toolTip", comment: "")
-                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.enabled.toolTip", comment: "")
-                    } else {
-                        button.toolTip = NSLocalizedString("windmill.recordVideo.button.disabled.toolTip", comment: "")
-                        self?.launchMenuItem.toolTip = NSLocalizedString("windmill.recordVideo.button.disabled.toolTip", comment: "")
-                    }
-                }
-            }
-            self.recordVideoButton.isEnabled = false
-        }
-    }
-    
     let log = OSLog(subsystem: "io.windmill.windmill", category: "windmill")
     
     var isLaunchButtonEnabledObserver: NSKeyValueObservation?
-    var isRecordVideoButtonEnabledObserver: NSKeyValueObservation?
     
     lazy var recordVideoDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
@@ -64,7 +43,6 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController,
     
     deinit {
         isLaunchButtonEnabledObserver?.invalidate()
-        isRecordVideoButtonEnabledObserver?.invalidate()
     }
     
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
@@ -73,6 +51,10 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController,
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    convenience init() {
+        self.init(nibName: NSNib.Name(String(describing: ProjectTitlebarAccessoryViewController.self)), bundle: Bundle(for: type(of: self)))
     }
     
     func didSet(windmill: Windmill?, notificationCenter: NotificationCenter = NotificationCenter.default) {
@@ -84,16 +66,6 @@ class ProjectTitlebarAccessoryViewController: NSTitlebarAccessoryViewController,
     func validateToolbarItem(_ item: NSToolbarItem) -> Bool {
         if item.action == #selector(launchOnSimulator(_:)) {
             return self.launchButton.isEnabled
-        }
-        
-        return true
-    }
-    
-    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == #selector(launchOnSimulator(_:)), let launchButton = self.launchButton {
-            return launchButton.isEnabled
-        } else if menuItem.action == #selector(recordVideo(_:)) {
-            return Preferences.shared.recordVideo
         }
         
         return true

@@ -10,43 +10,42 @@ import Foundation
 
 struct ActivityTest {
 
-    let applicationCachesDirectory: ApplicationCachesDirectory
-    let applicationSupportDirectory: ApplicationSupportDirectory
+    let locations: Windmill.Locations
 
     weak var processManager: ProcessManager?
     weak var delegate: ActivityDelegate?
     
-    let projectLogURL: URL
+    let logfile: URL
     
-    init(applicationCachesDirectory: ApplicationCachesDirectory, applicationSupportDirectory: ApplicationSupportDirectory, processManager: ProcessManager, projectLogURL: URL) {
-        self.applicationCachesDirectory = applicationCachesDirectory
-        self.applicationSupportDirectory = applicationSupportDirectory
+    init(locations: Windmill.Locations, processManager: ProcessManager, logfile: URL) {
+        self.locations = locations
         self.processManager = processManager
-        self.projectLogURL = projectLogURL
+        self.logfile = logfile
     }
 
-    func success(location: Project.Location, project: Project, devices: Devices, scheme: String) -> SuccessfulActivity {
+    func success(projectAt: Project.Location, project: Project, devices: Devices, configuration: Project.Configuration) -> SuccessfulActivity {
         
-        let derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
-        let resultBundle = self.applicationSupportDirectory.testResultBundle(at: project.name)
-
         return SuccessfulActivity { next in
             
             return { context in
              
+                let derivedData = self.locations.derivedData
+                let resultBundle = self.locations.testResultBundle
+                
                 guard let destination = devices.destination else {
                     preconditionFailure("Destination must not be nil to proceeed. Did you use `ActivityDevices` to read the list of devices?")
                 }
                 
                 let test: Process
                 let userInfo: [AnyHashable: Any]
+                let scheme = configuration.detectScheme(name: project.scheme)
                 
                 if WindmillStringKey.Test.nothing == (context[WindmillStringKey.test] as? WindmillStringKey.Test) {
                     test = Process.makeSuccess() //no need to go through the process manager now, simply fire the notification for when an activity succeeds
                     userInfo = ["activity" : ActivityType.test, "resultBundle": resultBundle]
                 } else {
                     userInfo = ["activity" : ActivityType.test, "artefact": ArtefactType.testReport, "devices": devices, "destination": destination, "resultBundle": resultBundle]
-                    test = Process.makeTestWithoutBuilding(location: location, project: project, scheme: scheme, destination: destination, derivedData: derivedData, resultBundle: resultBundle, log: self.projectLogURL)
+                    test = Process.makeTestWithoutBuilding(projectAt: projectAt, project: project, scheme: scheme, destination: destination, derivedData: derivedData, resultBundle: resultBundle, log: self.logfile)
                 }
                 
                 self.delegate?.willLaunch(activity: .test, userInfo: userInfo)

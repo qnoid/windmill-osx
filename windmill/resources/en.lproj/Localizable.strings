@@ -71,8 +71,7 @@
 "windmill.ui.toolbar.view.hideDebugArea"="Hide Debug Area";
 "windmill.ui.toolbar.view.showSidePanel"="Show Side Panel";
 "windmill.ui.toolbar.view.hideSidePanel"="Hide Side Panel";
-"windmill.ui.activityTextfield.idle"="idle";
-"windmill.ui.activityTextfield.stopped"="Stopped";
+"windmill.ui.message.view.stopped"="Stopped";
 "windmill.artefacts.build.header"="Application bundle";
 "windmill.artefacts.build.tooltip"="Enables you to run your app on the Simulator without the need to have the source code.";
 "windmill.reports.test.header"="Test Summary";

@@ -16,9 +16,9 @@ extension RegularExpressionMatchesFormatter {
         }
     }
     
-    static func makeReason(regularExpression: NSRegularExpression = NSRegularExpression.Windmill.REASON_EXPRESSION) -> RegularExpressionMatchesFormatter<String> {
+    static func makeReason(cachesDirectoryURL: URL = Directory.Windmill.ApplicationCachesDirectory().URL, regularExpression: NSRegularExpression = NSRegularExpression.Windmill.REASON_EXPRESSION) -> RegularExpressionMatchesFormatter<String> {
         return single(match: regularExpression) { reason in
-            return "\(reason)\n"
+            return "\t\(reason.replacingOccurrences(of: cachesDirectoryURL.path, with: ""))\n"
         }
     }
 }

@@ -43,8 +43,8 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
 
     let defaultCenter = NotificationCenter.default
     
-    var configuration: Windmill.Configuration? {
-        return windmill?.configuration
+    var locations: Windmill.Locations? {
+        return windmill?.locations
     }
     
     weak var windmill: Windmill? {
@@ -55,60 +55,63 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
 
     lazy var compileFormatter: RegularExpressionMatchesFormatter<NSAttributedString> = {
-        guard let configuration = self.windmill?.configuration else {
+        guard let locations = self.windmill?.locations else {
             return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         }
         
-        let baseDirectoryURL = configuration.projectRepositoryDirectory.URL.appendingPathComponent("/")
+        let baseDirectoryURL = locations.repository.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
     
     lazy var cpHeaderFormatter: RegularExpressionMatchesFormatter<NSAttributedString> = {
-        guard let configuration = self.windmill?.configuration else {
+        guard let locations = self.windmill?.locations else {
             return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender)
         }
         
-        let baseDirectoryURL = configuration.projectRepositoryDirectory.URL.appendingPathComponent("/")
+        let baseDirectoryURL = locations.repository.URL.appendingPathComponent("/")
         return RegularExpressionMatchesFormatter<NSAttributedString>.makeCpHeader(descender: descender, baseDirectoryURL: baseDirectoryURL)
     }()
 
 
     var dispatchSourceRead: DispatchSourceRead? {
         didSet {
+            oldValue?.activate() //this is to ensure the DispatchSource has been activated minimum one time before calling cancel; An unbalanced call causes a EXC_BAD_EXCEPTION
             oldValue?.cancel()
         }
     }
-
-    let queue = DispatchQueue(label: "io.windmil.console.distilled", qos: .utility, attributes: [])
-    var group = DispatchGroup()
     
-    var standardOutFormattedReader: StandardOutFormattedReader {
-        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), queue: self.queue, fileURL: self.configuration?.projectLogURL)
+    let queue = DispatchQueue(label: "io.windmil.console.distilled", qos: .utility, attributes: [])
+    
+    lazy var standardOutFormattedReader: StandardOutFormattedReader = {
+        let standardOutFormattedReader = StandardOutFormattedReader.make(standardOutFormatter: StandardOutPrettyFormatter(descender: descender, compileFormatter: compileFormatter, cpHeaderFormatter: cpHeaderFormatter), queue: self.queue)
         standardOutFormattedReader.delegate = self
         return standardOutFormattedReader
-    }
+    }()
     
     deinit {
+        dispatchSourceRead?.activate() //this is to ensure the DispatchSource has been activated minimum one time before calling cancel; An unbalanced call causes a EXC_BAD_EXCEPTION
         dispatchSourceRead?.cancel()
     }
     
     override func viewDidLoad() {
-        self.group.leave()
+        self.dispatchSourceRead?.activate()
     }
 
     @objc func willRun(_ aNotification: Notification) {
-        textView?.string = ""
-        textView?.isSelectable = false
-        textView?.allowScrollToEndOfDocument = true
+        self.textView?.string = ""
+        self.textView?.isSelectable = false
+        self.textView?.allowScrollToEndOfDocument = true
     }
     
     @objc func didRun(_ aNotification: Notification) {
         
-        if !isViewLoaded {
-            self.group.enter()
+        if let logfile = locations?.logfile, let fileHandleForReading = try? FileHandle(forReadingFrom: logfile) {
+            self.dispatchSourceRead = self.standardOutFormattedReader.read(fileHandleForReading: fileHandleForReading, completion: self.queue)
         }
         
-        self.dispatchSourceRead = self.standardOutFormattedReader.activate(completion: self.queue)
+        if isViewLoaded {
+            self.dispatchSourceRead?.activate()
+        }
     }
     
     func append(_ textView: TextView?, line: NSAttributedString) {
@@ -117,8 +120,6 @@ class PrettyConsoleViewController: NSViewController, StandardOutFormattedReaderD
     }
     
     func standardOut(line: NSAttributedString) {
-        self.group.wait()
-
         DispatchQueue.main.async {
             self.append(self.textView, line: line)
         }

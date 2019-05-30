@@ -370,7 +370,11 @@ class SidePanelViewController: NSViewController {
     }
     
     @objc func willRun(_ aNotification: Notification) {
-        for activityView in self.gridView.subviews {
+        guard let gridView = self.gridView else {
+            return
+        }
+        
+        for activityView in gridView.subviews {
             activityView.isHidden = true
         }
     }

@@ -216,6 +216,14 @@ extension NSRegularExpression {
         static let COMPILE_WARNING_EXPRESSION = try! NSRegularExpression(pattern: "^(\\/.+\\/(.*):).*:.*:\\s(?:fatal\\s)?(?:warning):\\s(.*)")
         
         // capture groups
+        // $1 bundle
+        static let NO_PROVISIONING_PROFILES_ERROR_EXPRESSION = try! NSRegularExpression(pattern:"^error: No profiles for '(?:.*)' were found: Xcode couldn't find any iOS App Development provisioning profiles matching '(.*)'\\.(?:.*)(?:in target '(.*)')")
+        
+        // capture groups
+        // $1 error
+        static let ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^error: (.*)$")
+        
+        // capture groups
         // $1 error
         static let CLANG_ERROR_EXPRESSION = try! NSRegularExpression(pattern: "^clang: error: (.*)$")
         

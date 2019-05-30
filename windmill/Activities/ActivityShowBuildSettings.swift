@@ -17,13 +17,14 @@ struct ActivityShowBuildSettings {
         self.processManager = processManager
     }
     
-    func success(project: Project, location: Project.Location, scheme: String, buildSettings: BuildSettings) -> SuccessfulActivity {
+    func success(project: Project, projectAt: Project.Location, configuration: Project.Configuration, buildSettings: BuildSettings) -> SuccessfulActivity {
         
         return SuccessfulActivity { next in
 
             return { context in
 
-                let readBuildSettings = Process.makeShowBuildSettings(project: project, scheme: scheme, buildSettings: buildSettings, location: location)
+                let scheme = configuration.detectScheme(name: project.scheme)
+                let readBuildSettings = Process.makeShowBuildSettings(project: project, scheme: scheme, buildSettings: buildSettings, projectAt: projectAt)
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.showBuildSettings]
                 self.delegate?.willLaunch(activity: .showBuildSettings, userInfo: userInfo)
                 self.processManager?.launch(process: readBuildSettings, userInfo: userInfo, wasSuccesful: { userInfo in

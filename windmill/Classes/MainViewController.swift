@@ -66,12 +66,37 @@ class MainViewController: NSViewController {
             branchTextField.toolTip = String(format: NSLocalizedString("windmill.branch.toolTip", comment: ""), branchTextField.stringValue)
         }
     }
-    @IBOutlet weak var checkoutActivityView: ActivityView!
-    @IBOutlet weak var buildActivityView: ActivityView!
-    @IBOutlet weak var testActivityView: ActivityView!
-    @IBOutlet weak var archiveActivityView: ActivityView!
-    @IBOutlet weak var exportActivityView: ActivityView!
-    @IBOutlet weak var distributeActivityView: ActivityView!
+    @IBOutlet weak var checkoutActivityView: ActivityView! {
+        didSet{
+            checkoutActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var buildActivityView: ActivityView! {
+        didSet{
+            buildActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var testActivityView: ActivityView! {
+        didSet{
+            testActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var archiveActivityView: ActivityView! {
+        didSet{
+            archiveActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var exportActivityView: ActivityView! {
+        didSet{
+            exportActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var distributeActivityView: ActivityView! {
+        didSet{
+            distributeActivityView.isHidden = true
+        }
+    }
+    @IBOutlet weak var divider: NSImageView!
     
     weak var topConstraint: NSLayoutConstraint!
     
@@ -93,6 +118,13 @@ class MainViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
             self.artefactsViewController?.windmill = windmill
+            
+            windmill?.configuration.activities.forEach { activity in
+                let activityView = self.activityViews[activity]
+                activityView?.isHidden = false
+            }
+            
+            self.mainView.needsUpdateConstraints = true
         }
     }
     
@@ -110,16 +142,22 @@ class MainViewController: NSViewController {
                 topConstraint.isActive = true
             }
         }
-
+        
+        if let activities = windmill?.configuration.activities {
+            
+            if let activityView = self.activityViews.reversed().first(where: { type, value -> Bool in
+                return type == activities.last
+            }) {
+                self.divider.trailingAnchor.constraint(equalTo: activityView.value.trailingAnchor, constant: 0).isActive = true
+            }
+        }
 
         super.updateViewConstraints()
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     @objc func willRun(_ aNotification: Notification) {
+        self.branchTextField.stringValue = self.windmill?.configuration.branch ?? ""
+
         for activityView in self.activityViews.values {
             activityView.toolTip = nil
             activityView.imageView.alphaValue = 0.1
@@ -174,13 +212,5 @@ class MainViewController: NSViewController {
         default:
             os_log("Warning: `activity` wasn't set in the notification.", log:.default, type: .debug)
         }
-    }
-    
-    @discardableResult func cleanDerivedData() -> Bool {
-        return windmill?.removeDerivedData() ?? false
-    }
-    
-    @discardableResult func cleanProjectFolder() -> Bool {
-        return windmill?.removeRepositoryDirectory() ?? false
     }    
 }

@@ -31,10 +31,10 @@ public protocol DirectoryType
     
     @discardableResult func create(withIntermediateDirectories: Bool) -> Bool
     
-    func remove() -> Bool
+    @discardableResult func remove() -> Bool
 }
 
-public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillDirectory, ProjectDirectory, RepositoryDirectory, DerivedDataDirectory
+public struct Directory : DirectoryType, UserLibraryDirectory, ApplicationSupportDirectory, ApplicationCachesDirectory, WindmillDirectory, ProjectDirectory, RepositoryDirectory, DerivedDataDirectory, ResultBundleDirectory
 {
     public let URL : Foundation.URL
     public let fileManager : FileManager
