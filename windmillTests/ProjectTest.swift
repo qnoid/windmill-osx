@@ -15,16 +15,16 @@ class ProjectTest: XCTestCase {
     func testEquatable()
     {
         let sameName = "name"
-        let x = Project(name: sameName, scheme: "scheme", origin: "x")
+        let x = Project(isWorkspace: false, name: sameName, scheme: "scheme", origin: "x")
         
         XCTAssertTrue(x == x, "`x == x` should be `true`")
         
-        let y = Project(name: sameName, scheme: "scheme", origin: "y")
+        let y = Project(isWorkspace: false, name: sameName, scheme: "scheme", origin: "x")
         
         XCTAssertTrue(x == y, "`x == y` implies `y == x`")
         XCTAssertTrue(y == x, "`x == y` implies `y == x`")
         
-        let z = Project(name: sameName, scheme: "scheme", origin: "z")
+        let z = Project(isWorkspace: false, name: sameName, scheme: "scheme", origin: "x")
         
         XCTAssertTrue(y == z, "`x == y` and `y == z` implies `x == z`")
         XCTAssertTrue(x == z, "`x == y` and `y == z` implies `x == z`")
@@ -32,8 +32,8 @@ class ProjectTest: XCTestCase {
     
     func testNonEquatable()
     {
-        let this = Project(name: "this", scheme: "scheme", origin: "foo")
-        let that = Project(name: "that", scheme: "scheme", origin: "foo")
+        let this = Project(isWorkspace: false, name: "this", scheme: "scheme", origin: "foo")
+        let that = Project(isWorkspace: false, name: "that", scheme: "scheme", origin: "foo")
         
         XCTAssertFalse(this == that, "Projects without the same origin should not be equal.")
     }
@@ -41,8 +41,8 @@ class ProjectTest: XCTestCase {
     func testHashable()
     {
         let sameOrigin = "origin"
-        let this = Project(name: "foo", scheme: "scheme", origin: sameOrigin)
-        let that = Project(name: "foo", scheme: "scheme", origin: sameOrigin)
+        let this = Project(isWorkspace: false, name: "foo", scheme: "scheme", origin: sameOrigin)
+        let that = Project(isWorkspace: false, name: "foo", scheme: "scheme", origin: sameOrigin)
         
         var set : Set<Project> = []
         set.insert(this)
@@ -53,8 +53,8 @@ class ProjectTest: XCTestCase {
     
     func testNonHashable()
     {
-        let this = Project(name: "this", scheme: "scheme", origin: "foo")
-        let that = Project(name: "that", scheme: "scheme", origin: "foo")
+        let this = Project(isWorkspace: false, name: "this", scheme: "scheme", origin: "foo")
+        let that = Project(isWorkspace: false, name: "that", scheme: "scheme", origin: "foo")
         
         var set : Set<Project> = []
         set.insert(this)

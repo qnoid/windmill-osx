@@ -21,6 +21,7 @@
             "children": [
                 "topic-getting_started-where_to_start",
                 "topic-getting_started-start",
+                "topic-getting_started-workflow",
                 "topic-windmill_basics-toggle_console",
                 "topic-windmill_basics-stage_lights",
                 "topic-windmill_basics-toggle_settings"
@@ -105,6 +106,12 @@
         "topic-getting_started-start": {
             "name": "Running",
             "href": "getting_started/start.html",
+            "categories": [
+            ]
+        },        
+        "topic-getting_started-workflow": {
+            "name": "Workflow",
+            "href": "getting_started/workflow.html",
             "categories": [
             ]
         },        

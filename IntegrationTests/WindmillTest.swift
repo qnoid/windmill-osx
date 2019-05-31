@@ -53,7 +53,7 @@ class WindmillTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         
         let name = "helloword-no-test-target"
-        let project = Project(name: name, scheme: "helloworld", origin: "git@github.com:qnoid/helloword-no-test-target.git")
+        let project = Project(isWorkspace: false, name: name, scheme: "helloworld", origin: "git@github.com:qnoid/helloword-no-test-target.git")
         let timer = WindmillTimer(expectation: expectation)
         let windmill = Windmill.make(project: project)
         

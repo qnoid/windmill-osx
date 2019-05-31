@@ -23,7 +23,7 @@ class ProcessChainTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         let processManager = ProcessManager()
         
-        let project = Project(name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
+        let project = Project(isWorkspace: false, name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
         let repositoryLocalURL = bundle.url(forResource: project.name, withExtension: "")!
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
@@ -35,7 +35,7 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }
 
-        let build = Process.makeBuildForTesting(location: Project.Location(project: project, url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let build = Process.makeBuildForTesting(projectAt: Project.Location(project: project, url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.launch(process: build, recover: RecoverableProcess.recover(terminationStatus: 66) { process in
             XCTAssertEqual(66, process.terminationStatus, "Process \(process.executableURL!.lastPathComponent) failed with exit code \(process.terminationStatus)")
@@ -50,7 +50,7 @@ class ProcessChainTest: XCTestCase {
         let expectation = self.expectation(description: #function)
         let processManager = ProcessManager()
         
-        let project = Project(name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
+        let project = Project(isWorkspace: false, name: "helloword-no-test-target", scheme: "helloword-no-test-target", origin: "any")
         let repositoryLocalURL = bundle.url(forResource: project.name, withExtension: "")!
         
         let devices = Devices(metadata: MetadataJSONEncoded(url: bundle.url(forResource: "/metadata/\(project.name)/devices", withExtension: "json")!))
@@ -62,7 +62,7 @@ class ProcessChainTest: XCTestCase {
             try? FileManager.default.removeItem(at: resultBundleURL)
         }        
         
-        let build = Process.makeBuild(location: Project.Location(project: project, url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let build = Process.makeBuild(projectAt: Project.Location(project: project, url: repositoryLocalURL), project: project, scheme: project.scheme, destination: devices.destination!, derivedData: Directory(URL: FileManager.default.trashDirectoryURL.appendingPathComponent("DerivedData").appendingPathComponent(project.name), fileManager: .default), resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.launch(process: build, wasSuccesful: { _ in
             expectation.fulfill()
@@ -91,12 +91,12 @@ class ProcessChainTest: XCTestCase {
             monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
 
-        let project = Project(name: "HelloWindmill", scheme: "HelloWindmill", origin: "any")
+        let project = Project(isWorkspace: false, name: "HelloWindmill", scheme: "HelloWindmill", origin: "any")
         let url = bundle.url(forResource: "HelloWindmill", withExtension: "xcarchive")!
         let info = Archive.Info.make(at: URL(string: "any")!)
         let archive = Archive(url: url, info: info)
         
-        let export = Process.makeExport(location: Project.Location(project: project, url: any), archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let export = Process.makeExport(projectAt: Project.Location(project: project, url: any), archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         processManager.launch(process: export, wasSuccesful: { _ in
             expectation.fulfill()

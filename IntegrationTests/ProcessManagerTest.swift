@@ -21,7 +21,7 @@ class ProcessManagerTest: XCTestCase {
         let validOrigin = "git@github.com:windmill-io/blank.git"
         let checkoutDirectory: Directory = FileManager.default.directory(FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random(characters: CharacterSet.lowercaseLetters, length: 16)))
         
-        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(name: repoName, scheme: "foo", origin: validOrigin), log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        let process = Process.makeCheckout(sourceDirectory: checkoutDirectory, project: Project(isWorkspace: false, name: repoName, scheme: "foo", origin: validOrigin), log: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         
         defer {
             var trashDirectory = FileManager.default.trashDirectoryURL

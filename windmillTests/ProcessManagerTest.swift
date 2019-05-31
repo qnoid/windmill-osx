@@ -79,7 +79,7 @@ class ProcessManagerTest: XCTestCase {
         let repoName = "any"
         let url = FileManager.default.trashDirectoryURL.appendingPathComponent(repoName)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
-        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: Project(name: repoName, scheme: "foo", origin: "invalid"), log: FileManager.default.trashDirectoryURL)
+        let process = Process.makeCheckout(sourceDirectory: FileManager.default.directory(FileManager.default.trashDirectoryURL), project: Project(isWorkspace: false, name: repoName, scheme: "foo", origin: "invalid"), log: FileManager.default.trashDirectoryURL)
         
         defer {
             try? FileManager.default.removeItem(at: url)
@@ -162,7 +162,7 @@ class ProcessManagerTest: XCTestCase {
 
         let manager = ProcessManager()
 
-        let project = Project(name: "project-not-at-root", scheme: "project-not-at-root", origin: "any")
+        let project = Project(isWorkspace: false, name: "project-not-at-root", scheme: "project-not-at-root", origin: "any")
         let repositoryLocalURL = bundle.url(forResource: "project-not-at-root", withExtension: "")!
         
         let process = Process.makeFind(project: project, repositoryLocalURL: repositoryLocalURL)

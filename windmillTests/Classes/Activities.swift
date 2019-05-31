@@ -18,7 +18,7 @@ class Activities {
     lazy var processManager = self.windmill.activityManager!.processManager
     lazy var applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
     lazy var applicationSupportDirectory = Directory.Windmill.ApplicationSupportDirectory()
-    lazy var projectDirectory = self.windmill.configuration.home
+    lazy var projectDirectory = self.windmill.locations.home
     
     
     init(project: Project, windmill: Windmill) {
@@ -36,12 +36,10 @@ class Activities {
         activityReadProjectConfiguration.delegate = activityManager
         let readProjectConfiguration = activityReadProjectConfiguration.success(project: project, configuration: configuration)
         
-        let scheme = configuration.detectScheme(name: project.scheme)
-        
         var activityShowBuildSettings =
             ActivityShowBuildSettings(processManager: processManager)
         activityShowBuildSettings.delegate = activityManager
-        let showBuildSettings = activityShowBuildSettings.success(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
+        let showBuildSettings = activityShowBuildSettings.success(project: project, projectAt: location, configuration: configuration, buildSettings: self.projectDirectory.buildSettings())
         
         let devices = self.projectDirectory.devices()
         
@@ -55,9 +53,9 @@ class Activities {
         let appBundle = self.projectDirectory.appBundle(name: project.name)
         
         var activityBuild =
-            ActivityBuild(configuration: self.windmill.configuration, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+            ActivityBuild(locations: self.windmill.locations, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         activityBuild.delegate = activityManager
-        let build = activityBuild.success(location: location, project: project, appBundle: appBundle, scheme: scheme, home: self.projectDirectory, buildSettings: buildSettings)
+        let build = activityBuild.success(projectAt: location, project: project, appBundle: appBundle, configuration: configuration, home: self.projectDirectory, buildSettings: buildSettings)
         
         return readProjectConfiguration -->
             showBuildSettings -->
@@ -70,20 +68,21 @@ class Activities {
         
         let location = Project.Location(project: self.project, url: locationURL)        
         let devices = self.projectDirectory.devices()
+        let configuration = self.windmill.locations.home.configuration()
 
         var activityListDevices =
             ActivityListDevices(processManager: processManager)
         activityListDevices.delegate = activityManager
         let listDevices = activityListDevices.success(devices: devices)
         
-        var activityBuild = ActivityBuild(configuration: self.windmill.configuration, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+        var activityBuild = ActivityBuild(locations: self.windmill.locations, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         activityBuild.delegate = activityManager
-        let build = activityBuild.success(location: location, project: project, appBundle: AppBundles.make(), scheme: project.scheme, home: self.projectDirectory, buildSettings: buildSettings)
+        let build = activityBuild.success(projectAt: location, project: project, appBundle: AppBundles.make(), configuration: configuration, home: self.projectDirectory, buildSettings: buildSettings)
         
         var activityTest =
-            ActivityTest(configuration: self.windmill.configuration, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
+            ActivityTest(locations: self.windmill.locations, processManager: processManager, logfile: FileManager.default.trashDirectoryURL.appendingPathComponent(CharacterSet.Windmill.random()))
         activityTest.delegate = activityManager
-        let test = activityTest.success(location: location, project: project, devices: devices, scheme: project.scheme)
+        let test = activityTest.success(projectAt: location, project: project, devices: devices, configuration: configuration)
 
         return listDevices --> build --> test --> next
     }

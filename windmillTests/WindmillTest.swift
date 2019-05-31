@@ -28,7 +28,7 @@ class WindmillMock: Windmill {
     
     init(expectation: XCTestExpectation, project: Project) {
         let subscriptionManager = SubscriptionManager()
-        super.init(configuration: Windmill.Configuration.make(project: project), subscriptionManager: subscriptionManager)
+        super.init(configuration: Windmill.Configuration.make(project: project), locations: Locations.make(project: project), subscriptionManager: subscriptionManager)
         
         let processManager = ProcessManager()
         
@@ -57,7 +57,7 @@ class WindmillTest: XCTestCase {
         let name = "helloword-no-test-target"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let project = Project(name: name, scheme: name, origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: name, origin: "any")
         let windmill = Windmill.make(project: project)
         
         let activities = Activities(project: project, windmill: windmill)
@@ -76,7 +76,7 @@ class WindmillTest: XCTestCase {
         let name = "project-with-unit-tests"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let project = Project(name: name, scheme: name, origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: name, origin: "any")
         let windmill = Windmill.make(project: project)
         
         let activities = Activities(project: project, windmill: windmill)
@@ -96,7 +96,7 @@ class WindmillTest: XCTestCase {
         let name = "project-with-build-errors"
         let repositoryLocalURL = bundle.url(forResource: name, withExtension: "")!
         
-        let project = Project(name: name, scheme: name, origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: name, origin: "any")
         let windmill = Windmill.make(project: project)
         
         NotificationCenter.default.addObserver(forName: Windmill.Notifications.didError, object: windmill, queue: OperationQueue.main) { notification in
@@ -131,7 +131,7 @@ class WindmillTest: XCTestCase {
             monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
-        let project = Project(name: name, scheme: "helloword-no-test-target", origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: "helloword-no-test-target", origin: "any")
         let windmill = Windmill.make(project: project, processManager: processManager)
         processManager.monitor = monitor
 
@@ -158,7 +158,7 @@ class WindmillTest: XCTestCase {
             monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
-        let project = Project(name: name, scheme: "helloworld", origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: "helloworld", origin: "any")
         let windmill = Windmill.make(project: project, processManager: processManager)
         processManager.monitor = monitor
 
@@ -186,7 +186,7 @@ class WindmillTest: XCTestCase {
             monitor = nil //just a way to keep the monitor reference arround for the test execution
         }
         
-        let project = Project(name: name, scheme: "no_simulator_available", origin: "any")
+        let project = Project(isWorkspace: false, name: name, scheme: "no_simulator_available", origin: "any")
         let windmill = Windmill.make(project: project, processManager: processManager)
         processManager.monitor = monitor
 
@@ -204,7 +204,7 @@ class WindmillTest: XCTestCase {
     func testGivenErrorAssertDidExitCalled() {
         
         let repoName = "any"
-        let project = Project(name: repoName, scheme: "any", origin: "invalid")
+        let project = Project(isWorkspace: false, name: repoName, scheme: "any", origin: "invalid")
         
         let expectation = self.expectation(description: #function)
         
