@@ -10,102 +10,166 @@ import Foundation
 
 class ActivityBuiler {
     
-    let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
-    let applicationSupportDirectory = Directory.Windmill.ApplicationSupportDirectory()
-
-    static func make(configuration: Windmill.Configuration, subscriptionManager: SubscriptionManager, processManager: ProcessManager) -> ActivityBuiler {
-        return ActivityBuiler(configuration: configuration, subscriptionManager: subscriptionManager, processManager: processManager)
+    static func make(configuration: Windmill.Configuration, locations: Windmill.Locations, subscriptionManager: SubscriptionManager, processManager: ProcessManager) -> ActivityBuiler {
+        return ActivityBuiler(configuration: configuration, locations: locations, subscriptionManager: subscriptionManager, processManager: processManager)
     }
 
     let configuration: Windmill.Configuration
-    
+    let locations: Windmill.Locations
     
     unowned var subscriptionManager: SubscriptionManager
     unowned var processManager: ProcessManager
 
-    lazy var project: Project = configuration.project
-    lazy var projectDirectory = configuration.projectDirectory
-    lazy var projectLogURL = configuration.projectLogURL
-    lazy var projectRepositoryDirectory = configuration.projectRepositoryDirectory
-
-    init(configuration: Windmill.Configuration, subscriptionManager: SubscriptionManager, processManager: ProcessManager) {
+    init(configuration: Windmill.Configuration, locations: Windmill.Locations, subscriptionManager: SubscriptionManager, processManager: ProcessManager) {
         self.configuration = configuration
+        self.locations = locations
         self.subscriptionManager = subscriptionManager
         self.processManager = processManager
     }
     
-    public func exportSeries(activityManager: ActivityManager, skipCheckout: Bool = false, next nextActivity: @escaping Activity) -> Activity {
-        
+    public func testSeries(activityManager: ActivityManager, skipCheckout: Bool = false, next nextActivity: @escaping Activity) -> Activity {
+
+        let project: Project = configuration.project
+        let home = locations.home
+        let logfile = locations.logfile
+        let repository = locations.repository
+
+        FileManager.default.createFile(atPath: logfile.path, contents: nil, attributes: nil)
+
         let checkoutActivity: SuccessfulActivity
-        
-        let repositoryLocalURL = self.projectRepositoryDirectory
         
         if skipCheckout {
             checkoutActivity =
                 ActivityAlwaysSuccess(activityManager: activityManager, type: ActivityType.checkout)
-                    .make(userInfo: ["repositoryDirectory": repositoryLocalURL])
+                    .make(userInfo: ["repository": repository])
         } else {
             var activityCheckout =
-                ActivityCheckout(processManager: processManager, projectLogURL: projectLogURL)
+                ActivityCheckout(processManager: processManager, logfile: logfile)
             activityCheckout.delegate = activityManager
-            checkoutActivity = activityCheckout.success(repositoryLocalURL: repositoryLocalURL, project: project)
+            checkoutActivity = activityCheckout.success(repository: repository, project: project, branch: configuration.branch)
         }
         
-        let location = configuration.location
+        let projectAt = self.locations.projectAt
         
         var activityFindProject =
-            ActivityFindProject(applicationCachesDirectory: applicationCachesDirectory, processManager: processManager)
+            ActivityFindProject(processManager: processManager)
         activityFindProject.delegate = activityManager
-        let findProjectActivity = activityFindProject.success(project: project, location: location)
+        let findProjectActivity = activityFindProject.success(project: project, projectAt: projectAt)
         
-        let configuration = self.projectDirectory.configuration()
+        let configuration = home.configuration()
         
         var activityReadProjectConfiguration =
             ActivityReadProjectConfiguration(processManager: processManager)
         activityReadProjectConfiguration.delegate = activityManager
         let readProjectConfigurationActivity = activityReadProjectConfiguration.success(project: project, configuration: configuration)
         
-        let scheme = configuration.detectScheme(name: project.scheme)
+        var activityShowBuildSettings =
+            ActivityShowBuildSettings(processManager: processManager)
+        activityShowBuildSettings.delegate = activityManager
+        let showBuildSettingsActivity = activityShowBuildSettings.success(project: project, projectAt: projectAt, configuration: configuration, buildSettings: home.buildSettings())
+        
+        let devices = home.devices()
+        
+        var activityListDevices =
+            ActivityListDevices(processManager: processManager)
+        activityListDevices.delegate = activityManager
+        let listDevicesActivity = activityListDevices.success(devices: devices)
+        
+        let buildSettings = home.buildSettings().for(project: project.name)
+        
+        let appBundle = home.appBundle(name: project.name)
+        
+        var activityBuild =
+            ActivityBuild(locations: self.locations, processManager: processManager, logfile: logfile)
+        activityBuild.delegate = activityManager
+        let buildActivity = activityBuild.success(projectAt: projectAt, project: project, appBundle: appBundle, configuration: configuration, home: home, buildSettings: buildSettings)
+        
+        var activityTest =
+            ActivityTest(locations: self.locations, processManager: processManager, logfile: logfile)
+        activityTest.delegate = activityManager
+        let testActivity = activityTest.success(projectAt: projectAt, project: project, devices: devices, configuration: configuration)
+        
+        return checkoutActivity -->
+            findProjectActivity -->
+            readProjectConfigurationActivity -->
+            showBuildSettingsActivity -->
+            listDevicesActivity -->
+            buildActivity -->
+            testActivity -->
+        nextActivity
+    }
+
+    public func exportSeries(activityManager: ActivityManager, skipCheckout: Bool = false, next nextActivity: @escaping Activity) -> Activity {
+        
+        let project = configuration.project
+        let home = locations.home
+        let logfile = locations.logfile
+        let repository = locations.repository
+
+        FileManager.default.createFile(atPath: logfile.path, contents: nil, attributes: nil)
+        
+        let checkoutActivity: SuccessfulActivity
+        
+        if skipCheckout {
+            checkoutActivity =
+                ActivityAlwaysSuccess(activityManager: activityManager, type: ActivityType.checkout)
+                    .make(userInfo: ["repository": repository])
+        } else {
+            var activityCheckout =
+                ActivityCheckout(processManager: processManager, logfile: logfile)
+            activityCheckout.delegate = activityManager
+            checkoutActivity = activityCheckout.success(repository: repository, project: project)
+        }
+        
+        let projectAt = locations.projectAt
+        
+        var activityFindProject =
+            ActivityFindProject(processManager: processManager)
+        activityFindProject.delegate = activityManager
+        let findProjectActivity = activityFindProject.success(project: project, projectAt: projectAt)
+        
+        let configuration = home.configuration()
+        
+        var activityReadProjectConfiguration =
+            ActivityReadProjectConfiguration(processManager: processManager)
+        activityReadProjectConfiguration.delegate = activityManager
+        let readProjectConfigurationActivity = activityReadProjectConfiguration.success(project: project, configuration: configuration)
         
         var activityShowBuildSettings =
             ActivityShowBuildSettings(processManager: processManager)
         activityShowBuildSettings.delegate = activityManager
-        let showBuildSettingsActivity = activityShowBuildSettings.success(project: project, location: location, scheme: scheme, buildSettings: self.projectDirectory.buildSettings())
+        let showBuildSettingsActivity = activityShowBuildSettings.success(project: project, projectAt: projectAt, configuration: configuration, buildSettings: home.buildSettings())
         
-        let devices = self.projectDirectory.devices()
+        let devices = home.devices()
         
         var activityListDevices =
             ActivityListDevices(processManager: processManager)
             activityListDevices.delegate = activityManager
         let listDevicesActivity = activityListDevices.success(devices: devices)
         
-        let buildSettings = self.projectDirectory.buildSettings().for(project: self.project.name)
+        let buildSettings = home.buildSettings().for(project: project.name)
         
-        let appBundle = self.projectDirectory.appBundle(name: project.name)
+        let appBundle = home.appBundle(name: project.name)
         
         var activityBuild =
-            ActivityBuild(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, projectLogURL: projectLogURL)
+            ActivityBuild(locations: self.locations, processManager: processManager, logfile: logfile)
         activityBuild.delegate = activityManager
-        let buildActivity = activityBuild.success(location: location, project: project, appBundle: appBundle, scheme: scheme, projectDirectory: self.projectDirectory, buildSettings: buildSettings)
+        let buildActivity = activityBuild.success(projectAt: projectAt, project: project, appBundle: appBundle, configuration: configuration, home: home, buildSettings: buildSettings)
         
         var activityTest =
-            ActivityTest(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, projectLogURL: projectLogURL)
+            ActivityTest(locations: self.locations, processManager: processManager, logfile: logfile)
         activityTest.delegate = activityManager
-        let testActivity = activityTest.success(location: location, project: project, devices: devices, scheme: scheme)
-        
-        let archive = self.projectDirectory.archive(name: scheme)
+        let testActivity = activityTest.success(projectAt: projectAt, project: project, devices: devices, configuration: configuration)
         
         var activityArchive =
-            ActivityArchive(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, projectLogURL: projectLogURL)
+            ActivityArchive(locations: self.locations, processManager: processManager, logfile: logfile)
         activityArchive.delegate = activityManager
-        let archiveActivity = activityArchive.success(location: location, project: project, scheme: scheme, archive: archive, configuration: .release)
-        
-        let export = self.projectDirectory.export(name: scheme)
+        let archiveActivity = activityArchive.success(projectAt: projectAt, project: project, configuration: configuration, build: .release)
         
         var activityExport =
-            ActivityExport(applicationCachesDirectory: self.applicationCachesDirectory, applicationSupportDirectory: self.applicationSupportDirectory, processManager: processManager, projectLogURL: projectLogURL)
+            ActivityExport(locations: self.locations, processManager: processManager, logfile: logfile)
         activityExport.delegate = activityManager
-        let exportActivity = activityExport.success(location: location, project: project, projectDirectory: self.projectDirectory, appBundle: appBundle, export: export, configuration: .release, exportDirectoryURL: self.projectDirectory.exportDirectoryURL())
+        let exportActivity = activityExport.success(projectAt: projectAt, project: project, appBundle: appBundle, configuration: configuration, build: .release, exportDirectoryURL: home.exportDirectoryURL())
         
         return checkoutActivity -->
             findProjectActivity -->
@@ -121,7 +185,7 @@ class ActivityBuiler {
     
     public func pollActivity(activityManager: ActivityManager, then: DispatchWorkItem) -> Activity {        
         return ActivityPoll(processManager: self.processManager, activityManager: activityManager)
-                .make(project: project, repositoryDirectory: self.projectRepositoryDirectory, pollDirectoryURL: self.projectDirectory.pollURL(), do: then)
+            .make(project: self.configuration.project, branch: self.configuration.branch, repository: self.locations.repository, pollDirectoryURL: self.locations.home.pollURL(), do: then)
     }
     
     

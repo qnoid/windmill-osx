@@ -64,7 +64,7 @@ class WindmillTest: XCTestCase {
         
         activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
             expectation.fulfill()
-        })(["location":Project.Location(project: project, url: repositoryLocalURL)])
+        })(["projectAt":Project.Location(project: project, url: repositoryLocalURL)])
         
         wait(for: [expectation], timeout: 30.0)
     }
@@ -83,7 +83,7 @@ class WindmillTest: XCTestCase {
 
         activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
             expectation.fulfill()
-        })(["location":Project.Location(project: project, url: repositoryLocalURL)])
+        })(["projectAt":Project.Location(project: project, url: repositoryLocalURL)])
         
         
         wait(for: [expectation], timeout: 30.0)
@@ -111,7 +111,7 @@ class WindmillTest: XCTestCase {
         let activities = Activities(project: project, windmill: windmill)
 
         activities.activityBuild(locationURL: repositoryLocalURL, next: { _ in
-            })(["location":Project.Location(project: project, url: repositoryLocalURL)])
+            })(["projectAt":Project.Location(project: project, url: repositoryLocalURL)])
         
         wait(for: [expectation], timeout: 30.0)
     }

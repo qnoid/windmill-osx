@@ -110,6 +110,11 @@ class StandardOutFormattedWriter: DispatchSourceWriteProvider, StandardOut, Stan
         self.failureReason(string: &standardOutput, message: error.failureReason)
         self.recoverySuggestion(string: &standardOutput, message: error.recoverySuggestion)
     }
+    
+    func note(_ message: String) {
+        self.standardOutput = ""
+        self.out(string: &standardOutput, type: "note: ", message: message)
+    }
 
     
     func activate() -> DispatchSourceWrite? {

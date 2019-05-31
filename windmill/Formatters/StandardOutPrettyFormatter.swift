@@ -23,6 +23,7 @@ class StandardOutPrettyFormatter: Formatter {
     let compileNoteFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileNote()
     let compileErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let compileWarningFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
+    let noProvisioningProfilesErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let clangErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let globalErrorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let globalWarningFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
@@ -66,7 +67,7 @@ class StandardOutPrettyFormatter: Formatter {
     let warnTitleFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let fatalFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
     let fatalCouldNotReadRemoteRepositoryFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
-    
+    let errorFormatter: RegularExpressionMatchesFormatter<NSAttributedString>
 
     let descender: CGFloat
     
@@ -81,6 +82,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.compileFormatter = compileFormatter
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
         self.compileWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileWarning(descender: descender)
+        self.noProvisioningProfilesErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeNoProvisioningProfilesError(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
         self.globalWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalWarning(descender: descender)
@@ -123,6 +125,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
         self.fatalFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatal(descender: descender)
         self.fatalCouldNotReadRemoteRepositoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatalCouldNotReadRemoteRepository(descender: descender)
+        self.errorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeError(descender: descender)
         super.init()
     }
     
@@ -137,6 +140,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.compileFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompile(descender: descender)
         self.compileErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileError(descender: descender)
         self.compileWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeCompileWarning(descender: descender)
+        self.noProvisioningProfilesErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeNoProvisioningProfilesError(descender: descender)
         self.clangErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeClangError(descender: descender)
         self.globalErrorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalError(descender: descender)
         self.globalWarningFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeGlobalWarning(descender: descender)
@@ -179,6 +183,7 @@ class StandardOutPrettyFormatter: Formatter {
         self.warnTitleFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeWarnTitle(descender: descender)
         self.fatalFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatal(descender: descender)
         self.fatalCouldNotReadRemoteRepositoryFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeFatalCouldNotReadRemoteRepository(descender: descender)
+        self.errorFormatter = RegularExpressionMatchesFormatter<NSAttributedString>.makeError(descender: descender)
         super.init(coder: aDecoder)
     }
     
@@ -235,6 +240,8 @@ class StandardOutPrettyFormatter: Formatter {
             return compileError
         } else if let compileWarning = self.compileWarningFormatter.format(for: obj) {
             return compileWarning
+        } else if let noProvisioningProfilesError = self.noProvisioningProfilesErrorFormatter.format(for: obj) {
+            return noProvisioningProfilesError
         } else if let clangError = self.clangErrorFormatter.format(for: obj) {
             return clangError
         } else if let globalError = self.globalErrorFormatter.format(for: obj) {
@@ -301,6 +308,8 @@ class StandardOutPrettyFormatter: Formatter {
             return fatalCouldNotReadRemoteRepository
         } else if let fatal = self.fatalFormatter.format(for: obj) {
             return fatal
+        } else if let error = self.errorFormatter.format(for: obj) {
+            return error
         } else {
             return nil
         }

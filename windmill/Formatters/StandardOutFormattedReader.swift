@@ -16,38 +16,24 @@ protocol StandardOutFormattedReaderDelegate: class {
 
 class StandardOutFormattedReader: DispatchSourceReadProvider {
     
-    static func make(standardOutFormatter: StandardOutPrettyFormatter, queue: DispatchQueue, fileURL: URL?) -> StandardOutFormattedReader {
-        return StandardOutFormattedReader(queue: queue, standardOutFormatter: standardOutFormatter, fileURL: fileURL)
+    static func make(standardOutFormatter: StandardOutPrettyFormatter, queue: DispatchQueue) -> StandardOutFormattedReader {
+        return StandardOutFormattedReader(queue: queue, standardOutFormatter: standardOutFormatter)
     }
     
     let standardOutFormatter: StandardOutPrettyFormatter
     let queue: DispatchQueue
     weak var delegate: StandardOutFormattedReaderDelegate?
     
-    var fileURL: URL?
     var standardOutput: String = ""
     
-    var fileHandleForReading: FileHandle? {
-        guard let fileURL = self.fileURL else {
-            return nil
-        }
-        
-        return try? FileHandle(forReadingFrom: fileURL)
-    }
-    
-    init(queue: DispatchQueue, standardOutFormatter: StandardOutPrettyFormatter, fileURL: URL?) {
+    init(queue: DispatchQueue, standardOutFormatter: StandardOutPrettyFormatter) {
         self.queue = queue
         self.standardOutFormatter = standardOutFormatter
-        self.fileURL = fileURL
     }
     
-    func activate(completion: DispatchQueue? = nil) -> DispatchSourceRead? {
+    func read(fileHandleForReading: FileHandle, completion: DispatchQueue? = nil) -> DispatchSourceRead {
         self.standardOutput = ""
-        
-        let dispatchSourceRead = self.read(completion: completion)
-        dispatchSourceRead?.activate()
-        
-        return dispatchSourceRead
+        return self.makeReadSource(fileHandleForReading: fileHandleForReading, completion: completion)
     }
     
     func output(part: String, count: Int) {
@@ -64,9 +50,7 @@ class StandardOutFormattedReader: DispatchSourceReadProvider {
                 return
             }
             
-            if let delegate = self.delegate {
-                delegate.standardOut(line: formatted)
-            }
+            self.delegate?.standardOut(line: formatted)
         }
         
         let range = self.standardOutput.lineRange(for: standardOutput.startIndex..<standardOutput.endIndex)

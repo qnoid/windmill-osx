@@ -13,12 +13,12 @@ class ActivityDistribute: NSObject {
     
     struct Context {
         
-        static func make(configuration: Windmill.Configuration) -> ActivityContext {
+        static func make(locations: Windmill.Locations, configuration: Windmill.Configuration) -> ActivityContext {
             
-            let archive = Archive.make(configuration: configuration)
-            let export = Export.make(configuration: configuration)
-            let appBundle = AppBundle.make(configuration: configuration, archive: archive, distributionSummary: export.distributionSummary)
-            let metadata = Export.Metadata.make(configuration: configuration, applicationProperties: appBundle.info)
+            let archive = Archive.make(home: locations.home, configuration: configuration)
+            let export = Export.make(home: locations.home, configuration: configuration)
+            let appBundle = AppBundle.make(home: locations.home, archive: archive, distributionSummary: export.distributionSummary)
+            let metadata = Export.Metadata.make(home: locations.home, projectAt: locations.projectAt, configuration: configuration, applicationProperties: appBundle.info)
 
             return make(export: export, metadata: metadata, appBundle: appBundle)
         }

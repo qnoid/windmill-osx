@@ -12,46 +12,45 @@ import os
 struct ActivityFindProject {
     
     let log = OSLog(subsystem: "io.windmill.windmill", category: "activity")
-    let applicationCachesDirectory: ApplicationCachesDirectory
-
+    
     weak var processManager: ProcessManager?
     weak var delegate: ActivityDelegate?
 
-    init(applicationCachesDirectory: ApplicationCachesDirectory, processManager: ProcessManager) {
-        self.applicationCachesDirectory = applicationCachesDirectory
+    init(processManager: ProcessManager) {
         self.processManager = processManager
     }
 
-    func success(project: Project, location: Project.Location) -> SuccessfulActivity {
+    func success(project: Project, projectAt: Project.Location) -> SuccessfulActivity {
      
         return SuccessfulActivity { next in
             
             return { context in
                 
-                guard let repositoryDirectory = context["repositoryDirectory"] as? RepositoryDirectory else {
-                    preconditionFailure("ActivityFindProject expects a `ProjectRepositoryDirectory` under the context[\"repositoryDirectory\"] for a succesful callback")
+                guard let repository = context["repository"] as? RepositoryDirectory else {
+                    preconditionFailure("ActivityFindProject expects a `ProjectRepositoryDirectory` under the context[\"repository\"] for a succesful callback")
                 }
 
-                let findProject = Process.makeFind(project: project, repositoryLocalURL: repositoryDirectory.URL)
+                let findProject = Process.makeFind(project: project, repositoryLocalURL: repository.URL)
                 
                 self.processManager?.launch(process: findProject) { projectDirectory in
                  
                     if let projectDirectory = projectDirectory.value {
-                        location.url = URL(fileURLWithPath: projectDirectory)
+                        projectAt.url = URL(fileURLWithPath: projectDirectory)
                     }
                     
-                    os_log("Project found under: '%{public}@'", log: self.log, type: .debug, location.url.path)
+                    os_log("Project found under: '%{public}@'", log: self.log, type: .debug, projectAt.url.path)
 
-                    guard let commit = location.commit else {
-                        preconditionFailure("ActivityFindProject expects the project to be located in a git repo")
+                    guard let commit = projectAt.commit else {
+                        let error = NSError.errorNoRepo(projectAt.url.path)
+                        self.delegate?.did(terminate: .readProjectConfiguration, error: WindmillError.recoverable(activityType: .readProjectConfiguration, error: error), userInfo: nil)
+                        return
                     }
-
                     
                     DispatchQueue.main.async {
                         self.delegate?.notify(notification: Windmill.Notifications.didCheckoutProject, userInfo: ["commit": commit])
                     }
 
-                    next?(["location":location])
+                    next?(["projectAt":projectAt])
                 }
             }
         }

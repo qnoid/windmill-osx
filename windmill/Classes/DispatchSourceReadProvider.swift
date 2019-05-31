@@ -8,28 +8,22 @@
 
 import Foundation
 
-protocol DispatchSourceReadProvider {
+protocol DispatchSourceReadProvider: class {
     
     var queue: DispatchQueue { get }
-    var fileHandleForReading: FileHandle? { get }
     
-    func read(completion: DispatchQueue?) -> DispatchSourceRead?
-    
+    func makeReadSource(fileHandleForReading: FileHandle, completion: DispatchQueue?) -> DispatchSourceRead
     func output(part: String, count: Int)
 }
 
 extension DispatchSourceReadProvider {
     
-    func read(completion: DispatchQueue? = nil) -> DispatchSourceRead? {
-        
-        guard let fileHandleForReading = fileHandleForReading else {
-            return nil
-        }
+    func makeReadSource(fileHandleForReading: FileHandle, completion: DispatchQueue? = nil) -> DispatchSourceRead {
         
         let fileDescriptor = fileHandleForReading.fileDescriptor
         let readSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: self.queue)
         
-        readSource.setEventHandler { [weak readSource = readSource] in
+        readSource.setEventHandler { [weak readSource = readSource, weak self] in
             guard let data = readSource?.data else {
                 return
             }
@@ -45,8 +39,8 @@ extension DispatchSourceReadProvider {
                 return
             }
         
-            (completion ?? DispatchQueue.main).async {
-                self.output(part: availableString, count: availableString.utf8.count)
+            (completion ?? DispatchQueue.main).async { 
+                self?.output(part: availableString, count: availableString.utf8.count)
             }
         }
         

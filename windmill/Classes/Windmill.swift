@@ -45,33 +45,58 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 }
 
 extension AppBundle {
-    static func make(configuration: Windmill.Configuration, archive: Archive, distributionSummary: DistributionSummary) -> AppBundle {
-        return configuration.projectDirectory.appBundle(archive: archive, name: distributionSummary.name)
+    static func make(home: ProjectDirectory, archive: Archive, distributionSummary: DistributionSummary) -> AppBundle {
+        return home.archivedAppBundle(archive: archive, name: distributionSummary.name)
     }
 }
 
 extension Archive {
     
-    static func make(configuration: Windmill.Configuration) -> Archive {
-        let scheme = configuration.projectDirectory.configuration().detectScheme(name: configuration.project.scheme)
-        return configuration.projectDirectory.archive(name: scheme)
+    static func make(home: ProjectDirectory, configuration: Windmill.Configuration) -> Archive {
+        let scheme = home.configuration().detectScheme(name: configuration.project.scheme)
+        return home.archive(name: scheme)
     }
 }
 
 extension Export {
     
-    static func make(configuration: Windmill.Configuration) -> Export {
-        let scheme = configuration.projectDirectory.configuration().detectScheme(name: configuration.project.scheme)
-        return configuration.projectDirectory.export(name: scheme)
+    static func make(home: ProjectDirectory, configuration: Windmill.Configuration) -> Export {
+        let scheme = home.configuration().detectScheme(name: configuration.project.scheme)
+        return home.export(name: scheme)
     }
 }
 
 extension Export.Metadata {
     
-    static func make(configuration: Windmill.Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
-        return configuration.projectDirectory.metadata(project: configuration.project, location: configuration.location, configuration: .release, applicationProperties: applicationProperties)
+    static func make(home: ProjectDirectory, projectAt: Project.Location, configuration: Windmill.Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
+        return home.metadata(project: configuration.project, projectAt: projectAt, configuration: .release, applicationProperties: applicationProperties)
     }
 }
+
+extension Set where Element == Windmill.Configuration {
+    
+    @discardableResult mutating func write(_ configuration: Windmill.Configuration) -> Bool {
+        let inserted = self.insert(configuration).inserted
+        
+        if inserted {
+            Windmill.Configuration.write(self)
+        }
+        
+        return inserted
+    }
+    
+    mutating func delete(_ configuration: Windmill.Configuration) {
+        self.remove(configuration)
+        Windmill.Configuration.write(self)
+    }
+    
+    func contains(_ project: Project, branch: String) -> Bool {
+        return self.contains(where: { configuration in
+            return configuration.project == project && configuration.branch == branch
+        })
+    }
+}
+
 /**
  
  A Windmill instance shouldn't be reused.
@@ -89,7 +114,8 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     class func make(project: Project, subscriptionManager: SubscriptionManager = SubscriptionManager(), processManager: ProcessManager = ProcessManager()) -> Windmill {
 
         let configuration = Windmill.Configuration.make(project: project)
-        let windmill = Windmill(configuration: configuration, subscriptionManager: subscriptionManager)
+        let locations = Windmill.Locations.make(project: project)
+        let windmill = Windmill(configuration: configuration, locations: locations, subscriptionManager: subscriptionManager)
         
         let activityManager = ActivityManager(subscriptionManager: subscriptionManager, processManager: processManager)
         windmill.activityManager = activityManager
@@ -97,29 +123,130 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         return windmill
     }
     
-    public class Configuration {
+    class func make(configuration: Configuration, subscriptionManager: SubscriptionManager = SubscriptionManager(), processManager: ProcessManager = ProcessManager()) -> Windmill {
+    
+        let locations: Locations
+        if configuration.branch == "master" {
+            locations = Windmill.Locations.make(project: configuration.project)
+        } else {
+            locations = Windmill.Locations.make(project: configuration.project, branch: configuration.branch)
+        }
+        
+        let windmill = Windmill(configuration: configuration, locations: locations, subscriptionManager: subscriptionManager)
+        
+        let activityManager = ActivityManager(subscriptionManager: subscriptionManager, processManager: processManager)
+        windmill.activityManager = activityManager
+        
+        return windmill
+    }
+    
+    public struct Locations {
+        
+        static func make(project: Project) -> Locations {
+            
+            let windmill = FileManager.default.windmillDirectory
+            let caches = Directory.Windmill.ApplicationCachesDirectory()
+            let support = Directory.Windmill.ApplicationSupportDirectory()
+            
+            let home = windmill.directory(for: project)
+            
+            let sources = caches.sources()
+            let repository = caches.respositoryDirectory(at: sources, pathComponent: project.name)
+            
+            let derivedData = caches.derivedData(pathComponent: project.name)
+            
+            let resultBundleDirectory = support.resultBundleDirectory()
+            let logfile = home.log(name: "raw")
+            
+            return Locations(project: project, home: home, repository: repository, sources: sources, derivedData: derivedData, resultBundleDirectory: resultBundleDirectory, logfile: logfile)
+        }
+        
+        static func make(project: Project, branch: String) -> Locations {
+            
+            precondition(branch != "master")
+            
+            let windmill = FileManager.default.windmillDirectory
+            let caches = Directory.Windmill.ApplicationCachesDirectory()
+            let support = Directory.Windmill.ApplicationSupportDirectory()
+            
+            let home = windmill.directory(for: project).builds().directory(at: branch)
+            
+            let sources = caches.sources(at: caches.builds()).directory(for: project).directory(at: branch)
+            let repository = caches.respositoryDirectory(at: sources, pathComponent: project.name)
+            
+            let derivedData = caches.derivedData(at: caches.builds()).directory(for: project).directory(at: branch)
+            
+            let resultBundleDirectory = support.resultBundleDirectory(at: support.builds())
+            let logfile = home.log(name: "raw")
 
-        class func make(project: Project) -> Configuration {
-            return Configuration(project: project)
+            return Locations(project: project, home: home, repository: repository, sources: sources, derivedData: derivedData, resultBundleDirectory: resultBundleDirectory, logfile: logfile)
+        }
+
+        private let project: Project
+        
+        let home: ProjectDirectory
+        
+        let repository: RepositoryDirectory
+        var projectAt: Project.Location { return self.repository.location(project: self.project) }
+
+        let sources: Directory
+        let derivedData: DerivedDataDirectory
+        
+        let resultBundleDirectory: ResultBundleDirectory
+        var buildResultBundle: ResultBundle { return self.resultBundleDirectory.buildResultBundle(at: self.project.name) }
+        var testResultBundle: ResultBundle { return self.resultBundleDirectory.testResultBundle(at: self.project.name) }
+        var archiveResultBundle: ResultBundle { return self.resultBundleDirectory.archiveResultBundle(at: self.project.name) }
+        var exportResultBundle: ResultBundle {  return self.resultBundleDirectory.exportResultBundle(at: self.project.name) }
+
+        let logfile: URL
+    }
+    
+    public struct Configuration: Codable, Equatable, Hashable {
+
+        static func make(project: Project) -> Configuration {
+            return make(project: project, branch: "master", activities: [.checkout, .build, .test, .archive, .export, .distribute])
+        }
+
+        static func make(project: Project, branch: String, activities: [ActivityType]) -> Configuration {
+            return Configuration(project: project, branch: branch, activities: activities)
         }
         
+        static func read(url: URL = Directory.Windmill.ApplicationSupportDirectory().file("configurations.json").URL) -> Set<Configuration>
+        {
+            do
+            {
+                let decoder = JSONDecoder()
+                let data = try Data(contentsOf: url)
+                return try decoder.decode(Set<Configuration>.self, from: data)
+            } catch let error as NSError {
+                os_log("%{public}@", log: .default, type: .error, error)
+                return []
+            }
+        }
+
+        static func write(_ projects: Set<Configuration>, url: URL = Directory.Windmill.ApplicationSupportDirectory().file("configurations.json").URL)
+        {
+            let encoder = JSONEncoder()
+            
+            do {
+                let data = try encoder.encode(projects)
+                try data.write(to: url, options: .atomic)
+            } catch {
+                os_log("%{errorno}@", log: .default, type: .error, error.localizedDescription)
+            }
+        }
+        
+        static var shared : Set<Windmill.Configuration> = Windmill.Configuration.read()
+
         let project: Project
-        let applicationCachesDirectory: ApplicationCachesDirectory
-        let applicationSupportDirectory: ApplicationSupportDirectory
-        let windmillDirectory: WindmillDirectory
+        let branch: String
+        let activities: [ActivityType]
         
-        init(project: Project, windmillDirectory: WindmillDirectory = FileManager.default.windmillDirectory, applicationCachesDirectory: ApplicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory(), applicationSupportDirectory: ApplicationSupportDirectory = Directory.Windmill.ApplicationSupportDirectory()) {
+        init(project: Project, branch: String, activities: [ActivityType]) {
             self.project = project
-            self.windmillDirectory = windmillDirectory
-            self.applicationCachesDirectory = applicationCachesDirectory
-            self.applicationSupportDirectory = applicationSupportDirectory
+            self.branch = branch
+            self.activities = activities
         }
-        
-        lazy var projectDirectory = self.windmillDirectory.directory(for: project)
-        lazy var projectLogURL = self.projectDirectory.log(name: "raw")
-        lazy var projectRepositoryDirectory = self.applicationCachesDirectory.respositoryDirectory(at: project.name)
-        lazy var location = self.projectRepositoryDirectory.location(project: project)
-        lazy var derivedData = self.applicationCachesDirectory.derivedData(at: project.name)
     }
     
     struct Notifications {
@@ -149,6 +276,7 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     let queue = DispatchQueue(label: "io.windmill.log.queue")
     
     let configuration: Configuration
+    let locations: Locations
     let subscriptionManager: SubscriptionManager
     var activityManager: ActivityManager? {
         didSet {
@@ -160,7 +288,10 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     var subscriptionStatus: SubscriptionStatus? {
         didSet {
             if oldValue == nil, case .active(let account, let authorizationToken)? = subscriptionStatus {
-                self.activityManager?.distribute(configuration: self.configuration, standardOutFormattedWriter: self.standardOutFormattedWriter, account: account, authorizationToken: authorizationToken)
+                
+                if self.configuration.activities.contains(.distribute) {
+                    self.activityManager?.distribute(configuration: self.configuration, locations: self.locations, standardOutFormattedWriter: self.standardOutFormattedWriter, account: account, authorizationToken: authorizationToken)
+                }
             }
         }
     }
@@ -178,10 +309,11 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     }
 
     // MARK: init
-    init(configuration: Configuration, subscriptionManager: SubscriptionManager) {
+    init(configuration: Configuration, locations: Locations, subscriptionManager: SubscriptionManager) {
 
         self.configuration = configuration
-        self.standardOutFormattedWriter = StandardOutFormattedWriter.make(queue: self.queue, fileURL: configuration.projectLogURL)
+        self.locations = locations
+        self.standardOutFormattedWriter = StandardOutFormattedWriter.make(queue: self.queue, fileURL: self.locations.logfile)
         self.subscriptionManager = subscriptionManager
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionActive(notification:)), name: SubscriptionManager.SubscriptionActive, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(subscriptionFailed(notification:)), name: SubscriptionManager.SubscriptionFailed, object: nil)
@@ -251,16 +383,16 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
     }
     
     // MARK: public
-    func removeDerivedData() -> Bool {
-        return self.configuration.derivedData.remove()
+    @discardableResult func removeDerivedData() -> Bool {
+        return self.locations.derivedData.remove()
     }
     
-    func isRepositoryDirectoryPresent() -> Bool {
-        return self.configuration.projectRepositoryDirectory.exists()
+    @discardableResult func isRepositoryDirectoryPresent() -> Bool {
+        return self.locations.repository.exists()
     }
     
-    func removeRepositoryDirectory() -> Bool {
-        return self.configuration.projectRepositoryDirectory.remove()
+    @discardableResult func removeRepositoryDirectory() -> Bool {
+        return self.locations.repository.remove()
     }
     
     func willLaunch(activity: ActivityType, userInfo: [AnyHashable : Any]?) {
@@ -310,12 +442,12 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         activityDistribute.delegate = self
         
         let distribute = activityDistribute.make(account: account, authorizationToken: authorizationToken)
-        distribute(ActivityDistribute.Context.make(configuration: self.configuration))
+        distribute(ActivityDistribute.Context.make(locations: self.locations, configuration: self.configuration))
     }
     
     func exportAndMonitor(activityManager: ActivityManager, skipCheckout: Bool = false) -> Activity {
         
-        let activityBuiler = activityManager.builder(configuration: self.configuration)
+        let activityBuiler = activityManager.builder(configuration: self.configuration, locations: self.locations)
         
         let pollActivity =
             activityBuiler.pollActivity(activityManager: activityManager, then: DispatchWorkItem { [weak self] in
@@ -323,6 +455,18 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
             })
         
         return activityBuiler.exportSeries(activityManager: activityManager, skipCheckout: skipCheckout, next: pollActivity)
+    }
+    
+    func testAndMonitor(activityManager: ActivityManager, skipCheckout: Bool = false) -> Activity {
+        
+        let activityBuiler = activityManager.builder(configuration: self.configuration, locations: self.locations)
+        
+        let pollActivity =
+            activityBuiler.pollActivity(activityManager: activityManager, then: DispatchWorkItem { [weak self] in
+                self?.notify(notification: Windmill.Notifications.SourceCodeChanged)
+            })
+        
+        return activityBuiler.testSeries(activityManager: activityManager, skipCheckout: skipCheckout, next: pollActivity)
     }
 
     /**
@@ -335,12 +479,22 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
             preconditionFailure("ActivityManager hasn't been set on Windmill. Did you call the setter?")
         }
         
+        if skipCheckout {
+            self.standardOutFormattedWriter.note("Using existing source code")
+            self.dispatchSourceWrite = self.standardOutFormattedWriter.activate()
+        }
+        
         self.notify(notification: Windmill.Notifications.willRun, userInfo: ["project":self.configuration.project])
         
         self.subscriptionStatus(SubscriptionStatus.default)
         
-        let exportAndMonitor = self.exportAndMonitor(activityManager: activityManager, skipCheckout: skipCheckout)
-        exportAndMonitor([:])
+        if self.configuration.activities.contains(.export) {
+            let exportAndMonitor = self.exportAndMonitor(activityManager: activityManager, skipCheckout: skipCheckout)
+            exportAndMonitor([:])
+        } else if self.configuration.activities.contains(.test) {
+            let testAndMonitor = self.testAndMonitor(activityManager: activityManager, skipCheckout: skipCheckout)
+            testAndMonitor([:])
+        }
         
         self.notify(notification: Windmill.Notifications.didRun, userInfo: ["project":self.configuration.project])
     }
@@ -398,5 +552,15 @@ class Windmill: ActivityManagerDelegate, ActivityDelegate
         default:
             return
         }
+    }
+    
+    public func remove() {
+        DispatchQueue.main.async {
+            Windmill.Configuration.shared.delete(self.configuration)
+        }
+        self.removeDerivedData()
+        self.removeRepositoryDirectory()
+        self.locations.home.remove()
+        self.locations.resultBundleDirectory.remove()
     }
 }

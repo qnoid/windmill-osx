@@ -23,6 +23,26 @@ public enum ArtefactType
     
 }
 
+extension ActivityType {
+    
+    func artefact() -> [ArtefactType] {
+        switch self {
+        case .build:
+            return [.appBundle]
+        case .test:
+            return [.testReport]
+        case .archive:
+            return [.archiveBundle]
+        case .export:
+            return [.ipaFile]
+        case .distribute:
+            return [.otaDistribution]
+        default:
+            return []
+        }
+    }
+}
+
 class ArtefactsViewController: NSViewController {
 
     @IBOutlet weak var buildArtefactView: ArtefactView! {
@@ -30,6 +50,7 @@ class ArtefactsViewController: NSViewController {
             buildArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.build.header", comment: "")
             buildArtefactView.toolTip = NSLocalizedString("windmill.artefacts.build.tooltip", comment: "")
             buildArtefactView.leadingLabel.stringValue = "Make sure:"
+            buildArtefactView.isHidden = true
         }
     }
     @IBOutlet weak var testArtefactView: ArtefactView! {
@@ -37,12 +58,14 @@ class ArtefactsViewController: NSViewController {
             testArtefactView.headerTextField.string = NSLocalizedString("windmill.reports.test.header", comment: "")
             testArtefactView.toolTip = NSLocalizedString("windmill.reports.test.tooltip", comment: "")
             testArtefactView.leadingLabel.stringValue = "You need to:"
+            testArtefactView.isHidden = true
         }
     }
     @IBOutlet weak var archiveArtefactView: ArtefactView! {
         didSet {
             archiveArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.archive.header", comment: "")
             archiveArtefactView.toolTip = NSLocalizedString("windmill.artefacts.archive.tooltip", comment: "")
+            archiveArtefactView.isHidden = true
         }
     }
     @IBOutlet weak var exportArtefactView: ArtefactView! {
@@ -50,6 +73,7 @@ class ArtefactsViewController: NSViewController {
             exportArtefactView.headerTextField.string = NSLocalizedString("windmill.artefacts.ipa.header", comment: "")
             exportArtefactView.toolTip = NSLocalizedString("windmill.artefacts.ipa.tooltip", comment: "")
             exportArtefactView.leadingLabel.stringValue = ""
+            exportArtefactView.isHidden = true
         }
     }
     @IBOutlet weak var distributeArtefactView: ArtefactView! {
@@ -57,6 +81,7 @@ class ArtefactsViewController: NSViewController {
             distributeArtefactView.headerTextField.string = NSLocalizedString("windmill.aspects.ota.header", comment: "")
             distributeArtefactView.leadingLabel.stringValue = "You need to:"
             distributeArtefactView.toolTip = NSLocalizedString("windmill.aspects.ota.tooltip", comment: "")
+            distributeArtefactView.isHidden = true
         }
     }
     
@@ -116,22 +141,36 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didDistributeSuccesfully(_:)), name: Windmill.Notifications.didDistributeProject, object: windmill)
+            
+            self.windmill?.configuration.activities.forEach { activity in
+                for artefact in activity.artefact() {
+                    self.artefactViews[artefact]?.isHidden = false
+                }
+            }
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    @objc func willRun(_ aNotification: Notification) {
-        for artefactView in self.artefactViews.values {
-            artefactView.isHidden = false
-            artefactView.stopStageAnimation()
-        }
+        
         for view in self.views.values {
             view.isHidden = true
         }
+    }
+
+    @objc func willRun(_ aNotification: Notification) {
         
+        self.windmill?.configuration.activities.forEach { activity in
+            for artefact in activity.artefact() {
+                self.artefactViews[artefact]?.isHidden = false
+                self.artefactViews[artefact]?.stopStageAnimation()
+            }
+        }
+        
+        for view in self.views.values {
+            view.isHidden = true
+        }
+
         self.testReportView.openButton.isHidden = true
     }
 

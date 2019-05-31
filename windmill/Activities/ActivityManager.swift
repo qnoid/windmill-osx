@@ -173,16 +173,16 @@ class ActivityManager: ProcessMonitor, ActivityDelegate {
     }
     
     // MARK: public
-    func builder(configuration: Windmill.Configuration) -> ActivityBuiler {
-        return ActivityBuiler(configuration: configuration, subscriptionManager: self.subscriptionManager, processManager: self.processManager)
+    func builder(configuration: Windmill.Configuration, locations: Windmill.Locations) -> ActivityBuiler {
+        return ActivityBuiler(configuration: configuration, locations: locations, subscriptionManager: self.subscriptionManager, processManager: self.processManager)
     }
     
-    func distribute(configuration: Windmill.Configuration, standardOutFormattedWriter: StandardOutFormattedWriter, account: Account, authorizationToken: SubscriptionAuthorizationToken) {
-        let activityBuiler = self.builder(configuration: configuration)
+    func distribute(configuration: Windmill.Configuration, locations: Windmill.Locations, standardOutFormattedWriter: StandardOutFormattedWriter, account: Account, authorizationToken: SubscriptionAuthorizationToken) {
+        let activityBuiler = self.builder(configuration: configuration, locations: locations)
         let activityDistribute = activityBuiler.distributeActivity(standardOutFormattedWriter: standardOutFormattedWriter)
         activityDistribute.delegate = self
         
         let distribute = activityDistribute.make(queue: self.queue, account: account, authorizationToken: authorizationToken)
-        distribute(ActivityDistribute.Context.make(configuration: configuration))
+        distribute(ActivityDistribute.Context.make(locations: locations, configuration: configuration))
     }
 }

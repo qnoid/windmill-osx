@@ -32,13 +32,13 @@ public struct Export {
         
         let project: Project
         let buildSettings: BuildSettings
-        let location: Project.Location
+        let projectAt: Project.Location
         let distributionSummary: DistributionSummary
         let configuration: Configuration
         let applicationProperties: AppBundle.Info
         
         var commit: Repository.Commit? {
-            return location.commit
+            return projectAt.commit
         }
     }    
 

@@ -87,7 +87,7 @@ class SummaryViewController: NSViewController {
     
     var textStorage: NSTextStorage?
     
-    let applicationCachesDirectory = Directory.Windmill.ApplicationCachesDirectory()
+    var locations: Windmill.Locations?
     
     var summary: Summary? {
         didSet{
@@ -101,8 +101,12 @@ class SummaryViewController: NSViewController {
             
             if let pathControl = self.pathControl {
                 pathControl.isHidden = false
-                let string = documentURL.path.replacingOccurrences(of: applicationCachesDirectory.sourcesURL().path, with: "")
-                pathControl.url = URL(string: string)
+                
+                if let locations = self.locations {
+                    let string = documentURL.path.replacingOccurrences(of: locations.sources.URL.path, with: "")
+                    pathControl.url = URL(string: string)
+                }
+                
                 pathControl.pathItems.forEach { path in
                     path.image = #imageLiteral(resourceName: "NavGroup")
                 }

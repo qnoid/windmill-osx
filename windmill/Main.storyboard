@@ -18,7 +18,7 @@
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
                         <value key="minSize" type="size" width="850" height="622"/>
                         <value key="minFullScreenContentSize" type="size" width="850" height="772"/>
-                        <toolbar key="toolbar" implicitIdentifier="AC398DAC-DA28-4CF7-8F5F-CBE6815E270B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="g38-IE-MjZ">
+                        <toolbar key="toolbar" implicitIdentifier="AC398DAC-DA28-4CF7-8F5F-CBE6815E270B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconOnly" sizeMode="regular" id="g38-IE-MjZ">
                             <allowedToolbarItems>
                                 <toolbarItem implicitItemIdentifier="84D24695-66F7-4E66-857F-B4554690E24A" label="" paletteLabel="" id="EBh-fb-7rc">
                                     <nil key="toolTip"/>
@@ -37,8 +37,8 @@
                                     </button>
                                 </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="753848E6-C7B0-4042-9F18-E44641D1B031" label="scheme" paletteLabel="" toolTip="Set the active scheme" id="hOv-4p-5zj" userLabel="Scheme Item">
-                                    <size key="minSize" width="150" height="28"/>
-                                    <size key="maxSize" width="300" height="31"/>
+                                    <size key="minSize" width="150" height="22"/>
+                                    <size key="maxSize" width="300" height="28"/>
                                     <popUpButton key="view" verticalHuggingPriority="750" id="bYB-yA-hcg" userLabel="Scheme Button">
                                         <rect key="frame" x="0.0" y="14" width="200" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -57,12 +57,10 @@
                                     <size key="maxSize" width="500" height="22"/>
                                 </toolbarItem>
                                 <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="HvT-GS-ycv"/>
-                                <toolbarItem implicitItemIdentifier="1E150C1D-1269-4C11-8C29-4D8E32EE1965" label="Debug Area" paletteLabel="" id="THt-8f-Wrj">
+                                <toolbarItem implicitItemIdentifier="1E150C1D-1269-4C11-8C29-4D8E32EE1965" label="Debug Area" paletteLabel="" sizingBehavior="auto" id="THt-8f-Wrj">
                                     <nil key="toolTip"/>
-                                    <size key="minSize" width="67" height="23"/>
-                                    <size key="maxSize" width="100" height="28"/>
                                     <segmentedControl key="view" verticalHuggingPriority="750" id="ESA-yL-4Qj">
-                                        <rect key="frame" x="0.0" y="14" width="74" height="23"/>
+                                        <rect key="frame" x="0.0" y="14" width="73" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedRounded" trackingMode="selectAny" id="6sZ-bs-Bt0">
                                             <font key="font" metaFont="system"/>
@@ -76,6 +74,20 @@
                                         <action selector="performSegmentedControlAction:" target="DBm-IY-qca" id="EwY-yz-gEF"/>
                                     </connections>
                                 </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="C01C1FC2-4500-499F-8F91-A48314AA6702" label="" paletteLabel="" image="tabsoverview" sizingBehavior="auto" id="wCr-Xz-bUP" userLabel="Tabs Overview" customClass="ShowTabOverviewToolbarItem" customModule="Windmill" customModuleProvider="target">
+                                    <nil key="toolTip"/>
+                                    <button key="view" toolTip="Show an overview of every branch added if more than 1." verticalHuggingPriority="750" id="yGh-xC-WNl">
+                                        <rect key="frame" x="0.0" y="14" width="83" height="24"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="tabsoverview" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NFz-aH-8lD">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="toggleTabOverview:" target="DBm-IY-qca" id="ela-Gh-voU"/>
+                                        </connections>
+                                    </button>
+                                </toolbarItem>
                             </allowedToolbarItems>
                             <defaultToolbarItems>
                                 <toolbarItem reference="EBh-fb-7rc"/>
@@ -84,6 +96,7 @@
                                 <toolbarItem reference="whK-6v-q5N"/>
                                 <toolbarItem reference="HvT-GS-ycv"/>
                                 <toolbarItem reference="THt-8f-Wrj"/>
+                                <toolbarItem reference="wCr-Xz-bUP"/>
                             </defaultToolbarItems>
                         </toolbar>
                         <connections>
@@ -255,11 +268,11 @@
                                 </userDefinedRuntimeAttributes>
                             </customView>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AnH-wR-VPq" userLabel="Divider">
-                                <rect key="frame" x="8" y="619" width="838" height="11"/>
+                                <rect key="frame" x="8" y="619" width="22" height="10"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" image="divider" id="xte-0F-nSP"/>
                             </imageView>
                             <containerView translatesAutoresizingMaskIntoConstraints="NO" id="gzb-Ou-pnU">
-                                <rect key="frame" x="8" y="163" width="838" height="448"/>
+                                <rect key="frame" x="8" y="162" width="838" height="448"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="448" id="5Uw-cS-Rcb"/>
                                 </constraints>
@@ -272,16 +285,15 @@
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="top" secondItem="bvb-g2-0Id" secondAttribute="top" id="4DX-1r-stm"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="top" secondItem="RWe-v3-81B" secondAttribute="top" id="8mw-SB-RUo"/>
                             <constraint firstItem="RWe-v3-81B" firstAttribute="leading" secondItem="dmf-os-213" secondAttribute="trailing" id="JgD-Bb-3Lt"/>
-                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="top" secondItem="AnH-wR-VPq" secondAttribute="bottom" constant="8" id="KFk-cD-zNb"/>
+                            <constraint firstItem="gzb-Ou-pnU" firstAttribute="top" secondItem="AnH-wR-VPq" secondAttribute="bottom" constant="9" id="KFk-cD-zNb"/>
                             <constraint firstAttribute="trailing" secondItem="gzb-Ou-pnU" secondAttribute="trailing" constant="20" symbolic="YES" id="KZq-5I-rdC"/>
                             <constraint firstItem="CN9-ls-yLA" firstAttribute="height" secondItem="bvb-g2-0Id" secondAttribute="height" id="OjE-Oa-cJY"/>
                             <constraint firstItem="QRl-WA-0CJ" firstAttribute="top" secondItem="miV-du-5Xh" secondAttribute="top" id="S21-NR-RYC"/>
-                            <constraint firstItem="AnH-wR-VPq" firstAttribute="top" secondItem="Nrz-3h-enE" secondAttribute="bottom" constant="8" id="SfW-EN-AVO"/>
+                            <constraint firstItem="AnH-wR-VPq" firstAttribute="top" secondItem="Nrz-3h-enE" secondAttribute="bottom" constant="9" id="SfW-EN-AVO"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="top" secondItem="CN9-ls-yLA" secondAttribute="top" id="Sxu-WZ-ZUi"/>
                             <constraint firstItem="Nrz-3h-enE" firstAttribute="baseline" secondItem="bvb-g2-0Id" secondAttribute="baseline" id="U1g-RQ-etI"/>
                             <constraint firstItem="AnH-wR-VPq" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="leading" id="UJF-nx-8O3"/>
                             <constraint firstItem="miV-du-5Xh" firstAttribute="leading" secondItem="RWe-v3-81B" secondAttribute="trailing" id="VpB-x2-hJq"/>
-                            <constraint firstItem="AnH-wR-VPq" firstAttribute="trailing" secondItem="QRl-WA-0CJ" secondAttribute="trailing" id="Y2i-qh-f7v"/>
                             <constraint firstItem="gzb-Ou-pnU" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="leading" id="a7L-RO-wgY"/>
                             <constraint firstItem="dmf-os-213" firstAttribute="leading" secondItem="CN9-ls-yLA" secondAttribute="trailing" id="dZI-a9-pLN"/>
                             <constraint firstItem="bvb-g2-0Id" firstAttribute="leading" secondItem="Nrz-3h-enE" secondAttribute="trailing" constant="8" id="ebI-1X-sFO"/>
@@ -298,6 +310,7 @@
                         <outlet property="buildActivityView" destination="CN9-ls-yLA" id="qpB-kt-nGs"/>
                         <outlet property="checkoutActivityView" destination="bvb-g2-0Id" id="UP4-ky-LKz"/>
                         <outlet property="distributeActivityView" destination="QRl-WA-0CJ" id="Fsx-NL-yad"/>
+                        <outlet property="divider" destination="AnH-wR-VPq" id="NUt-U4-QRY"/>
                         <outlet property="exportActivityView" destination="miV-du-5Xh" id="3fX-jA-mId"/>
                         <outlet property="mainView" destination="6j5-vW-ygG" id="dZY-cO-rs9"/>
                         <outlet property="testActivityView" destination="dmf-os-213" id="4Ti-yx-KRe"/>
@@ -500,19 +513,28 @@
                                     <items>
                                         <menuItem title="New Video Recording (10 seconds)" keyEquivalent="s" toolTip="Allows you to record a 10 seconds video on the Simulator; enabled under Preferences ⌘," id="uUf-Ej-Dl2" userLabel="Record Video">
                                             <connections>
-                                                <action selector="recordVideo:" target="lHE-BB-cpm" id="usL-yA-gdt"/>
+                                                <action selector="recordVideo:" target="aS9-1w-R0E" id="gzO-Uh-mJQ"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Open..." keyEquivalent="o" id="xjJ-Gh-TYv">
-                                            <string key="toolTip">Open the folder that contains your Xcode project/workspace as cloned by a remote repo. 
+                                            <string key="toolTip">Open your Xcode project/workspace as cloned by a remote repo. 
 
-Windmill will perform a full checkout of the remote repo and start monitoring.</string>
+Windmill will perform a full checkout of the master branch in the remote repo and start monitoring.</string>
                                             <connections>
                                                 <action selector="openDocument:" target="aS9-1w-R0E" id="9AN-uj-Nnq"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Open at Branch..." alternate="YES" keyEquivalent="o" id="ZF8-3b-ByD">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <string key="toolTip">Open your Xcode project/workspace as cloned by a remote repo. 
+
+Windmill will perform a full checkout of the current branch in the remote repo and start monitoring.</string>
+                                            <connections>
+                                                <action selector="openProjectAtBranch:" target="aS9-1w-R0E" id="29H-A6-3TQ"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="TJk-8K-ves"/>
-                                        <menuItem title="Close Window" keyEquivalent="W" id="sOx-vr-r3T">
+                                        <menuItem title="Close" keyEquivalent="w" id="sOx-vr-r3T">
                                             <connections>
                                                 <action selector="performClose:" target="aS9-1w-R0E" id="sLn-N0-qy1"/>
                                             </connections>
@@ -642,7 +664,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Debug Area" autoenablesItems="NO" id="nOh-K4-TO3">
                                                 <items>
-                                                    <menuItem title="Show Debug Area" tag="1" alternate="YES" keyEquivalent="Y" toolTip="Show the full log of each stage." id="86b-Mo-8r7" userLabel="Show Debug Area">
+                                                    <menuItem title="Show Debug Area" alternate="YES" keyEquivalent="Y" toolTip="Show the full log of each stage." id="86b-Mo-8r7" userLabel="Show Debug Area">
                                                         <connections>
                                                             <action selector="toggleDebugArea:" target="aS9-1w-R0E" id="1oY-Py-Rjw"/>
                                                         </connections>
@@ -652,12 +674,12 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         </menuItem>
                                         <menuItem title="Side Panel" id="m8G-em-wLh">
                                             <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Side Panel" id="v9o-8n-Jaf">
+                                            <menu key="submenu" title="Side Panel" autoenablesItems="NO" id="v9o-8n-Jaf">
                                                 <items>
-                                                    <menuItem title="Show Side Panel" keyEquivalent="0" toolTip="Show detailed information of each stage." id="6k2-Q8-62V">
+                                                    <menuItem title="Show Side Panel" keyEquivalent="0" identifier="0" toolTip="Show detailed information of each stage." id="6k2-Q8-62V">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
-                                                            <action selector="toggleSidePanel:" target="jgg-ZM-qio" id="APa-QR-aiK"/>
+                                                            <action selector="toggleSidePanel:" target="aS9-1w-R0E" id="W3b-Nb-bN1"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -671,6 +693,13 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NCj-ez-iIC"/>
+                                        <menuItem title="Show Tab Overview" keyEquivalent="\" toolTip="Show an overview of every branch added if more than 1." id="pC6-WV-gly">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="toggleTabOverview:" target="aS9-1w-R0E" id="EMk-UH-56o"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="D4l-lK-qKa"/>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="d6k-0d-WJj">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -687,18 +716,18 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <menuItem title="Show Checkout Folder in Terminal" id="kmS-bs-JZS">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="showProjectFolder:" target="jgg-ZM-qio" id="Ghz-Vn-mP7"/>
+                                                <action selector="showProjectFolder:" target="aS9-1w-R0E" id="VKb-ec-jjc"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="GWc-sM-3F8"/>
                                         <menuItem title="Jump to Next Issue" keyEquivalent="'" id="cfx-7V-lRI" userLabel="Jump to Next Issue">
                                             <connections>
-                                                <action selector="jumpToNextIssue:" target="jgg-ZM-qio" id="UN0-Ps-lUM"/>
+                                                <action selector="jumpToNextIssue:" target="aS9-1w-R0E" id="Yk4-Xm-kOF"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Jump to Previous Issue" keyEquivalent="&quot;" id="5W7-6M-ziA" userLabel="Jump to Previous Issue">
                                             <connections>
-                                                <action selector="jumpToPreviousIssue:" target="jgg-ZM-qio" id="P2S-UB-ytI"/>
+                                                <action selector="jumpToPreviousIssue:" target="aS9-1w-R0E" id="9Ur-XW-pe9"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -710,7 +739,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                     <items>
                                         <menuItem title="Launch" keyEquivalent="l" toolTip="Launch the app on the Simulator." id="s0S-Zb-aAH">
                                             <connections>
-                                                <action selector="launchOnSimulator:" target="lHE-BB-cpm" id="C1l-IV-3Tb"/>
+                                                <action selector="launchOnSimulator:" target="aS9-1w-R0E" id="aiu-Hh-OTV"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="T7h-Ho-NMg"/>
@@ -720,13 +749,13 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                                 <items>
                                                     <menuItem title="Run" keyEquivalent="r" id="RUs-Xt-SEm">
                                                         <connections>
-                                                            <action selector="run:" target="jgg-ZM-qio" id="lbh-mL-7N1"/>
+                                                            <action selector="run:" target="aS9-1w-R0E" id="9kn-ja-iG1"/>
                                                         </connections>
                                                     </menuItem>
                                                     <menuItem title="Run (Use existing source code)" alternate="YES" keyEquivalent="r" toolTip="Use existing source code; e.g. to keep any local changes you have made for the next Run." id="Sv9-RK-ZqQ">
                                                         <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                                         <connections>
-                                                            <action selector="runSkipCheckout:" target="jgg-ZM-qio" id="eOH-L0-LcX"/>
+                                                            <action selector="runSkipCheckout:" target="aS9-1w-R0E" id="oVC-sS-mu3"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -735,13 +764,13 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         <menuItem isSeparatorItem="YES" id="2qi-MV-HHJ"/>
                                         <menuItem title="Clean DerivedData Folder" enabled="NO" keyEquivalent="K" toolTip="Perform a full build on the next run; enabled in case of an error." id="bkO-ZH-pFj" userLabel="Clean Build Folder Menu">
                                             <connections>
-                                                <action selector="cleanDerivedData:" target="jgg-ZM-qio" id="5Mf-eo-406"/>
+                                                <action selector="cleanDerivedData:" target="aS9-1w-R0E" id="m74-Q0-Hgf"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Remove the Checkout Folder and Run..." enabled="NO" alternate="YES" keyEquivalent="K" toolTip="Clone the repo instead of pulling any changes on the next run; enabled in case of an error." id="Xk5-Xr-W0f" userLabel="Remove Checkout Folder... Menu">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="cleanProjectFolder:" target="jgg-ZM-qio" id="Qik-OH-9Fj"/>
+                                                <action selector="cleanProjectFolder:" target="aS9-1w-R0E" id="mK8-CR-g9k"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -758,6 +787,9 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                                         </menuItem>
                                         <menuItem title="Zoom" id="Htg-eV-68e">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="zoom:" target="aS9-1w-R0E" id="AJV-CM-TX1"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Ynx-sX-mjd"/>
                                         <menuItem title="Bring All to Front" id="l66-sx-vdY">
@@ -828,18 +860,8 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 </application>
                 <customObject id="aS9-1w-R0E" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="Msx-JS-ZRA" customClass="NSFontManager"/>
-                <customObject id="lHE-BB-cpm" customClass="ProjectTitlebarAccessoryViewController" customModule="Windmill" customModuleProvider="target">
-                    <connections>
-                        <outlet property="launchMenuItem" destination="s0S-Zb-aAH" id="VtP-e6-4Zb"/>
-                        <outlet property="recordVideoButton" destination="uUf-Ej-Dl2" id="5ow-4h-7K4"/>
-                    </connections>
-                </customObject>
                 <menu id="HyG-96-1Q3">
                     <items>
-                        <menuItem title="idle" enabled="NO" id="fyt-9a-x0h">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="sxK-Cr-GTY"/>
                         <menuItem title="Quit Windmill" keyEquivalent="q" id="KuQ-YW-JQM">
                             <connections>
                                 <action selector="terminate:" target="aS9-1w-R0E" id="fxJ-9F-8nW"/>
@@ -849,11 +871,9 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
                 </menu>
                 <customObject id="jgg-ZM-qio" customClass="AppDelegate" customModule="Windmill" customModuleProvider="target">
                     <connections>
-                        <outlet property="activityMenuItem" destination="fyt-9a-x0h" id="q48-pz-ygM"/>
-                        <outlet property="debugAreaMenuItem" destination="86b-Mo-8r7" id="VKK-Wx-1FL"/>
+                        <outlet property="launchMenuItem" destination="s0S-Zb-aAH" id="Cdd-hQ-izp"/>
                         <outlet property="menu" destination="HyG-96-1Q3" id="dS2-qu-IZz"/>
-                        <outlet property="projectTitlebarAccessoryViewController" destination="lHE-BB-cpm" id="jJu-0J-Uej"/>
-                        <outlet property="sidePanelMenuItem" destination="6k2-Q8-62V" id="shh-N8-j4K"/>
+                        <outlet property="recordVideoMenuItem" destination="uUf-Ej-Dl2" id="tVJ-dY-GLr"/>
                     </connections>
                 </customObject>
             </objects>
@@ -1052,7 +1072,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <image name="application-icon" width="42" height="42"/>
         <image name="archive" width="64" height="64"/>
         <image name="bottom panel" width="18" height="14"/>
-        <image name="divider" width="21.5" height="10.5"/>
+        <image name="divider" width="21.5" height="10"/>
         <image name="ipa" width="64" height="64"/>
         <image name="iphone-x" width="64" height="64"/>
         <image name="lights-archive" width="110" height="44"/>
@@ -1062,6 +1082,7 @@ Windmill will perform a full checkout of the remote repo and start monitoring.</
         <image name="lights-export" width="110" height="44"/>
         <image name="lights-test" width="110" height="44"/>
         <image name="right panel" width="18" height="14"/>
+        <image name="tabsoverview" width="12" height="12"/>
         <image name="unit-test_Icon" width="128" height="128"/>
         <namedColor name="archive">
             <color name="systemOrangeColor" catalog="System" colorSpace="catalog"/>

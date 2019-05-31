@@ -9,6 +9,27 @@
 import Foundation
 import os
 
+extension DirectoryType {
+
+    func directory(at pathComponent: String) -> Directory {
+        
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent(pathComponent))
+        
+        directory.create()
+        
+        return directory
+    }
+    
+    public func builds() -> Directory {
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent("Builds"))
+        
+        directory.create()
+        
+        return directory
+    }
+}
+
+
 public protocol UserLibraryDirectory : DirectoryType
 {
     func mobileDeviceProvisioningProfiles() -> DirectoryType
@@ -16,21 +37,21 @@ public protocol UserLibraryDirectory : DirectoryType
 
 public protocol ApplicationSupportDirectory : DirectoryType
 {
-    func buildResultBundle(at pathComponent: String) -> ResultBundle
+    func resultBundleDirectory(at: Directory?) -> ResultBundleDirectory
 }
 
-extension ApplicationSupportDirectory {
+public protocol ResultBundleDirectory : DirectoryType {
     
-    public func resultBundleDirectory() -> Directory {
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent("ResultBundle"))
-        
-        directory.create()
-        
-        return directory
-    }
+    func buildResultBundle(at name: String) -> ResultBundle
+    func testResultBundle(at name: String) -> ResultBundle
+    func archiveResultBundle(at name: String) -> ResultBundle
+    func exportResultBundle(at name: String) -> ResultBundle
+}
+
+extension ResultBundleDirectory {
     
-    fileprivate func resultBundleURL(name: String, at pathComponent: String) -> URL {
-        let directory = self.fileManager.directory(self.resultBundleDirectory().URL.appendingPathComponent(name).appendingPathComponent(pathComponent))
+    func resultBundleURL(name: String, at pathComponent: String) -> URL {
+        let directory = self.fileManager.directory(self.URL.appendingPathComponent(name).appendingPathComponent(pathComponent))
         
         directory.create(withIntermediateDirectories: true)
         
@@ -42,7 +63,7 @@ extension ApplicationSupportDirectory {
         
         return directory.URL.appendingPathComponent("\(name).bundle")
     }
-    
+
     public func buildResultBundle(at name: String) -> ResultBundle {
         
         let buildResultBundleURL = self.resultBundleURL(name: name, at: "build")
@@ -50,7 +71,7 @@ extension ApplicationSupportDirectory {
         
         return ResultBundle.make(at: buildResultBundleURL, info: ResultBundle.Info.make(at: bundleResultInfoURL))
     }
-
+    
     public func testResultBundle(at name: String) -> ResultBundle {
         
         let testResultBundleURL = self.resultBundleURL(name: name, at: "test")
@@ -59,7 +80,7 @@ extension ApplicationSupportDirectory {
         
         return ResultBundle.make(at: testResultBundleURL, info: ResultBundle.Info.make(at: testResultInfoURL), testSummaries: TestSummaries.make(at: testSummariesURL))
     }
-
+    
     public func archiveResultBundle(at name: String) -> ResultBundle {
         
         let archiveResultBundleURL = self.resultBundleURL(name: name, at: "archive")
@@ -77,34 +98,69 @@ extension ApplicationSupportDirectory {
     }
 }
 
+extension ApplicationSupportDirectory {
+    
+    public func resultBundleDirectory(at: Directory? = nil) -> ResultBundleDirectory {
+        
+        let location = at?.URL ?? self.URL
+
+        let directory = self.fileManager.directory(location.appendingPathComponent("ResultBundle"))
+        
+        directory.create()
+        
+        return directory
+    }
+}
+
 public protocol ApplicationCachesDirectory : DirectoryType
 {
-    func sourcesURL() -> URL
-    func respositoryDirectory(at pathComponent: String) -> RepositoryDirectory
-    func derivedData(at pathComponent: String) -> DerivedDataDirectory
+    func sources(at: Directory?) -> Directory
+    func respositoryDirectory(at: Directory?, pathComponent: String) -> RepositoryDirectory
+    func derivedData(at: Directory?) -> Directory
+    func derivedData(at: Directory?, pathComponent: String) -> DerivedDataDirectory
 }
 
 extension ApplicationCachesDirectory {
     
-    public func sourcesURL() -> URL {
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent("Sources"))
+    public func sources(at: Directory? = nil) -> Directory {
+        
+        let location = at?.URL ?? self.URL
+
+        let directory = self.fileManager.directory(location.appendingPathComponent("Sources"))
         
         directory.create()
-        
-        return directory.URL
-    }
-    
-    public func respositoryDirectory(at pathComponent: String) -> RepositoryDirectory {
-        
-        let directory = self.fileManager.directory(self.sourcesURL().appendingPathComponent(pathComponent))
         
         return directory
     }
     
-    public func derivedData(at pathComponent: String) -> DerivedDataDirectory {
-        let directory = self.fileManager.directory(self.URL.appendingPathComponent("DerivedData").appendingPathComponent(pathComponent))
+    /**
+     
+     at: must exist
+    */
+    public func respositoryDirectory(at: Directory? = nil, pathComponent: String) -> RepositoryDirectory {
         
-        directory.create(withIntermediateDirectories: true)
+        let location = at?.URL ?? self.sources().URL
+        
+        return self.fileManager.directory( location.appendingPathComponent(pathComponent))
+    }
+    
+    public func derivedData(at: Directory? = nil) -> Directory {
+        let location = at?.URL ?? self.URL
+        
+        let directory = self.fileManager.directory(location.appendingPathComponent("DerivedData"))
+        
+        directory.create()
+        
+        return directory
+    }
+    
+    public func derivedData(at: Directory? = nil, pathComponent: String) -> DerivedDataDirectory {
+        
+        let location = at?.URL ?? self.derivedData().URL
+
+        let directory = self.fileManager.directory(location.appendingPathComponent(pathComponent))
+        
+        directory.create()
         
         return directory
     }
@@ -123,7 +179,18 @@ extension RepositoryDirectory {
 
 public protocol DerivedDataDirectory: DirectoryType {
     
+    func derivedAppBundle(name: String) -> AppBundle
+}
+
+extension DerivedDataDirectory {
     
+    public func derivedAppBundle(name: String) -> AppBundle {
+        
+        let appBundleURL = self.URL.appendingPathComponent("Build/Products/Debug-iphonesimulator/\(name).app")
+        let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
+        
+        return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
+    }
 }
 
 public protocol WindmillDirectory: DirectoryType {
@@ -153,12 +220,11 @@ public protocol ProjectDirectory : DirectoryType
     func buildSettings() -> BuildSettings
     func devices() -> Devices
     func appBundle(name: String) -> AppBundle
-    func appBundle(derivedData: DerivedDataDirectory, name: String) -> AppBundle
     func archive(name: String) -> Archive
-    func appBundle(archive: Archive, name: String) -> AppBundle
+    func archivedAppBundle(archive: Archive, name: String) -> AppBundle
     func distributionSummary() -> DistributionSummary
     func manifest() -> Manifest
-    func metadata(project: Project, location: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata
+    func metadata(project: Project, projectAt: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata
     func export(name: String) -> Export
 }
 
@@ -168,17 +234,13 @@ extension ProjectDirectory {
 
         let directory = self.fileManager.directory(self.URL.appendingPathComponent("log"))
 
-        directory.create()
+        directory.create(withIntermediateDirectories: true)
         
         return directory.URL
     }
     
     public func log(name: String) -> URL {
-        let log = logDirectoryURL().appendingPathComponent("\(name).log")
-        
-        self.fileManager.createFile(atPath: log.path, contents: nil, attributes: nil)
-        
-        return log
+        return logDirectoryURL().appendingPathComponent("\(name).log")
     }
     
     public func buildDirectoryURL() -> URL {
@@ -254,15 +316,7 @@ extension ProjectDirectory {
         return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
     }
 
-    public func appBundle(derivedData: DerivedDataDirectory, name: String) -> AppBundle {
-        
-        let appBundleURL = derivedData.URL.appendingPathComponent("Build/Products/Debug-iphonesimulator/\(name).app")
-        let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
-        
-        return AppBundle(url: appBundleURL, info: AppBundle.Info.make(at: appBundleInfoURL))
-    }
-
-    public func appBundle(archive: Archive, name: String) -> AppBundle {
+    public func archivedAppBundle(archive: Archive, name: String) -> AppBundle {
         
         let appBundleURL = archive.url.appendingPathComponent("Products/Applications/\(name)")
         let appBundleInfoURL = appBundleURL.appendingPathComponent("Info.plist")
@@ -282,11 +336,11 @@ extension ProjectDirectory {
         return Manifest.make(at: url)
     }
     
-    public func metadata(project: Project, location: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
+    public func metadata(project: Project, projectAt: Project.Location, configuration: Configuration, applicationProperties: AppBundle.Info) -> Export.Metadata {
         let buildSettings = self.buildSettings()
         let distributionSummary = self.distributionSummary()
 
-        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), location: location, distributionSummary: distributionSummary, configuration: configuration, applicationProperties: applicationProperties)
+        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), projectAt: projectAt, distributionSummary: distributionSummary, configuration: configuration, applicationProperties: applicationProperties)
     }
     
     public func export(name: String) -> Export {

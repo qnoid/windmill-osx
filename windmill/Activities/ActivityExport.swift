@@ -10,33 +10,34 @@ import Foundation
 
 struct ActivityExport {
     
-    let applicationCachesDirectory: ApplicationCachesDirectory
-    let applicationSupportDirectory: ApplicationSupportDirectory
+    let locations: Windmill.Locations
     
     weak var processManager: ProcessManager?
     weak var delegate: ActivityDelegate?
 
-    let projectLogURL: URL
+    let logfile: URL
     
-    init(applicationCachesDirectory: ApplicationCachesDirectory, applicationSupportDirectory: ApplicationSupportDirectory, processManager: ProcessManager, projectLogURL: URL) {
-        self.applicationCachesDirectory = applicationCachesDirectory
-        self.applicationSupportDirectory = applicationSupportDirectory
+    init(locations: Windmill.Locations, processManager: ProcessManager, logfile: URL) {
+        self.locations = locations
         self.processManager = processManager
-        self.projectLogURL = projectLogURL
+        self.logfile = logfile
     }
 
-    func success(location: Project.Location, project: Project, projectDirectory: ProjectDirectory, appBundle: AppBundle, export: Export, configuration: Configuration, exportDirectoryURL: URL) -> SuccessfulActivity {
+    func success(projectAt: Project.Location, project: Project, appBundle: AppBundle, configuration: Project.Configuration, build: Configuration, exportDirectoryURL: URL) -> SuccessfulActivity {
         
-        let resultBundle = self.applicationSupportDirectory.exportResultBundle(at: project.name)
-
         return SuccessfulActivity { next in
             
-            return { context in
+            return { [home = self.locations.home] context in
             
+                let resultBundle = self.locations.exportResultBundle
+                
                 guard let archive = context["archive"] as? Archive else {
                     preconditionFailure("ActivityExport expects a `Archive` under the context[\"archive\"] for a succesful callback")
                 }
-                let makeExport = Process.makeExport(location: location, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: self.projectLogURL)
+                let makeExport = Process.makeExport(projectAt: projectAt, archive: archive, exportDirectoryURL: exportDirectoryURL, resultBundle: resultBundle, log: self.logfile)
+
+                let scheme = configuration.detectScheme(name: project.scheme)
+                let export = home.export(name: scheme)
 
                 let userInfo: [AnyHashable : Any] = ["activity" : ActivityType.export, "project":project, "artefact": ArtefactType.ipaFile, "export": export, "appBundle": appBundle, "resultBundle": resultBundle]
                 self.delegate?.willLaunch(activity: .export, userInfo: userInfo)
@@ -44,11 +45,11 @@ struct ActivityExport {
                     
                     self.delegate?.didExitSuccesfully(activity: .export, userInfo: userInfo)
                     
-                    let appBundle = projectDirectory.appBundle(archive: archive, name: export.distributionSummary.name)
+                    let archivedAppBundle = home.archivedAppBundle(archive: archive, name: export.distributionSummary.name)
                     
-                    let metadata = projectDirectory.metadata(project: project, location: location, configuration: configuration, applicationProperties: appBundle.info)
+                    let metadata = home.metadata(project: project, projectAt: projectAt, configuration: build, applicationProperties: archivedAppBundle.info)
                     
-                    let userInfo = userInfo.merging(["export": export, "metadata": metadata, "appBundle": appBundle], uniquingKeysWith: { (_, new) -> Any in
+                    let userInfo = userInfo.merging(["export": export, "metadata": metadata, "appBundle": archivedAppBundle], uniquingKeysWith: { (_, new) -> Any in
                         return new //shouldn't it be the new one? if not the appBundle doesn't make a difference.
                     })
                     

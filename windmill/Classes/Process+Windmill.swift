@@ -38,12 +38,12 @@ extension Process
         return process
     }
 
-    public static func makeShowBuildSettings(project: Project, scheme: String, buildSettings: BuildSettings, location: Project.Location) -> Process {
+    public static func makeShowBuildSettings(project: Project, scheme: String, buildSettings: BuildSettings, projectAt: Project.Location) -> Process {
         
         switch project.isWorkspace {
         case true:
             let process = Process()
-            process.currentDirectoryPath = location.url.path
+            process.currentDirectoryPath = projectAt.url.path
             process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.SHOW_WORKSPACE_BUILD_SETTINGS, ofType: "sh")!
             process.arguments = [project.filename, scheme, buildSettings.url.path, self.pathForDir("Scripts")]
             process.qualityOfService = .utility
@@ -51,7 +51,7 @@ extension Process
             return process
         case false:
             let process = Process()
-            process.currentDirectoryPath = location.url.path
+            process.currentDirectoryPath = projectAt.url.path
             process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.SHOW_PROJECT_BUILD_SETTINGS, ofType: "sh")!
             process.arguments = [project.filename, buildSettings.url.path, self.pathForDir("Scripts")]
             process.qualityOfService = .utility
@@ -60,12 +60,12 @@ extension Process
         }
     }
     
-    public static func makeListConfiguration(project: Project, configuration: Project.Configuration, location: Project.Location) -> Process {
+    public static func makeListConfiguration(project: Project, configuration: Project.Configuration, projectAt: Project.Location) -> Process {
         
         let listConfigurationScript = project.isWorkspace ? Scripts.Xcodebuild.LIST_WORKSPACE_CONFIGURATION : Scripts.Xcodebuild.LIST_PROJECT_CONFIGURATION
             
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: listConfigurationScript, ofType: "sh")!
         process.arguments = [project.filename, configuration.url.path]
         process.qualityOfService = .utility
@@ -98,12 +98,12 @@ extension Process
         return process
     }
     
-    public static func makeBuildForTesting(location: Project.Location, project: Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
+    public static func makeBuildForTesting(projectAt: Project.Location, project: Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
         
         let buildForTestingScript = project.isWorkspace ? Scripts.Xcodebuild.BUILD_WORKSPACE_FOR_TESTING : Scripts.Xcodebuild.BUILD_PROJECT_FOR_TESTING
 
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: buildForTestingScript, ofType: "sh")!
         process.arguments = [project.filename, scheme, configuration.name, destination.udid ?? "", derivedData.URL.path, resultBundle.url.path, log.path]
         process.qualityOfService = .utility
@@ -111,12 +111,12 @@ extension Process
         return process
     }
     
-    public static func makeBuild(location: Project.Location, project:Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
+    public static func makeBuild(projectAt: Project.Location, project:Project, scheme: String, configuration: Configuration = .debug, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
         
         let buildScript = project.isWorkspace ? Scripts.Xcodebuild.BUILD_WORKSPACE : Scripts.Xcodebuild.BUILD_PROJECT
         
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: buildScript, ofType: "sh")!
         process.arguments = [project.filename, scheme, configuration.name, destination.udid ?? "", derivedData.URL.path, resultBundle.url.path, log.path]
         process.qualityOfService = .utility
@@ -124,12 +124,12 @@ extension Process
         return process
     }
     
-    static func makeTestWithoutBuilding(location: Project.Location, project:Project, scheme: String, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
+    static func makeTestWithoutBuilding(projectAt: Project.Location, project:Project, scheme: String, destination: Devices.Destination, derivedData: DerivedDataDirectory, resultBundle: ResultBundle, log: URL) -> Process {
         
         let testWithoutBuildingScript = project.isWorkspace ? Scripts.Xcodebuild.TEST_WORKSPACE_WITHOUT_BUILDING : Scripts.Xcodebuild.TEST_PROJECT_WITHOUT_BUILDING
         
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: testWithoutBuildingScript, ofType: "sh")!
         process.arguments = [project.filename, destination.udid ?? "", scheme, derivedData.URL.path, resultBundle.url.path, log.path]
         process.qualityOfService = .utility
@@ -137,12 +137,12 @@ extension Process
         return process
     }
         
-    public static func makeArchive(location: Project.Location, project:Project, scheme: String, derivedData: DerivedDataDirectory, archive: Archive, configuration: Configuration, resultBundle: ResultBundle, log: URL) -> Process {
+    public static func makeArchive(projectAt: Project.Location, project:Project, scheme: String, derivedData: DerivedDataDirectory, archive: Archive, configuration: Configuration, resultBundle: ResultBundle, log: URL) -> Process {
         
         let archiveScript = project.isWorkspace ? Scripts.Xcodebuild.ARCHIVE_WORKSPACE : Scripts.Xcodebuild.ARCHIVE_PROJECT
 
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: archiveScript, ofType: "sh")!
         process.arguments = [project.filename, scheme, configuration.name, derivedData.URL.path, archive.url.path, resultBundle.url.path, log.path]
         process.qualityOfService = .utility
@@ -150,10 +150,10 @@ extension Process
         return process
     }
     
-    public static func makeExport(location: Project.Location, archive: Archive, exportDirectoryURL: URL, resultBundle: ResultBundle, log: URL) -> Process {
+    public static func makeExport(projectAt: Project.Location, archive: Archive, exportDirectoryURL: URL, resultBundle: ResultBundle, log: URL) -> Process {
         
         let process = Process()
-        process.currentDirectoryPath = location.url.path
+        process.currentDirectoryPath = projectAt.url.path
         process.launchPath = Bundle.main.path(forResource: Scripts.Xcodebuild.EXPORT, ofType: "sh")!
         process.arguments = [archive.url.path, exportDirectoryURL.path, self.pathForDir("resources"), resultBundle.url.path, log.path]
         process.qualityOfService = .utility

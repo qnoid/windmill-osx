@@ -8,11 +8,7 @@
 
 import Foundation
 
-public func == (lhs: Project, rhs: Project) -> Bool {
-    return lhs.filename == rhs.filename
-}
-
-final public class Project : Codable, Hashable, Equatable, CustomStringConvertible
+public struct Project : Codable, Hashable, Equatable, CustomStringConvertible
 {
     /*
         The URL under which the Xcode project is located
@@ -103,31 +99,18 @@ final public class Project : Codable, Hashable, Equatable, CustomStringConvertib
         }
     }
     
-    static let toDictionary : (Project) -> Dictionary<String, Any> = { project in
-        
-        return [
-            "isWorkspace": project.isWorkspace,
-            "name": project.name,
-            "scheme": project.scheme,
-            "origin": project.origin ]
-    }
-
-    static let fromDictionary : (_ object : Any) -> Project = { (object : Any) -> Project in
-        return Project(dictionary: object as! Dictionary<String, AnyObject>)
-    }
-    
     public var description: String {
         return self.filename
     }
     
-    lazy var filename: String = {
+    var filename: String {
         switch self.isWorkspace {
         case true:
             return "\(self.name).xcworkspace"
         case false:
             return "\(self.name).xcodeproj"
         }
-    }()
+    }
     
     enum CodingKeys: CodingKey {
         case isWorkspace
@@ -136,38 +119,11 @@ final public class Project : Codable, Hashable, Equatable, CustomStringConvertib
         case origin
     }
 
-    var isWorkspace: Bool
+    let isWorkspace: Bool
     let name: String
     
     let scheme : String
     
     /// the origin of the git repo as returned by 'git remote -v', i.e. git@bitbucket.org:qnoid/balance.git
-    let origin : String
-    
-    public required init(isWorkspace: Bool, name: String, scheme: String, origin: String)
-    {
-        self.isWorkspace = isWorkspace
-        self.name = name
-        self.scheme = scheme
-        self.origin = origin
-    }
-    
-    convenience required init(name: String, scheme: String, origin: String)
-    {
-        self.init(isWorkspace: false, name: name, scheme: scheme, origin: origin)
-    }
-
-    convenience public init(dictionary aDictionary: Dictionary<String, AnyObject>)
-    {
-        let isWorkspace = aDictionary["isWorkspace"] as! Bool
-        let name = aDictionary["name"] as! String
-        let scheme = aDictionary["scheme"] as! String
-        let origin = aDictionary["origin"] as! String
-        
-        self.init(isWorkspace: isWorkspace, name:name, scheme: scheme, origin:origin)
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.filename)
-    }
+    let origin : String    
 }

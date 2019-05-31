@@ -23,19 +23,20 @@ struct ActivityReadProjectConfiguration {
 
             return { context in
 
-                guard let location = context["location"] as? Project.Location else {
-                    preconditionFailure("ActivityReadProjectConfiguration expects a `Project.Location` under the context[\"location\"] for a succesful callback")
+                guard let projectAt = context["projectAt"] as? Project.Location else {
+                    preconditionFailure("ActivityReadProjectConfiguration expects a `Project.Location` under the context[\"projectAt\"] for a succesful callback")
                 }
 
-                let readProjectConfiguration = Process.makeListConfiguration(project: project, configuration: configuration, location: location)
+                let readProjectConfiguration = Process.makeListConfiguration(project: project, configuration: configuration, projectAt: projectAt)
                 
-                let userInfo: [AnyHashable : Any] = ["activity": ActivityType.readProjectConfiguration, "configuration": configuration]
+                let userInfo: [AnyHashable : Any] = ["activity": ActivityType.readProjectConfiguration]
                 self.delegate?.willLaunch(activity: .readProjectConfiguration, userInfo: userInfo)
                 self.processManager?.launch(process: readProjectConfiguration, userInfo: userInfo, wasSuccesful: { userInfo in
                     
                     let scheme = configuration.detectScheme(name: project.scheme)
                     
-                    self.delegate?.didExitSuccesfully(activity: .readProjectConfiguration, userInfo: userInfo.merging(["scheme" : scheme], uniquingKeysWith: { (_, new) in new } ))
+                    let userInfo: [AnyHashable : Any] = ["activity": ActivityType.readProjectConfiguration, "configuration": configuration, "scheme" : scheme]
+                    self.delegate?.didExitSuccesfully(activity: .readProjectConfiguration, userInfo: userInfo)
                     next?([:])
                 })
                 

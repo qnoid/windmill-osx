@@ -7,21 +7,22 @@
 //
 
 import AppKit
-
+import os
 
 protocol MainWindowControllerDelegate {
-    func didSelectScheme(mainWindowController:MainWindowController, project: Project, scheme: String)
+    func sidePanelSplitViewController(mainWindowController: MainWindowController, isCollapsed: Bool)
+    func bottomPanelSplitViewController(mainWindowController: MainWindowController, isCollapsed: Bool)
 }
 
-class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemValidation {
+class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemValidation, NSWindowDelegate {
     
-    @discardableResult static func make(windmill: Windmill, project: Project, projectTitlebarAccessoryViewController: ProjectTitlebarAccessoryViewController) -> MainWindowController? {
+    @discardableResult static func make(windmill: Windmill) -> MainWindowController? {
         let storyboard = NSStoryboard(name: NSStoryboard.Name("Main"), bundle: Bundle(for: self))
         
         let mainWindowController = storyboard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier("MainWindowController")) as? MainWindowController
+        let projectTitlebarAccessoryViewController = ProjectTitlebarAccessoryViewController()
         mainWindowController?.projectTitlebarAccessoryViewController = projectTitlebarAccessoryViewController
         mainWindowController?.windmill = windmill
-        mainWindowController?.project = project
         
         return mainWindowController
     }
@@ -36,23 +37,39 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
     @IBOutlet weak var panels: NSSegmentedControl!
 
     let defaultCenter = NotificationCenter.default
-    var delegate: MainWindowControllerDelegate?
+    var delegate: MainWindowControllerDelegate? {
+        didSet{
+            if let sidePanelSplitViewController = self.sidePanelSplitViewController {
+                self.delegate?.sidePanelSplitViewController(mainWindowController: self, isCollapsed: sidePanelSplitViewController.sideViewSplitViewItem.isCollapsed)
+            }
+            if let bottomPanelSplitViewController = self.bottomPanelSplitViewController {
+                self.delegate?.bottomPanelSplitViewController(mainWindowController: self, isCollapsed: bottomPanelSplitViewController.bottomViewSplitViewItem.isCollapsed)
+            }
+        }
+    }
     
     var image: NSImage = #imageLiteral(resourceName: "Application") {
         didSet {
             self.schemeButton.itemArray.forEach({ (item) in
-                image.size = NSSize(width: 20, height: 20)
+                image.size = NSSize(width: 16, height: 16)
                 item.image = image
             })
         }
     }
-
-    var project: Project? {
-        didSet {
-            self.window?.title = project?.filename ?? ""
+    
+    var configuration: Windmill.Configuration? {
+        didSet{
+            if let configuration = self.windmill?.configuration {
+                self.window?.title = "\(configuration.project) -> \(configuration.branch)"
+            }
+            
+            if let oldValue = oldValue, let configuration = configuration {
+                Windmill.Configuration.shared.delete(oldValue)
+                Windmill.Configuration.shared.write(configuration)
+            }
         }
     }
-    
+
     var windmill: Windmill? {
         didSet{
             let bottomViewController = self.bottomPanelSplitViewController?.bottomViewController
@@ -67,9 +84,13 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
             self.defaultCenter.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityError(_:)), name: Windmill.Notifications.didError, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(activityDidExitSuccesfully(_:)), name: Windmill.Notifications.activityDidExitSuccesfully, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didCheckoutProject(_:)), name: Windmill.Notifications.didCheckoutProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(sourceCodeChanged(_:)), name: Windmill.Notifications.SourceCodeChanged, object: windmill)
             self.projectTitlebarAccessoryViewController?.didSet(windmill: windmill)
             self.userMessageView.didSet(windmill: windmill)
+            self.configuration = windmill?.configuration
         }
     }
     
@@ -79,9 +100,10 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
         
         self.isSidePanelCollapsedObserver = sidePanelSplitViewController.onCollapsed { [weak self = self](splitviewitem, change) in
-            if let isCollapsed = change.newValue {
+            if let isCollapsed = change.newValue, let self = self {
+                self.delegate?.sidePanelSplitViewController(mainWindowController: self, isCollapsed: isCollapsed)
                 sidePanelSplitViewController.sidePanelViewController?.toggle(isHidden: isCollapsed)
-                self?.setSidePanel(isOpen: !isCollapsed)
+                self.setSidePanel(isOpen: !isCollapsed)
             }
         }
 
@@ -95,8 +117,9 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
         
         self.isBottomPanelCollapsedObserver = bottomPanelSplitViewController.onCollapsed { [weak self = self](splitviewitem, change) in
-            if let isCollapsed = change.newValue {
-                self?.setBottomPanel(isOpen: !isCollapsed)
+            if let isCollapsed = change.newValue, let self = self {
+                self.delegate?.bottomPanelSplitViewController(mainWindowController: self, isCollapsed: isCollapsed)
+                self.setBottomPanel(isOpen: !isCollapsed)
             }
         }
 
@@ -115,8 +138,18 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
     }
     
+    var errorSummariesWindowController: ErrorSummariesWindowController?
+    var commit: Repository.Commit?
+    
+    var testFailureSummariesWindowController: TestFailureSummariesWindowController?
+    var testSummariesWindowController: TestSummariesWindowController?
+    
     weak var warnSummariesWindowController: NSWindowController?
     var warnings = [Error]()
+    
+    var canRemoveCheckoutFolder = false
+    var canCleanDerivedData = false
+    var canLaunchOnSimulator = false
     
     var isSidePanelCollapsedObserver: NSKeyValueObservation?
     var isBottomPanelCollapsedObserver: NSKeyValueObservation?
@@ -147,31 +180,88 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
         
         window.collectionBehavior = [window.collectionBehavior, NSWindow.CollectionBehavior.fullScreenAllowsTiling]
-
-        window.title = project?.filename ?? ""
         window.titleVisibility = .hidden
     }
     
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == #selector(refreshSubscription(_:)) {
+        if menuItem.action == #selector(run(_:)) {
+            return self.window?.isVisible ?? false
+        } else if menuItem.action == #selector(runSkipCheckout(_:)), let windmill = self.windmill {
+            return windmill.isRepositoryDirectoryPresent()
+        } else if menuItem.action == #selector(showProjectFolder(_:)), let windmill = self.windmill {
+            return windmill.isRepositoryDirectoryPresent()
+        } else if menuItem.action == #selector(cleanDerivedData(_:)) {
+            return self.canCleanDerivedData
+        } else if menuItem.action == #selector(cleanProjectFolder(_:)) {
+            return self.canRemoveCheckoutFolder
+        } else if menuItem.action == #selector(refreshSubscription(_:)) {
             let account = try? Keychain.default.read(key: .account)
     
             switch account {
             case .some: return true
             case .none: return false
             }
-        }
-
-        if menuItem.action == #selector(restoreSubscription(_:)) {
+        } else if menuItem.action == #selector(restoreSubscription(_:)) {
             let account = try? Keychain.default.read(key: .account)
             
             switch account {
             case .some: return false
             case .none: return true
             }
+        } else if menuItem.action == #selector(jumpToNextIssue(_:)) || menuItem.action == #selector(jumpToPreviousIssue(_:)) {
+            
+            let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+            let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+            
+            switch (errorSummaries?.count, testFailureSummaries?.count) {
+            case (let errorSummaries?, _) where errorSummaries > 0:
+                return true
+            case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+                return true
+            default:
+                return false
+            }
+        } else if menuItem.action == #selector(launchOnSimulator(_:)) {
+                return self.canLaunchOnSimulator
+        } else if menuItem.action == #selector(recordVideo(_:)) {
+            return Preferences.shared.recordVideo
         }
 
         return true
+    }
+    
+    @IBAction func jumpToNextIssue(_ sender: Any) {
+        
+        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+        
+        switch (errorSummaries?.count, testFailureSummaries?.count) {
+        case (let errorSummaries?, _) where errorSummaries > 0:
+            self.showErrorSummariesWindowController(sender)
+            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToNextIssue()
+        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+            self.showTestFailureSummariesWindowController(sender)
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToNextIssue()
+        default:
+            return
+        }
+    }
+    
+    @IBAction func jumpToPreviousIssue(_ sender: Any) {
+        
+        let errorSummaries = errorSummariesWindowController?.errorSummariesViewController?.errorSummaries
+        let testFailureSummaries = testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries
+        
+        switch (errorSummaries?.count, testFailureSummaries?.count) {
+        case (let errorSummaries?, _) where errorSummaries > 0:
+            self.showErrorSummariesWindowController(sender)
+            self.errorSummariesWindowController?.errorSummariesViewController?.jumpToPreviousIssue()
+        case (_, let testFailureSummaries?) where testFailureSummaries > 0:
+            self.showTestFailureSummariesWindowController(sender)
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.jumpToPreviousIssue()
+        default:
+            return
+        }
     }
     
     fileprivate func addItems(with titles: [String], didAddItems: (NSPopUpButton) -> Swift.Void) {
@@ -184,16 +274,47 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         self.didSelectScheme(self.schemeButton)
     }
     
+    @objc func sourceCodeChanged(_ aNotification: Notification) {
+        self.run(aNotification.object ?? self)
+    }
+
     @objc func willRun(_ aNotification: Notification) {
         self.schemeButton.removeAllItems()
+        self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = []
+        self.errorSummariesWindowController?.close()
+        self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = []
+        self.testFailureSummariesWindowController?.close()
         self.warnings = []
         self.warnSummariesWindowController?.close()
+        self.canCleanDerivedData = false
+        self.canRemoveCheckoutFolder = false
+        self.canLaunchOnSimulator = false
+        self.toggleDebugArea(sender: aNotification.object, isCollapsed: true)
     }
     
     @objc func activityError(_ aNotification: Notification) {
         
+        self.canCleanDerivedData = true
+        self.canRemoveCheckoutFolder = true
+
         guard let error = aNotification.userInfo?["error"] as? NSError else {
             return
+        }
+        
+        if let errorSummaries = aNotification.userInfo?["errorSummaries"] as? [ResultBundle.ErrorSummary] {
+            self.errorSummariesWindowController = ErrorSummariesWindowController.make()
+            self.errorSummariesWindowController?.errorSummariesViewController?.errorSummaries = errorSummaries
+        }
+
+        if let testFailureSummaries = aNotification.userInfo?["testFailureSummaries"] as? [ResultBundle.TestFailureSummary] {
+            self.testFailureSummariesWindowController = TestFailureSummariesWindowController.make()
+            self.testFailureSummariesWindowController?.testFailureSummariesViewController?.testFailureSummaries = testFailureSummaries
+        }
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+            
+            self.testSummariesWindowController = testSummariesWindowController
         }
         
         switch error.domain {
@@ -230,6 +351,8 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
                     button.selectItem(withTitle: scheme)
                 }
             }
+        case .test:
+            self.canLaunchOnSimulator = true
         default:
             break
         }
@@ -246,19 +369,43 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         }
     }
 
-    @IBAction func didSelectScheme(_ sender: NSPopUpButton) {
-        guard let scheme = sender.titleOfSelectedItem, let project = self.project else {
+    @objc func didTestProject(_ aNotification: Notification) {
+        
+        if let testableSummaries = aNotification.userInfo?["testableSummaries"] as? [TestableSummary] {
+            
+            let testSummariesWindowController = TestSummariesWindowController.make(testableSummaries: testableSummaries)
+            self.testSummariesWindowController = testSummariesWindowController
+        }
+    }
+    
+
+    @objc func didCheckoutProject(_ aNotification: Notification) {
+        
+        guard let commit = aNotification.userInfo?["commit"] as? Repository.Commit else {
+            os_log("Commit for project not found.", log: .default, type: .debug)
             return
         }
         
-        let newValue = Project(isWorkspace: project.isWorkspace, name: project.name, scheme: scheme, origin: project.origin)
-        self.delegate?.didSelectScheme(mainWindowController: self, project: newValue, scheme: scheme)
-        self.project = newValue
+        self.commit = commit
+    }
+
+    @IBAction func didSelectScheme(_ sender: NSPopUpButton) {
+        guard let scheme = sender.titleOfSelectedItem, let configuration = self.configuration else {
+            return
+        }
+        
+        let project = Project(isWorkspace: configuration.project.isWorkspace, name: configuration.project.name, scheme: scheme, origin: configuration.project.origin)
+        self.configuration = Windmill.Configuration(project: project, branch: configuration.branch, activities: configuration.activities)
     }
     
     func show(errorSummariesWindowController: ErrorSummariesWindowController?, commit: Repository.Commit?) {
+        errorSummariesWindowController?.locations = self.windmill?.locations
         errorSummariesWindowController?.errorSummariesViewController?.commit = commit
         errorSummariesWindowController?.showWindow(self)
+    }
+    
+    @IBAction func showErrorSummariesWindowController(_ sender: Any?) {
+        self.show(errorSummariesWindowController: self.errorSummariesWindowController, commit: commit)
     }
 
     func show(testFailureSummariesWindowController: TestFailureSummariesWindowController?, commit: Repository.Commit?) {
@@ -276,6 +423,25 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         self.warnSummariesWindowController?.showWindow(self)
     }
 
+    @IBAction func showTestFailureSummariesWindowController(_ sender: Any?) {
+        
+        switch sender {
+        case let testReportButton as TestReportButton:
+            if case .failure = testReportButton.testReport {
+                self.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
+            }
+            return
+        case is NSMenuItem:
+            self.show(testFailureSummariesWindowController: self.testFailureSummariesWindowController, commit: commit)
+        default:
+            return
+        }
+    }
+    
+    @IBAction func showTestSummariesWindowController(_ sender: Any?) {
+        testSummariesWindowController?.showWindow(self)
+    }
+
     func setBottomPanel(isOpen selected: Bool) {
         self.panels.setSelected(selected, forSegment: 0)
     }
@@ -288,10 +454,55 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
         self.sidePanelSplitViewController?.bottomPanelSplitViewController?.toggleBottomPanel(isCollapsed: isCollapsed)
     }
     
+    func toggleDebugArea(sender: Any? = nil, isCollapsed: Bool? = nil) {
+        self.toggleDebugArea(isCollapsed: isCollapsed)
+    }
+    
+    @IBAction func toggleDebugArea(_ sender: Any) {
+        self.toggleDebugArea(sender: sender)
+    }
+    
     func toggleSidePanel(isCollapsed: Bool? = nil) {
         self.sidePanelSplitViewController?.toggleSidePanel(isCollapsed: isCollapsed)
     }
     
+    func toggleSidePanel(sender: Any? = nil, isCollapsed: Bool? = nil) {
+        self.toggleSidePanel(isCollapsed: isCollapsed)
+    }
+    
+    @IBAction func toggleSidePanel(_ sender: Any) {
+        self.toggleSidePanel(sender: sender)
+    }
+    
+    @IBAction func performSegmentedControlAction(_ segmentedControl: NSSegmentedControl) {
+        switch segmentedControl.selectedSegment {
+        case 0:
+            self.toggleDebugArea(sender: segmentedControl)
+        case 1:
+            self.toggleSidePanel(sender: segmentedControl)
+        default:
+            os_log("Index of selected segment for NSSegmentedControl does not have a corresponding action associated.", log: .default, type: .debug)
+        }
+    }
+    
+    func run(_ sender: Any, skipCheckout: Bool) {
+        guard let configuration = self.configuration else {
+            preconditionFailure("MainWindowViewController should have its windmill property set. Have you set it?")
+        }
+        
+        let windmill = Windmill.make(configuration: configuration)
+        self.windmill = windmill
+        windmill.run(skipCheckout: skipCheckout)
+    }
+    
+    @IBAction func run(_ sender: Any) {
+        self.run(sender, skipCheckout: false)
+    }
+    
+    @IBAction func runSkipCheckout(_ sender: Any) {
+        self.run(sender, skipCheckout: true)
+    }
+
     @IBAction func restoreSubscription(_ sender: Any) {
         self.windmill?.restoreSubscription { [weak self] error in
             self?.toggleDebugArea(isCollapsed: false)
@@ -320,5 +531,64 @@ class MainWindowController: NSWindowController, NSToolbarDelegate, NSMenuItemVal
     
     @objc func noUserAccount(notification: NSNotification) {
         self.warnings.append(NSError.errorNoAccount())
+    }
+    
+    @IBAction func cleanDerivedData(_ sender: Any) {
+        self.windmill?.removeDerivedData()
+    }
+    
+    @IBAction func cleanProjectFolder(_ sender: Any) {
+        
+        let alert = NSAlert()
+        alert.addButton(withTitle: "Remove")
+        alert.addButton(withTitle: "Cancel")
+        alert.messageText = "Remove the Checkout Folder?"
+        alert.informativeText = "Windmill will clone the repo on the next `Run`."
+        alert.alertStyle = .warning
+        
+        guard let window = self.window else {
+            return
+        }
+        
+        alert.beginSheetModal(for: window) { response in
+            
+            guard response == .alertFirstButtonReturn else {
+                return
+            }
+            
+            if self.windmill?.removeRepositoryDirectory() == true {
+                self.run(self)
+            }
+        }
+    }
+    
+    @IBAction func showProjectFolder(_ sender: Any) {
+        guard let windmill = self.windmill else {
+            return
+        }
+        
+        let repository = windmill.locations.repository
+        
+        NSWorkspace.shared.openFile(repository.URL.path, withApplication: "Terminal")
+    }
+    
+    @IBAction func recordVideo(_ sender: Any) {
+        self.projectTitlebarAccessoryViewController?.recordVideo(sender)
+    }
+    
+    @IBAction func launchOnSimulator(_ sender: Any) {
+        self.projectTitlebarAccessoryViewController?.launchOnSimulator(sender)
+    }
+    
+    func windowWillClose(_ notification: Notification) {
+        self.windmill?.remove()
+    }
+    
+    func addTabbedWindow(mainWindowController: MainWindowController) {
+        guard let window = mainWindowController.window else {
+            return
+        }
+        
+        self.window?.addTabbedWindow(window, ordered: .out)
     }
 }

@@ -11,20 +11,11 @@ import Cocoa
 class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     let dispatch_queue_serial = DispatchQueue(label: "io.windmil.console.raw", qos: .utility, attributes: [])
-    var group = DispatchGroup()
 
     var queue: DispatchQueue {
         return self.dispatch_queue_serial
     }
 
-    var fileHandleForReading: FileHandle? {
-        guard let configuration = self.configuration else {
-            return nil
-        }
-        
-        return try? FileHandle(forReadingFrom: configuration.projectLogURL)
-    }
-    
     @IBOutlet weak var scrollView: NSScrollView! {
         didSet {
             scrollView.wantsLayer = true
@@ -52,8 +43,8 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     let defaultCenter = NotificationCenter.default
     
-    var configuration: Windmill.Configuration? {
-        return windmill?.configuration
+    var locations: Windmill.Locations? {
+        return windmill?.locations
     }
 
     weak var windmill: Windmill? {
@@ -65,10 +56,11 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     
     var dispatchSourceRead: DispatchSourceRead? {
         didSet {
+            oldValue?.activate() //this is to ensure the DispatchSource has been activated minimum one time before calling cancel; An unbalanced call causes a EXC_BAD_EXCEPTION
             oldValue?.cancel()
         }
     }
-    
+
     static func make() -> ConsoleViewController {
         let mainStoryboard = NSStoryboard(name: "Main", bundle: Bundle(for: ConsoleViewController.self))
         
@@ -76,27 +68,29 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     }
     
     deinit {
+        dispatchSourceRead?.activate() //this is to ensure the DispatchSource has been activated minimum one time before calling cancel; An unbalanced call causes a EXC_BAD_EXCEPTION
         dispatchSourceRead?.cancel()
     }
     
     override func viewDidLoad() {
-        self.group.leave()
+        self.dispatchSourceRead?.activate()
     }
-
+    
     @objc func willRun(_ aNotification: Notification) {
-        textView?.string = ""
-        textView?.isSelectable = false
-        textView?.allowScrollToEndOfDocument = true
+        self.textView?.string = ""
+        self.textView?.isSelectable = false
+        self.textView?.allowScrollToEndOfDocument = true
     }
     
     @objc func didRun(_ aNotification: Notification) {
         
-        if !isViewLoaded {
-            self.group.enter()
+        if let logfile = locations?.logfile, let fileHandleForReading = try? FileHandle(forReadingFrom: logfile) {
+            self.dispatchSourceRead = self.makeReadSource(fileHandleForReading: fileHandleForReading, completion: self.queue)
         }
         
-        self.dispatchSourceRead = self.read(completion: self.queue)
-        self.dispatchSourceRead?.activate()
+        if isViewLoaded {
+            self.dispatchSourceRead?.activate()
+        }
     }
 
     /**
@@ -108,8 +102,6 @@ class ConsoleViewController: NSViewController, DispatchSourceReadProvider {
     }
     
     func output(part: String, count: Int) {
-        self.group.wait()
-        
         DispatchQueue.main.async {
             self.append(self.textView, output: NSAttributedString(string: part, attributes: [.foregroundColor : NSColor.textColor]), count: count)
         }

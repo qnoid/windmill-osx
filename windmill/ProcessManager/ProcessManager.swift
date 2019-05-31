@@ -326,12 +326,15 @@ class ProcessManager {
                 return
             }
 
-            DispatchQueue.main.async { 
+            DispatchQueue.main.async {
                 self.repeat(process: provider, every: timeInterval, untilTerminationStatus: terminationStatus, then: eventHandler, deadline: DispatchTime.now() + timeInterval)
             }
         }
         
         DispatchQueue.main.asyncAfter(deadline: deadline) {
+            guard FileManager.default.fileExists(atPath: process.currentDirectoryPath) else {
+                return
+            }
             process.launch()
         }
     }
