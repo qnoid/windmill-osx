@@ -340,7 +340,7 @@ extension ProjectDirectory {
         let buildSettings = self.buildSettings()
         let distributionSummary = self.distributionSummary()
 
-        return Export.Metadata(project: project, buildSettings: buildSettings.for(project: project.name), projectAt: projectAt, distributionSummary: distributionSummary, configuration: configuration, applicationProperties: applicationProperties)
+        return Export.Metadata(project: project, buildSettings: buildSettings, projectAt: projectAt, distributionSummary: distributionSummary, configuration: configuration, applicationProperties: applicationProperties)
     }
     
     public func export(name: String) -> Export {

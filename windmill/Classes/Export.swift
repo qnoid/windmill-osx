@@ -24,7 +24,7 @@ public struct Export {
             var container = encoder.container(keyedBy: CodingKeys.self)
             
             try container.encode(self.commit, forKey: .commit)
-            try container.encode(self.buildSettings , forKey: .deployment)
+            try container.encode(self.buildSettings.for(project: project.name) , forKey: .deployment)
             try container.encode(self.configuration, forKey: .configuration)
             try container.encode(self.distributionSummary, forKey: .distributionSummary)
             try container.encode(self.applicationProperties, forKey: .applicationProperties)
