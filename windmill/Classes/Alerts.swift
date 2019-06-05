@@ -8,11 +8,15 @@
 
 import AppKit
 
-func alert(_ error: NSError, window: NSWindow)
-{
-    let alert = NSAlert()
-    alert.messageText = error.localizedDescription
-    alert.informativeText = error.localizedFailureReason ?? ""
-    alert.alertStyle = .critical
-    alert.beginSheetModal(for: window, completionHandler: nil)
+struct Alerts {
+    
+    static func make(_ error: NSError) -> NSAlert {
+        
+        let alert = NSAlert()
+        alert.messageText = error.localizedDescription
+        alert.informativeText = error.localizedFailureReason ?? ""
+        alert.alertStyle = .critical
+        
+        return alert
+    }
 }

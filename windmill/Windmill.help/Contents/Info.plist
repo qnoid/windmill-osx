@@ -11,7 +11,7 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>3.1.1</string>
+	<string>3.1.2</string>
 	<key>CFBundleSignature</key>
 	<string>hbwr</string>
 	<key>CFBundleVersion</key>
@@ -19,7 +19,7 @@
 	<key>CFBundleName</key>
 	<string>Windmill</string>
 	<key>HPDBookAccessPath</key>
-	<string>index.html</string>
+	<string>redirect.html</string>
 	<key>HPDBookIconPath</key>
 	<string>Windmill.png</string>
 	<key>HPDBookKBProduct</key>

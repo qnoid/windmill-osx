@@ -139,8 +139,8 @@ class ArtefactsViewController: NSViewController {
             self.defaultCenter.addObserver(self, selector: #selector(didBuildProject(_:)), name: Windmill.Notifications.didBuildProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didTestProject(_:)), name: Windmill.Notifications.didTestProject, object: windmill)
             self.defaultCenter.addObserver(self, selector: #selector(didArchiveSuccesfully(_:)), name: Windmill.Notifications.didArchiveProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
-            self.defaultCenter.addObserver(self, selector: #selector(didDistributeSuccesfully(_:)), name: Windmill.Notifications.didDistributeProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didExportProject(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
+            self.defaultCenter.addObserver(self, selector: #selector(didDistributeProject(_:)), name: Windmill.Notifications.didDistributeProject, object: windmill)
             
             self.windmill?.configuration.activities.forEach { activity in
                 for artefact in activity.artefact() {
@@ -265,7 +265,7 @@ class ArtefactsViewController: NSViewController {
         self.archiveView.isHidden = false
     }
     
-    @objc func didExportSuccesfully(_ aNotification: Notification) {
+    @objc func didExportProject(_ aNotification: Notification) {
 
         if let export = aNotification.userInfo?["export"] as? Export {
             self.exportView.export = export
@@ -278,7 +278,7 @@ class ArtefactsViewController: NSViewController {
         self.exportView.isHidden = false
     }
     
-    @objc func didDistributeSuccesfully(_ aNotification: Notification) {
+    @objc func didDistributeProject(_ aNotification: Notification) {
         
         if let export = aNotification.userInfo?["export"] as? Export {
             self.distributeView.export = export

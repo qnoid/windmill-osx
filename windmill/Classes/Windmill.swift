@@ -45,6 +45,10 @@ public struct WindmillStringKey : RawRepresentable, Equatable, Hashable {
 }
 
 extension AppBundle {
+    static func make(home: ProjectDirectory, project: Project) -> AppBundle {
+        return home.appBundle(name: project.name)
+    }
+
     static func make(home: ProjectDirectory, archive: Archive, distributionSummary: DistributionSummary) -> AppBundle {
         return home.archivedAppBundle(archive: archive, name: distributionSummary.name)
     }

@@ -65,8 +65,8 @@
 "windmill.repo.error.failureReason"="The folder containing the Xcode project/workspace must be a git repo with a remote origin.\n* `git init` to create a new git.\n* `git remote add origin <url>` to add a remote origin.\n* `git push -u origin master` to push the folder to the repo.";
 "windmill.latestCommit.error.description"="No commit found in remote repository";
 "windmill.latestCommit.error.failureReason"="Have you made your first commit yet?\nDid you push?\n'git push -u origin master'";
-"windmill.noOriginError.error.description"="No 'origin' found in remote repository";
-"windmill.noOriginError.error.failureReason"="Windmill requires a remote 'origin'.\n* `git remote -v` to look for your project's url, possibly under a different name\n* `git remote add origin <url>` to describe the url as an 'origin' instead\n* `git push -u origin master` to push master to the origin url'";
+"windmill.noOriginError.error.description"="No remote found in the repository";
+"windmill.noOriginError.error.failureReason"="Could not find a remote server in the git repo for the project. You can use `git remote -v` in your repository to confirm. Windmill uses SSH authentication to clone your project. See more in the Help menu, under Getting Started > Where to Start.";
 "windmill.ui.toolbar.view.showDebugArea"="Show Debug Area";
 "windmill.ui.toolbar.view.hideDebugArea"="Hide Debug Area";
 "windmill.ui.toolbar.view.showSidePanel"="Show Side Panel";

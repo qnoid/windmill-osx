@@ -45,15 +45,9 @@ struct ActivityExport {
                     
                     self.delegate?.didExitSuccesfully(activity: .export, userInfo: userInfo)
                     
-                    let archivedAppBundle = home.archivedAppBundle(archive: archive, name: export.distributionSummary.name)
+                    let metadata = home.metadata(project: project, projectAt: projectAt, configuration: build, applicationProperties: appBundle.info)
                     
-                    let metadata = home.metadata(project: project, projectAt: projectAt, configuration: build, applicationProperties: archivedAppBundle.info)
-                    
-                    let userInfo = userInfo.merging(["export": export, "metadata": metadata, "appBundle": archivedAppBundle], uniquingKeysWith: { (_, new) -> Any in
-                        return new //shouldn't it be the new one? if not the appBundle doesn't make a difference.
-                    })
-                    
-                    self.delegate?.notify(notification: Windmill.Notifications.didExportProject, userInfo: userInfo)
+                    self.delegate?.notify(notification: Windmill.Notifications.didExportProject, userInfo: ["export": export, "metadata": metadata, "appBundle": appBundle])
                     
                     next?(userInfo)
                 })

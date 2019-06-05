@@ -39,12 +39,14 @@ public struct Repository: CustomDebugStringConvertible {
             
             
             let name = localGitRepoURL.lastPathComponent
-            let remote = try repo.configuration().remotes?.filter { remote in
-                return remote.name == "origin"
-            }
+            let remotes = try repo.configuration().remotes
             
-            guard let origin = remote?.first?.urlString else {
-                os_log("%{public}@", log: log, type: .error, "Could not fetch origin")
+            let remote = remotes?.first { remote in
+                return remote.name == "origin"
+            } ?? remotes?.first
+            
+            guard let origin = remote?.urlString else {
+                os_log("%{public}@", log: log, type: .error, "Could not find a remote server in the git repo for the project. You can use `git remote -v` in your repository to confirm. Windmill uses SSH authentication to clone your project. See more in the Help menu, under Getting Started > Where to Start.")
                 throw NSError.noOriginError(localGitRepoURL.path)
             }
             

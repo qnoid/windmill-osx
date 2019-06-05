@@ -77,7 +77,7 @@ class ActivityManager: ProcessMonitor, ActivityDelegate {
     weak var windmill: Windmill? {
         didSet {
             NotificationCenter.default.addObserver(self, selector: #selector(willRun(_:)), name: Windmill.Notifications.willRun, object: windmill)
-            NotificationCenter.default.addObserver(self, selector: #selector(didExportSuccesfully(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
+            NotificationCenter.default.addObserver(self, selector: #selector(didExportProject(_:)), name: Windmill.Notifications.didExportProject, object: windmill)
         }
     }
     
@@ -93,7 +93,7 @@ class ActivityManager: ProcessMonitor, ActivityDelegate {
         self.activitiesGroup.enter()
     }
     
-    @objc func didExportSuccesfully(_ aNotification: Notification) {
+    @objc func didExportProject(_ aNotification: Notification) {
         activitiesGroup.leave()
     }
     

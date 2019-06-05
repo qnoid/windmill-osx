@@ -144,7 +144,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
 
     func application(_ sender: NSApplication, openFile filename: String) -> Bool {
         guard let project = self.addProject(url: URL(fileURLWithPath: filename)) else {
-            os_log("Have you saved the configuration for that project?", log: .default, type: .error)
+            os_log("Have you saved the configuration for that project?", log: .default, type: .debug)
             return false
         }
         
@@ -291,10 +291,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSUserNoti
             
             return Windmill.Configuration.shared.contains(project, branch: branch ?? commit.branch) == true ? nil : (project, branch ?? commit.branch)
         } catch let error as NSError {
-            guard let window = NSApplication.shared.keyWindow else {
-                return nil
+            let alert = Alerts.make(error)
+            if let window = NSApplication.shared.keyWindow {
+                alert.beginSheetModal(for: window, completionHandler: nil)
+            } else {
+                alert.runModal()
             }
-            alert(error, window: window)
             return nil
         }
     }

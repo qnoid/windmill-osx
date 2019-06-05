@@ -69,7 +69,7 @@ public class BuildSettings: Encodable {
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.deployment?.target , forKey: .target)
+        try container.encode(self.deployment?.target ?? "", forKey: .target)
     }
     var projectName: String? {
         guard let project = values["project"] as? [String: String]?, let name = project?["name"] as String? else {

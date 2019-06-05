@@ -15,9 +15,8 @@ class ActivityDistribute: NSObject {
         
         static func make(locations: Windmill.Locations, configuration: Windmill.Configuration) -> ActivityContext {
             
-            let archive = Archive.make(home: locations.home, configuration: configuration)
             let export = Export.make(home: locations.home, configuration: configuration)
-            let appBundle = AppBundle.make(home: locations.home, archive: archive, distributionSummary: export.distributionSummary)
+            let appBundle = AppBundle.make(home: locations.home, project: configuration.project)
             let metadata = Export.Metadata.make(home: locations.home, projectAt: locations.projectAt, configuration: configuration, applicationProperties: appBundle.info)
 
             return make(export: export, metadata: metadata, appBundle: appBundle)
