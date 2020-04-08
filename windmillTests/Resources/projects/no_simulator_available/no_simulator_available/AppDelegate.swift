@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  no_simulator_available
 //
-//  Created by Markos Charatzas on 4/2/18.
+//  Created by Markos Charatzas (markos@qnoid.com) on 4/2/18.
 //  Copyright © 2018 qnoid. All rights reserved.
 //
 

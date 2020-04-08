@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  project-with-build-errors
 //
-//  Created by Markos Charatzas on 5/3/18.
+//  Created by Markos Charatzas (markos@qnoid.com) on 5/3/18.
 //  Copyright © 2018 qnoid. All rights reserved.
 //
 

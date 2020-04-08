@@ -2,7 +2,7 @@
 //  Windmill.swift
 //  windmill
 //
-//  Created by Markos Charatzas on 13/03/2015.
+//  Created by Markos Charatzas (markos@qnoid.com) on 13/03/2015.
 //  Copyright (c) 2015 qnoid.com. All rights reserved.
 //
 

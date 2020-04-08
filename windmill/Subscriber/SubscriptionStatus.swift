@@ -2,7 +2,7 @@
 //  SubscriberStatus.swift
 //  windmill
 //
-//  Created by Markos Charatzas on 19/02/2019.
+//  Created by Markos Charatzas (markos@qnoid.com) on 19/02/2019.
 //  Copyright © 2019 Windmill. All rights reserved.
 //
 

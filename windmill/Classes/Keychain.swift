@@ -2,7 +2,7 @@
 //  Keychain.swift
 //  windmill
 //
-//  Created by Markos Charatzas on 06/09/2014.
+//  Created by Markos Charatzas (markos@qnoid.com) on 06/09/2014.
 //  Copyright (c) 2014 qnoid.com. All rights reserved.
 //
 
